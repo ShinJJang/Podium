@@ -2,7 +2,7 @@ Django
 django-jenkins
 psycopg2
 coverage
-pip install pyflakes
-pip install pep8
+pyflakes
+pep8
 # lettuce and selenium are not yet ported to python 3k
 # any other libraries required for you project
