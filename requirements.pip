@@ -1,4 +1,4 @@
 Django
 django-jenkins
-postgresql
+psycopg2
 # any other libraries required for you project
