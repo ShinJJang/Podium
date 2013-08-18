@@ -2,5 +2,10 @@
 from django.shortcuts import render_to_response, render
 from django.shortcuts import redirect
 
+from django.template import Context, RequestContext
+
 def home(request):
-    return render_to_response('index.html')
+    variables = Context({
+        'page_title': 'Podium'
+    })
+    return render(request,'index.html',variables)
