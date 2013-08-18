@@ -1,0 +1,49 @@
+a {
+	color: #38978c;
+	text-decoration: none;
+}
+
+a:hover, a:active, a:focus {
+	color:#76bab2;
+}
+
+body { background:#424b4a; }
+
+#p_header { background: #76bab2; border-color:#38978c; }
+#p_header #p_topSearch input[type="text"] { background-image:url(../images/color-mint/top_search.png); }
+#p_body #p_nav #nav_userProfile a .nav_no { color:#ff7f7f }
+
+#p_body #p_timeline .p_timelineContents .p_tIcon { background-color:#76bab2; }
+
+#p_body #p_timeline .p_timelineNav ul li a { background-image:url(../images/color-mint/moment_item.png); }
+#p_body #p_timeline .p_timelineNav ul li.selected a { background-image:url(../images/color-mint/moment_selected.png); color:#38978c; }
+#p_body #p_timeline .p_timelineNav ul li.more a { background-image:url(../images/color-mint/moment_more.png); }
+#p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget h2 { color:#38978c; }
+#p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .p_responses p a strong { color:#38978c; font-weight:bold; }
+
+#p_body #p_timeline .p_timelineContents .project .p_tArticle { background-image:url(../images/color-mint/timeline_project_bg.png); }
+#p_body #p_timeline .p_timelineContents .private .p_tArticle { background-image:url(../images/color-mint/private_bg.png); }
+
+#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .public { background-image: url(../images/color-mint/timeline_public.png); }
+#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .private { background-image: url(../images/color-mint/timeline_private.png); }
+#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .project { background-image: url(../images/color-mint/timeline_project.png); }
+
+/* Retina Display Support */
+
+@media 
+(-webkit-min-device-pixel-ratio: 2), 
+(min-resolution: 192dpi) {
+	
+	#p_header #p_topSearch input[type="text"] { background-image:url(../images/color-mint/top_search@2x.png); }
+	
+	#p_body #p_timeline .p_timelineNav ul li a { background-image:url(../images/color-mint/moment_item@2x.png); }
+	#p_body #p_timeline .p_timelineNav ul li.selected a { background-image:url(../images/color-mint/moment_selected@2x.png); }
+	#p_body #p_timeline .p_timelineNav ul li.more a { background-image:url(../images/color-mint/moment_more@2x.png); }
+	
+	#p_body #p_timeline .p_timelineContents .project .p_tArticle { background-image:url(../images/color-mint/timeline_project_bg@2x.png); }
+	#p_body #p_timeline .p_timelineContents .private .p_tArticle { background-image:url(../images/color-mint/private_bg@2x.png); }
+	
+	#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .public { background-image: url(../images/color-mint/timeline_public@2x.png); }
+	#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .private { background-image: url(../images/color-mint/timeline_private@2x.png); }
+	#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .project { background-image: url(../images/color-mint/timeline_project@2x.png); }
+}
