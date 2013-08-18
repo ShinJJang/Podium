@@ -5,7 +5,4 @@ from django.shortcuts import redirect
 from django.template import Context, RequestContext
 
 def home(request):
-    variables = Context({
-        'page_title': 'Podium'
-    })
-    return render(request,'index.html',variables)
+    return render_to_response('index.html', {'page_title': 'Podium'}, RequestContext(request))
