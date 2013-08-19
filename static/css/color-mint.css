@@ -47,3 +47,8 @@ body { background:#424b4a; }
 	#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .private { background-image: url(../images/color-mint/timeline_private@2x.png); }
 	#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .project { background-image: url(../images/color-mint/timeline_project@2x.png); }
 }
+
+@media
+screen and (max-width:67em) {
+    #p_body #p_nav #nav_userProfile a .nav_no { color:#fff; background:#f54949; border-color:#fff; }
+}
