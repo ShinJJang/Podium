@@ -4,8 +4,9 @@ from django.shortcuts import redirect
 
 from django.template import Context, RequestContext
 from django.views.generic.edit import CreateView
+from django.contrib.auth.models import User
 
-from .models import Post
+from .models import UserProfile, Post
 from .forms import PostForm, PostWriteForm
 from django.utils import timezone
 
@@ -19,8 +20,10 @@ class WritePost(CreateView):
     template_name = 'index.html'
 
     def form_valid(self, form):
+        user = self.request.user
         instance = form.save(commit=False)
         instance.created = timezone.now()
+        instance.user_key = UserProfile.objects.get(user=user)
         return super(WritePost, self).form_valid(form)
 
 #class UpdatePost(UpdateView):
