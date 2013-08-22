@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<<<<<<< Updated upstream
 	<head>
 		<title>{% block title %}{% endblock %}</title>
 		<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.jscrollpane.css" type="text/css" media="screen">
@@ -326,14 +327,92 @@
 				</div>
 			</section>
 		</section>
+=======
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{{STATIC_URL}}css/jquery.jscrollpane.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="{{STATIC_URL}}css/base.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="{{STATIC_URL}}css/layout.css" type="text/css" media="screen">
+
+        <link rel="stylesheet" href="{{STATIC_URL}}css/color-mint.css" title="Podium Mint" type="text/css" media="screen">
+        <link rel="alternate stylesheet" href="{{STATIC_URL}}css/color-pink.css" title="Podium Pink" type="text/css" media="screen">
+        <link rel="alternate stylesheet" href="{{STATIC_URL}}css/color-sky.css" title="Podium Sky" type="text/css" media="screen">
+
+        <link rel="apple-touch-icon" href="{{STATIC_URL}}apple-icon-touch.png">
+        <link rel="shortcut icon" href="/favicon.ico">
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no" />
+    </head>
+    <body>
+        <header id="p_header">
+            <div class="p_container">
+                <h1>Podium</h1>
+                <div id="p_topSearch">
+                    <input id="p_topSearchForm" type="text" name="p_topSearchForm" value="" placeholder="Search Everything in the Podium">
+                </div>
+                <ul id="p_headerLinks">
+                    <li><a id="toSetting" href="#">Settings</a></li>
+                </ul>
+            </div>
+        </header>
+        <section id="p_body">
+            <nav id="p_nav">
+                <div class="p_container">
+                    <ul id="nav_userProfile">
+                        <li id="nav_profile"><a href="#"><span class="nav_profile"></span><span class="nav_label">최태건</span></a></li>
+                        <li id="nav_request"><a href="#"><span class="nav_icon"></span><span class="nav_label">Request</span><span class="nav_no">4</span></a></li>
+                        <li id="nav_notification"><a href="#"><span class="nav_icon"></span><span class="nav_label">Notification</span><span class="nav_no">56</span></a></li>
+                    </ul>
+                    <h2>Timeline</h2>
+                    <ul id="nav_timeline">
+                        <li id="nav_everything" class="selected"><a href="#"><span class="nav_icon"></span><span class="nav_label">Everything</span></a></li>
+                        <li id="nav_private"><a href="#"><span class="nav_icon"></span><span class="nav_label">Private</span></a></li>
+                        <li id="nav_project"><a href="#"><span class="nav_icon"></span><span class="nav_label">Project</span></a></li>
+                        <li id="nav_favorite"><a href="#"><span class="nav_icon"></span><span class="nav_label">Favorite</span></a></li>
+                    </ul>
+                    <h2>NETWORK</h2>
+                    <ul id="nav_network">
+                        <li id="nav_people"><a href="#"><span class="nav_icon"></span><span class="nav_label">People</span></a></li>
+                        <li id="nav_event"><a href="#"><span class="nav_icon"></span><span class="nav_label">Event</span></a></li>
+                    </ul>
+                    <h2>TOOLS</h2>
+                    <ul id="nav_tools">
+                        <li id="nav_codeshare"><a href="#"><span class="nav_icon"></span><span class="nav_label">Code Share</span></a></li>
+                        <li id="nav_schedule"><a href="#"><span class="nav_icon"></span><span class="nav_label">Schedule</span></a></li>
+                        <li id="nav_wiki"><a href="#"><span class="nav_icon"></span><span class="nav_label">SW_Wiki</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+            <aside id="p_messages">
+                <div class="p_container">
+                    <h2>Online</h2>
+                    <ul class="userList">
+                        <li><a href="#">가</a></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                    <h2>Friends</h2>
+                    <ul class="userList">
+                        <li><a href="#">가</a></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+            </aside>
+            {% include "timeline.html" %}
+        </section>
+        <div id="navTooltip"></div>
+
+>>>>>>> Stashed changes
         {% block scripts %}
-			<script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.10.2.min.js"></script>
+            <script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.10.2.min.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.placeholder.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.jscrollpane.min.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.mousewheel.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/layout.js"></script>
-		{% endblock %}
-		{% block add_scripts %}
-		{% endblock %}
-	</body>
+        {% endblock %}
+        {% block add_scripts %}
+        {% endblock %}
+    </body>
 </html>

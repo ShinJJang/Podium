@@ -6,7 +6,7 @@
 	#p_header h1 { width:210px; float:left; height:0px; padding-top:50px; background: url(../images/top_bi.png) no-repeat; background-size: 210px 50px; overflow: hidden; }
 	
 	#p_header #p_topSearch { float:left; padding:10px 0; }
-	#p_header #p_topSearch input[type="text"] { width:400px; height:30px; border:none; border-radius: 5px; box-sizing: border-box; padding-left:25px; background-position:8px 50%; background-repeat: no-repeat; background-size:12px 12px; }
+	#p_header #p_topSearch input[type="text"] { width:370px; height:20px; line-height:20px; border:none; border-radius: 5px; padding:5px 5px 5px 25px; background-position:8px 50%; background-repeat: no-repeat; background-size:12px 12px; }
 	
 	#p_header #p_headerLinks { float:right; }
 	#p_header #p_headerLinks li { float:left; width:75px; }
