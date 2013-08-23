@@ -22,9 +22,9 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             new_user = form.save()
-            new_user = authenticate(username=request.POST['username'], password=request.POST['password1'])
+            new_user = authenticate(username=request.POST['email'], password=request.POST['password1'])
             login(request, new_user)
-            return HttpResponseRedirect('index.html')
+            return HttpResponseRedirect('/')
     else:
         form = UserRegisterForm()
 
