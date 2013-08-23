@@ -9,7 +9,8 @@ urlpatterns = patterns('',
     #url(r'^$', 'Podium.views.home', name='home'),
     # url(r'^Podium/', include('Podium.foo.urls')),
     url(r'^$', views.WritePost.as_view(), name='post_write'),
-    (r'^login/$', 'django.contrib.auth.views.login')
+    (r'^register/$', views.register),
+    (r'^login/$', 'django.contrib.auth.views.login'),
     # Uncomment the admin/doc line below to enable admin documentation:
     #url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

@@ -5,7 +5,6 @@ from django.db.models.signals import post_save
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     created = models.DateTimeField(auto_now=True)
-    login_last = models.DateTimeField(auto_now=True)
     login_status = models.IntegerField(default=0)
 
     def __str__(self):
