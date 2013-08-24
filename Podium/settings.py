@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django_jenkins',
     'Maple',
+    'tastypie',
 )
 
 # A sample logging configuration. The only tangible logging
