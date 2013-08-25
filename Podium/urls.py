@@ -11,6 +11,10 @@ urlpatterns = patterns('',
     url(r'^$', views.WritePost.as_view(), name='post_write'),
     (r'^register/$', views.register),
     (r'^login/$', 'django.contrib.auth.views.login'),
+    url(r'^invite_chat/$', 'Maple.views.invite_chat', name='invite_chat'),
+    url(r'^invited_chat/$', 'Maple.views.invited_chat', name='invited_chat'),
+    url(r'^chat_comment$', 'Maple.views.chat_comment', name='chat_comment'),
+    url(r'^chat/$', 'Maple.views.chat', name='chat'),
     # Uncomment the admin/doc line below to enable admin documentation:
     #url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

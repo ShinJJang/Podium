@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Main</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://localhost:4000/socket.io/socket.io.js"></script>
+</head>
+<body>
+<ul id="login_user_list">
+    {% for user in users %}
+        <li>{{ user.username }}</li>
+    {% endfor %}
+</ul>
+<div class="invite_friend">
+    <form id="invite_ajax" method="get" action="/invite_chat" onsubmit="form_submit(); return false">
+        <input type="text" id="friend_id" name="chating_user"/>
+        <input type="submit" value="채팅하기"/>
+    </form>
+</div>
+<div id="chat"></div>
+<script>
+    var form_submit = function (data) {
+         $.ajax({
+            type: 'GET',
+            url: '/invite_chat',
+            data: dataString,
+            success: function (data) {
+                $('#chat').html(data);
+                console.log("ajax chat ");
+                b();
+            },
+            error: function () {
+                console.error(arguments);
+            }
+        });
+    };
+
+    var a = setInterval(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/invited_chat',
+            success: function (data) {
+                if (data != "0") {
+                    $('#chat').html(data);
+                    b();
+                }
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }, 5000);
+
+    var b = (function () {
+        var socket = io.connect('localhost', {port: 4000});
+        console.log("connect");
+        socket.on('connect', function () {
+            console.log("connect");
+        });
+
+        console.log("socket on");
+        var room_info = $('#chat_room');
+
+        var room = room_info.val();
+        var join_info = {room_name: room, user_id: "{{user}}"};
+        var entry_el = $('#comment_entry');
+
+        socket.emit('join', join_info);
+
+        socket.on('message', function (message) {
+            var data = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            console.log(data);
+            $('#chat_comments').append('<li>' + data + '</li>');
+            window.scrollBy(0, 10000000000);
+            entry_el.focus();
+        });
+
+        entry_el.keypress(function (event) {
+            if (event.keyCode != 13) return;
+            console.log("keypress event " + entry_el.val());
+            var value = entry_el.val();
+            console.log(value);
+            var msg = {room_name: room, user_id: "{{user}}", type: 'chat', message: entry_el.val()} //user 사진 작게
+            if (msg) {
+                socket.emit('send_message', msg, function (data) {
+                    console.log(data);
+                });
+                entry_el.val("");
+            }
+        });
+    });
+</script>
+</body>
+</html>
