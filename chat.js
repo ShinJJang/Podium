@@ -6,7 +6,6 @@ var querystring = require('querystring');
 
 var redis = require('socket.io/node_modules/redis');
 var sub = redis.createClient();
-var pub = redis.createClient();
 //Subscribe to the Redis chat channel
 console.log('test');
 //Configure socket.io to store cookie set by Django
@@ -49,22 +48,20 @@ io.sockets.on('connection', function (socket) {
         //send message to client
         console.log("send_message event");
         var data = (message.user_id + ": " + message.message);
-        console.log(data);
         socket.get(message.room_name, function (error, room) {
             console.log(data + "get event and emit message in room");
-            console.log(room);
             io.sockets.in(message.room_name).emit('message', data);
         });
-
+        console.log(message.user_id);
         //send message to django fo chat_comment db
         values = querystring.stringify({
             comment: message.message,
-            sessionid: socket.handshake.cookie['sessionid'],
+            user_id: message.user_id,
             room_name: message.room_name
         });
         var options = {
             host: 'localhost',
-            port: 3000,
+            port: 8000,
             path: '/chat_comment',
             method: 'POST',
             headers: {

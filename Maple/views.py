@@ -43,7 +43,7 @@ class WritePost(CreateView):
 @login_required
 def invite_chat(request):
     invite_people = request.GET.get("chating_user", "")
-    print invite_people
+    print "chating_user = " + invite_people
     session = Session.objects.get(session_key = request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)
@@ -52,7 +52,7 @@ def invite_chat(request):
 
     try: #이미 만들어져있는 채팅방이 있는지를 조회
         chat_info = UserChats.objects.get(chat_to_user_key = user, chat_from_user_key = chating_user)
-        chat_comments = ChatComments.objects.filter(user_chat = chat_info)
+        chat_comments = ChatComments.objects.filter(userChat_key = chat_info)
         ctx = Context({
                         'user':user,
                         'chat_info':chat_info,
@@ -62,7 +62,7 @@ def invite_chat(request):
     except:
         try:
             chat_info = UserChats.objects.get(chat_to_user_key = chating_user, chat_from_user_key = user)
-            chat_comments = ChatComments.objects.filter(user_chat = chat_info)
+            chat_comments = ChatComments.objects.filter(userChat_key = chat_info)
             ctx = Context({
                         'chat_info':chat_info,
                         'user':user,
@@ -71,7 +71,7 @@ def invite_chat(request):
             return render_to_response('chat.html', ctx)
         except:
             chat_info = UserChats.objects.create(chat_to_user_key = chating_user, chat_from_user_key = user, chat_room_name = str(user.id) + "to" + str(chating_user.id))
-            chat_comments = ChatComments.objects.create(user_chat = chat_info, chat_comment = "null")
+            chat_comments = ChatComments.objects.create(userChat_key = chat_info, chat_comment = "null")
             ctx = Context({
                         'user':user,
                         'chat_info':chat_info,
@@ -107,12 +107,11 @@ def invited_chat(request):
 @csrf_exempt
 def chat_comment(request):
     print request.POST.get('room_name')
+    print request.POST.get('user_id')
     try:
-        session = Session.objects.get(session_key=request.POST.get('sessionid'))
-        user_id = session.get_decoded().get('_auth_user_id')
-        user = User.objects.get(id=user_id)
         user_chat  = UserChats.objects.get(chat_room_name = request.POST.get('room_name'))
         print user_chat.chat_room_name
+        user = User.objects.get(id = request.POST.get('user_id'))
         chat_comment = user.username + ": " + request.POST.get('comment')
         ChatComments.objects.create(userChat_key = user_chat, chat_comment = chat_comment)
         print request.POST.get('comment')

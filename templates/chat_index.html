@@ -9,7 +9,7 @@
 <body>
 <ul id="login_user_list">
     {% for user in users %}
-        <li>{{ user.username }}</li>
+        <li>{{ user.id }} {{ user.username }}</li>
     {% endfor %}
 </ul>
 <div class="invite_friend">
@@ -21,10 +21,12 @@
 <div id="chat"></div>
 <script>
     var form_submit = function (data) {
+        var dataString = $('#friend_id').val();
+        console.log(dataString);
          $.ajax({
             type: 'GET',
             url: '/invite_chat',
-            data: dataString,
+            data: 'chating_user=' + dataString,
             success: function (data) {
                 $('#chat').html(data);
                 console.log("ajax chat ");
@@ -78,10 +80,11 @@
 
         entry_el.keypress(function (event) {
             if (event.keyCode != 13) return;
-            console.log("keypress event " + entry_el.val());
             var value = entry_el.val();
+            var userId = $('#user_id');
             console.log(value);
-            var msg = {room_name: room, user_id: "{{user}}", type: 'chat', message: entry_el.val()} //user 사진 작게
+            var msg = {room_name: room, user_id: userId.val(), type: 'chat', message: entry_el.val()} //user 사진 작게
+            console.log(userId.val());
             if (msg) {
                 socket.emit('send_message', msg, function (data) {
                     console.log(data);
