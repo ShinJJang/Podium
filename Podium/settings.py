@@ -131,7 +131,17 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django_jenkins',
     'Maple',
+    'tastypie',
+    'registration'
 )
+
+# registration required option
+ACCOUNT_ACTIVATION_DAYS = 7
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'makao.rule@gmail.com'
+EMAIL_HOST_PASSWORD = 'goomellowgle17'
+EMAIL_PORT = 587
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -177,5 +187,4 @@ JENKINS_TASKS = (
     #'django_jenkins.tasks.lettuce_tests',
 )
 
-#
 AUTH_PROFILE_MODULE = 'Maple.UserProfile'

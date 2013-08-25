@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
 
 from .models import UserProfile, Post, ChatNoti, ChatComments, UserChats
-from .forms import UserRegisterForm, PostForm, PostWriteForm
+from .forms import PostForm, PostWriteForm
 from django.utils import timezone
 
 @login_required
@@ -26,19 +26,6 @@ def chat(request):
                         'users':users
         })
     return render_to_response('chat_index.html', ctx)
-
-def register(request):
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            new_user = form.save()
-            new_user = authenticate(username=request.POST['email'], password=request.POST['password1'])
-            login(request, new_user)
-            return HttpResponseRedirect('/')
-    else:
-        form = UserRegisterForm()
-
-    return render_to_response('registration/register.html', {'form': form}, context_instance=RequestContext(request))
 
 class WritePost(CreateView):
     model = PostForm
