@@ -13,27 +13,7 @@ from .models import UserProfile, Post
 from .forms import UserRegisterForm, PostForm, PostWriteForm
 from django.utils import timezone
 from django.core.mail import send_mail
-from django.utils.hashcompat import sha_constructor
-
-@login_required
-def home(request):
-    return render_to_response('index.html', {'page_title': 'Podium'}, RequestContext(request))
-
-def register(request):
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            new_user = form.save()
-            new_user = authenticate(username=request.POST['email'], password=request.POST['password1'])
-            login(request, new_user)
-            salt = "secret_Podium"
-            confirmation_key = sha_constructor(salt + new_user.email).hexdigest()
-            send_mail('2mail activation code', 'ere\nerer\n %s' % confirmation_key, 'makao.rule@gmail.com', ['makao.rule@gmail.com'])
-            return HttpResponseRedirect('/')
-    else:
-        form = UserRegisterForm()
-
-    return render_to_response('registration/register.html', {'form': form}, context_instance=RequestContext(request))
+import hashlib
 
 class WritePost(CreateView):
     model = PostForm

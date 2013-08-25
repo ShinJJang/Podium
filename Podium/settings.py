@@ -132,8 +132,11 @@ INSTALLED_APPS = (
     'django_jenkins',
     'Maple',
     'tastypie',
+    'registration'
 )
 
+# registration required option
+ACCOUNT_ACTIVATION_DAYS = 7
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'makao.rule@gmail.com'
@@ -184,5 +187,4 @@ JENKINS_TASKS = (
     #'django_jenkins.tasks.lettuce_tests',
 )
 
-#
 AUTH_PROFILE_MODULE = 'Maple.UserProfile'

@@ -20,6 +20,7 @@ class UserProfileResource(ModelResource):
     class Meta:
         queryset = UserProfile.objects.all()
         resource_name = 'userprofile'
+        include_resource_uri = False
         authorization = DjangoAuthorization()
 
 class PostResource(ModelResource):
@@ -28,4 +29,5 @@ class PostResource(ModelResource):
     class Meta:
         queryset = Post.objects.all()
         resource_name = 'post'
+        include_resource_uri = False
         authorization = DjangoAuthorization()
