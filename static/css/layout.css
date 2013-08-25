@@ -6,7 +6,7 @@
 	#p_header h1 { width:210px; float:left; height:0px; padding-top:50px; background: url(../images/top_bi.png) no-repeat; background-size: 210px 50px; overflow: hidden; }
 	
 	#p_header #p_topSearch { float:left; padding:10px 0; }
-	#p_header #p_topSearch input[type="text"] { width:370px; height:20px; line-height:20px; border:none; border-radius: 5px; padding:5px 5px 5px 25px; background-position:8px 50%; background-repeat: no-repeat; background-size:12px 12px; }
+	#p_header #p_topSearch input[type="text"] { width:400px; height:30px; border:none; border-radius: 5px; box-sizing: border-box; padding-left:25px; background-position:8px 50%; background-repeat: no-repeat; background-size:12px 12px; }
 	
 	#p_header #p_headerLinks { float:right; }
 	#p_header #p_headerLinks li { float:left; width:75px; }
@@ -185,8 +185,8 @@
 	#p_body #p_nav #nav_schedule a .nav_icon { background-image:url(../images/icon_schedule@2x.png); }
 	#p_body #p_nav #nav_wiki a .nav_icon { background-image:url(../images/icon_wiki@2x.png); }
 	
-	#p_body #p_timeline .p_timelineNav h3.weekly { background:url(../images/timeline_weekly@2x.png) 0 50% no-repeat; }
-	#p_body #p_timeline .p_timelineNav h3.moment { background:url(../images/timeline_moment@2x.png) 0 50% no-repeat; }
+	#p_body #p_timeline .p_timelineNav h3.weekly { background-image:url(../images/timeline_weekly@2x.png); }
+	#p_body #p_timeline .p_timelineNav h3.moment { background-image:url(../images/timeline_moment@2x.png); }
 	
 	/* Timeline Icons */
 	#p_body #p_timeline .p_timelineContents .p_tAdd { background-image:url(../images/timeline_write@2x.png); }
@@ -247,5 +247,7 @@ screen and (max-width:78em) and
 screen and (max-width:67em) {
 	#p_body #p_nav { width:75px; }
 	#p_body #p_nav h2 { width:75px; padding:0; text-align:center; }
+    #p_body #p_nav ul li a { position:relative; }
+    #p_body #p_nav ul li a .nav_no { position:absolute; top:5px; right:150px; display:block; padding:0 5px; border-radius:40px; line-height:1.5; box-shadow:0 1px 3px rgba(0,0,0,0.7); }
 	#p_body #p_timeline { margin-left:75px; }
 }

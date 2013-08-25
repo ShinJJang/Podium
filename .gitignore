@@ -36,26 +36,4 @@ nosetests.xml
 
 .DS_Store
 
-.idea/.name
-
-.idea/dataSources.ids
-
-.idea/dataSources.xml
-
-.idea/encodings.xml
-
-.idea/misc.xml
-
-.idea/modules.xml
-
-.idea/other.xml
-
-.idea/scopes/scope_settings.xml
-
-.idea/testrunner.xml
-
-.idea/vcs.xml
-
-.idea/workspace.xml
-
-.idea/Podium.iml
+.idea/

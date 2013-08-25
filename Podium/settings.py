@@ -1,5 +1,4 @@
 # Django settings for Podium project.
-
 import os.path
 
 BASE_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -19,7 +18,7 @@ DATABASES = {
         'NAME': 'test',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'PASSWORD': '0000',
         'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
     }
@@ -107,12 +106,16 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+AUTHENTICATION_BACKENDS  = (
+    'Maple.backends.EmailAuthBackend',            # enable email login
+    #'django.contrib.auth.backends.ModelBackend', # enable username login
+)
+
 ROOT_URLCONF = 'Podium.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'Podium.wsgi.application'
 
-import os
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\','/'),)
 
 INSTALLED_APPS = (
@@ -128,7 +131,17 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django_jenkins',
     'Maple',
+    'tastypie',
+    'registration'
 )
+
+# registration required option
+ACCOUNT_ACTIVATION_DAYS = 7
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'makao.rule@gmail.com'
+EMAIL_HOST_PASSWORD = 'goomellowgle17'
+EMAIL_PORT = 587
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -173,3 +186,5 @@ JENKINS_TASKS = (
     #'django_jenkins.tasks.run_sloccount',
     #'django_jenkins.tasks.lettuce_tests',
 )
+
+AUTH_PROFILE_MODULE = 'Maple.UserProfile'

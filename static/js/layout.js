@@ -19,4 +19,5 @@ $(function(){
 		$(this).toggleClass("opened");
 		return false;
 	});
+
 });
