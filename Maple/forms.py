@@ -1,25 +1,18 @@
 from django import forms
 from django.db import models
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
 
 from .models import Post
 
-class UserRegisterForm(UserCreationForm):
-    username = forms.CharField(label="Your Username")
-    email = forms.EmailField(label="Email Address")
-    class Meta:
-        model = User
-        fields = ('username', 'email',)
+# do not use resgistration.views!
+from registration.backends.default.views import RegistrationView
+from registration.forms import RegistrationFormUniqueEmail
 
-    def save(self, commit=True):
-        user = super(UserRegisterForm, self).save(commit=False)
-        user.username = self.cleaned_data["username"]
-        user.email = self.cleaned_data["email"]
-        user.is_active = False
-        if commit:
-            user.save()
-        return  user
+class RegistrationForm(RegistrationFormUniqueEmail):
+    def clean_username(self):
+        return self.cleaned_data['username']
+
+class RegistrationViewUniqueEmail(RegistrationView):
+    form_class = RegistrationForm
 
 class PostForm(models.Model):
     post = forms.Textarea

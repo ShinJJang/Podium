@@ -1,19 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render_to_response, render
-from django.shortcuts import redirect
-from django.http import HttpResponseRedirect
-
-from django.template import Context, RequestContext
 from django.views.generic.edit import CreateView
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
 
 from .models import UserProfile, Post
-from .forms import UserRegisterForm, PostForm, PostWriteForm
+from .forms import PostForm, PostWriteForm
 from django.utils import timezone
-from django.core.mail import send_mail
-import hashlib
 
 class WritePost(CreateView):
     model = PostForm
