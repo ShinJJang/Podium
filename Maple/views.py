@@ -71,7 +71,7 @@ def invite_chat(request):
             return render_to_response('chat.html', ctx)
         except:
             chat_info = UserChats.objects.create(chat_to_user_key = chating_user, chat_from_user_key = user, chat_room_name = str(user.id) + "to" + str(chating_user.id))
-            chat_comments = ChatComments.objects.create(userChat_key = chat_info, chat_comment = "null")
+            chat_comments = ChatComments.objects.create(userChat_key = chat_info, chat_comment = "친구 초대")
             ctx = Context({
                         'user':user,
                         'chat_info':chat_info,
