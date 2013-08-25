@@ -4,16 +4,18 @@ from Maple import views
 from django.contrib import admin
 admin.autodiscover()
 from tastypie.api import Api
-from Maple.api import UserResource, UserProfileResource, PostResource
+from Maple.api import *
 from Maple.forms import RegistrationViewUniqueEmail
 
 v1_api = Api(api_name='v1')
 v1_api.register(UserResource())
 v1_api.register(UserProfileResource())
 v1_api.register(PostResource())
+v1_api.register(CommentResource())
+
 
 urlpatterns = patterns('',
-    url(r'^$', views.WritePost.as_view(), name='post_write'),
+    url(r'^$', views.home),
     (r'^api/', include(v1_api.urls)),
     url(r'accounts/register/$', RegistrationViewUniqueEmail.as_view(), name='registration_register'),
     (r'^accounts/',include('registration.backends.default.urls')),
