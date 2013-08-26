@@ -20,6 +20,6 @@ $(function(){
 		return false;
 	});
 
-    $("#p_messages").load('/chat');
+    $("#p_messages #p_chat").load('/chat');
 
 });

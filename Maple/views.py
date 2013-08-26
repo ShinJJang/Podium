@@ -11,7 +11,13 @@ from .models import  ChatNotis, ChatComments, UserChats
 
 @login_required
 def home(request):
-    return render(request, 'index.html')
+    session = Session.objects.get(session_key = request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id = user_id)
+    ctx = Context({
+        'user':user
+    })
+    return render(request,'index.html', ctx)
 
 @login_required
 def chat(request):
@@ -23,39 +29,42 @@ def chat(request):
 
 @login_required
 def invite_chat(request):
-    invite_people = request.GET.get("chating_user", "")
+    invite_people = request.GET.get("chatting_user", "")
     print "chating_user = " + invite_people
     session = Session.objects.get(session_key = request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)
-    chating_user = User.objects.get(id = invite_people)
+    chatting_user = User.objects.get(id = invite_people)
     ChatNotis.objects.create(noti_from_user_key = user, noti_to_user_key = chating_user)
 
     try: #이미 만들어져있는 채팅방이 있는지를 조회
-        chat_info = UserChats.objects.get(chat_to_user_key = user, chat_from_user_key = chating_user)
+        chat_info = UserChats.objects.get(chat_to_user_key = user, chat_from_user_key = chatting_user)
         chat_comments = ChatComments.objects.filter(userChat_key = chat_info)
         ctx = Context({
                         'user':user,
+                        'chatting_user':chatting_user,
                         'chat_info':chat_info,
                         'chat_comments':chat_comments
         })
         return render_to_response('chat.html', ctx)
     except:
         try:
-            chat_info = UserChats.objects.get(chat_to_user_key = chating_user, chat_from_user_key = user)
+            chat_info = UserChats.objects.get(chat_to_user_key = chatting_user, chat_from_user_key = user)
             chat_comments = ChatComments.objects.filter(userChat_key = chat_info)
             ctx = Context({
                         'chat_info':chat_info,
                         'user':user,
+                        'chatting_user':chatting_user,
                         'chat_comments':chat_comments
             })
             return render_to_response('chat.html', ctx)
         except:
-            chat_info = UserChats.objects.create(chat_to_user_key = chating_user, chat_from_user_key = user, chat_room_name = str(user.id) + "to" + str(chating_user.id))
+            chat_info = UserChats.objects.create(chat_to_user_key = chatting_user, chat_from_user_key = user, chat_room_name = str(user.id) + "to" + str(chatting_user.id))
             chat_comments = ChatComments.objects.create(userChat_key = chat_info, chat_comment = "친구 초대")
             ctx = Context({
                         'user':user,
                         'chat_info':chat_info,
+                        'chatting_user':chatting_user,
                         'chat_comments':chat_comments
             })
             return render_to_response('chat.html', ctx)
