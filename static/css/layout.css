@@ -47,13 +47,20 @@
 		#p_body #p_nav #nav_wiki a .nav_icon { background-image:url(../images/icon_wiki.png); }
 	
 	#p_body #p_messages { overflow:hidden; width:75px; height:100%; padding-top:55px; box-sizing:border-box; position:fixed; top:0; right:0; }
-		#p_body #p_messages > .p_container { width:88px; height:100%; box-sizing:border-box; padding:15px 0 0; }
+		#p_body #p_messages > .p_container { width:88px; height:100%; box-sizing:border-box; }
+        #p_body #p_messages #p_chat { padding:15px 0 0; }
 		
 		#p_body #p_messages h2 { width:75px; font-size:0.76em; text-transform:uppercase; color:#999999; font-weight:500; text-shadow: 0 -1px 0 rgba(0,0,0,0.33); text-align: center; margin-bottom:10px; }
 		
 		#p_body #p_messages ul.userList { width:45px; padding:0 15px; margin:0; margin-bottom:25px; }
 		#p_body #p_messages ul.userList li { margin-bottom:10px; }
 		#p_body #p_messages ul.userList li a { border:1px; display:block; width:43px; height:0px; padding-top:43px; border-radius:30px; border:1px #ccc solid; box-shadow:inset 0 2px 5px rgba(0,0,0,0.33); background-color:#ccc; overflow:hidden; }
+
+        #p_chatBoxContainer { position:fixed; bottom:0; right:85px; }
+        #p_chatBoxContainer .chatBox h2 { height:25px; font-weight:bold; padding:0 5px; color:#fff; line-height:25px; }
+        #p_chatBoxContainer .chatBox { width:200px; height:250px; background:#fff; border:1px solid; border-bottom:none; bottom:0; margin-left:10px; float:right; font-size:0.86em; box-shadow:0px 1px 2px #999; }
+        #p_chatBoxContainer .chatBox ul { height:190px; overflow-y:scroll; padding:5px; background:#f4f4f4; }
+        #p_chatBoxContainer .chatBox input { height:24px; border:none; border-top:1px #dadada solid; padding:0 5px; font-size:12px; margin:0; width:190px; }
 	
 	#p_body #p_timeline { margin-left:210px; margin-right:75px; background:#f0f0f0; min-height:100%; box-shadow:0 0 10px rgba(0,0,0,0.5) }
 	

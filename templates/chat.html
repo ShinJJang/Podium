@@ -1,10 +1,11 @@
-<ul id="chat_comments">
-    {% for comment in chat_comments %}
-        <li>{{ comment.chat_comment }}</li>
-    {% endfor %}
-</ul>
-    <input type="hidden" id="chat_room" value="{{ chat_info.chat_room_name }}" />
-    <input type="text" id="comment_entry" name="comment" />
-    <input type="hidden" id="user_id" value="{{ user.id }}" />
-    <input type="hidden" id="user_name" value="{{ user.username }}" />
-
+<div class="chatBox" id="chatBox_{{ chat_info.chat_room_name }}">
+    <h2>{{ chatting_user.username }}</h2>
+    <ul>
+        {% for comment in chat_comments %}
+            <li>{{ comment.chat_comment }}</li>
+        {% endfor %}
+    </ul>
+    <input type="text" class="comment_entry" />
+    <input type="hidden" class="user_id" value="{{ user.id }}" />
+    <input type="hidden" class="user_name" value="{{ user.username }}" />
+</div>

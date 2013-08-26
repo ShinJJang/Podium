@@ -58,11 +58,16 @@
             </nav>
             <aside id="p_messages">
                 <div class="p_container">
+                    <div id="p_chat">
+
+                    </div>
                 </div>
             </aside>
             {% include "timeline.html" %}
         </section>
         <div id="navTooltip"></div>
+
+        <div id="p_chatBoxContainer"></div>
 
         {% block scripts %}
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.10.2.min.js"></script>
