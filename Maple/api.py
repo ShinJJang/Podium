@@ -3,7 +3,7 @@
 from django.contrib.auth.models import User
 from .models import *
 from tastypie import fields
-from tastypie.resources import ModelResource
+from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization, Authorization
 
@@ -24,13 +24,18 @@ class UserProfileResource(ModelResource):
         authorization= Authorization()
 
 class PostResource(ModelResource):
-    user_key = fields.ToOneField(UserProfileResource, 'user_key', full=True)
+    user = fields.ToOneField(UserProfileResource, 'user_key', full=False)
 
     class Meta:
         queryset = Posts.objects.all()
         resource_name = 'post'
         include_resource_uri = False
         authorization= Authorization()
+        filtering = {
+            "user": ALL_WITH_RELATIONS,
+            "post": ALL,
+        }
+        always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
         userprofile = UserProfile.objects.get(user=bundle.request.user)
@@ -40,14 +45,18 @@ class PostResource(ModelResource):
         return bundle
 
 class CommentResource(ModelResource):
-    user_key = fields.ToOneField(UserProfileResource, 'user_key', full=False)
-    post_key = fields.ToOneField(PostResource, 'post_key', full=False)
+    user = fields.ForeignKey(UserProfileResource, 'user_key', full=False)
+    post = fields.ForeignKey(PostResource, 'post_key', full=False)
 
     class Meta:
         queryset = Comments.objects.all()
         resource_name = 'comment'
         include_resource_uri = False
         authorization= Authorization()
+        filtering = {
+            "user": ALL_WITH_RELATIONS,
+            "post": ALL_WITH_RELATIONS,
+        }
 
     def obj_create(self, bundle, **kwargs):
         user = User.objects.get(pk=bundle.request.user.id)
