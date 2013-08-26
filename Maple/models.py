@@ -74,13 +74,13 @@ class FriendshipNotis(models.Model):
     friend_noti_to_user_key = models.ForeignKey(UserProfile, related_name='request_to')
 
 class UserChats(models.Model):
-    chat_from_user_key = models.ForeignKey(User, related_name = 'UserChats_from_user') #chat_user
-    chat_to_user_key = models.ForeignKey(User, related_name = 'UserChats_to_user') #chat_with_user
+    chat_from_user_key = models.ForeignKey(User, related_name = 'UserChats_from_user')
+    chat_to_user_key = models.ForeignKey(User, related_name = 'UserChats_to_user')
     chat_room_name = models.CharField(max_length=255)
 
 class ChatNotis(models.Model):
-    noti_from_user_key = models.ForeignKey(User, related_name = 'ChatNoti_from_user')#from_user
-    noti_to_user_key = models.ForeignKey(User, related_name = 'ChatNoti_to_user')#to_user
+    noti_from_user_key = models.ForeignKey(User, related_name = 'ChatNoti_from_user')
+    noti_to_user_key = models.ForeignKey(User, related_name = 'ChatNoti_to_user')
 
 class ChatComments(models.Model):
     userChat_key = models.ForeignKey(UserChats)

@@ -41,7 +41,7 @@ class PostResource(ModelResource):
 
 class CommentResource(ModelResource):
     user_key = fields.ToOneField(UserProfileResource, 'user_key', full=False)
-    post_key = fields.ToOneField(PostResource, 'post_key', full=True)
+    post_key = fields.ToOneField(PostResource, 'post_key', full=False)
 
     class Meta:
         queryset = Comments.objects.all()
