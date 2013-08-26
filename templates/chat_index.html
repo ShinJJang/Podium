@@ -82,8 +82,9 @@
             if (event.keyCode != 13) return;
             var value = entry_el.val();
             var userId = $('#user_id');
+            var userName = $('#user_name');
             console.log(value);
-            var msg = {room_name: room, user_id: userId.val(), type: 'chat', message: entry_el.val()} //user 사진 작게
+            var msg = {room_name: room, user_id: userId.val(), type: 'chat', message: entry_el.val(), user_name: userName.val()} //user 사진 작게
             console.log(userId.val());
             if (msg) {
                 socket.emit('send_message', msg, function (data) {

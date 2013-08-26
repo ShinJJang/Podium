@@ -4,16 +4,18 @@ from Maple import views
 from django.contrib import admin
 admin.autodiscover()
 from tastypie.api import Api
-from Maple.api import UserResource, UserProfileResource, PostResource
+from Maple.api import *
 from Maple.forms import RegistrationViewUniqueEmail
 
 v1_api = Api(api_name='v1')
 v1_api.register(UserResource())
 v1_api.register(UserProfileResource())
 v1_api.register(PostResource())
+v1_api.register(CommentResource())
+
 
 urlpatterns = patterns('',
-    url(r'^$', views.WritePost.as_view(), name='post_write'),
+    url(r'^$', views.home),
     url(r'^invite_chat/$', 'Maple.views.invite_chat', name='invite_chat'),
     url(r'^invited_chat/$', 'Maple.views.invited_chat', name='invited_chat'),
     url(r'^chat_comment$', 'Maple.views.chat_comment', name='chat_comment'),

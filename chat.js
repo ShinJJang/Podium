@@ -47,7 +47,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('send_message', function (message) {
         //send message to client
         console.log("send_message event");
-        var data = (message.user_id + ": " + message.message);
+        var data = (message.user_name + ": " + message.message);
         socket.get(message.room_name, function (error, room) {
             console.log(data + "get event and emit message in room");
             io.sockets.in(message.room_name).emit('message', data);
@@ -57,7 +57,7 @@ io.sockets.on('connection', function (socket) {
         values = querystring.stringify({
             comment: message.message,
             user_id: message.user_id,
-            room_name: message.room_name
+            room_name: message.room_name,
         });
         var options = {
             host: 'localhost',

@@ -1,44 +1,17 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render_to_response, render
-from django.shortcuts import redirect
-from django.http import HttpResponse, HttpResponseServerError, HttpResponseRedirect
-
-from django.template import Context, RequestContext
-from django.views.generic.edit import CreateView
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+from django.shortcuts import redirect, render, render_to_response
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseServerError
+from django.template import Context
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 
-from .models import UserProfile, Post, ChatNoti, ChatComments, UserChats
-from .forms import PostForm, PostWriteForm
-from django.utils import timezone
+from .models import  ChatNoti, ChatComments, UserChats
 
 @login_required
 def home(request):
-    users = User.objects.select_related().all()[0:100]
-    return render_to_response('index.html', {'page_title': 'Podium'}, RequestContext(request))
-
-def chat(request):
-    users = User.objects.select_related().all()[0:100]
-    ctx = Context({
-                        'users':users
-        })
-    return render_to_response('chat_index.html', ctx)
-
-class WritePost(CreateView):
-    model = PostForm
-    form_class = PostWriteForm
-    success_url = '/'
-    template_name = 'index.html'
-
-    def form_valid(self, form):
-        user = self.request.user.id
-        instance = form.save(commit=False)
-        instance.created = timezone.now()
-        instance.user_key = UserProfile.objects.get(user_id=user)
-        return super(WritePost, self).form_valid(form)
+    return render(request, 'index.html')
 
 @login_required
 def invite_chat(request):
@@ -71,7 +44,7 @@ def invite_chat(request):
             return render_to_response('chat.html', ctx)
         except:
             chat_info = UserChats.objects.create(chat_to_user_key = chating_user, chat_from_user_key = user, chat_room_name = str(user.id) + "to" + str(chating_user.id))
-            chat_comments = ChatComments.objects.create(userChat_key = chat_info, chat_comment = "null")
+            chat_comments = ChatComments.objects.create(userChat_key = chat_info, chat_comment = "친구 초대")
             ctx = Context({
                         'user':user,
                         'chat_info':chat_info,
@@ -118,5 +91,3 @@ def chat_comment(request):
         return HttpResponse("Everything worked :)")
     except Exception, e:
         return HttpResponseServerError(str(e))
-
-#class UpdatePost(UpdateView):

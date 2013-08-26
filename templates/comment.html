@@ -1,0 +1,6 @@
+<form id="form_comment" method="post" action=".">{% csrf_token %}
+    <div class="p_commentForm">
+        <input name="post_key" type="hidden" value="2">
+        <span class="commentProfile"></span><input name="comment" type="text" class="commentFormText" placeholder="댓글을 입력하세요">
+    </div>
+</form>
