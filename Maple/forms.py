@@ -1,7 +1,7 @@
 from django import forms
 from django.db import models
 
-from .models import Post
+from .models import Posts
 
 # do not use resgistration.views!
 from registration.backends.default.views import RegistrationView
@@ -23,5 +23,5 @@ class PostForm(models.Model):
 
 class PostWriteForm(forms.ModelForm):
     class Meta:
-        model = Post
+        model = Posts
         fields = ['post']

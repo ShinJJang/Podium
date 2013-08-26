@@ -27,7 +27,7 @@ class PostResource(ModelResource):
     user_key = fields.ToOneField(UserProfileResource, 'user_key', full=True)
 
     class Meta:
-        queryset = Post.objects.all()
+        queryset = Posts.objects.all()
         resource_name = 'post'
         include_resource_uri = False
         authorization= Authorization()
@@ -35,7 +35,7 @@ class PostResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         userprofile = UserProfile.objects.get(user=bundle.request.user)
         post = bundle.data['post']
-        bundle.obj = Post(user_key=userprofile, post=post)
+        bundle.obj = Posts(user_key=userprofile, post=post)
         bundle.obj.save()
         return bundle
 
@@ -44,16 +44,16 @@ class CommentResource(ModelResource):
     post_key = fields.ToOneField(PostResource, 'post_key', full=True)
 
     class Meta:
-        queryset = Comment.objects.all()
+        queryset = Comments.objects.all()
         resource_name = 'comment'
         include_resource_uri = False
         authorization= Authorization()
 
     def obj_create(self, bundle, **kwargs):
         user = User.objects.get(pk=bundle.request.user.id)
-        post = Post.objects.get(pk=1)
+        post = Posts.objects.get(pk=1)
         comment = bundle.data['comment']
-        bundle.obj = Comment(user_key=user, post_key=post, comment=comment)
+        bundle.obj = Comments(user_key=user, post_key=post, comment=comment)
         bundle.obj.save()
         return bundle
 

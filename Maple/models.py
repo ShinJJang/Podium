@@ -16,18 +16,18 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 post_save.connect(create_user_profile, sender=User)
 
-class Post(models.Model):
+class Posts(models.Model):
     user_key = models.ForeignKey(UserProfile)
     post = models.CharField(max_length=4096)
     created = models.DateTimeField(auto_now=True)
 
-class Comment(models.Model):
+class Comments(models.Model):
     user_key = models.ForeignKey(User)
-    post_key = models.ForeignKey(Post)
+    post_key = models.ForeignKey(Posts)
     comment = models.CharField(max_length=1024)
     created = models.DateTimeField(auto_now=True)
 
-class Emotion(models.Model):
+class Emotions(models.Model):
     LIKE = 'E1'
     GOOD = 'E2'
     EMOTION_CHOICES = (
@@ -35,42 +35,52 @@ class Emotion(models.Model):
         (GOOD, 'good'),
     )
     user_key = models.ForeignKey(UserProfile)
-    post_key = models.ForeignKey(Post)
-    comment_key = models.ForeignKey(Comment)
     emotion = models.CharField(max_length=2, choices=EMOTION_CHOICES) # default = None?
 
-class Picture(models.Model):
+class PostEmotions(Emotions):
+    post_key = models.ForeignKey(Posts)
+
+class CommentEmotions(Emotions):
+    comment_key = models.ForeignKey(Comments)
+
+class UserPictures(models.Model):
     user_key = models.ForeignKey(UserProfile)
-    post_key = models.ForeignKey(Post)
     picture = models.FileField(upload_to = 'upload/%y/%m/%d')
     name = models.CharField(max_length=30,null=False)
     created = models.DateTimeField(auto_now=True)
 
-class File(models.Model):
+class PostPictures(models.Model):
     user_key = models.ForeignKey(UserProfile)
-    post_key = models.ForeignKey(Post)
+    post_key = models.ForeignKey(Posts)
+    picture = models.FileField(upload_to = 'upload/%y/%m/%d')
+    name = models.CharField(max_length=30,null=False)
+    created = models.DateTimeField(auto_now=True)
+
+class Files(models.Model):
+    user_key = models.ForeignKey(UserProfile)
+    post_key = models.ForeignKey(Posts)
     file = models.FileField(upload_to = 'upload/%y/%m/%d')
     name = models.CharField(max_length=30,null=False)
     created = models.DateTimeField(auto_now=True)
 
 # Relation with friend
 class Friendships(models.Model):
-    friend_from_user_key = models.ForeignKey(UserProfile, related_name='friend_from')
-    friend_to_user_key = models.ForeignKey(UserProfile, related_name='friend_to')
+    user_key = models.ForeignKey(UserProfile, related_name='my_key')
+    friend_user_key = models.ForeignKey(UserProfile, related_name='friend_key')
 
 # Relation sending friend request
-class PendingFriendships(models.Model):
-    request_from_user_key = models.ForeignKey(UserProfile, related_name='request_from')
-    request_to_user_key = models.ForeignKey(UserProfile, related_name='request_to')
+class FriendshipNotis(models.Model):
+    friend_noti_from_user_key = models.ForeignKey(UserProfile, related_name='request_from')
+    friend_noti_to_user_key = models.ForeignKey(UserProfile, related_name='request_to')
 
 class UserChats(models.Model):
-    chat_from_user_key = models.ForeignKey(User, related_name = 'UserChats_from_user')
-    chat_to_user_key = models.ForeignKey(User, related_name = 'UserChats_to_user')
+    chat_from_user_key = models.ForeignKey(User, related_name = 'UserChats_from_user') #chat_user
+    chat_to_user_key = models.ForeignKey(User, related_name = 'UserChats_to_user') #chat_with_user
     chat_room_name = models.CharField(max_length=255)
 
-class ChatNoti(models.Model):
-    noti_from_user_key = models.ForeignKey(User, related_name = 'ChatNoti_from_user')
-    noti_to_user_key = models.ForeignKey(User, related_name = 'ChatNoti_to_user')
+class ChatNotis(models.Model):
+    noti_from_user_key = models.ForeignKey(User, related_name = 'ChatNoti_from_user')#from_user
+    noti_to_user_key = models.ForeignKey(User, related_name = 'ChatNoti_to_user')#to_user
 
 class ChatComments(models.Model):
     userChat_key = models.ForeignKey(UserChats)
