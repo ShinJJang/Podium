@@ -28,6 +28,9 @@ body { background:#424b4a; }
 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .private { background-image: url(../images/color-mint/timeline_private.png); }
 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .project { background-image: url(../images/color-mint/timeline_project.png); }
 
+#p_chatBoxContainer .chatBox { border-color:#76bab2; }
+#p_chatBoxContainer .chatBox h2 { background:#76bab2; }
+
 /* Retina Display Support */
 
 @media 

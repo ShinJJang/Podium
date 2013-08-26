@@ -1,42 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Chat Main</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="http://localhost:4000/socket.io/socket.io.js"></script>
-</head>
-<body>
-<ul id="login_user_list">
-    {% for user in users %}
-        <li>{{ user.id }} {{ user.username }}</li>
+<h2>USERS</h2>
+<ul id="login_user_list" class="userList">
+    {% for user_in_list in users %}
+        <li><a class="openChat" id="open_chat{{ user_in_list.id }}" href="#">{{ user_in_list.username }}</a></li>
     {% endfor %}
 </ul>
-<div class="invite_friend">
-    <form id="invite_ajax" method="get" action="/invite_chat" onsubmit="form_submit(); return false">
-        <input type="text" id="friend_id" name="chating_user"/>
-        <input type="submit" value="채팅하기"/>
-    </form>
-</div>
-<div id="chat"></div>
-<script>
-    var form_submit = function (data) {
-        var dataString = $('#friend_id').val();
-        console.log(dataString);
-         $.ajax({
+
+<script src="http://localhost:4000/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+
+    $(".openChat").click(function(){
+        var dataString = $(this).attr("id").substring(9);
+        $.ajax({
             type: 'GET',
             url: '/invite_chat',
-            data: 'chating_user=' + dataString,
+            data: 'chatting_user=' + dataString,
             success: function (data) {
-                $('#chat').html(data);
-                console.log("ajax chat ");
-                b();
+                $('#p_chatBoxContainer').append($(data));
+                b($(data).attr("id"));
+
+                $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
             },
             error: function () {
                 console.error(arguments);
             }
         });
-    };
+    });
 
     var a = setInterval(function () {
         $.ajax({
@@ -44,8 +32,7 @@
             url: '/invited_chat',
             success: function (data) {
                 if (data != "0") {
-                    $('#chat').html(data);
-                    b();
+                    $('#p_chatBoxContainer').append($(data));
                 }
             },
             error: function (data) {
@@ -54,7 +41,7 @@
         });
     }, 5000);
 
-    var b = (function () {
+    var b = (function (roomid) {
         var socket = io.connect('localhost', {port: 4000});
         console.log("connect");
         socket.on('connect', function () {
@@ -62,28 +49,28 @@
         });
 
         console.log("socket on");
-        var room_info = $('#chat_room');
-        var room = room_info.val();
-        var entry_el = $('#comment_entry');
-        var userId = $('#user_id');
-        var userName = $('#user_name');
+        var entry_el = $("#" + roomid+' input.comment_entry');
+        var userId = $("#" + roomid+' input.user_id');
+        var userName = $("#" + roomid+' input.user_name');
+        var room = roomid.substring(8);
 
         var join_info = {room_name: room, user_id: userId.val(), username: userName.val()};
 
         socket.emit('join', join_info);
         socket.on('message', function (message) {
-            var data = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            console.log(data);
-            $('#chat_comments').append('<li>' + data + '</li>');
-            window.scrollBy(0, 10000000000);
+
+            var data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            console.log('roomid : '+ roomid);
+            $('#'+roomid+' ul').append('<li>' + data + '</li>');
+            $('#'+roomid+' ul').scrollTop(1000000000);
             entry_el.focus();
         });
 
         socket.on('user_out', function (message) {
-            var data = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            var data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             console.log(data);
-            $('#chat_comments').append('<li>' + data + '</li>');
-            window.scrollBy(0, 10000000000);
+            $('#'+roomid+' ul').append('<li>' + data + '</li>');
+            $('#'+roomid+' ul').scrollTop(1000000000);
             entry_el.focus();
         });
 
@@ -91,6 +78,7 @@
             if (event.keyCode != 13) return;
             var value = entry_el.val();
             console.log(value);
+            room = $(this).parent().attr("id").substring(8);
             var msg = {room_name: room, user_id: userId.val(), type: 'chat', message: entry_el.val(), user_name: userName.val()} //user 사진 작게
             console.log(userId.val());
             if (msg) {
@@ -102,5 +90,3 @@
         });
     });
 </script>
-</body>
-</html>
