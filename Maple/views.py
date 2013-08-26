@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 
-from .models import  ChatNoti, ChatComments, UserChats
+from .models import  ChatNotis, ChatComments, UserChats
 
 @login_required
 def home(request):
@@ -27,7 +27,7 @@ def invite_chat(request):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)
     chating_user = User.objects.get(id = invite_people)
-    ChatNoti.objects.create(noti_from_user_key = user, noti_to_user_key = chating_user)
+    ChatNotis.objects.create(noti_from_user_key = user, noti_to_user_key = chating_user)
 
     try: #이미 만들어져있는 채팅방이 있는지를 조회
         chat_info = UserChats.objects.get(chat_to_user_key = user, chat_from_user_key = chating_user)
@@ -66,7 +66,7 @@ def invited_chat(request):
     print "invited_chat event"
     try:
         print "try get chatnoti"
-        chat_noti = ChatNoti.objects.get(noti_to_user_key = user)
+        chat_noti = ChatNotis.objects.get(noti_to_user_key = user)
         print "chat_noti get"
         chating_user = chat_noti.noti_from_user_key
         print "chat_noti chating_user get"
