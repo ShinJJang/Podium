@@ -16,6 +16,10 @@ v1_api.register(CommentResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home),
+    url(r'^invite_chat/$', 'Maple.views.invite_chat', name='invite_chat'),
+    url(r'^invited_chat/$', 'Maple.views.invited_chat', name='invited_chat'),
+    url(r'^chat_comment$', 'Maple.views.chat_comment', name='chat_comment'),
+    url(r'^chat/$', 'Maple.views.chat', name='chat'),
     (r'^api/', include(v1_api.urls)),
     url(r'accounts/register/$', RegistrationViewUniqueEmail.as_view(), name='registration_register'),
     (r'^accounts/',include('registration.backends.default.urls')),

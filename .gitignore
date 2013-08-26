@@ -37,3 +37,6 @@ nosetests.xml
 .DS_Store
 
 .idea/
+
+# node module
+node_modules/
