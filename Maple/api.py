@@ -6,7 +6,6 @@ from tastypie import fields
 from tastypie.resources import ModelResource
 from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization, Authorization
-from tastypie.serializers import Serializer
 
 class UserResource(ModelResource):
     class Meta:
@@ -22,6 +21,7 @@ class UserProfileResource(ModelResource):
         queryset = UserProfile.objects.all()
         resource_name = 'userprofile'
         include_resource_uri = False
+        authorization= Authorization()
 
 class PostResource(ModelResource):
     user_key = fields.ToOneField(UserProfileResource, 'user_key', full=True)
@@ -30,12 +30,14 @@ class PostResource(ModelResource):
         queryset = Post.objects.all()
         resource_name = 'post'
         include_resource_uri = False
+        authorization= Authorization()
 
-    def obj_create(self, bundle, request, **kwargs):
-        post, comment = bundle.data['post'], bundle.data['comment']
-        bundle.obj = Comment(user_key=request.user, post_key=post, comment=comment)
+    def obj_create(self, bundle, **kwargs):
+        userprofile = UserProfile.objects.get(user=bundle.request.user)
+        post = bundle.data['post']
+        bundle.obj = Post(user_key=userprofile, post=post)
         bundle.obj.save()
-        return  bundle
+        return bundle
 
 class CommentResource(ModelResource):
     user_key = fields.ToOneField(UserProfileResource, 'user_key', full=False)
@@ -48,11 +50,11 @@ class CommentResource(ModelResource):
         authorization= Authorization()
 
     def obj_create(self, bundle, **kwargs):
-        user = User.objects.get(pk=1)
+        user = User.objects.get(pk=bundle.request.user.id)
         post = Post.objects.get(pk=1)
         comment = bundle.data['comment']
         bundle.obj = Comment(user_key=user, post_key=post, comment=comment)
         bundle.obj.save()
-        return  bundle
+        return bundle
 
 
