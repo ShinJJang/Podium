@@ -12,6 +12,8 @@ from .models import  ChatNotis, ChatComments, UserChats
 @login_required
 def home(request):
     return render(request, 'index.html')
+
+@login_required
 def chat(request):
     users = User.objects.select_related().all()[0:100]
     ctx = Context({
