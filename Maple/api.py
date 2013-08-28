@@ -65,3 +65,20 @@ class CommentResource(ModelResource):
         bundle.obj = Comments(user_key=user, post_key=post, comment=comment)
         bundle.obj.save()
         return bundle
+
+#class FriendshipNotisResource(ModelResource):
+
+#class FriendshipsResource(ModelResource):
+
+
+"""
+detail_uri_kwargs()
+get_object_list()
+obj_get_list()
+obj_get()
+obj_create()
+obj_update()
+obj_delete_list()
+obj_delete()
+rollback()
+"""
