@@ -24,7 +24,7 @@ class UserProfileResource(ModelResource):
         authorization= Authorization()
 
 class PostResource(ModelResource):
-    user = fields.ToOneField(UserProfileResource, 'user_key', full=False)
+    user = fields.ToOneField(UserProfileResource, 'user_key', full=True)
 
     class Meta:
         queryset = Posts.objects.all()
@@ -65,5 +65,3 @@ class CommentResource(ModelResource):
         bundle.obj = Comments(user_key=user, post_key=post, comment=comment)
         bundle.obj.save()
         return bundle
-
-
