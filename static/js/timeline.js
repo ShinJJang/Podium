@@ -33,9 +33,9 @@ $('#form_post').submit(function(event) {
         statusCode: {
             201: function(data) {
                 /*post로 생성 후 생성한 json response*/
-                console.log(data)
-                console.log(data.post);
-                console.log(data.user.user.last_login);
+                console.log("post submit response");
+                console.log(data);
+                $('#postPublic').tmpl(data).appendTo('#timeline');
             }
         }
     });

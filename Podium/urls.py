@@ -12,6 +12,7 @@ v1_api.register(UserResource())
 v1_api.register(UserProfileResource())
 v1_api.register(PostResource())
 v1_api.register(CommentResource())
+v1_api.register(FriendPostResource())
 
 
 urlpatterns = patterns('',

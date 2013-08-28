@@ -24,9 +24,9 @@ class Posts(models.Model):
 def create_friend_post(sender, instance, created, **kwargs):
     if created:
         write_user = instance.user_key
-        friends = UserProfile.objects.all()
-        for user_friend in friends:
-             posts, created = FriendPosts.objects.get_or_create(user_key=user_friend, friend_post_key=instance)
+        friendships = Friendships.objects.filter(user_key=write_user)
+        for friendship in friendships:
+             posts, created = FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
 
 post_save.connect(create_friend_post, sender=Posts)
 

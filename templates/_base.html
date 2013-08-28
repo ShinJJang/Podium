@@ -82,8 +82,10 @@
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.widget.min.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.menu.min.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.autocomplete.min.js"></script>
+            <script type="text/javascript" src="{{STATIC_URL}}js/jquery.tmpl.js"></script>
         {% endblock %}
         {% block add_scripts %}
+            {% include 'post_public.html' %}
             <script type="text/javascript" src="{{ STATIC_URL }}js/timeline.js"></script>
             <script type="text/javascript" src="{{ STATIC_URL }}js/search.js"></script>
         {% endblock %}
