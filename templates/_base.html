@@ -20,8 +20,8 @@
         <header id="p_header">
             <div class="p_container">
                 <h1>Podium</h1>
-                <div id="p_topSearch">
-                    <input id="p_topSearchForm" type="text" name="p_topSearch0Form" value="" placeholder="Search Everything in the Podium">
+                <div id="p_topSearch" class="disabled">
+                    <input id="p_topSearchForm" type="text" name="p_topSearchForm" value="" placeholder="Search Everything in the Podium">
                 </div>
                 <ul id="p_headerLinks">
                     <li><a id="toSetting" href="#">Settings</a></li>
@@ -34,26 +34,28 @@
                     <ul id="nav_userProfile">
                         <li id="nav_profile"><a href="#"><span class="nav_profile"></span><span class="nav_label">최태건</span></a></li>
                         <li id="nav_request"><a href="#"><span class="nav_icon"></span><span class="nav_label">Request</span><span class="nav_no">4</span></a></li>
-                        <li id="nav_notification"><a href="#"><span class="nav_icon"></span><span class="nav_label">Notification</span><span class="nav_no">56</span></a></li>
+                        <li id="nav_notification" class="disabled"><a href="#"><span class="nav_icon"></span><span class="nav_label">Notification</span><span class="nav_no">56</span></a></li>
                     </ul>
-                    <h2>Timeline</h2>
-                    <ul id="nav_timeline">
-                        <li id="nav_everything" class="selected"><a href="#"><span class="nav_icon"></span><span class="nav_label">Everything</span></a></li>
-                        <li id="nav_private"><a href="#"><span class="nav_icon"></span><span class="nav_label">Private</span></a></li>
-                        <li id="nav_project"><a href="#"><span class="nav_icon"></span><span class="nav_label">Project</span></a></li>
-                        <li id="nav_favorite"><a href="#"><span class="nav_icon"></span><span class="nav_label">Favorite</span></a></li>
-                    </ul>
-                    <h2>NETWORK</h2>
-                    <ul id="nav_network">
-                        <li id="nav_people"><a href="#"><span class="nav_icon"></span><span class="nav_label">People</span></a></li>
-                        <li id="nav_event"><a href="#"><span class="nav_icon"></span><span class="nav_label">Event</span></a></li>
-                    </ul>
-                    <h2>TOOLS</h2>
-                    <ul id="nav_tools">
-                        <li id="nav_codeshare"><a href="#"><span class="nav_icon"></span><span class="nav_label">Code Share</span></a></li>
-                        <li id="nav_schedule"><a href="#"><span class="nav_icon"></span><span class="nav_label">Schedule</span></a></li>
-                        <li id="nav_wiki"><a href="#"><span class="nav_icon"></span><span class="nav_label">SW_Wiki</span></a></li>
-                    </ul>
+                    <div class="disabled">
+                        <h2>Timeline</h2>
+                        <ul id="nav_timeline">
+                            <li id="nav_everything" class="selected"><a href="#"><span class="nav_icon"></span><span class="nav_label">Everything</span></a></li>
+                            <li id="nav_private"><a href="#"><span class="nav_icon"></span><span class="nav_label">Private</span></a></li>
+                            <li id="nav_project"><a href="#"><span class="nav_icon"></span><span class="nav_label">Project</span></a></li>
+                            <li id="nav_favorite"><a href="#"><span class="nav_icon"></span><span class="nav_label">Favorite</span></a></li>
+                        </ul>
+                        <h2>NETWORK</h2>
+                        <ul id="nav_network">
+                            <li id="nav_people"><a href="#"><span class="nav_icon"></span><span class="nav_label">People</span></a></li>
+                            <li id="nav_event"><a href="#"><span class="nav_icon"></span><span class="nav_label">Event</span></a></li>
+                        </ul>
+                        <h2>TOOLS</h2>
+                        <ul id="nav_tools">
+                            <li id="nav_codeshare"><a href="#"><span class="nav_icon"></span><span class="nav_label">Code Share</span></a></li>
+                            <li id="nav_schedule"><a href="#"><span class="nav_icon"></span><span class="nav_label">Schedule</span></a></li>
+                            <li id="nav_wiki"><a href="#"><span class="nav_icon"></span><span class="nav_label">SW_Wiki</span></a></li>
+                        </ul>
+                    </div>
                 </div>
             </nav>
             <aside id="p_messages">
@@ -75,15 +77,9 @@
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.jscrollpane.min.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.mousewheel.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/layout.js"></script>
-            <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.core.min.js"></script>
-            <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.widget.min.js"></script>
-            <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.position.min.js"></script>
-            <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.autocomplete.min.js"></script>
-            <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.menu.min.js"></script>
         {% endblock %}
         {% block add_scripts %}
             <script type="text/javascript" src="{{ STATIC_URL }}js/timeline.js"></script>
-            <script type="text/javascript" src="{{ STATIC_URL }}js/search.js"></script>
         {% endblock %}
     </body>
 </html>
