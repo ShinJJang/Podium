@@ -35,7 +35,7 @@ $('#form_post').submit(function(event) {
                 /*post로 생성 후 생성한 json response*/
                 console.log("post submit response");
                 console.log(data);
-                $('#postPublic').tmpl(data).appendTo('#timeline');
+                $('#postPublic').tmpl(data).prependTo('#timeline');
             }
         }
     });
@@ -43,23 +43,36 @@ $('#form_post').submit(function(event) {
     return false;
 });
 
-function timelineRefresh() {
+var _offset;
+
+function timelineRefresh(offset) {
+    get_uri = "/api/v1/post/"; // api inner parameter ?limit=20&offset=0"
+    if(offset){
+        get_uri += "?limit=20&offset=" + offset;
+    }
     $.ajax({
-        url: "/api/v1/post/", // api inner parameter ?limit=20&offset=0"
+        url: get_uri,
         type: "GET",
         dataType: "json",
-        timeout: 5000,
         complete:self,
         success: function(data) {
             console.log("polling");
             console.log(data)
+            if(data.objects.length != 0)
+            {
+                $('#postPublic').tmpl(data.objects.reverse()).prependTo('#timeline');
+                // need to save end offset
+                _offset = data.objects[0].id;
+                console.log(_offset);
+            }
         }
         });
 }
 
 /* post polling */
 $(document).ready(function() {
+  timelineRefresh();
   (function poll() {
-    setTimeout(function(){$.ajax({complete:poll()});timelineRefresh();}, 5000);
+    setTimeout(function(){$.ajax({complete:poll()});timelineRefresh(_offset);}, 5000);
   })();
 });
