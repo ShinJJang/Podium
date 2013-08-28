@@ -35,49 +35,31 @@ $('#form_post').submit(function(event) {
                 /*post로 생성 후 생성한 json response*/
                 console.log(data)
                 console.log(data.post);
-                console.log(data.user);
-
+                console.log(data.user.user.last_login);
             }
         }
     });
-    /*object 가져오는 방법*/
-    $.ajax({
-        url: '/api/v1/post/?user=2',
-        crossDomain: true,
-        type: 'GET',
-        dataType: 'json',
-
-        beforeSend: function() {
-        },
-
-        success: function(data, textStatus, jqXHR) {
-            console.log("dfdsfs");
-            console.log(data);
-            console.log(data.objects[2].created);
-        },
-
-        error: function(responseText) {
-            alert('Error: '+ responseText.toString());
-        }
-    });
+    timelineRefresh();
     return false;
 });
+
+function timelineRefresh() {
+    $.ajax({
+        url: "/api/v1/post/", // api inner parameter ?limit=20&offset=0"
+        type: "GET",
+        dataType: "json",
+        timeout: 5000,
+        complete:self,
+        success: function(data) {
+            console.log("polling");
+            console.log(data)
+        }
+        });
+}
+
 /* post polling */
 $(document).ready(function() {
   (function poll() {
-    setTimeout(function() {
-        $.ajax({
-            url: "/api/v1/post/", // api inner parameter ?limit=20&offset=0"
-            type: "GET",
-            success: function(data) {
-                console.log("polling");
-                console.log(data)
-            },
-            dataType: "json",
-            complete: poll,
-            timeout: 5000
-        })
-    }, 5000);
+    setTimeout(function(){$.ajax({complete:poll()});timelineRefresh();}, 5000);
   })();
 });
-

@@ -21,8 +21,17 @@ class Posts(models.Model):
     post = models.CharField(max_length=4096)
     created = models.DateTimeField(auto_now=True)
 
+def create_friend_post(sender, instance, created, **kwargs):
+    if created:
+        write_user = instance.user_key
+        friends = UserProfile.objects.all()
+        for user_friend in friends:
+             posts, created = FriendPosts.objects.get_or_create(user_key=user_friend, friend_post_key=instance)
+
+post_save.connect(create_friend_post, sender=Posts)
+
 class Comments(models.Model):
-    user_key = models.ForeignKey(User)
+    user_key = models.ForeignKey(UserProfile)
     post_key = models.ForeignKey(Posts)
     comment = models.CharField(max_length=1024)
     created = models.DateTimeField(auto_now=True)
@@ -86,8 +95,11 @@ class ChatComments(models.Model):
     userChat_key = models.ForeignKey(UserChats)
     chat_comment = models.CharField(max_length=255)
 
+class Notices(models.Model):
+    subject = models.CharField(max_length=40)
+    content = models.CharField(max_length=2000)
+    # need to add files
 
-
-
-
-
+class FriendPosts(models.Model):
+    user_key = models.ForeignKey(UserProfile, related_name='my_userprofile_key')
+    friend_post_key = models.ForeignKey(Posts, related_name='friend_post_key')

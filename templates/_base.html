@@ -21,7 +21,7 @@
             <div class="p_container">
                 <h1>Podium</h1>
                 <div id="p_topSearch">
-                    <input id="p_topSearchForm" type="text" name="p_topSearchForm" value="" placeholder="Search Everything in the Podium">
+                    <input id="p_topSearchForm" type="text" name="p_topSearch0Form" value="" placeholder="Search Everything in the Podium">
                 </div>
                 <ul id="p_headerLinks">
                     <li><a id="toSetting" href="#">Settings</a></li>
@@ -75,9 +75,15 @@
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.jscrollpane.min.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.mousewheel.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/layout.js"></script>
+            <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.core.min.js"></script>
+            <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.widget.min.js"></script>
+            <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.position.min.js"></script>
+            <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.autocomplete.min.js"></script>
+            <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.menu.min.js"></script>
         {% endblock %}
         {% block add_scripts %}
             <script type="text/javascript" src="{{ STATIC_URL }}js/timeline.js"></script>
+            <script type="text/javascript" src="{{ STATIC_URL }}js/search.js"></script>
         {% endblock %}
     </body>
 </html>
