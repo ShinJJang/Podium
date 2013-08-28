@@ -1150,3 +1150,21 @@
 {"level":"info","message":"lacidout","timestamp":"2013-08-28T03:48:08.391Z"}
 {"level":"info","message":"lacidjunout","timestamp":"2013-08-28T03:48:08.945Z"}
 {"level":"info","message":"lacidjunout","timestamp":"2013-08-28T03:48:08.952Z"}
+{"level":"info","message":"sessionId =dnelvroiksgy4o11b4hifsddvo5yz8e0 connect","timestamp":"2013-08-28T10:15:49.085Z"}
+{"room_name":"1to2","user_id":"1","username":"lacidjun","level":"info","message":"","timestamp":"2013-08-28T10:15:50.344Z"}
+{"level":"info","message":"socket.username = lacidjun","timestamp":"2013-08-28T10:15:50.345Z"}
+{"level":"info","message":"username = lacidjun user_id = 1 room_name = 1to2","timestamp":"2013-08-28T10:15:50.345Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-28T10:15:50.452Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-28T10:15:50.481Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-28T10:15:50.481Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-28T10:15:50.481Z"}
+{"level":"info","message":"lacidjun: 아이구from client message","timestamp":"2013-08-28T10:15:58.104Z"}
+{"level":"info","message":"send to django data : comment=%EC%95%84%EC%9D%B4%EA%B5%AC&user_id=1&room_name=1to2","timestamp":"2013-08-28T10:15:58.111Z"}
+{"level":"info","message":"lacidjun: 안녕하슈from client message","timestamp":"2013-08-28T10:16:00.525Z"}
+{"level":"info","message":"send to django data : comment=%EC%95%88%EB%85%95%ED%95%98%EC%8A%88&user_id=1&room_name=1to2","timestamp":"2013-08-28T10:16:00.536Z"}
+{"level":"info","message":"lacid: 예 안녕하슈from client message","timestamp":"2013-08-28T10:16:06.139Z"}
+{"level":"info","message":"send to django data : comment=%EC%98%88%20%EC%95%88%EB%85%95%ED%95%98%EC%8A%88&user_id=2&room_name=1to2","timestamp":"2013-08-28T10:16:06.148Z"}
+{"level":"info","message":"lacid: 갈겡퓨from client message","timestamp":"2013-08-28T10:16:29.650Z"}
+{"level":"info","message":"send to django data : comment=%EA%B0%88%EA%B2%A1%ED%93%A8&user_id=2&room_name=1to2","timestamp":"2013-08-28T10:16:29.658Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-28T10:16:32.346Z"}
+{"level":"info","message":"lacidjunout","timestamp":"2013-08-28T10:16:47.080Z"}

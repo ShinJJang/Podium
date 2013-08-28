@@ -1,7 +1,7 @@
 <h2>USERS</h2>
 <ul id="login_user_list" class="userList">
     {% for user_in_list in users %}
-        <li><a class="openChat" id="open_chat{{ user_in_list.id }}" href="#">{{ user_in_list.username }}</a></li>
+        <li><a class="openChat" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">{{ user_in_list.username }}</a></li>
     {% endfor %}
 </ul>
 
