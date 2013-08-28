@@ -27,6 +27,7 @@ var logger = new (winston.Logger)({
         })
     ]
 });
+
 winston.setLevels(winston.config.syslog.levels);
 logger.setLevels(winston.config.syslog.levels);
 
@@ -40,50 +41,61 @@ io.configure(function () {
         logger.error('socket connect error');
         return accept('error', false);
     });
-    io.set('log level', 1);
+    io.set('log level', 6);
 });
 
 var users = {};
-io.sockets.on('connection', function (socket) {
+
+io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 방 이름을 합쳐 유니크하게 만듬
     socket.on('join', function (data) {
         logger.info(data);
         if(data.user_id != null) {
             socket.username = data.username;
-		    socket.userId = data.user_id;
+		    socket.user_id = data.user_id + data.room_name;
             logger.info('socket.username = ' + socket.username);
             //socket.room_name = data.room_name;
-		    users[socket.username] = {
-			    userName : data.username,
-			    userId : data.user_id
+		    users[socket.user_id] = {
+			    user_name : data.username,
+			    user_id : socket.user_id
                 //room_name : data.room_name
 		    };
-            logger.info('username = ' + data.username + ' userId = ' + data.user_id + ' room_name = ' + data.room_name);
+            logger.info('username = ' + data.username + ' user_id = ' + data.user_id + ' room_name = ' + data.room_name);
             socket.join(data.room_name);
-            socket.set(data.user_id, data.room_name);
+            socket.set(socket.user_id, data.room_name);
+            //socket.join(data.user_id);
+            //socket.set(data.room_name, data.user_id);
         }
     });//this function is for socket room*/
 
     socket.on("disconnect", function() {
 		logger.info(socket.username + 'out');
-        socket.get(socket.room_name, function (error, room) {
+        socket.get(socket.user_id, function (error, room) {
             //logger.info(message.username + ': ' + message.message + 'send to node server');
-            io.sockets.in(socket.room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
+            //socket.broadcast.to(room).emit('user_out', socket.username + " 이 나갔습니다.!");
+            io.sockets.in(room).emit('user_out', socket.username + " 이 나갔습니다.!");
         });
         delete users[socket.username];
     });
     socket.on('send_message', function (message) {
         //send message to client
         var data = (message.user_name + ": " + message.message);
-        socket.get(message.room_name, function (error, room) {
-            logger.info(message.user_name + ': ' + message.message + 'from client message');
-            io.sockets.in(message.room_name).emit('message', data);
-        });
+        //socket.get(socket.user_id, function (error, room) {
+        logger.info(message.user_name + ': ' + message.message + 'from client message');
+        //socket.broadcast.to(message.room_name).emit('message', data); //자기를 제외한 방의 사람들에게 데이터 전송
+        io.sockets.in(message.room_name).emit('message', data);
+        //});
+        //socket.get(socket.user_id, function (error, room) {
+          //  socket.emit('my_message', data);
+        //});
+        //socket.get(socket.user_id).emit('my_message', data);
+
         //send message to django fo chat_comment db
         values = querystring.stringify({
             comment: message.message,
             user_id: message.user_id,
             room_name: message.room_name
         });
+
         var options = {
             host: 'localhost',
             port: 8000,
@@ -99,7 +111,7 @@ io.sockets.on('connection', function (socket) {
             res.setEncoding('utf8');
             res.on('data', function (message) {
                 if (message != 'Everything worked :)') {
-                    console.log('Message: ' + message);
+                    logger.log('Message: ' + message);
                 }
             });
         });
