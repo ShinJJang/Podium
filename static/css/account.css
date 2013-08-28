@@ -13,3 +13,14 @@ body { background:#424b4a; }
     #loginForm.error input[type="text"], #loginForm.error input[type="password"] { background:#f6d6d6 !important; border-color:#ee9999 !important; box-shadow:inset 0px 2px 5px #f6e3e3 !important; }
 
     #loginForm .errorMessage { position:absolute; top:244px; height:40px; width:340px; text-align:center; color:#fff; line-height:40px; border-radius:5px; background:#e15858 }
+
+
+#signupForm { width:640px; background:#fff; border-radius:10px; box-shadow:0px 1px 1px rgba(0,0,0,0.33); margin:30px auto; }
+
+    #signupForm .p_container { padding:30px; }
+
+    #signupForm #signupTitle { height:75px; padding-bottom:20px; border-bottom:3px #ddd solid; margin-bottom:20px; }
+
+    #signupForm h1 { width:310px; height:0px; padding-top:75px; margin:0 25px 0 60px; background-image:url(../images/login_logo.png); background-repeat:no-repeat; background-size:340px 75px; background-position:-20px 0; overflow:hidden; float:left; border-right:2px #eaeaea solid; clear:none; }
+
+    #signupForm h2 { font-size:1.72em; padding:10px 0; clear:none; line-height:60px; color:#888; font-weight:100; letter-spacing:-0.05em; }
