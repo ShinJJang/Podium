@@ -40,3 +40,6 @@ nosetests.xml
 
 # node module
 node_modules/
+
+# chat log
+tmp/
