@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 
-from .models import  ChatNoti, ChatComments, UserChats
+from .models import  ChatNotis, ChatComments, UserChats
 
 @login_required
 def home(request):
@@ -35,7 +35,12 @@ def invite_chat(request):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)
     chatting_user = User.objects.get(id = invite_people)
-    ChatNoti.objects.create(noti_from_user_key = user, noti_to_user_key = chatting_user)
+
+
+    try:
+        ChatNotis.objects.get(noti_from_user_key = user, noti_to_user_key = chatting_user) #같은 디비가 있으면 생성하지 않는다.get부터 먼저 하면 대겠다
+    except:
+        ChatNotis.objects.create(noti_from_user_key = user, noti_to_user_key = chatting_user) #같은 디비가 있으면 생성하지 않는다.get부터 먼저 하면 대겠다
 
     try: #이미 만들어져있는 채팅방이 있는지를 조회
         chat_info = UserChats.objects.get(chat_to_user_key = user, chat_from_user_key = chatting_user)
@@ -74,20 +79,23 @@ def invited_chat(request):
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)
-    print "invited_chat event"
+    print "invited_chat event  " + user.username + " invite!"
     try:
-        print "try get chatnoti"
-        chat_noti = ChatNoti.objects.get(noti_to_user_key = user)
-        print "chat_noti get"
-        chating_user = chat_noti.noti_from_user_key
-        print "chat_noti chating_user get"
+        chat_noti = ChatNotis.objects.get(noti_to_user_key = user)#수정
+        chatting_user = User.objects.get(id = chat_noti.noti_from_user_key.id)
+        chatting_user = chat_noti.noti_from_user_key
         chat_noti.delete()
-        print "chat_noti clear"
-        chat_info = UserChats.objects.get(chat_to_user_key = user, chat_from_user_key = chating_user)
+        print 'delete Chat Notis = ' + user.username
+        try:
+            chat_info = UserChats.objects.get(chat_to_user_key = user, chat_from_user_key = chatting_user)
+        except:
+            chat_info = UserChats.objects.get(chat_to_user_key = chatting_user, chat_from_user_key = user)
+
         chat_comments = ChatComments.objects.filter(userChat_key = chat_info)
         ctx = Context({
-                        'user':user,
-                        'chat_info':chat_info,
+                        'user': user,
+                        'chat_info': chat_info,
+                        'chatting_user': chatting_user,
                         'chat_comments':chat_comments
         })
         return render_to_response('chat.html', ctx)

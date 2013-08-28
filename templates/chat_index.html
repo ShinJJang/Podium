@@ -16,8 +16,7 @@
             data: 'chatting_user=' + dataString,
             success: function (data) {
                 $('#p_chatBoxContainer').append($(data));
-                b($(data).attr("id"));
-
+                socket_chat_connection($(data).attr("id"));
                 $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
             },
             error: function () {
@@ -26,13 +25,15 @@
         });
     });
 
-    var a = setInterval(function () {
+    var invited_chat = setInterval(function () {
         $.ajax({
             type: 'GET',
             url: '/invited_chat',
             success: function (data) {
                 if (data != "0") {
                     $('#p_chatBoxContainer').append($(data));
+                    socket_chat_connection($(data).attr("id"));
+                    $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
                 }
             },
             error: function (data) {
@@ -41,8 +42,8 @@
         });
     }, 5000);
 
-    var b = (function (roomid) {
-        var socket = io.connect('localhost', {port: 4000});
+    var socket_chat_connection = (function (roomid) {
+        var socket = io.connect('localhost', {port: 4000, 'force new connection': true});
         console.log("connect");
         socket.on('connect', function () {
             console.log("connect");
@@ -57,8 +58,16 @@
         var join_info = {room_name: room, user_id: userId.val(), username: userName.val()};
 
         socket.emit('join', join_info);
-        socket.on('message', function (message) {
 
+        socket.on('message', function (message) {
+            var data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            console.log('roomid : '+ roomid);
+            $('#'+roomid+' ul').append('<li>' + data + '</li>');
+            $('#'+roomid+' ul').scrollTop(1000000000);
+            entry_el.focus();
+        });
+
+        socket.on('my_message', function (message) {
             var data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             console.log('roomid : '+ roomid);
             $('#'+roomid+' ul').append('<li>' + data + '</li>');
