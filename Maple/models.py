@@ -103,3 +103,7 @@ class Notices(models.Model):
 class FriendPosts(models.Model):
     user_key = models.ForeignKey(UserProfile, related_name='my_userprofile_key')
     friend_post_key = models.ForeignKey(Posts, related_name='friend_post_key')
+
+class ChatTables(models.Model):
+    from_chatting_user = models.ForeignKey(User, related_name = 'from_ChatTable_user')
+    to_chatting_user = models.ForeignKey(User, related_name = 'to_ChatTable_user')
