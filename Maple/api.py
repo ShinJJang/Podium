@@ -95,13 +95,6 @@ class FriendshipsResource(ModelResource): #polling get or create
     class Meta:
         queryset = Friendships.objects.all()
         resource_name = 'friend'
-class FriendPostResource(ModelResource):
-    user = fields.ForeignKey(UserProfileResource, 'user_key', full=True)
-    post = fields.ForeignKey(PostResource, 'friend_post_key', full=True)
-
-    class Meta:
-        queryset = FriendPosts.objects.all()
-        resource_name = 'friendposts'
         include_resource_uri = False
         authorization= Authorization()
         filtering = {
@@ -115,6 +108,7 @@ class FriendPostResource(ModelResource):
         bundle.obj = Friendships(user_key = user, friend_user_key = friend_user)
         bundle.obj.save()
         return bundle
+    
 
 
 """
