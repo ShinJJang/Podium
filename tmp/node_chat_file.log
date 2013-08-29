@@ -2869,6 +2869,7 @@
 {"level":"info","message":"send to django data : comment=dsfawed&user_id=1&room_name=1to2","timestamp":"2013-08-29T19:46:33.110Z"}
 {"level":"info","message":"lacid: [qweasd] from client message","timestamp":"2013-08-29T19:46:35.455Z"}
 {"level":"info","message":"send to django data : comment=qweasd&user_id=2&room_name=1to2","timestamp":"2013-08-29T19:46:35.459Z"}
+<<<<<<< HEAD
 {"level":"info","message":"lacidjunout","timestamp":"2013-08-29T20:32:20.861Z"}
 {"level":"info","message":"lacidout","timestamp":"2013-08-29T20:32:22.306Z"}
 {"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T20:53:14.413Z"}
@@ -3101,3 +3102,23 @@
 {"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:18:46.869Z"}
 {"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:18:46.869Z"}
 {"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:18:46.869Z"}
+=======
+{"level":"info","message":"sessionId =j0atdw9wyyfz3wwg3uj8hz7b3ri7thnw connect","timestamp":"2013-08-29T20:19:25.984Z"}
+{"level":"info","message":"client id = lGYAobZ1S5oce5f1dcQD","timestamp":"2013-08-29T20:19:26.337Z"}
+{"room_name":"2to1","user_id":"2","username":"1번마","level":"info","message":"","timestamp":"2013-08-29T20:19:26.460Z"}
+{"level":"info","message":"socket.username = 1번마","timestamp":"2013-08-29T20:19:26.460Z"}
+{"level":"info","message":"username = 1번마 user_id = 2 room_name = 2to1","timestamp":"2013-08-29T20:19:26.461Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T20:19:26.461Z"}
+{"level":"info","message":"sessionId =2yegp5cxl78goudj8c6zs1fnyt56b9n8 connect","timestamp":"2013-08-29T20:19:28.495Z"}
+{"level":"info","message":"client id = 1IZ0_sviMzaEUuNbdcQE","timestamp":"2013-08-29T20:19:28.636Z"}
+{"room_name":"2to1","user_id":"1","username":"admin","level":"info","message":"","timestamp":"2013-08-29T20:19:28.645Z"}
+{"level":"info","message":"socket.username = admin","timestamp":"2013-08-29T20:19:28.646Z"}
+{"level":"info","message":"username = admin user_id = 1 room_name = 2to1","timestamp":"2013-08-29T20:19:28.646Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T20:19:28.646Z"}
+{"level":"info","message":"admin: [Hello] from client message","timestamp":"2013-08-29T20:19:38.217Z"}
+{"level":"info","message":"send to django data : comment=Hello&user_id=1&room_name=2to1","timestamp":"2013-08-29T20:19:38.364Z"}
+{"level":"info","message":"admin: [???] from client message","timestamp":"2013-08-29T20:20:18.121Z"}
+{"level":"info","message":"send to django data : comment=%3F%3F%3F&user_id=1&room_name=2to1","timestamp":"2013-08-29T20:20:18.123Z"}
+{"level":"info","message":"1번마out","timestamp":"2013-08-29T20:29:02.084Z"}
+{"level":"info","message":"adminout","timestamp":"2013-08-29T20:29:08.231Z"}
+>>>>>>> 14af442607ad096d63dfb4bc75addcfb9cb650cf

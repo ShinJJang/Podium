@@ -24,6 +24,15 @@ class UserProfileResource(ModelResource):
         include_resource_uri = False
         authorization= Authorization()
 
+class UserPictureResource(ModelResource):
+    user = fields.ForeignKey(UserProfileResource, 'user_key', full=False)
+
+    class Meta:
+        queryset = UserPictures.objects.all()
+        resource_name = 'userpictures'
+        include_resource_uri = False
+        authorization= Authorization()
+
 class PostResource(ModelResource):
     user = fields.ToOneField(UserProfileResource, 'user_key', full=True)
 

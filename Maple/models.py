@@ -53,7 +53,7 @@ class CommentEmotions(Emotions):
     comment_key = models.ForeignKey(Comments)
 
 class UserPictures(models.Model):
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     picture = models.FileField(upload_to = 'upload/%y/%m/%d')
     name = models.CharField(max_length=30,null=False)
     created = models.DateTimeField(auto_now=True)
