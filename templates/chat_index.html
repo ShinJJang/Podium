@@ -124,7 +124,6 @@
 
         socket.on('user_out', function (message) {
             var out_user_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            console.log(data);
             $('#' + roomid + ' ul').append('<li>' + out_user_data + '</li>');
             $('#' + roomid + ' ul').scrollTop(1000000000);
             entry_el.focus();

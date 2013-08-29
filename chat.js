@@ -58,23 +58,52 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
             //socket.room_name = data.room_name;
             users[socket.user_id] = {
                 user_name: data.username,
-                user_id: socket.user_id
-                //room_name : data.room_name
+                user_id: socket.user_id,
+                room_name : data.room_name
             };
             logger.info('username = ' + data.username + ' user_id = ' + data.user_id + ' room_name = ' + data.room_name);
             socket.join(data.room_name);
             socket.set(socket.user_id, data.room_name);
-            //socket.join(data.user_id);
-            //socket.set(data.room_name, data.user_id);
             logger.info('user in sockets :' + users);
         }
     });//this function is for socket room*/
 
     socket.on("disconnect", function () {
         logger.info(socket.username + 'out');
-        socket.get(socket.user_id, function (error, room) {
-            io.sockets.in(room).emit('user_out', socket.username + " 이 나갔습니다.!");
+        //socket.get(socket.user_id, function (error, room) {
+          //  io.sockets.in(room).emit('user_out', socket.username + " 이 나갔습니다.!");
+        //});
+        io.sockets.in(users[socket.user_id].room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
+
+        logger.info("disconnect user id = " + users[socket.user_id].user_id);
+        values = querystring.stringify({
+            user_id: users[socket.user_id].user_id,
+            room_name: users[socket.user_id].room_name,
+            type: 'DELETE'
         });
+
+        var options = {
+            host: 'localhost',
+            port: 8000,
+            path: '/chat_comment',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': values.length
+            }
+        };
+
+        var req = http.get(options, function (res) {
+            res.setEncoding('utf8');
+            res.on('data', function (message) {
+                if (message != 'Everything worked :)') {
+                    logger.log('Message: ' + message);
+                }
+            });
+        });
+        req.write(values);
+        logger.info('send to django data : ' + values);
+        req.end();
         delete users[socket.user_id];
     });
 
@@ -83,7 +112,6 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
     });
 
     socket.on('send_message', function (message) {
-        //send message to client
         var data = (message.user_name + ": " + message.message);
         //socket.get(socket.user_id, function (error, room) {
         logger.info(message.user_name + ': [' + message.message + '] from client message');
@@ -94,7 +122,8 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
         values = querystring.stringify({
             comment: message.message,
             user_id: message.user_id,
-            room_name: message.room_name
+            room_name: message.room_name,
+            type: 'POST'
         });
 
         var options = {

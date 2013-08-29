@@ -2869,3 +2869,235 @@
 {"level":"info","message":"send to django data : comment=dsfawed&user_id=1&room_name=1to2","timestamp":"2013-08-29T19:46:33.110Z"}
 {"level":"info","message":"lacid: [qweasd] from client message","timestamp":"2013-08-29T19:46:35.455Z"}
 {"level":"info","message":"send to django data : comment=qweasd&user_id=2&room_name=1to2","timestamp":"2013-08-29T19:46:35.459Z"}
+{"level":"info","message":"lacidjunout","timestamp":"2013-08-29T20:32:20.861Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T20:32:22.306Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T20:53:14.413Z"}
+{"level":"info","message":"client id = A7V53qYqKz9-9Lzh2a8L","timestamp":"2013-08-29T20:53:15.657Z"}
+{"room_name":"1to2","user_id":"1","username":"lacidjun","level":"info","message":"","timestamp":"2013-08-29T20:53:15.661Z"}
+{"level":"info","message":"socket.username = lacidjun","timestamp":"2013-08-29T20:53:15.661Z"}
+{"level":"info","message":"username = lacidjun user_id = 1 room_name = 1to2","timestamp":"2013-08-29T20:53:15.662Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T20:53:15.663Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T20:53:16.385Z"}
+{"level":"info","message":"client id = 8AOLck5mcY8Z6haK2a8M","timestamp":"2013-08-29T20:53:16.407Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T20:53:16.415Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T20:53:16.416Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T20:53:16.416Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T20:53:16.416Z"}
+{"level":"info","message":"lacidjun: [weasdf] from client message","timestamp":"2013-08-29T20:53:19.202Z"}
+{"level":"info","message":"send to django data : comment=weasdf&user_id=1&room_name=1to2&type=POST","timestamp":"2013-08-29T20:53:19.212Z"}
+{"level":"info","message":"lacid: [qweasd] from client message","timestamp":"2013-08-29T20:53:21.610Z"}
+{"level":"info","message":"send to django data : comment=qweasd&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T20:53:21.615Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T20:53:34.981Z"}
+{"level":"info","message":"client id = 4cHawtWAsy7i1aRO2a8N","timestamp":"2013-08-29T20:53:35.996Z"}
+{"room_name":"1to3","user_id":"1","username":"lacidjun","level":"info","message":"","timestamp":"2013-08-29T20:53:35.997Z"}
+{"level":"info","message":"socket.username = lacidjun","timestamp":"2013-08-29T20:53:35.999Z"}
+{"level":"info","message":"username = lacidjun user_id = 1 room_name = 1to3","timestamp":"2013-08-29T20:53:36.000Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T20:53:36.001Z"}
+{"level":"info","message":"lacid: [fawesd] from client message","timestamp":"2013-08-29T20:53:38.449Z"}
+{"level":"info","message":"send to django data : comment=fawesd&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T20:53:38.452Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T20:53:44.014Z"}
+{"level":"info","message":"send to django data : user_id=&room_name=&type=DELETE","timestamp":"2013-08-29T20:53:44.014Z"}
+{"level":"info","message":"lacidjun: [wefsed] from client message","timestamp":"2013-08-29T20:54:22.737Z"}
+{"level":"info","message":"send to django data : comment=wefsed&user_id=1&room_name=1to2&type=POST","timestamp":"2013-08-29T20:54:22.740Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T20:55:18.286Z"}
+{"level":"info","message":"client id = g5e0ru4f2EfgnCcZ2a8O","timestamp":"2013-08-29T20:55:18.307Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T20:55:18.315Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T20:55:18.315Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T20:55:18.315Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T20:55:18.315Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T20:55:48.148Z"}
+{"level":"info","message":"send to django data : user_id=&room_name=&type=DELETE","timestamp":"2013-08-29T20:55:48.150Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T20:58:03.439Z"}
+{"level":"info","message":"client id = uiSF9ELCGeftJliW2a8P","timestamp":"2013-08-29T20:58:03.463Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T20:58:03.471Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T20:58:03.471Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T20:58:03.471Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T20:58:03.471Z"}
+{"level":"info","message":"lacid: [asdf] from client message","timestamp":"2013-08-29T20:58:14.506Z"}
+{"level":"info","message":"send to django data : comment=asdf&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T20:58:14.510Z"}
+{"level":"info","message":"lacidjun: [dfwae] from client message","timestamp":"2013-08-29T20:58:21.585Z"}
+{"level":"info","message":"send to django data : comment=dfwae&user_id=1&room_name=1to2&type=POST","timestamp":"2013-08-29T20:58:21.588Z"}
+{"level":"info","message":"lacid: [adfsd] from client message","timestamp":"2013-08-29T20:58:34.125Z"}
+{"level":"info","message":"send to django data : comment=adfsd&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T20:58:34.126Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T20:58:36.096Z"}
+{"level":"info","message":"send to django data : user_id=&room_name=&type=DELETE","timestamp":"2013-08-29T20:58:36.099Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T21:00:17.975Z"}
+{"level":"info","message":"client id = gxDPwgT0EGcJvKVg4G2q","timestamp":"2013-08-29T21:00:19.255Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T21:00:28.660Z"}
+{"level":"info","message":"client id = m3lt4glx9Oc_p4r84G2r","timestamp":"2013-08-29T21:00:29.671Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-08-29T21:00:45.273Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T21:01:02.562Z"}
+{"level":"info","message":"client id = iILzkWoAhgNkhpQa4Pgq","timestamp":"2013-08-29T21:01:03.799Z"}
+{"room_name":"1to2","user_id":"1","username":"lacidjun","level":"info","message":"","timestamp":"2013-08-29T21:01:03.801Z"}
+{"level":"info","message":"socket.username = lacidjun","timestamp":"2013-08-29T21:01:03.801Z"}
+{"level":"info","message":"username = lacidjun user_id = 1 room_name = 1to2","timestamp":"2013-08-29T21:01:03.801Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:01:03.802Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T21:01:03.825Z"}
+{"level":"info","message":"client id = rt62vEkxtp39i-cp4Pgr","timestamp":"2013-08-29T21:01:03.848Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T21:01:03.856Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:01:03.857Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:01:03.857Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:01:03.857Z"}
+{"level":"info","message":"lacidjun: [weasdf] from client message","timestamp":"2013-08-29T21:01:07.033Z"}
+{"level":"info","message":"send to django data : comment=weasdf&user_id=1&room_name=1to2&type=POST","timestamp":"2013-08-29T21:01:07.044Z"}
+{"level":"info","message":"lacid: [asdfasdf] from client message","timestamp":"2013-08-29T21:01:09.214Z"}
+{"level":"info","message":"send to django data : comment=asdfasdf&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T21:01:09.216Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T21:01:19.606Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T21:02:26.458Z"}
+{"level":"info","message":"client id = mp6j0G3fxmLwCBal4llf","timestamp":"2013-08-29T21:02:27.739Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-08-29T21:02:36.745Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T21:02:54.105Z"}
+{"level":"info","message":"client id = YmkR05yfETdGXY9h4p6v","timestamp":"2013-08-29T21:02:55.355Z"}
+{"room_name":"1to2","user_id":"1","username":"lacidjun","level":"info","message":"","timestamp":"2013-08-29T21:02:55.362Z"}
+{"level":"info","message":"socket.username = lacidjun","timestamp":"2013-08-29T21:02:55.363Z"}
+{"level":"info","message":"username = lacidjun user_id = 1 room_name = 1to2","timestamp":"2013-08-29T21:02:55.364Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:02:55.366Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T21:02:55.557Z"}
+{"level":"info","message":"client id = 8XKmVmsnfpoNdaHc4p6w","timestamp":"2013-08-29T21:02:55.580Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T21:02:55.587Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:02:55.587Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:02:55.587Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:02:55.588Z"}
+{"level":"info","message":"lacidjun: [we] from client message","timestamp":"2013-08-29T21:02:56.833Z"}
+{"level":"info","message":"send to django data : comment=we&user_id=1&room_name=1to2&type=POST","timestamp":"2013-08-29T21:02:56.843Z"}
+{"level":"info","message":"lacid: [wefds] from client message","timestamp":"2013-08-29T21:02:58.517Z"}
+{"level":"info","message":"send to django data : comment=wefds&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T21:02:58.519Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T21:03:06.931Z"}
+{"level":"info","message":"disconnect user id = 21to2","timestamp":"2013-08-29T21:03:06.933Z"}
+{"level":"info","message":"send to django data : user_id=21to2&room_name=1to2&type=DELETE","timestamp":"2013-08-29T21:03:06.933Z"}
+{"level":"info","message":"lacidjunout","timestamp":"2013-08-29T21:06:11.049Z"}
+{"level":"info","message":"disconnect user id = 11to2","timestamp":"2013-08-29T21:06:11.049Z"}
+{"level":"info","message":"send to django data : user_id=11to2&room_name=1to2&type=DELETE","timestamp":"2013-08-29T21:06:11.050Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T21:07:16.832Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T21:07:17.719Z"}
+{"level":"info","message":"client id = M7BiYheKCOC0-MrO4p6y","timestamp":"2013-08-29T21:07:17.741Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T21:07:17.749Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:07:17.749Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:07:17.749Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:07:17.749Z"}
+{"level":"info","message":"client id = fevXmTk23nA6jr8a4p6x","timestamp":"2013-08-29T21:07:17.853Z"}
+{"room_name":"1to2","user_id":"1","username":"lacidjun","level":"info","message":"","timestamp":"2013-08-29T21:07:17.856Z"}
+{"level":"info","message":"socket.username = lacidjun","timestamp":"2013-08-29T21:07:17.858Z"}
+{"level":"info","message":"username = lacidjun user_id = 1 room_name = 1to2","timestamp":"2013-08-29T21:07:17.859Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:07:17.860Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T21:07:27.688Z"}
+{"level":"info","message":"disconnect user id = 21to2","timestamp":"2013-08-29T21:07:27.688Z"}
+{"level":"info","message":"send to django data : user_id=21to2&room_name=1to2&type=DELETE","timestamp":"2013-08-29T21:07:27.689Z"}
+{"level":"info","message":"lacidjunout","timestamp":"2013-08-29T21:08:43.794Z"}
+{"level":"info","message":"disconnect user id = 11to2","timestamp":"2013-08-29T21:08:43.794Z"}
+{"level":"info","message":"send to django data : user_id=11to2&room_name=1to2&type=DELETE","timestamp":"2013-08-29T21:08:43.795Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T21:08:52.702Z"}
+{"level":"info","message":"client id = SpYD33YC87UqU_dG4p6z","timestamp":"2013-08-29T21:08:53.730Z"}
+{"room_name":"1to2","user_id":"1","username":"lacidjun","level":"info","message":"","timestamp":"2013-08-29T21:08:53.733Z"}
+{"level":"info","message":"socket.username = lacidjun","timestamp":"2013-08-29T21:08:53.739Z"}
+{"level":"info","message":"username = lacidjun user_id = 1 room_name = 1to2","timestamp":"2013-08-29T21:08:53.741Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:08:53.743Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T21:08:54.927Z"}
+{"level":"info","message":"client id = YrZ-q9_JGXX1L08M4p60","timestamp":"2013-08-29T21:08:54.950Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T21:08:54.958Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:08:54.959Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:08:54.959Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:08:54.959Z"}
+{"level":"info","message":"lacid: [kjnb] from client message","timestamp":"2013-08-29T21:08:59.257Z"}
+{"level":"info","message":"send to django data : comment=kjnb&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T21:08:59.265Z"}
+{"level":"info","message":"lacidjun: [kuhbj] from client message","timestamp":"2013-08-29T21:09:02.423Z"}
+{"level":"info","message":"send to django data : comment=kuhbj&user_id=1&room_name=1to2&type=POST","timestamp":"2013-08-29T21:09:02.426Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T21:09:06.323Z"}
+{"level":"info","message":"disconnect user id = 21to2","timestamp":"2013-08-29T21:09:06.325Z"}
+{"level":"info","message":"send to django data : user_id=21to2&room_name=1to2&type=DELETE","timestamp":"2013-08-29T21:09:06.326Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T21:09:54.691Z"}
+{"level":"info","message":"client id = nkacmwNAggaoXA7r6TtF","timestamp":"2013-08-29T21:09:55.934Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-08-29T21:09:59.805Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T21:10:10.746Z"}
+{"level":"info","message":"client id = zjGuetJEgae5gUGr6VwE","timestamp":"2013-08-29T21:10:12.057Z"}
+{"room_name":"1to2","user_id":"1","username":"lacidjun","level":"info","message":"","timestamp":"2013-08-29T21:10:12.062Z"}
+{"level":"info","message":"socket.username = lacidjun","timestamp":"2013-08-29T21:10:12.063Z"}
+{"level":"info","message":"username = lacidjun user_id = 1 room_name = 1to2","timestamp":"2013-08-29T21:10:12.064Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:10:12.066Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T21:11:22.946Z"}
+{"level":"info","message":"client id = Qcxxbr5KaSXdZsAC6VwF","timestamp":"2013-08-29T21:11:22.968Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T21:11:22.976Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:11:22.977Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:11:22.977Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:11:22.978Z"}
+{"level":"info","message":"lacid: [asf] from client message","timestamp":"2013-08-29T21:11:25.427Z"}
+{"level":"info","message":"send to django data : comment=asf&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T21:11:25.438Z"}
+{"level":"info","message":"lacidjun: [asd] from client message","timestamp":"2013-08-29T21:11:26.872Z"}
+{"level":"info","message":"send to django data : comment=asd&user_id=1&room_name=1to2&type=POST","timestamp":"2013-08-29T21:11:26.875Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T21:11:28.800Z"}
+{"level":"info","message":"disconnect user id = 21to2","timestamp":"2013-08-29T21:11:28.801Z"}
+{"level":"info","message":"send to django data : user_id=21to2&room_name=1to2&type=DELETE","timestamp":"2013-08-29T21:11:28.802Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T21:12:25.418Z"}
+{"level":"info","message":"client id = pJPwsEGA5aLxcSVN6VwG","timestamp":"2013-08-29T21:12:25.440Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T21:12:25.448Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:12:25.448Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:12:25.449Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:12:25.449Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T21:12:26.863Z"}
+{"level":"info","message":"disconnect user id = 21to2","timestamp":"2013-08-29T21:12:26.864Z"}
+{"level":"info","message":"send to django data : user_id=21to2&room_name=1to2&type=DELETE","timestamp":"2013-08-29T21:12:26.865Z"}
+{"level":"info","message":"lacidjun: [asdasd] from client message","timestamp":"2013-08-29T21:12:53.320Z"}
+{"level":"info","message":"send to django data : comment=asdasd&user_id=1&room_name=1to2&type=POST","timestamp":"2013-08-29T21:12:53.322Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T21:12:58.416Z"}
+{"level":"info","message":"client id = FNIEqNdqMyHOztG76VwH","timestamp":"2013-08-29T21:12:58.438Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T21:12:58.446Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:12:58.446Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:12:58.447Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:12:58.447Z"}
+{"level":"info","message":"lacidjun: [qwasd] from client message","timestamp":"2013-08-29T21:13:01.598Z"}
+{"level":"info","message":"send to django data : comment=qwasd&user_id=1&room_name=1to2&type=POST","timestamp":"2013-08-29T21:13:01.601Z"}
+{"level":"info","message":"lacid: [asdqwe] from client message","timestamp":"2013-08-29T21:13:04.389Z"}
+{"level":"info","message":"send to django data : comment=asdqwe&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T21:13:04.392Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T21:15:31.520Z"}
+{"level":"info","message":"client id = 3fn11D6wr1m8lbZC7enk","timestamp":"2013-08-29T21:15:32.777Z"}
+{"room_name":"1to2","user_id":"1","username":"lacidjun","level":"info","message":"","timestamp":"2013-08-29T21:15:32.784Z"}
+{"level":"info","message":"socket.username = lacidjun","timestamp":"2013-08-29T21:15:32.786Z"}
+{"level":"info","message":"username = lacidjun user_id = 1 room_name = 1to2","timestamp":"2013-08-29T21:15:32.787Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:15:32.788Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T21:15:34.488Z"}
+{"level":"info","message":"client id = UM1mpH462dO4r3467enl","timestamp":"2013-08-29T21:15:34.511Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T21:15:34.519Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:15:34.519Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:15:34.520Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:15:34.520Z"}
+{"level":"info","message":"lacid: [adf] from client message","timestamp":"2013-08-29T21:15:37.724Z"}
+{"level":"info","message":"send to django data : comment=adf&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T21:15:37.735Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T21:15:39.201Z"}
+{"level":"info","message":"disconnect user id = 21to2","timestamp":"2013-08-29T21:15:39.203Z"}
+{"level":"info","message":"send to django data : user_id=21to2&room_name=1to2&type=DELETE","timestamp":"2013-08-29T21:15:39.204Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T21:17:14.118Z"}
+{"level":"info","message":"client id = yE2_BtEhfpsos79277IF","timestamp":"2013-08-29T21:17:14.370Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T21:17:14.377Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:17:14.378Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:17:14.378Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:17:14.379Z"}
+{"level":"info","message":"lacid: [sdfg] from client message","timestamp":"2013-08-29T21:17:17.588Z"}
+{"level":"info","message":"send to django data : comment=sdfg&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T21:17:17.598Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T21:17:33.581Z"}
+{"level":"info","message":"disconnect user id = 21to2","timestamp":"2013-08-29T21:17:33.581Z"}
+{"level":"info","message":"send to django data : user_id=21to2&room_name=1to2&type=DELETE","timestamp":"2013-08-29T21:17:33.583Z"}
+{"level":"info","message":"sessionId =d1fss0v1372xrwehy36gd9miyrbbetqr connect","timestamp":"2013-08-29T21:17:38.511Z"}
+{"level":"info","message":"client id = DKLCcFG_-shF-RXS77IG","timestamp":"2013-08-29T21:17:39.536Z"}
+{"room_name":"1to2","user_id":"1","username":"lacidjun","level":"info","message":"","timestamp":"2013-08-29T21:17:39.541Z"}
+{"level":"info","message":"socket.username = lacidjun","timestamp":"2013-08-29T21:17:39.542Z"}
+{"level":"info","message":"username = lacidjun user_id = 1 room_name = 1to2","timestamp":"2013-08-29T21:17:39.544Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:17:39.545Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T21:17:39.900Z"}
+{"level":"info","message":"client id = 4qQ8CuikLhBfifZu77IH","timestamp":"2013-08-29T21:17:39.923Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T21:17:39.931Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:17:39.931Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:17:39.931Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:17:39.931Z"}
+{"level":"info","message":"lacidjun: [awds] from client message","timestamp":"2013-08-29T21:17:42.666Z"}
+{"level":"info","message":"send to django data : comment=awds&user_id=1&room_name=1to2&type=POST","timestamp":"2013-08-29T21:17:42.668Z"}
+{"level":"info","message":"lacid: [asdqwas] from client message","timestamp":"2013-08-29T21:17:45.066Z"}
+{"level":"info","message":"send to django data : comment=asdqwas&user_id=2&room_name=1to2&type=POST","timestamp":"2013-08-29T21:17:45.068Z"}
+{"level":"info","message":"lacidout","timestamp":"2013-08-29T21:17:46.888Z"}
+{"level":"info","message":"disconnect user id = 21to2","timestamp":"2013-08-29T21:17:46.889Z"}
+{"level":"info","message":"send to django data : user_id=21to2&room_name=1to2&type=DELETE","timestamp":"2013-08-29T21:17:46.890Z"}
+{"level":"info","message":"sessionId =p9gjbbewq6wr27pidn5ps77135b99vtb connect","timestamp":"2013-08-29T21:18:46.837Z"}
+{"level":"info","message":"client id = O-HlvmnTO_UoKnST77II","timestamp":"2013-08-29T21:18:46.861Z"}
+{"room_name":"1to2","user_id":"2","username":"lacid","level":"info","message":"","timestamp":"2013-08-29T21:18:46.869Z"}
+{"level":"info","message":"socket.username = lacid","timestamp":"2013-08-29T21:18:46.869Z"}
+{"level":"info","message":"username = lacid user_id = 2 room_name = 1to2","timestamp":"2013-08-29T21:18:46.869Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-08-29T21:18:46.869Z"}
