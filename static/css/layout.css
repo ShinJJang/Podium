@@ -196,6 +196,11 @@
 	#p_body #p_timeline .p_timelineNav h3.moment { background-image:url(../images/timeline_moment@2x.png); }
 	
 	/* Timeline Icons */
+
+    #p_body #p_timeline .p_timelineContents .p_tUser { background-image:url(../images/user_profile@2x.jpg); }
+    #p_body #p_timeline .p_timelineContents .p_tWidget { background-image:url(../images/timeline_widget@2x.png); }
+    #p_body #p_timeline .p_timelineContents .p_tAdd { background-image:url(../images/timeline_write@2x.png); }
+
 	#p_body #p_timeline .p_timelineContents .p_tAdd { background-image:url(../images/timeline_write@2x.png); }
 	
 	#p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget h3 a { background-image:url(../images/timeline_edit@2x.png); } 

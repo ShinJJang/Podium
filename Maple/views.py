@@ -20,9 +20,13 @@ def home(request):
     return render(request,'index.html', ctx)
 
 @login_required
-def user(request):
+def people(request, people_id):
+    session = Session.objects.get(session_key = request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id = user_id)
     ctx = Context({
-        'user':user
+        'user':user,
+        'people_id':people_id
     })
     return render(request,'profile.html',ctx)
 

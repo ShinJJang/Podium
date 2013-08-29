@@ -13,10 +13,12 @@ v1_api.register(UserProfileResource())
 v1_api.register(PostResource())
 v1_api.register(CommentResource())
 v1_api.register(FriendPostResource())
+v1_api.register(UserPictureResource())
 
 
 urlpatterns = patterns('',
     url(r'^$', views.home),
+    url(r'^people/(?P<people_id>\d+)/$', 'Maple.views.people', name='people'),
     url(r'^invite_chat/$', 'Maple.views.invite_chat', name='invite_chat'),
     url(r'^invited_chat/$', 'Maple.views.invited_chat', name='invited_chat'),
     url(r'^chat_comment$', 'Maple.views.chat_comment', name='chat_comment'),

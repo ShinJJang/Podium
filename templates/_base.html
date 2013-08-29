@@ -20,7 +20,7 @@
         <header id="p_header">
             <div class="p_container">
                 <h1>Podium</h1>
-                <div id="p_topSearch" class="disabled">
+                <div id="p_topSearch">
                     <input id="p_topSearchForm" type="text" name="p_topSearchForm" value="" placeholder="Search Everything in the Podium">
                 </div>
                 <ul id="p_headerLinks">
@@ -65,7 +65,8 @@
                     </div>
                 </div>
             </aside>
-            {% include "timeline.html" %}
+            {% block content %}
+            {% endblock %}
         </section>
         <div id="navTooltip"></div>
 
