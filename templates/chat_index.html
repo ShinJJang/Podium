@@ -1,13 +1,28 @@
 <h2>CHATTING USERS</h2>
 <ul id="login_user_list" class="userList">
     {% for user_in_list in users %}
-        <li><a class="openChat" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}"
-               href="#">{{ user_in_list.username }}</a></li>
+        {% if user_in_list.id != user.id %}
+            <li>
+                <a class="openChat" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">
+                    {% with user_in_list.userpictures_set.all|first as userpicture %}
+                        {% if userpicture %}
+                            <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="chatPicture" />
+                        {% else %}
+                            <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" />
+                        {% endif %}
+                    {% endwith %}
+                    <span class="username">{{ user_in_list.username }}</span>
+                </a>
+            </li>
+        {% endif %}
     {% endfor %}
 </ul>
 
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
 <script type="text/javascript">
+    $(function(){
+
+    });
 
     $(".openChat").click(function () {
         var dataString = $(this).attr("id").substring(9);

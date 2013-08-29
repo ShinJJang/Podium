@@ -1,8 +1,7 @@
 $(function(){
 	$("input, textarea").placeholder();
 	
-    $('#p_nav > .p_container').jScrollPane({horizontalGutter:5,verticalGutter:5,'showArrows': false,autoReinitialise: true, mouseWheelSpeed:30});
-    $('#p_messages > .p_container').jScrollPane({horizontalGutter:5,verticalGutter:5,'showArrows': false,autoReinitialise: true, mouseWheelSpeed:30});
+    $('#p_messages > .p_container').jScrollPane({horizontalGutter:5,verticalGutter:5,'showArrows': false,autoReinitialise: true, mouseWheelSpeed:30}).css("overflow","inherit");
     
     
     $('.jspDrag').hide();
