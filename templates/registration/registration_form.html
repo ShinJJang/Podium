@@ -1,6 +1,25 @@
-<section>
-    <form method="post" action=".">{% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="가입하기"/>
-    </form>
-</section>
+{% extends "registration/_account.html" %}
+{% block formContents %}
+    <section>
+        <div id="signupForm">
+            <div class="p_container">
+                <header id="signupTitle">
+                    <hgroup>
+                        <h1>Podium for SW_Maestro</h1>
+                        <h2>회원가입</h2>
+                    </hgroup>
+                </header>
+                <h3>약관</h3>
+                <h4>이용약관</h4>
+                <div class="private"></div>
+                {% include "registration/" %}
+                <h4>개인정보 보호</h4>
+                <h3>필수 정보 입력</h3>
+                <form method="post" action=".">{% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="가입하기"/>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}

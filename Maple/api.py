@@ -1,4 +1,4 @@
-# RESTful API controller
+ # RESTful API controller
 # tastypie framework using
 from django.contrib.auth.models import User
 from .models import *
@@ -69,17 +69,58 @@ class CommentResource(ModelResource):
         bundle.obj.save()
         return bundle
 
-class FriendPostResource(ModelResource):
-    user = fields.ForeignKey(UserProfileResource, 'user_key', full=True)
-    post = fields.ForeignKey(PostResource, 'friend_post_key', full=True)
+class FriendshipNotisResource(ModelResource): #create
+    noti_from_user = fields.ForeignKey(UserResource, 'friend_noti_from_user_key', full=False)
+    noti_to_user = fields.ForeignKey(UserResource, 'friend_noti_to_user_key', full=False)
 
     class Meta:
-        queryset = FriendPosts.objects.all()
-        resource_name = 'friendposts'
+        queryset = FriendshipNotis.objects.all()
+        resource_name = 'friend_noti'
+        include_resource_uri = False
+        authorization= Authorization()
+        filtering = {
+            "noti_from_user": ALL_WITH_RELATIONS,
+            "noti_to_user": ALL_WITH_RELATIONS,
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        noti_from_user = User.objects.get(pk = bundle.request.user.id)
+        noti_to_user = User.objects.get(pk = bundel.request.friend.id)
+        bundle.obj = FriendshipNotis(friend_noti_from_user_key = noti_from_user, friend_noti_to_user_key = noti_to_user)
+        bundle.obj.save()
+        return bundle
+
+class FriendshipsResource(ModelResource): #polling get or create
+    user = fields.ForeignKey(UserProfileResource, 'user_key', full=False)
+    friend_user = fields.ForeignKey(UserProfileResource, 'friend_user_key', full=False)
+
+    class Meta:
+        queryset = Friendships.objects.all()
+        resource_name = 'friend'
         include_resource_uri = False
         authorization= Authorization()
         filtering = {
             "user": ALL_WITH_RELATIONS,
-            "post": ALL_WITH_RELATIONS,
+            "friend_user": ALL_WITH_RELATIONS,
         }
-        paginator_class = EstimatedCountPaginator
+
+    def obj_create(self, bundle, **kwargs):
+        user = User.objects.get(pk = bundle.request.user.id)
+        friend_user = User.objects.get(pk = bundle.request.friend.id)
+        bundle.obj = Friendships(user_key = user, friend_user_key = friend_user)
+        bundle.obj.save()
+        return bundle
+    
+
+
+"""
+detail_uri_kwargs()
+get_object_list()
+obj_get_list()
+obj_get()
+obj_create()
+obj_update()
+obj_delete_list()
+obj_delete()
+rollback()
+"""

@@ -41,7 +41,7 @@ io.configure(function () {
         logger.error('socket connect error');
         return accept('error', false);
     });
-    io.set('log level', 6);
+    io.set('log level', 1);
 });
 
 var users = {};
@@ -64,17 +64,17 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
             socket.set(socket.user_id, data.room_name);
             //socket.join(data.user_id);
             //socket.set(data.room_name, data.user_id);
+            logger.info('user in sockets :' + users);
         }
     });//this function is for socket room*/
 
     socket.on("disconnect", function() {
 		logger.info(socket.username + 'out');
         socket.get(socket.user_id, function (error, room) {
-            //logger.info(message.username + ': ' + message.message + 'send to node server');
-            //socket.broadcast.to(room).emit('user_out', socket.username + " 이 나갔습니다.!");
             io.sockets.in(room).emit('user_out', socket.username + " 이 나갔습니다.!");
         });
-        delete users[socket.username];
+        delete users[socket.user_id];
+        logger.info('현재 소켓에 연결되어 있는 사용자 :' + users);
     });
     socket.on('send_message', function (message) {
         //send message to client
@@ -83,11 +83,6 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
         logger.info(message.user_name + ': ' + message.message + 'from client message');
         //socket.broadcast.to(message.room_name).emit('message', data); //자기를 제외한 방의 사람들에게 데이터 전송
         io.sockets.in(message.room_name).emit('message', data);
-        //});
-        //socket.get(socket.user_id, function (error, room) {
-          //  socket.emit('my_message', data);
-        //});
-        //socket.get(socket.user_id).emit('my_message', data);
 
         //send message to django fo chat_comment db
         values = querystring.stringify({
