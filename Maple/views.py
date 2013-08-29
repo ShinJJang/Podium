@@ -36,7 +36,6 @@ def invite_chat(request):
     user = User.objects.get(id = user_id)
     chatting_user = User.objects.get(id = invite_people)
 
-
     try:
         ChatNotis.objects.get(noti_from_user_key = user, noti_to_user_key = chatting_user) #같은 디비가 있으면 생성하지 않는다.get부터 먼저 하면 대겠다
     except:

@@ -108,7 +108,7 @@ class FriendshipsResource(ModelResource): #polling get or create
         bundle.obj = Friendships(user_key = user, friend_user_key = friend_user)
         bundle.obj.save()
         return bundle
-    
+
 
 
 """
