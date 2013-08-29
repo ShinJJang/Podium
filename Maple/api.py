@@ -46,7 +46,7 @@ class PostResource(ModelResource):
         return bundle
 
 class CommentResource(ModelResource):
-    user = fields.ForeignKey(UserProfileResource, 'user_key', full=False)
+    user = fields.ForeignKey(UserProfileResource, 'user_key', full=True)
     post = fields.ForeignKey(PostResource, 'post_key', full=False)
 
     class Meta:
@@ -58,10 +58,12 @@ class CommentResource(ModelResource):
             "user": ALL_WITH_RELATIONS,
             "post": ALL_WITH_RELATIONS,
         }
+        always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
-        user = User.objects.get(pk=bundle.request.user.id)
-        post = Posts.objects.get(pk=1)
+        user = UserProfile.objects.get(user=bundle.request.user)
+        post_key = bundle.data['post_key']
+        post = Posts.objects.get(pk=post_key)
         comment = bundle.data['comment']
         bundle.obj = Comments(user_key=user, post_key=post, comment=comment)
         bundle.obj.save()
