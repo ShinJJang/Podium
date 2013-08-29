@@ -14,6 +14,7 @@ v1_api.register(PostResource())
 v1_api.register(CommentResource())
 v1_api.register(FriendshipNotisResource())
 v1_api.register(FriendshipsResource())
+v1_api.register(FriendPostResource())
 
 
 urlpatterns = patterns('',

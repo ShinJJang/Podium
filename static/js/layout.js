@@ -184,6 +184,9 @@ var w_getWeather = function (code) {
                     weatherType="알 수 없음";
             }
             $("#weatherBox .weather").addClass("weather-"+data.query.results.channel.item.condition.code).html("<strong>"+weatherType+"</strong> "+data.query.results.channel.item.condition.temp+"℃ ("+data.query.results.channel.item.forecast[0].low+"℃ ~ "+data.query.results.channel.item.forecast[0].high+"℃)").css("background-position","0 -"+parseInt(data.query.results.channel.item.condition.code)*30+"px");
+            var today = new Date();
+            var day = new Array("일","월","화","수","목","금","토");
+            $("#weatherBox h2").html(today.getFullYear() + "년 " + (today.getMonth()+1)+"월 " + today.getDate()+"일 (" + day[today.getDay()] + ")" );
         },
         error: function(xhr, textStatus, errorThrown) {
             console.error(textStatus)

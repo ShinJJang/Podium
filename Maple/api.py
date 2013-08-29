@@ -6,6 +6,7 @@ from tastypie import fields
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization, Authorization
+from .paginator import EstimatedCountPaginator
 
 class UserResource(ModelResource):
     class Meta:
@@ -94,6 +95,13 @@ class FriendshipsResource(ModelResource): #polling get or create
     class Meta:
         queryset = Friendships.objects.all()
         resource_name = 'friend'
+class FriendPostResource(ModelResource):
+    user = fields.ForeignKey(UserProfileResource, 'user_key', full=True)
+    post = fields.ForeignKey(PostResource, 'friend_post_key', full=True)
+
+    class Meta:
+        queryset = FriendPosts.objects.all()
+        resource_name = 'friendposts'
         include_resource_uri = False
         authorization= Authorization()
         filtering = {

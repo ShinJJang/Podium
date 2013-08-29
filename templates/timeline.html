@@ -15,7 +15,7 @@
                                     <li class="wEvent disabled"><a href="#">Event</a></li>
                                 </ul>
                                 <section>
-                                    <form id="form_post" method="post" action=".">{% csrf_token %}
+                                    <form id="form_post" method="post" action="">{% csrf_token %}
                                         <input type="text" name="post">
                                         <input type="submit" value="작성">
                                     </form>
@@ -27,7 +27,7 @@
                             <div class="p_tBox">
                                 <section class="p_tWidget cboth">
                                     <div id="weatherBox" class="cboth">
-                                        <h2>2013년 8월 14일 (수)</h2>
+                                        <h2></h2>
                                         <p class="weather"></p>
                                     </div>
                                     <div class="disabled widgetBox widget_wide cboth">
@@ -98,9 +98,7 @@
                                 </section>
                             </div>
                         </div>
-                        <div id="timeline">
-                            {% include "post_public.html" %}
-                        </div>
+                        <div id="timeline"></div>
                         <div class="p_tItem p_container private">
                             <a href="#" class="p_tUser p_tIcon"></a>
                             <div class="p_tBox">
