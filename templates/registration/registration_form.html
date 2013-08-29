@@ -9,17 +9,29 @@
                         <h2>회원가입</h2>
                     </hgroup>
                 </header>
-                <h3>약관</h3>
-                <h4>이용약관</h4>
-                <div class="private"></div>
-                {% include "registration/" %}
-                <h4>개인정보 보호</h4>
-                <h3>필수 정보 입력</h3>
+                <h3 class="formTitle">약관</h3>
+                <h4 class="formTitle">이용약관</h4>
+                <div class="agreementForm">
+                    {% include "registration/eula.html" %}
+                </div>
+                <p class="agreementCheckbox"><input type="checkbox" name="agree_eula" id="agree_eula"><label for="agree_eula">이용약관에 동의합니다.</label></p>
+                <h4 class="formTitle">개인정보 보호정책</h4>
+                <div class="agreementForm">
+                    {% include "registration/privacy.html" %}
+                </div>
+                <p class="agreementCheckbox"><input type="checkbox" name="agree_privacy" id="agree_privacy"><label for="agree_privacy">개인정보 보호정책에 동의합니다.</label></p>
+                <h3 class="formTitle">필수 정보 입력</h3>
                 <form method="post" action=".">{% csrf_token %}
-                    {{ form.as_p }}
+                    <ul id="signupField">
+                        {{ form.as_ul }}
+                    </ul>
                     <input type="submit" value="가입하기"/>
                 </form>
             </div>
         </div>
     </section>
+{% endblock %}
+{% block add_scripts %}
+    <script type="text/javascript">
+    </script>
 {% endblock %}
