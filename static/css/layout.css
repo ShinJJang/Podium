@@ -60,10 +60,10 @@
         #p_body #p_messages ul.userList li a { display:block; width:43px; height:43px; border-radius:30px; border:1px #ccc solid; box-shadow:inset 0 2px 5px rgba(0,0,0,0.33); position:relative; }
         #p_body #p_messages ul.userList li a .chatPicture { width:43px; height:43px; border-radius:30px; z-index:-1; position:relative; }
 
-        #p_body #p_messages ul.userList li a .username { position:absolute; display:none; }
-        #p_body #p_messages ul.userList li a:hover .username { display:block; top:10px; right:70px; border-radius:3px; background:rgba(0,0,0,0.7); border:1px #333 solid; width:auto; padding:0 10px; text-shadow:none; color:#fff; text-align: right; white-space: nowrap; text-shadow:0 1px 0 #000; line-height:23px; }
+        #p_body #p_messages ul.userList li a .username { position:absolute; display:none; z-index:30; }
+        #p_body #p_messages ul.userList li a:hover .username { display:block; top:10px; right:70px; border-radius:3px; background:rgba(0,0,0,0.7); border:1px #333 solid; width:auto; padding:0 10px; color:#fff; text-align: right; white-space: nowrap; text-shadow:0 1px 0 #000; line-height:23px; }
 
-        #p_chatBoxContainer { position:fixed; bottom:0; right:85px; }
+        #p_chatBoxContainer { z-index:50;position:fixed; bottom:0; right:85px; }
         #p_chatBoxContainer .chatBox h2 { height:25px; font-weight:bold; padding:0 5px; color:#fff; line-height:25px; }
         #p_chatBoxContainer .chatBox { width:200px; height:250px; background:#fff; border:1px solid; border-bottom:none; bottom:0; margin-left:10px; float:right; font-size:0.86em; box-shadow:0px 1px 2px #999; }
         #p_chatBoxContainer .chatBox ul { height:190px; overflow-y:scroll; padding:5px; background:#f4f4f4; }
@@ -144,7 +144,7 @@
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget .widget_narrow_left { float:left; width:280px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget .widget_narrow_right { float:right; width:280px; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table { width:100%; border-spacing: none; border-collapse: collapse; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table { width:100%; border-spacing: 0; border-collapse: collapse; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table td, #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table th { text-align: left; line-height:20px; height:20px; padding:0 5px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table td.time { font-size:0.86em; font-weight:500; width:75px; letter-spacing: -1px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table th strong { font-size:0.86em; font-weight:500; margin-right:5px; }
