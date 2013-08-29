@@ -16,9 +16,33 @@
             url: '/invite_chat',
             data: 'chatting_user=' + dataString,
             success: function (data) {
-                $('#p_chatBoxContainer').append($(data));
-                socket_chat_connection($(data).attr("id"));
-                $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
+                if (data != "0") {
+                    if ($('#' + $(data).attr("id")).is(':visible')) {
+                        console.log('hide');
+                        $('#' + $(data).attr("id")).hide();
+                    }
+                    else {
+                        console.log($(data).attr("id"));
+                        console.log(document.getElementById($(data).attr("id")));
+                        if (document.getElementById($(data).attr("id")) == null) {
+                            $('#p_chatBoxContainer').append($(data));
+                            socket_chat_connection($(data).attr("id"));
+                            $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
+                        }
+                        $('#' + $(data).attr("id")).show();
+                        console.log($(data).attr("id"));
+                    }
+                }
+                else {
+                    console.log('testets');
+                    if ($('#' + $(data).attr("id")).is(':visible')) {
+                        console.log('hide');
+                        $('#' + $(data).attr("id")).hide();
+                    }
+                    else {
+                        $('#' + $(data).attr("id")).show();
+                    }
+                }
             },
             error: function () {
                 console.error(arguments);
@@ -32,9 +56,30 @@
             url: '/invited_chat',
             success: function (data) {
                 if (data != "0") {
-                    $('#p_chatBoxContainer').append($(data));
-                    socket_chat_connection($(data).attr("id"));
-                    $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
+                    if ($('#' + $(data).attr("id")).is(':visible')) {
+                        console.log('hide');
+                        $('#' + $(data).attr("id")).hide();
+                    }
+                    else {
+                        console.log($(data).attr("id"));
+                        console.log(document.getElementById($(data).attr("id")));
+                        if (document.getElementById($(data).attr("id")) == null) {
+                            $('#p_chatBoxContainer').append($(data));
+                            socket_chat_connection($(data).attr("id"));
+                            $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
+                        }
+                        $('#' + $(data).attr("id")).show();
+                        console.log($(data).attr("id"));
+                    }
+                }
+                else {
+                    if ($('#' + $(data).attr("id")).is(':visible')) {
+                        console.log('hide');
+                        $('#' + $(data).attr("id")).hide();
+                    }
+                    else {
+                        $('#' + $(data).attr("id")).show();
+                    }
                 }
             },
             error: function (data) {

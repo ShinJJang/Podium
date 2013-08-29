@@ -19,7 +19,7 @@ $('#form_request_friend').submit(function (event) {
         dataType: "json",
         statusCode: {
             201: function (data) {
-                /*post로 생성 후 생성한 json response*/
+                /*post로 Noti 생성한 후 json response*/
                 console.log("request friend to django server, [response] = [" + data + "]");
             }
         }
@@ -29,7 +29,7 @@ $('#form_request_friend').submit(function (event) {
 
 var noti_check_friend = setInterval(function () {
     $('#form_noti_check_friend').submit(function (event) {
-        var noti_check_friend_url = "/api/v1/friend_noti/";
+        var noti_check_friend_url = "/api/v1/friend_noti/?noti_to_user=" + user_id; //자기 자신의 유저 아이디
         $.ajax({
             type: "GET",
             url: noti_check_friend_url,
@@ -48,7 +48,7 @@ var noti_check_friend = setInterval(function () {
 
 var accept_friend_request = (function(friend_id) {
     console.log('friend_id = ' + friend_id);
-    var accept_friendship_url = "/api/v1/friendship";
+    var accept_friendship_url = "/api/v1/friendship/";
     accept_friend_data = JSON.stringify({
        friend_id : friend_id
     });
