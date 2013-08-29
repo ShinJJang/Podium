@@ -34,9 +34,9 @@ def people(request, people_id):
 def chat(request):
     users = User.objects.select_related().all()[0:100]
     ctx = Context({
-                    'users':users
+        'users':users
     })
-    return render_to_response('chat_index.html', ctx)
+    return render(request,'chat_index.html', ctx)
 
 @login_required
 def invite_chat(request):

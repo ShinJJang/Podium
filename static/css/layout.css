@@ -14,8 +14,7 @@
 	
 #p_body { position:relative; padding-top:55px; min-height:100%; box-sizing:border-box; }
 
-	#p_body #p_nav { overflow:hidden; width:210px; height:100%; padding-top:55px; box-sizing:border-box; position:fixed; top:0; left:0; }
-		#p_body #p_nav > .p_container { width:223px; height:100%; box-sizing:border-box; }
+	#p_body #p_nav { margin-right:-13px; width:210px; height:100%; box-sizing:border-box; float:left;}
 	
 		#p_body #p_nav h2 { width:180px; font-size:0.76em; padding:0 15px; text-transform:uppercase; color:#999999; font-weight:500; text-shadow: 0 -1px 0 rgba(0,0,0,0.33); margin-bottom:10px; }
 		#p_body #p_nav ul { width:210px; margin-bottom:10px; }
@@ -28,10 +27,12 @@
 		#p_body #p_nav a .nav_icon { float:left; border:1px; display:block; width:28px; height:0px; padding-top:28px; margin:0 23px 0 7px; border-radius:20px; border:1px #ccc solid; box-shadow:inset 0 2px 5px rgba(0,0,0,0.33); background-color:#ccc; background-size: 30px 30px; background-position:50% 50%; background-repeat:no-repeat; overflow:hidden; }
 		#p_body #p_nav a .nav_no { float:right; font-size:0.86em; font-weight:bold; }
 		
-		#p_body #p_nav #nav_userProfile { padding-top:10px; }
+		#p_body #p_nav #nav_userProfile { background:#424b4a; z-index:25; padding:10px 0; position:fixed; border-bottom:1px #2c3232 solid; }
 		#p_body #p_nav #nav_userProfile a { font-size:1em; }
 		#p_body #p_nav #nav_userProfile #nav_profile a { font-size:1.29em; line-height:45px;}
 		#p_body #p_nav #nav_userProfile a .nav_profile { float:left; border:1px; display:block; width:43px; height:0px; padding-top:43px; margin:0 15px 0 0; border-radius:30px; border:1px #ccc solid; box-shadow:inset 0 2px 5px rgba(0,0,0,0.33); background-color:#ccc; background-size: 45px 45px; background-position:50% 50%; background-repeat:no-repeat; overflow:hidden; background-image:url(../images/user_profile.jpg); }
+
+        #p_body #p_nav #nav_items { padding-top:195px; }
 		
 		/* Nav Bar Icons */
 		#p_body #p_nav #nav_request a .nav_icon { background-image:url(../images/icon_request.png); }
@@ -46,7 +47,7 @@
 		#p_body #p_nav #nav_schedule a .nav_icon { background-image:url(../images/icon_schedule.png); }
 		#p_body #p_nav #nav_wiki a .nav_icon { background-image:url(../images/icon_wiki.png); }
 	
-	#p_body #p_messages { overflow:hidden; width:75px; height:100%; padding-top:55px; box-sizing:border-box; position:fixed; top:0; right:0; }
+	#p_body #p_messages { width:75px; height:100%; padding-top:55px; box-sizing:border-box; position:fixed; top:0; right:0; }
 		#p_body #p_messages > .p_container { width:88px; height:100%; box-sizing:border-box; }
         #p_body #p_messages #p_chat { padding:15px 0 0; }
 		
@@ -54,7 +55,11 @@
 		
 		#p_body #p_messages ul.userList { width:45px; padding:0 15px; margin:0; margin-bottom:25px; }
 		#p_body #p_messages ul.userList li { margin-bottom:10px; }
-		#p_body #p_messages ul.userList li a { border:1px; display:block; width:43px; height:0px; padding-top:43px; border-radius:30px; border:1px #ccc solid; box-shadow:inset 0 2px 5px rgba(0,0,0,0.33); background-color:#ccc; overflow:hidden; }
+		#p_body #p_messages ul.userList li a { border:1px; display:block; width:43px; height:43px; border-radius:30px; border:1px #ccc solid; box-shadow:inset 0 2px 5px rgba(0,0,0,0.33); position:relative; }
+        #p_body #p_messages ul.userList li a .chatPicture { width:43px; height:43px; border-radius:30px; z-index:-1; position:relative; }
+
+        #p_body #p_messages ul.userList li a .username { position:absolute; display:none; }
+        #p_body #p_messages ul.userList li a:hover .username { display:block; top:10px; right:70px; border-radius:3px; background:rgba(0,0,0,0.7); border:1px #333 solid; width:auto; padding:0 10px; text-shadow:none; color:#fff; text-align: right; white-space: nowrap; text-shadow:0 1px 0 #000; line-height:23px; }
 
         #p_chatBoxContainer { position:fixed; bottom:0; right:85px; }
         #p_chatBoxContainer .chatBox h2 { height:25px; font-weight:bold; padding:0 5px; color:#fff; line-height:25px; }

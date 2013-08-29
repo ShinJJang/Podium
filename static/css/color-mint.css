@@ -7,7 +7,7 @@ a:hover, a:active, a:focus {
 	color:#76bab2;
 }
 
-body { background:#424b4a; }
+body { background:#586160; }
 
 #p_header { background: #76bab2; border-color:#38978c; }
 #p_header #p_topSearch input[type="text"] { background-image:url(../images/color-mint/top_search.png); }
