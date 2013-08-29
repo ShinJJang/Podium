@@ -6,8 +6,7 @@ from django.template import Context
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
-
-from .models import  ChatNotis, ChatComments, UserChats
+from .models import  ChatNotis, ChatComments, UserChats, ChatTables
 
 @login_required
 def home(request):
@@ -46,11 +45,13 @@ def invite_chat(request):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)
     chatting_user = User.objects.get(id = invite_people)
-
     try:
-        ChatNotis.objects.get(noti_from_user_key = user, noti_to_user_key = chatting_user) #같은 디비가 있으면 생성하지 않는다.get부터 먼저 하면 대겠다
+        ChatTables.objects.get(from_chatting_user = user, to_chatting_user = chatting_user)
     except:
-        ChatNotis.objects.create(noti_from_user_key = user, noti_to_user_key = chatting_user) #같은 디비가 있으면 생성하지 않는다.get부터 먼저 하면 대겠다
+        try:
+            ChatTables.objects.get(from_chatting_user = chatting_user, to_chatting_user = user)#양쪽으로 채팅중인 테이블이 있으면
+        except:
+            ChatNotis.objects.create(noti_from_user_key = user, noti_to_user_key = chatting_user)
 
     try: #이미 만들어져있는 채팅방이 있는지를 조회
         chat_info = UserChats.objects.get(chat_to_user_key = user, chat_from_user_key = chatting_user)
@@ -62,6 +63,7 @@ def invite_chat(request):
                         'chat_comments':chat_comments
         })
         return render_to_response('chat.html', ctx)
+        #return HttpResponse(json.dumps(ctx), mimetype="application/json")
     except:
         try:
             chat_info = UserChats.objects.get(chat_to_user_key = chatting_user, chat_from_user_key = user)
@@ -90,12 +92,19 @@ def invited_chat(request):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)
     print "invited_chat event  " + user.username + " invite!"
+
     try:
-        chat_noti = ChatNotis.objects.get(noti_to_user_key = user)#수정
+        chat_noti = ChatNotis.objects.get(noti_to_user_key = user)#noti가 있으면 채팅 유저를 찾고
         chatting_user = User.objects.get(id = chat_noti.noti_from_user_key.id)
-        chatting_user = chat_noti.noti_from_user_key
-        chat_noti.delete()
-        print 'delete Chat Notis = ' + user.username
+        try:
+            ChatTables.objects.get(to_chatting_user = user, from_chatting_user = chatting_user)
+        except:
+            try:
+                ChatTables.objects.get(to_chatting_user = chatting_user, from_chatting_user = user)
+            except:
+                ChatTables.objects.create(to_chatting_user = user, from_chatting_user = chatting_user)
+                chat_noti.delete()
+
         try:
             chat_info = UserChats.objects.get(chat_to_user_key = user, chat_from_user_key = chatting_user)
         except:
