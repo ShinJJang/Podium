@@ -85,7 +85,7 @@ class FriendshipNotisResource(ModelResource): #create
 
     def obj_create(self, bundle, **kwargs):
         noti_from_user = User.objects.get(pk = bundle.request.user.id)
-        noti_to_user = User.objects.get(pk = bundel.request.friend.id)
+        noti_to_user = User.objects.get(pk = bundle.request.friend.id)
         bundle.obj = FriendshipNotis(friend_noti_from_user_key = noti_from_user, friend_noti_to_user_key = noti_to_user)
         bundle.obj.save()
         return bundle
@@ -110,7 +110,22 @@ class FriendshipsResource(ModelResource): #polling get or create
         bundle.obj = Friendships(user_key = user, friend_user_key = friend_user)
         bundle.obj.save()
         return bundle
-    
+
+class FriendPostResource(ModelResource):
+    user = fields.ForeignKey(UserProfileResource, 'user_key', full=True)
+    post = fields.ForeignKey(PostResource, 'friend_post_key', full=True)
+
+    class Meta:
+        queryset = FriendPosts.objects.all()
+        resource_name = 'friendposts'
+        include_resource_uri = False
+        authorization= Authorization()
+        filtering = {
+            "user": ALL_WITH_RELATIONS,
+            "post": ALL_WITH_RELATIONS,
+        }
+        paginator_class = EstimatedCountPaginator
+        allowed_methods = ['get']
 
 
 """
