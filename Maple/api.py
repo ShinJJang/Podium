@@ -46,7 +46,7 @@ class PostResource(ModelResource):
         return bundle
 
 class CommentResource(ModelResource):
-    user = fields.ForeignKey(UserProfileResource, 'user_key', full=False)
+    user = fields.ForeignKey(UserProfileResource, 'user_key', full=True)
     post = fields.ForeignKey(PostResource, 'post_key', full=False)
 
     class Meta:
@@ -58,10 +58,12 @@ class CommentResource(ModelResource):
             "user": ALL_WITH_RELATIONS,
             "post": ALL_WITH_RELATIONS,
         }
+        always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
-        user = User.objects.get(pk=bundle.request.user.id)
-        post = Posts.objects.get(pk=1)
+        user = UserProfile.objects.get(user=bundle.request.user)
+        post_key = bundle.data['post_key']
+        post = Posts.objects.get(pk=post_key)
         comment = bundle.data['comment']
         bundle.obj = Comments(user_key=user, post_key=post, comment=comment)
         bundle.obj.save()
@@ -83,7 +85,7 @@ class FriendshipNotisResource(ModelResource): #create
 
     def obj_create(self, bundle, **kwargs):
         noti_from_user = User.objects.get(pk = bundle.request.user.id)
-        noti_to_user = User.objects.get(pk = bundel.request.friend.id)
+        noti_to_user = User.objects.get(pk = bundle.request.friend.id)
         bundle.obj = FriendshipNotis(friend_noti_from_user_key = noti_from_user, friend_noti_to_user_key = noti_to_user)
         bundle.obj.save()
         return bundle
@@ -109,6 +111,24 @@ class FriendshipsResource(ModelResource): #polling get or create
         bundle.obj.save()
         return bundle
 
+<<<<<<< HEAD
+=======
+class FriendPostResource(ModelResource):
+    user = fields.ForeignKey(UserProfileResource, 'user_key', full=True)
+    post = fields.ForeignKey(PostResource, 'friend_post_key', full=True)
+
+    class Meta:
+        queryset = FriendPosts.objects.all()
+        resource_name = 'friendposts'
+        include_resource_uri = False
+        authorization= Authorization()
+        filtering = {
+            "user": ALL_WITH_RELATIONS,
+            "post": ALL_WITH_RELATIONS,
+        }
+        paginator_class = EstimatedCountPaginator
+        allowed_methods = ['get']
+>>>>>>> 3af502910e215c246ff4309645522551ca263294
 
 
 """
