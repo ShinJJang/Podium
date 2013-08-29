@@ -1,13 +1,17 @@
 /**
  * Created with PyCharm.
+ * User: zfbe
+ * Date: 13. 8. 30.
+ * Time: 오전 7:29
+ * To change this template use File | Settings | File Templates.
+ */
+/**
+ * Created with PyCharm.
  * User: lacidjun
  * Date: 13. 8. 29
  * Time: 오후 10:04
  * To change this template use File | Settings | File Templates.
  */
-$(function(){
-
-});
 
 $('#form_request_friend').submit(function (event) {
     var request_friend_url = "/api/v1/friend_noti/";

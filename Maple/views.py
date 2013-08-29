@@ -23,9 +23,10 @@ def people(request, people_id):
     session = Session.objects.get(session_key = request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)
+    user_pageowner = User.objects.get(id = people_id)
     ctx = Context({
         'user':user,
-        'people_id':people_id
+        'user_pageowner':user_pageowner
     })
     return render(request,'profile.html',ctx)
 

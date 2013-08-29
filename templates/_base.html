@@ -19,7 +19,7 @@
     <body>
         <header id="p_header">
             <div class="p_container">
-                <h1>Podium</h1>
+                <h1><a href="/">Podium</a></h1>
                 <div id="p_topSearch">
                     <input id="p_topSearchForm" type="text" name="p_topSearchForm" value="" placeholder="Search Everything in the Podium">
                 </div>
@@ -32,11 +32,24 @@
             <nav id="p_nav">
                 <div class="p_container">
                     <ul id="nav_userProfile">
-                        <li id="nav_profile"><a href="#"><span class="nav_profile"></span><span class="nav_label">최태건</span></a></li>
+                        <li id="nav_profile">
+                            <a href="/people/{{ user.id }}">
+                                <span class="nav_profile">
+                                    {% with user.userpictures_set.all|first as userpicture %}
+                                        {% if userpicture %}
+                                            <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="userPicture" />
+                                        {% else %}
+                                            <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="userPicture" />
+                                        {% endif %}
+                                    {% endwith %}
+                                </span>
+                                <span class="nav_label">{{ user.username }}</span>
+                            </a>
+                        </li>
                         <li id="nav_request"><a href="#"><span class="nav_icon"></span><span class="nav_label">Request</span><span class="nav_no">4</span></a></li>
                         <li id="nav_notification" class="disabled"><a href="#"><span class="nav_icon"></span><span class="nav_label">Notification</span><span class="nav_no">56</span></a></li>
                     </ul>
-                    <div id="nav_items" class="disabled">
+                    <div id="nav_items">
                         <h2>Timeline</h2>
                         <ul id="nav_timeline">
                             <li id="nav_everything" class="selected"><a href="#"><span class="nav_icon"></span><span class="nav_label">Everything</span></a></li>
@@ -84,11 +97,9 @@
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.menu.min.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.autocomplete.min.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.tmpl.js"></script>
+            <script type="text/javascript" src="{{ STATIC_URL }}js/search.js"></script>
         {% endblock %}
         {% block add_scripts %}
-            {% include 'post_public.html' %}
-            <script type="text/javascript" src="{{ STATIC_URL }}js/timeline.js"></script>
-            <script type="text/javascript" src="{{ STATIC_URL }}js/search.js"></script>
         {% endblock %}
     </body>
 </html>
