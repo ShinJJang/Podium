@@ -1,4 +1,4 @@
-<script id="postPublic" type="text/x-jquery-tmpl">
+<script id="post_public_template" type="text/x-jquery-tmpl">
     <div class="p_tItem p_container public">
         <a href="#" class="p_tUser p_tIcon"></a>
         <div class="p_tBox">
@@ -24,7 +24,7 @@
                     </div>
                 </section>
                 <section class="p_comment">
-                    <ul class="p_commentList">
+                    <ul class="p_commentList" id="commentList${id}">
                         <li>
                             <strong class="commentAuthor"><a href="#"><span class="commentProfile"></span>최태건</a></strong>
                             Hello, world!<br />
@@ -35,7 +35,7 @@
                     </ul>
                     <form id="form_comment" method="post" action=".">{% csrf_token %}
                         <div class="p_commentForm">
-                            <input name="post_key" type="hidden" value='${ id }'>
+                            <input name="post_key" type="hidden" value="${ id }">
                             <span class="commentProfile"></span><input name="comment" type="text" class="commentFormText" placeholder="댓글을 입력하세요">
                         </div>
                     </form>
@@ -43,4 +43,11 @@
             </aside>
         </div>
     </div>
+</script>
+<script id="comment_template" type="text/x-jquery-tmpl">
+    <li>
+        <strong class="commentAuthor"><a href="#"><span class="commentProfile"></span>${ user.user.username }</a></strong>
+        ${ comment }
+        <a href="#" class="timestamp">/ 2시간 전</a>
+    </li>
 </script>

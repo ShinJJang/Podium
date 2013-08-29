@@ -1,4 +1,4 @@
-# RESTful API controller
+ # RESTful API controller
 # tastypie framework using
 from django.contrib.auth.models import User
 from .models import *
@@ -55,7 +55,7 @@ class PostResource(ModelResource):
         return bundle
 
 class CommentResource(ModelResource):
-    user = fields.ForeignKey(UserProfileResource, 'user_key', full=False)
+    user = fields.ForeignKey(UserProfileResource, 'user_key', full=True)
     post = fields.ForeignKey(PostResource, 'post_key', full=False)
 
     class Meta:
@@ -67,12 +67,60 @@ class CommentResource(ModelResource):
             "user": ALL_WITH_RELATIONS,
             "post": ALL_WITH_RELATIONS,
         }
+        always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
-        user = User.objects.get(pk=bundle.request.user.id)
-        post = Posts.objects.get(pk=1)
+        user = UserProfile.objects.get(user=bundle.request.user)
+        post_key = bundle.data['post_key']
+        post = Posts.objects.get(pk=post_key)
         comment = bundle.data['comment']
         bundle.obj = Comments(user_key=user, post_key=post, comment=comment)
+        bundle.obj.save()
+        return bundle
+
+class FriendshipNotisResource(ModelResource): #create
+    noti_from_user = fields.ForeignKey(UserProfileResource, 'friend_noti_from_user_key', full=False)
+    noti_to_user = fields.ForeignKey(UserProfileResource, 'friend_noti_to_user_key', full=False)
+
+    class Meta:
+        queryset = FriendshipNotis.objects.all()
+        resource_name = 'friend_noti'
+        include_resource_uri = False
+        authorization = Authorization()
+        filtering = {
+            "noti_to_user": ALL_WITH_RELATIONS,
+            "noti_from_user": ALL_WITH_RELATIONS
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        noti_from_user = UserProfile.objects.get(user = bundle.request.user) #bundle.request.user
+        friend_id = bundle.data['friend_id']
+        temp_friend_user = User.objects.get(pk = friend_id)
+        noti_to_user = UserProfile.objects.get(user = temp_friend_user)
+        bundle.obj = FriendshipNotis(friend_noti_from_user_key = noti_from_user, friend_noti_to_user_key = noti_to_user)
+        bundle.obj.save()
+        return bundle
+
+class FriendshipsResource(ModelResource): #polling get or create
+    user = fields.ForeignKey(UserProfileResource, 'user_key', full=False)
+    friend_user = fields.ForeignKey(UserProfileResource, 'friend_user_key', full=False)
+
+    class Meta:
+        queryset = Friendships.objects.all()
+        resource_name = 'friendship'
+        include_resource_uri = False
+        authorization= Authorization()
+        filtering = {
+            "user": ALL_WITH_RELATIONS,
+            "friend_user": ALL_WITH_RELATIONS,
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = UserProfile.objects.get(user = bundle.request.user)
+        friend_id = bundle.data['friend_id']
+        temp_friend_user = User.objects.get(pk = friend_id)
+        friend_user = UserProfile.objects.get(user = temp_friend_user)
+        bundle.obj = Friendships(user_key = user, friend_user_key = friend_user)
         bundle.obj.save()
         return bundle
 
@@ -90,3 +138,17 @@ class FriendPostResource(ModelResource):
             "post": ALL_WITH_RELATIONS,
         }
         paginator_class = EstimatedCountPaginator
+        allowed_methods = ['get']
+
+
+"""
+detail_uri_kwargs()
+get_object_list()
+obj_get_list()
+obj_get()
+obj_create()
+obj_update()
+obj_delete_list()
+obj_delete()
+rollback()
+"""
