@@ -98,6 +98,7 @@ class ChatComments(models.Model):
 class Notices(models.Model):
     subject = models.CharField(max_length=40)
     content = models.CharField(max_length=2000)
+    created = models.DateTimeField(auto_now=True)
     # need to add files
 
 class FriendPosts(models.Model):
