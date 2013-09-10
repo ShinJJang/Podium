@@ -123,16 +123,23 @@ def invited_chat(request):
         return HttpResponse("0")
 
 @csrf_exempt
-def chat_comment(request):
-    print request.POST.get('room_name')
-    print request.POST.get('user_id')
-    try:
-        user_chat  = UserChats.objects.get(chat_room_name = request.POST.get('room_name'))
-        print user_chat.chat_room_name
-        user = User.objects.get(id = request.POST.get('user_id'))
-        chat_comment = user.username + ": " + request.POST.get('comment')
-        ChatComments.objects.create(userChat_key = user_chat, chat_comment = chat_comment)
-        print request.POST.get('comment')
+def chat_comment(request): #chat_noti 만들어야 함
+    if request.POST.get('type') == 'DELETE' :
+        user_chat = UserChats.objects.get(chat_room_name = request.POST.get('room_name'))
+        try:
+            chat_table = ChatTables.objects.get(from_chatting_user = user_chat.chat_from_user_key, to_chatting_user = user_chat.chat_to_user_key)
+        except:
+            chat_table = ChatTables.objects.get(from_chatting_user = user_chat.chat_to_user_key, to_chatting_user = user_chat.chat_from_user_key)
+        chat_table.delete()
         return HttpResponse("Everything worked :)")
-    except Exception, e:
-        return HttpResponseServerError(str(e))
+    if request.POST.get('type') == "POST" :
+        try:
+            user_chat  = UserChats.objects.get(chat_room_name = request.POST.get('room_name'))
+            print user_chat.chat_room_name
+            user = User.objects.get(id = request.POST.get('user_id'))
+            chat_comment = user.username + ": " + request.POST.get('comment')
+            ChatComments.objects.create(userChat_key = user_chat, chat_comment = chat_comment)
+            print request.POST.get('comment')
+            return HttpResponse("Everything worked :)")
+        except Exception, e:
+            return HttpResponseServerError(str(e))
