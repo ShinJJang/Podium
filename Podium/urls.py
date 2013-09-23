@@ -20,6 +20,7 @@ v1_api.register(UserPictureResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home),
+    url(r'^pui/$', views.pui),
     url(r'^people/(?P<people_id>\d+)/$', 'Maple.views.people', name='people'),
     url(r'^invite_chat/$', 'Maple.views.invite_chat', name='invite_chat'),
     url(r'^invited_chat/$', 'Maple.views.invited_chat', name='invited_chat'),

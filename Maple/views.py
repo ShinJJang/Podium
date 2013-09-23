@@ -14,9 +14,21 @@ def home(request):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)
     ctx = Context({
-        'user':user
+        'user':user,
+        'page_title':'Podium'
     })
     return render(request,'index.html', ctx)
+
+@login_required
+def pui(request):
+    session = Session.objects.get(session_key = request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id = user_id)
+    ctx = Context({
+        'user':user,
+        'page_title':'PUI Framework'
+    })
+    return render(request,'pui.html', ctx)
 
 @login_required
 def people(request, people_id):

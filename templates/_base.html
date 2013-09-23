@@ -3,6 +3,7 @@
     <head>
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{{STATIC_URL}}css/jquery.jscrollpane.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="{{STATIC_URL}}css/rainbow.css" type="text/css" media="screen">
         <link rel="stylesheet" href="{{STATIC_URL}}css/base.css" type="text/css" media="screen">
         <link rel="stylesheet" href="{{STATIC_URL}}css/layout.css" type="text/css" media="screen">
 
@@ -98,6 +99,7 @@
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.autocomplete.min.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.tmpl.js"></script>
             <script type="text/javascript" src="{{ STATIC_URL }}js/search.js"></script>
+            <script type="text/javascript" src="{{ STATIC_URL }}js/rainbow.min.js"></script>
         {% endblock %}
         {% block add_scripts %}
         {% endblock %}

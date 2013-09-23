@@ -1,0 +1,48 @@
+<section id="p_document" class="pui">
+    <div class="p_container">
+        <div class="box">
+            <div class="text">
+                <header class="head">
+                    <h1>PUI: Podium UI Framework</h1>
+                    <p class="desc">Read this documentation and implement your UI.</p>
+                </header>
+                <h2>Global</h2>
+                <p>원하는 코드를 <code>pui</code> 클래스로 감싸면 됩니다.</p>
+                <pre><code data-language="html">&lt;div class="pui"&gt;
+    여기에 코드를 넣으세요
+&lt;/div&gt;</code></pre>
+                <h2>Box</h2>
+                <p>Podium에서 공통적으로 쓰이는 박스를 쓰고 싶을 때는 <code>box</code> 클래스를 사용하세요.</p>
+                <h3>Code Example</h3>
+                <pre><code data-language="html">&lt;div class="box"&gt;
+    &lt;div class="text"&gt;
+        Hello, world!
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                <h3>Result</h3>
+                <div class="box"><div class="text">Hello, world!</div></div>
+                <h2>Tooltips</h2>
+                <h3>Code Example</h3>
+                <pre><code data-language="html">&lt;div class="text-center"&gt;
+    &lt;div class="tooltip-parent tooltip-hover"&gt;
+        &lt;span class="tooltip tooltip-top"&gt;Tooltip Text Goes Here&lt;/span&gt;
+        &lt;span class="tooltip tooltip-right"&gt;Tooltip Text Goes Here&lt;/span&gt;
+        &lt;span class="tooltip tooltip-bottom"&gt;Tooltip Text Goes Here&lt;/span&gt;
+        &lt;span class="tooltip tooltip-left"&gt;Tooltip Text Goes Here&lt;/span&gt;
+        Hello, world!
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                <h3>Result</h3>
+                <div class="text-center">
+                    <button type="button" class="btn tooltip-parent tooltip-hover">
+                        <span class="tooltip tooltip-top">Tooltip Text Goes Here</span>
+                        <span class="tooltip tooltip-right">Tooltip Text Goes Here</span>
+                        <span class="tooltip tooltip-bottom">Tooltip Text Goes Here</span>
+                        <span class="tooltip tooltip-left">Tooltip Text Goes Here</span>
+                        Hello, world!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
