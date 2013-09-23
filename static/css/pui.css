@@ -17,7 +17,7 @@
 .pui .text-center { text-align: center; }
 .pui .text-right { text-align: right; }
 
-.pui .text { padding:15px; }
+.pui .box > .text { padding:15px; }
 .pui .text p { margin-bottom:10px; }
 .pui .text h1, .pui .text h2, .pui .text h3, .pui .text h4, .pui .text h5, .pui .text h6 { margin:10px 0; border-bottom:1px #dadada solid; }
 
@@ -25,7 +25,7 @@
 
 .pui .tooltip-parent { position:relative; }
 .pui .tooltip-parent .tooltip { position:absolute; display:inline-block; }
-.pui .tooltip-parent .tooltip-top { top:-30px; }
+.pui .tooltip-parent .tooltip-top { top:-30px; left:50%;  }
 
 .pui .tooltip-hover .tooltip { display:none; border-radius:3px; background:rgba(0,0,0,0.7); border:1px #333 solid; width:auto; padding:0 10px; text-shadow:none; color:#fff; white-space: nowrap; text-shadow:0 1px 0 #000; line-height:23px; }
 .pui .tooltip-hover:hover .tooltip { display:inline-block; }
