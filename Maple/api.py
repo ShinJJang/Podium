@@ -1,4 +1,5 @@
- # RESTful API controller
+# -*- coding: utf-8 -*-
+# RESTful API controller
 # tastypie framework using
 from django.contrib.auth.models import User
 from .models import *
@@ -116,19 +117,23 @@ class FriendPostResource(ModelResource):
     post = fields.ForeignKey(PostResource, 'friend_post_key', full=True)
 
     class Meta:
-        queryset = FriendPosts.objects.all()
+        queryset = FriendPosts.objects.all().order_by('-pk')
         resource_name = 'friendposts'
         include_resource_uri = False
         authorization= Authorization()
         filtering = {
+            "id": ['exact', 'gt'],
             "user": ALL_WITH_RELATIONS,
             "post": ALL_WITH_RELATIONS,
         }
-        paginator_class = EstimatedCountPaginator
+        # paginator_class = EstimatedCountPaginator
         allowed_methods = ['get']
 
+    # def get_object_list(self, request):
+    #     this_user_posts = super(PostResource, self).get_object_list(request).filter(user_key=request.user)
 
 """
+// tastypie 상속 가능한 method
 detail_uri_kwargs()
 get_object_list()
 obj_get_list()

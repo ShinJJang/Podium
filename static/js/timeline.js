@@ -1,4 +1,4 @@
-var post_top_url = "/api/v1/friendposts/?limit=5&offset=40";
+var post_top_url = "/api/v1/friendposts/";
 var post_bottom_url = "/api/v1/friendposts/";
 var comment_offsets = new Object();
 var isBottominit = 0;
@@ -64,14 +64,16 @@ function PostTopPolling() {
             console.log(data)
             if(data.objects.length != 0)
             {
-                $("#post_public_template").tmpl(data.objects.reverse()).prependTo("#timeline");
+                $("#post_public_template").tmpl(data.objects).prependTo("#timeline");
                 $.waypoints('refresh');
-                post_top_url = data.meta.next;
-                if(!post_top_url)
-                    post_top_url = "api/v1/post/?limit=20&offset=" + (data.meta.offset+data.objects.length);
+                post_top_url = data.meta.previous;
+                console.log("1 previous url:  "+post_top_url);
+                if(!data.meta.previous)
+                    post_top_url = "api/v1/friendposts/?id__gt=" + data.objects[0].id;
+                console.log("2 previous url:  "+post_top_url);
                 if(isBottominit==0) {
-                    post_bottom_url = data.meta.previous;
-                    console.log("previous url init "+post_bottom_url);
+                    post_bottom_url = data.meta.next;
+                    console.log("next url:  "+post_bottom_url);
                     isBottominit = 1;
                 }
 //                focusComment();
@@ -83,7 +85,7 @@ function PostTopPolling() {
 // when screen on top, call PostTopPolling
 $(document).ready(function() {
   PostTopPolling();
-  $("#p_timeline").waypoint(function(){postBottom();}, { offset: 'bottom-in-view' });
+  setTimeout(function(){$("#p_timeline").waypoint(function(){postBottom();}, { offset: 'bottom-in-view' });}, 1000);
   $("#p_timeline").waypoint(function(){
   (function poll() {
     setTimeout(function(){PostTopPolling();$.ajax({complete:poll()});}, 5000);
@@ -98,11 +100,13 @@ function postBottom() {
         type: "GET",
         dataType: "json",
         success: function(data) {
+            console.log("BOTTOM POLL POST   url:" + post_bottom_url);
+            console.log(data);
             if(data.objects.length != 0)
             {
-                $("#post_public_template").tmpl(data.objects.reverse()).appendTo("#timeline");
-                post_bottom_url = data.meta.previous;
-                console.log("BOTTOM POLL POST   url:" + post_bottom_url);
+                $("#post_public_template").tmpl(data.objects).appendTo("#timeline");
+                post_bottom_url = data.meta.next;
+                console.log("next url:  "+post_bottom_url);
             }
         }
         });
