@@ -25,7 +25,9 @@
 
 .pui .tooltip-parent { position:relative; }
 .pui .tooltip-parent .tooltip { position:absolute; display:inline-block; }
-.pui .tooltip-parent .tooltip-top { top:-30px; left:50%;  }
+.pui .tooltip-parent .tooltip-top { top:-30px; left:50%; }
+.pui .tooltip-parent .tooltip-bottom { bottom:-30px; left:50%;  }
+.pui .tooltip-parent .tooltip-left, .pui .tooltip-parent .tooltip-right { top:50%; }
 
 .pui .tooltip-hover .tooltip { display:none; border-radius:3px; background:rgba(0,0,0,0.7); border:1px #333 solid; width:auto; padding:0 10px; text-shadow:none; color:#fff; white-space: nowrap; text-shadow:0 1px 0 #000; line-height:23px; }
 .pui .tooltip-hover:hover .tooltip { display:inline-block; }
