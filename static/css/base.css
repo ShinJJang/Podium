@@ -65,7 +65,7 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 
-body, input, textarea {
+body, input, textarea, button {
 	color: #373737;
 	font: 14px "Helvetica Neue","Apple SD Gothic Neo",Helvetica, Arial,"맑은 고딕",sans-serif;
 	font-weight: 300;

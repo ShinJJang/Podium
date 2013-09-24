@@ -1,23 +1,59 @@
-<h2>USERS</h2>
+<h2>CHATTING USERS</h2>
 <ul id="login_user_list" class="userList">
     {% for user_in_list in users %}
-        <li><a class="openChat" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">{{ user_in_list.username }}</a></li>
+        {% if user_in_list.id != user.id %}
+            <li>
+                <a class="openChat" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">
+                    {% with user_in_list.userpictures_set.all|first as userpicture %}
+                        {% if userpicture %}
+                            <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="chatPicture" />
+                        {% else %}
+                            <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" />
+                        {% endif %}
+                    {% endwith %}
+                    <span class="username">{{ user_in_list.username }}</span>
+                </a>
+            </li>
+        {% endif %}
     {% endfor %}
 </ul>
 
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
 <script type="text/javascript">
-
-    $(".openChat").click(function(){
+    $(".openChat").click(function () {
         var dataString = $(this).attr("id").substring(9);
         $.ajax({
             type: 'GET',
             url: '/invite_chat',
             data: 'chatting_user=' + dataString,
             success: function (data) {
-                $('#p_chatBoxContainer').append($(data));
-                socket_chat_connection($(data).attr("id"));
-                $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
+                if (data != "0") {
+                    if ($('#' + $(data).attr("id")).is(':visible')) {
+                        console.log('hide');
+                        $('#' + $(data).attr("id")).hide();
+                    }
+                    else {
+                        console.log($(data).attr("id"));
+                        console.log(document.getElementById($(data).attr("id")));
+                        if (document.getElementById($(data).attr("id")) == null) {
+                            $('#p_chatBoxContainer').append($(data));
+                            socket_chat_connection($(data).attr("id"));
+                            $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
+                        }
+                        $('#' + $(data).attr("id")).show();
+                        console.log($(data).attr("id"));
+                    }
+                }
+                else {
+                    console.log('testets');
+                    if ($('#' + $(data).attr("id")).is(':visible')) {
+                        console.log('hide');
+                        $('#' + $(data).attr("id")).hide();
+                    }
+                    else {
+                        $('#' + $(data).attr("id")).show();
+                    }
+                }
             },
             error: function () {
                 console.error(arguments);
@@ -31,68 +67,87 @@
             url: '/invited_chat',
             success: function (data) {
                 if (data != "0") {
-                    $('#p_chatBoxContainer').append($(data));
-                    socket_chat_connection($(data).attr("id"));
-                    $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
+                    if ($('#' + $(data).attr("id")).is(':visible')) {
+                        console.log('hide');
+                        $('#' + $(data).attr("id")).hide();
+                    }
+                    else {
+                        console.log($(data).attr("id"));
+                        console.log(document.getElementById($(data).attr("id")));
+                        if (document.getElementById($(data).attr("id")) == null) {
+                            $('#p_chatBoxContainer').append($(data));
+                            socket_chat_connection($(data).attr("id"));
+                            $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
+                        }
+                        $('#' + $(data).attr("id")).show();
+                        console.log($(data).attr("id"));
+                    }
+                }
+                else {
+                    if ($('#' + $(data).attr("id")).is(':visible')) {
+                        console.log('hide');
+                        $('#' + $(data).attr("id")).hide();
+                    }
+                    else {
+                        $('#' + $(data).attr("id")).show();
+                    }
                 }
             },
             error: function (data) {
-                console.log(data);
+                console.log("invited_chat error [response] = [" + data + "]");
             }
         });
     }, 5000);
 
     var socket_chat_connection = (function (roomid) {
         var socket = io.connect('localhost', {port: 4000, 'force new connection': true});
-        console.log("connect");
+
         socket.on('connect', function () {
-            console.log("connect");
+            console.log("socket connect");
         });
 
-        console.log("socket on");
-        var entry_el = $("#" + roomid+' input.comment_entry');
-        var userId = $("#" + roomid+' input.user_id');
-        var userName = $("#" + roomid+' input.user_name');
-        var room = roomid.substring(8);
+        socket.on('disconnected', function () {
+            socket.emit('disconnected_check', 'user out');
+        });
 
+        var entry_el = $("#" + roomid + ' input.comment_entry');
+        var userId = $("#" + roomid + ' input.user_id');
+        var userName = $("#" + roomid + ' input.user_name');
+        var room = roomid.substring(8);
         var join_info = {room_name: room, user_id: userId.val(), username: userName.val()};
 
         socket.emit('join', join_info);
 
         socket.on('message', function (message) {
-            var data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            console.log('roomid : '+ roomid);
-            $('#'+roomid+' ul').append('<li>' + data + '</li>');
-            $('#'+roomid+' ul').scrollTop(1000000000);
+            var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            console.log('roomid : ' + roomid);
+            $('#' + roomid + ' ul').append('<li>' + receive_data + '</li>');
+            $('#' + roomid + ' ul').scrollTop(1000000000);
             entry_el.focus();
         });
 
         socket.on('my_message', function (message) {
-            var data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            console.log('roomid : '+ roomid);
-            $('#'+roomid+' ul').append('<li>' + data + '</li>');
-            $('#'+roomid+' ul').scrollTop(1000000000);
+            var my_data_check = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            $('#' + roomid + ' ul').append('<li>' + my_data_check + '</li>');
+            $('#' + roomid + ' ul').scrollTop(1000000000);
             entry_el.focus();
         });
 
         socket.on('user_out', function (message) {
-            var data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            console.log(data);
-            $('#'+roomid+' ul').append('<li>' + data + '</li>');
-            $('#'+roomid+' ul').scrollTop(1000000000);
+            var out_user_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            $('#' + roomid + ' ul').append('<li>' + out_user_data + '</li>');
+            $('#' + roomid + ' ul').scrollTop(1000000000);
             entry_el.focus();
         });
 
         entry_el.keypress(function (event) {
             if (event.keyCode != 13) return;
             var value = entry_el.val();
-            console.log(value);
             room = $(this).parent().attr("id").substring(8);
             var msg = {room_name: room, user_id: userId.val(), type: 'chat', message: entry_el.val(), user_name: userName.val()} //user 사진 작게
-            console.log(userId.val());
             if (msg) {
                 socket.emit('send_message', msg, function (data) {
-                    console.log(data);
+                    console.log('send message to server [message] = [' + data + ']');
                 });
                 entry_el.val("");
             }

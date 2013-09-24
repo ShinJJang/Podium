@@ -1,0 +1,171 @@
+{% extends "_base.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+    <section id="p_timeline">
+        <header>
+            <div id="p_peopleCover">
+                <div id="p_peopleName">
+                    <span id="p_peoplePicture">
+                        {% with user_pageowner.userpictures_set.all|first as userpicture %}
+                            {% if userpicture %}
+                                <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="peoplePicture" />
+                            {% else %}
+                                <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="peoplePicture" />
+                            {% endif %}
+                        {% endwith %}
+                    </span>
+                    <h1>{{ user_pageowner.username }}</h1>
+                    <p id="friendStatus">
+                    </p>
+                </div>
+            </div>
+        </header>
+        <div id="p_profileContents" class="p_container">
+            <section class="p_timelineContents">
+                <div class="p_tItem p_container">
+                    <a href="#" class="p_tUser p_tIcon"></a>
+                    <div class="p_tBox">
+                        <article class="p_tArticle">
+                            <div class="p_container">
+                                <p class="p_tUserName"><a href="#">최태건</a></p>
+                                <div class="p_tText">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                </div>
+                                <p class="p_tPermalink private"><a class="timestamp" href="#">15시간 전</a></p>
+                            </div>
+                        </article>
+                        <aside class="p_tAside">
+                            <header class="p_responses">
+                                <div class="p_container">
+                                    <p class="p_emotion"><a href="#"><strong>감정</strong>/ 13</a></p>
+                                    <p class="p_comment"><a href="#"><strong>댓글</strong>/ 23</a></p>
+                                </div>
+                            </header>
+                            <section class="p_emotion">
+                                <div class="p_container">
+                                    Hello
+                                </div>
+                            </section>
+                            <section class="p_comment">
+                                <ul class="p_commentList">
+                                    <li>
+                                        <strong class="commentAuthor"><a href="#"><span class="commentProfile"></span>최태건</a></strong>
+                                        Hello, world!<br />
+                                        Hello??<br />
+                                        Helllllllllo<br />
+                                        코멘트 예제 <a href="#" class="timestamp">/ 2시간 전</a>
+                                    </li>
+                                </ul>
+                                <form>
+                                    <div class="p_commentForm">
+                                        <span class="commentProfile"></span><input type="text" class="commentFormText" placeholder="댓글을 입력하세요">
+                                    </div>
+                                </form>
+                            </section>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <input name="friend_id" id="friend_id" type="hidden" value="{{ user_pageowner.id }}">
+
+{% endblock %}
+
+{% block add_scripts %}
+    <script type="text/javascript">
+        $(function(){
+            var request_friend_url = "/api/v1/friend_noti/";
+            var data = JSON.stringify({
+                "friend_id": {{ user_pageowner.id }}
+            });
+            $.ajax({
+                type: "GET",
+                url: request_friend_url,
+                contentType: "application/json",
+                data: data,
+                dataType: "json",
+                statusCode: {
+                    200: function (data) {
+                        /*post로 Noti 생성한 후 json response*/
+                        if(data.meta.total_count) {
+                            $("#friendStatus").html('<span class="friend">친구</span>');
+                        }
+                        else {
+                            $("#friendStatus").html('<a href="#" id="addFriend">친구 추가</span>');
+
+                            $('#addFriend').click(function (event) {
+                                var request_friend_url = "/api/v1/friend_noti/";
+                                var data = JSON.stringify({
+                                    "friend_id": {{ user_pageowner.id }}
+                                });
+                                console.log("friend id = " + data.friend_id);
+                                $.ajax({
+                                    type: "POST",
+                                    url: request_friend_url,
+                                    contentType: "application/json",
+                                    data: data,
+                                    dataType: "json",
+                                    statusCode: {
+                                        201: function (data) {
+                                            /*post로 Noti 생성한 후 json response*/
+                                            console.log("request friend to django server, [response] = [" + data + "]");
+                                            $("#friendStatus").html('<span class="friend">친구</span>');
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    }
+                }
+            });
+        });
+
+
+
+        var noti_check_friend = setInterval(function () {
+            $('#form_noti_check_friend').submit(function (event) {
+                var noti_check_friend_url = "/api/v1/friend_noti/?noti_to_user=" + user_id; //자기 자신의 유저 아이디
+                $.ajax({
+                    type: "GET",
+                    url: noti_check_friend_url,
+                    contentType: "application/json",
+                    dataType: "json",
+                    statusCode: {
+                        200: function (data) {
+                            console.log("request friend to django server, [response] = [" + data + "]");
+                            accept_friend_request(data.friend_id); //accept or reject but, now always accept
+                        }
+                    }
+                });
+                return false;
+            });
+        }, 5000);
+
+        var accept_friend_request = (function(friend_id) {
+            console.log('friend_id = ' + friend_id);
+            var accept_friendship_url = "/api/v1/friendship/";
+            accept_friend_data = JSON.stringify({
+               friend_id : friend_id
+            });
+            $.ajax({
+                type: 'POST',
+                url: accept_friend_request_url,
+                contentType: "application/json",
+                data: accept_friend_data,
+                dataType: "json",
+                statusCode: {
+                    201: function (data) {
+                        console.log("accept_friendship, [response] = [" + data + "]");
+                    }
+                }
+            });
+            return false;
+        });
+    </script>
+{% endblock %}

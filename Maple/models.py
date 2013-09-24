@@ -59,7 +59,7 @@ class CommentEmotions(Emotions):
     comment_key = models.ForeignKey(Comments)
 
 class UserPictures(models.Model):
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     picture = models.FileField(upload_to = 'upload/%y/%m/%d')
     name = models.CharField(max_length=30,null=False)
     created = models.DateTimeField(auto_now=True)
@@ -110,3 +110,7 @@ class Notices(models.Model):
 class FriendPosts(models.Model):
     user_key = models.ForeignKey(UserProfile, related_name='my_userprofile_key')
     friend_post_key = models.ForeignKey(Posts, related_name='friend_post_key')
+
+class ChatTables(models.Model):
+    from_chatting_user = models.ForeignKey(User, related_name = 'from_ChatTable_user')
+    to_chatting_user = models.ForeignKey(User, related_name = 'to_ChatTable_user')
