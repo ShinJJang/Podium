@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -24,6 +25,11 @@ class Posts(models.Model):
 def create_friend_post(sender, instance, created, **kwargs):
     if created:
         write_user = instance.user_key
+
+        # 자신에게 글 저장
+        FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
+
+        # 친구들에게 글 저장
         friendships = Friendships.objects.filter(user_key=write_user)
         for friendship in friendships:
              posts, created = FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
