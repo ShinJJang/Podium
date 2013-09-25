@@ -69,7 +69,7 @@ function PostTopPolling() {
                 post_top_url = data.meta.previous;
                 console.log("1 previous url:  "+post_top_url);
                 if(!data.meta.previous)
-                    post_top_url = "api/v1/friendposts/?id__gt=" + data.objects[0].id;
+                    post_top_url = "api/v1/friendposts/?offset=0&limit=1&id__gt=" + data.objects[0].id;
                 console.log("2 previous url:  "+post_top_url);
                 if(isBottominit==0) {
                     post_bottom_url = data.meta.next;
