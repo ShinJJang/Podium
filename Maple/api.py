@@ -9,6 +9,11 @@ from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization, Authorization
 from .paginator import EstimatedCountPaginator
 
+import logging
+l = logging.getLogger('django.db.backends')
+l.setLevel(logging.DEBUG)
+l.addHandler(logging.StreamHandler())
+
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
@@ -135,7 +140,7 @@ class FriendPostResource(ModelResource):
         include_resource_uri = False
         authorization= Authorization()
         filtering = {
-            "id": ['exact', 'gt'],
+            "id": ['exact', 'gt', 'gte'],
             "user": ALL_WITH_RELATIONS,
             "post": ALL_WITH_RELATIONS,
         }
@@ -143,7 +148,8 @@ class FriendPostResource(ModelResource):
         allowed_methods = ['get']
 
     # def get_object_list(self, request):
-    #     this_user_posts = super(PostResource, self).get_object_list(request).filter(user_key=request.user)
+    #     this_user_posts = super(FriendPostResource, self).get_object_list(request).filter(user_key=request.user)
+    #     return this_user_posts
 
 """
 // tastypie 상속 가능한 method
