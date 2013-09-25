@@ -65,11 +65,10 @@ function PostTopPolling() {
             if(data.objects.length != 0)
             {
                 $("#post_public_template").tmpl(data.objects).prependTo("#timeline");
-                $.waypoints('refresh');
                 post_top_url = data.meta.previous;
                 console.log("1 previous url:  "+post_top_url);
                 if(!data.meta.previous)
-                    post_top_url = "api/v1/friendposts/?offset=0&limit=1&id__gt=" + data.objects[0].id;
+                    post_top_url = "api/v1/friendposts/?limit=1&id__gt=" + data.objects[0].id; // TODO(ym):Pick latest element
                 console.log("2 previous url:  "+post_top_url);
                 if(isBottominit==0) {
                     post_bottom_url = data.meta.next;
@@ -86,10 +85,7 @@ function PostTopPolling() {
 $(document).ready(function() {
   PostTopPolling();
   setTimeout(function(){$("#p_timeline").waypoint(function(){postBottom();}, { offset: 'bottom-in-view' });}, 1000);
-  $("#p_timeline").waypoint(function(){
-  (function poll() {
-    setTimeout(function(){PostTopPolling();$.ajax({complete:poll()});}, 5000);
-  })()}, { offset: '0' })
+  setTimeout(function(){$("#p_timeline").waypoint(function(){PostTopPolling()}, { offset: '0' });}, 5000);
 });
 
 function postBottom() {
@@ -126,7 +122,7 @@ function focusComment(){
         })();
     }, { offset: "bottom-in-view"});
 }
-
+// TODO(ym):comment polling work with dynamical creation
 $(document).on("waypoint", { offset: "bottom-in-view"}, ".p_commentList", function(){
     var tagid = $(this).attr("id");
         if (!tagid)
