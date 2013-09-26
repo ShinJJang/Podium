@@ -17,10 +17,19 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 post_save.connect(create_user_profile, sender=User)
 
+class Groups(models.Model):
+    group_name = models.CharField(max_length=30)
+    discription = models.CharField(max_length=4096)
+    created = models.DateTimeField(auto_now=True)
+    group_users = models.ManyToManyField(UserProfile)
+
 class Posts(models.Model):
     user_key = models.ForeignKey(UserProfile)
     post = models.CharField(max_length=4096)
     created = models.DateTimeField(auto_now=True)
+    group = models.ForeignKey(Groups)
+    open_scope = models.IntegerField(default=0) # 0 = public, 1 = private
+
 
 def create_friend_post(sender, instance, created, **kwargs):
     if created:
@@ -51,6 +60,7 @@ class Emotions(models.Model):
     )
     user_key = models.ForeignKey(UserProfile)
     emotion = models.CharField(max_length=2, choices=EMOTION_CHOICES) # default = None?
+    created = models.DateTimeField(auto_now=True)
 
 class PostEmotions(Emotions):
     post_key = models.ForeignKey(Posts)
