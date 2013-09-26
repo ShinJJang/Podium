@@ -66,13 +66,13 @@ function PostTopPolling() {
             {
                 $("#post_public_template").tmpl(data.objects).prependTo("#timeline");
                 post_top_url = data.meta.previous;
-                console.log("1 previous url:  "+post_top_url);
+                console.log("1 previous url:  " + post_top_url);
                 if(!data.meta.previous)
                     post_top_url = "api/v1/friendposts/?limit=1&id__gt=" + data.objects[0].id;
-                console.log("2 previous url:  "+post_top_url);
+                console.log("2 previous url:  " + post_top_url);
                 if(isBottominit==0) {
-                    post_bottom_url = data.meta.next + "&id__lte=" + data.objects[0].id;
-                    console.log("next url:  "+post_bottom_url);
+                    post_bottom_url = (!data.meta.next) ? null : data.meta.next + "&id__lte=" + data.objects[0].id;
+                    console.log("1 next url:  " + post_bottom_url);
                     isBottominit = 1;
                 }
 //                focusComment();
@@ -102,7 +102,7 @@ function postBottom() {
             {
                 $("#post_public_template").tmpl(data.objects).appendTo("#timeline");
                 post_bottom_url = data.meta.next;
-                console.log("next url:  "+post_bottom_url);
+                console.log("2 next url:  "+post_bottom_url);
             }
         }
         });

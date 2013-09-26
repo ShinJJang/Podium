@@ -31,7 +31,7 @@ class UserProfileResource(ModelResource):
         authorization= Authorization()
 
 class UserPictureResource(ModelResource):
-    user = fields.ForeignKey(UserProfileResource, 'user_key', full=False)
+    user = fields.ForeignKey(UserResource, 'user_key', full=False)
 
     class Meta:
         queryset = UserPictures.objects.all()
@@ -40,7 +40,7 @@ class UserPictureResource(ModelResource):
         authorization= Authorization()
 
 class PostResource(ModelResource):
-    user = fields.ToOneField(UserProfileResource, 'user_key', full=True)
+    user = fields.ToOneField(UserResource, 'user_key', full=True)
 
     class Meta:
         queryset = Posts.objects.all()
@@ -54,14 +54,14 @@ class PostResource(ModelResource):
         always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
-        userprofile = UserProfile.objects.get(user=bundle.request.user)
+        user = bundle.request.user
         post = bundle.data['post']
-        bundle.obj = Posts(user_key=userprofile, post=post)
+        bundle.obj = Posts(user_key=user, post=post)
         bundle.obj.save()
         return bundle
 
 class CommentResource(ModelResource):
-    user = fields.ForeignKey(UserProfileResource, 'user_key', full=True)
+    user = fields.ForeignKey(UserResource, 'user_key', full=True)
     post = fields.ForeignKey(PostResource, 'post_key', full=False)
 
     class Meta:
@@ -76,7 +76,7 @@ class CommentResource(ModelResource):
         always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
-        user = UserProfile.objects.get(user=bundle.request.user)
+        user = User.objects.get(user=bundle.request.user)
         post_key = bundle.data['post_key']
         post = Posts.objects.get(pk=post_key)
         comment = bundle.data['comment']
@@ -85,8 +85,8 @@ class CommentResource(ModelResource):
         return bundle
 
 class FriendshipNotisResource(ModelResource): #create
-    noti_from_user = fields.ForeignKey(UserProfileResource, 'friend_noti_from_user_key', full=False)
-    noti_to_user = fields.ForeignKey(UserProfileResource, 'friend_noti_to_user_key', full=False)
+    noti_from_user = fields.ForeignKey(UserResource, 'friend_noti_from_user_key', full=False)
+    noti_to_user = fields.ForeignKey(UserResource, 'friend_noti_to_user_key', full=False)
 
     class Meta:
         queryset = FriendshipNotis.objects.all()
@@ -99,17 +99,16 @@ class FriendshipNotisResource(ModelResource): #create
         }
 
     def obj_create(self, bundle, **kwargs):
-        noti_from_user = UserProfile.objects.get(user = bundle.request.user) #bundle.request.user
+        noti_from_user = User.objects.get(bundle.request.user) #bundle.request.user
         friend_id = bundle.data['friend_id']
-        temp_friend_user = User.objects.get(pk = friend_id)
-        noti_to_user = UserProfile.objects.get(user = temp_friend_user)
+        noti_to_user = User.objects.get(pk = friend_id)
         bundle.obj = FriendshipNotis(friend_noti_from_user_key = noti_from_user, friend_noti_to_user_key = noti_to_user)
         bundle.obj.save()
         return bundle
 
 class FriendshipsResource(ModelResource): #polling get or create
-    user = fields.ForeignKey(UserProfileResource, 'user_key', full=False)
-    friend_user = fields.ForeignKey(UserProfileResource, 'friend_user_key', full=False)
+    user = fields.ForeignKey(UserResource, 'user_key', full=False)
+    friend_user = fields.ForeignKey(UserResource, 'friend_user_key', full=False)
 
     class Meta:
         queryset = Friendships.objects.all()
@@ -122,16 +121,15 @@ class FriendshipsResource(ModelResource): #polling get or create
         }
 
     def obj_create(self, bundle, **kwargs):
-        user = UserProfile.objects.get(user = bundle.request.user)
+        user = User.objects.get(user = bundle.request.user)
         friend_id = bundle.data['friend_id']
-        temp_friend_user = User.objects.get(pk = friend_id)
-        friend_user = UserProfile.objects.get(user = temp_friend_user)
+        friend_user = User.objects.get(pk = friend_id)
         bundle.obj = Friendships(user_key = user, friend_user_key = friend_user)
         bundle.obj.save()
         return bundle
 
 class FriendPostResource(ModelResource):
-    user = fields.ForeignKey(UserProfileResource, 'user_key', full=True)
+    user = fields.ForeignKey(UserResource, 'user_key', full=True)
     post = fields.ForeignKey(PostResource, 'friend_post_key', full=True)
 
     class Meta:

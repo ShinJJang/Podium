@@ -27,7 +27,7 @@ class Posts(models.Model):
     user_key = models.ForeignKey(User)
     post = models.CharField(max_length=4096)
     created = models.DateTimeField(auto_now=True)
-    group = models.ForeignKey(Groups)
+    group = models.ForeignKey(Groups, null=True)
     open_scope = models.IntegerField(default=0) # 0 = public, 1 = private
 
 
