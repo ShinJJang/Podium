@@ -75,6 +75,7 @@ function PostTopPolling() {
                     console.log("1 next url:  " + post_bottom_url);
                     isBottominit = 1;
                 }
+                timeRefresh();
 //                focusComment();
             }
         }
@@ -103,6 +104,7 @@ function postBottom() {
                 $("#post_public_template").tmpl(data.objects).appendTo("#timeline");
                 post_bottom_url = data.meta.next;
                 console.log("2 next url:  "+post_bottom_url);
+                timeRefresh();
             }
         }
         });
@@ -210,7 +212,7 @@ jQuery(document).ready(function() {
         wordSeparator: " "
    };
 
-  setTimeout(function(){timeRefresh()}, 1000);
+  setTimeout(function(){timeRefresh();}, 5000);
 });
 
 function timeRefresh() {

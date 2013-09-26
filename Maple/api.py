@@ -163,7 +163,7 @@ class PostEmotionsResource(ModelResource):
         }
 
     def obj_create(self, bundle, **kwargs):
-        user = bundle.request.user #bundle.request.user
+        user = bundle.request.user
         post = Posts.objects.get(pk=bundle.data['post_key'])
         emotion = bundle.data['emotion']
         bundle.obj = PostEmotions(user_key = user, post_key = post, emotion = emotion)
