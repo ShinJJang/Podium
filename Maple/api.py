@@ -140,7 +140,7 @@ class FriendPostResource(ModelResource):
         include_resource_uri = False
         authorization= Authorization()
         filtering = {
-            "id": ['exact', 'gt', 'gte'],
+            "id": ['exact', 'gt', 'lte'],
             "user": ALL_WITH_RELATIONS,
             "post": ALL_WITH_RELATIONS,
         }
