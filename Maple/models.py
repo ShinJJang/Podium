@@ -24,7 +24,7 @@ class Groups(models.Model):
     group_users = models.ManyToManyField(UserProfile)
 
 class Posts(models.Model):
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     post = models.CharField(max_length=4096)
     created = models.DateTimeField(auto_now=True)
     group = models.ForeignKey(Groups)
@@ -46,7 +46,7 @@ def create_friend_post(sender, instance, created, **kwargs):
 post_save.connect(create_friend_post, sender=Posts)
 
 class Comments(models.Model):
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)
     comment = models.CharField(max_length=1024)
     created = models.DateTimeField(auto_now=True)
@@ -58,7 +58,7 @@ class Emotions(models.Model):
         (LIKE, 'like'),
         (GOOD, 'good'),
     )
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     emotion = models.CharField(max_length=2, choices=EMOTION_CHOICES) # default = None?
     created = models.DateTimeField(auto_now=True)
 
@@ -75,14 +75,14 @@ class UserPictures(models.Model):
     created = models.DateTimeField(auto_now=True)
 
 class PostPictures(models.Model):
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)
     picture = models.FileField(upload_to = 'upload/%y/%m/%d')
     name = models.CharField(max_length=30,null=False)
     created = models.DateTimeField(auto_now=True)
 
 class Files(models.Model):
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)
     file = models.FileField(upload_to = 'upload/%y/%m/%d')
     name = models.CharField(max_length=30,null=False)
@@ -90,13 +90,13 @@ class Files(models.Model):
 
 # Relation with friend
 class Friendships(models.Model):
-    user_key = models.ForeignKey(UserProfile, related_name='my_key')
-    friend_user_key = models.ForeignKey(UserProfile, related_name='friend_key')
+    user_key = models.ForeignKey(User, related_name='my_key')
+    friend_user_key = models.ForeignKey(User, related_name='friend_key')
 
 # Relation sending friend request
 class FriendshipNotis(models.Model):
-    friend_noti_from_user_key = models.ForeignKey(UserProfile, related_name='request_from')
-    friend_noti_to_user_key = models.ForeignKey(UserProfile, related_name='request_to')
+    friend_noti_from_user_key = models.ForeignKey(User, related_name='request_from')
+    friend_noti_to_user_key = models.ForeignKey(User, related_name='request_to')
 
 class UserChats(models.Model):
     chat_from_user_key = models.ForeignKey(User, related_name = 'UserChats_from_user') #chat_user
@@ -118,7 +118,7 @@ class Notices(models.Model):
     # need to add files
 
 class FriendPosts(models.Model):
-    user_key = models.ForeignKey(UserProfile, related_name='my_userprofile_key')
+    user_key = models.ForeignKey(User, related_name='my_user_key')
     friend_post_key = models.ForeignKey(Posts, related_name='friend_post_key')
 
 class ChatTables(models.Model):
