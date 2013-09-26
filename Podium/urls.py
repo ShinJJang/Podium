@@ -16,6 +16,7 @@ v1_api.register(FriendshipNotisResource())
 v1_api.register(FriendshipsResource())
 v1_api.register(FriendPostResource())
 v1_api.register(UserPictureResource())
+v1_api.register(PostEmotionsResource())
 
 
 urlpatterns = patterns('',

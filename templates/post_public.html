@@ -8,7 +8,7 @@
                     <div class="p_tText">
                         <p>${ post.post }</p>
                     </div>
-                    <p class="p_tPermalink public"><a class="timestamp" href="#">15시간 전 ${ post.created }</a></p>
+                    <p class="p_tPermalink public"><a class="timestamp" href="#"><abbr class="timeago" title=${ post.created }></abbr></a></p>
                 </div>
             </article>
             <aside class="p_tAside">
@@ -20,7 +20,11 @@
                 </header>
                 <section class="p_emotion">
                     <div class="p_container">
-                        Hello
+                        <form id="form_emotion" method="post" action=".">{% csrf_token %}
+                            <input name="post_key" type="hidden" value="${ id }">
+                            <input name="emotion" type="submit" value="좋아요" tag="E1">
+                            <input name="emotion" type="submit" value="멋져요" tag="E2">
+                        </form>
                     </div>
                 </section>
                 <section class="p_comment">

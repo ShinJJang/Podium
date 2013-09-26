@@ -76,7 +76,7 @@ class CommentResource(ModelResource):
         always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
-        user = User.objects.get(user=bundle.request.user)
+        user = bundle.request.user
         post_key = bundle.data['post_key']
         post = Posts.objects.get(pk=post_key)
         comment = bundle.data['comment']
@@ -148,6 +148,27 @@ class FriendPostResource(ModelResource):
     # def get_object_list(self, request):
     #     this_user_posts = super(FriendPostResource, self).get_object_list(request).filter(user_key=request.user)
     #     return this_user_posts
+
+class PostEmotionsResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user')
+    post = fields.ForeignKey(PostResource, 'post')
+
+    class Meta:
+        queryset = PostEmotions.objects.all()
+        resource_name = 'postemotions'
+        authorization= Authorization()
+        filtering = {
+            "user": ALL_WITH_RELATIONS,
+            "post": ALL_WITH_RELATIONS,
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user #bundle.request.user
+        post = Posts.objects.get(pk=bundle.data['post_key'])
+        emotion = bundle.data['emotion']
+        bundle.obj = PostEmotions(user_key = user, post_key = post, emotion = emotion)
+        bundle.obj.save()
+        return bundle
 
 """
 // tastypie 상속 가능한 method

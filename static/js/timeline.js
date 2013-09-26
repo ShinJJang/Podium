@@ -166,3 +166,53 @@ $(document).on("click", ".p_responses", function(){
                     $(this).toggleClass("opened");
                     return false;
                 });
+
+// emotion click
+$(document).on("click", "#form_emotion :submit", function(event){
+        var feedback_api = "/api/v1/postemotions/"
+        var data = JSON.stringify({
+            "emotion": $(this).attr('tag'),
+            "post_key": $("input[name=post_key]").val()
+        });
+        console.log(data);
+        $.ajax({
+            url: feedback_api,
+            type: "POST",
+            contentType: "application/json",
+            data: data,
+            dataType: "json",
+            statusCode: {
+                201: function(data) {
+                    console.log("post emotion submit response");
+                    console.log(data);
+                }
+            }
+        });
+        return false;
+});
+
+jQuery(document).ready(function() {
+    // Korean
+    jQuery.timeago.settings.strings = {
+        suffixAgo: "전",
+        suffixFromNow: "후",
+        seconds: "1분 이내",
+        minute: "1분",
+        minutes: "%d분",
+        hour: "1시간",
+        hours: "%d시간",
+        day: "하루",
+        days: "%d일",
+        month: "한 달",
+        months: "%d달",
+        year: "1년",
+        years: "%d년",
+        wordSeparator: " "
+   };
+
+  setTimeout(function(){timeRefresh()}, 1000);
+});
+
+function timeRefresh() {
+    jQuery("abbr.timeago").timeago();
+}
