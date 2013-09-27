@@ -32,8 +32,8 @@ $("#form_post").submit(function(event) {
 $(document).on("submit", "#form_comment",function(event) {
         var feedback_api = "/api/v1/comment/";
         var data = JSON.stringify({
-            "comment": $("input[name=comment]").val(),
-            "post_key": $("input[name=post_key]").val()
+            "comment": $(this).find("input[name=comment]").val(),
+            "post_key": $(this).find("input[name=post_key]").val()
         });
         console.log(data);
         $.ajax({
@@ -170,11 +170,11 @@ $(document).on("click", ".p_responses", function(){
                 });
 
 // emotion click
-$(document).on("click", "#form_emotion :submit", function(event){
+$(document).on("click", ".form_emotion :submit", function(event){
         var feedback_api = "/api/v1/postemotions/"
         var data = JSON.stringify({
             "emotion": $(this).attr('tag'),
-            "post_key": $("input[name=post_key]").val()
+            "post_key": $(this).siblings("input[name=post_key]").val()
         });
         console.log(data);
         $.ajax({
@@ -193,6 +193,7 @@ $(document).on("click", "#form_emotion :submit", function(event){
         return false;
 });
 
+// dynamic timeago
 jQuery(document).ready(function() {
     // Korean
     jQuery.timeago.settings.strings = {

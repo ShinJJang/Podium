@@ -20,10 +20,10 @@
                 </header>
                 <section class="p_emotion">
                     <div class="p_container">
-                        <form id="form_emotion" method="post" action=".">{% csrf_token %}
-                            <input name="post_key" type="hidden" value="${ id }">
+                        <form class="form_emotion" method="post" action=".">{% csrf_token %}
                             <input name="emotion" type="submit" value="좋아요" tag="E1">
                             <input name="emotion" type="submit" value="멋져요" tag="E2">
+                            <input name="post_key" type="hidden" value="${ id }">
                         </form>
                     </div>
                 </section>
