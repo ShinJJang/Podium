@@ -166,6 +166,11 @@ class PostEmotionsResource(ModelResource):
         user = bundle.request.user
         post = Posts.objects.get(pk=bundle.data['post_key'])
         emotion = bundle.data['emotion']
+
+        # 이미 감정표현을 한 경우.
+        if PostEmotions.objects.filter(user_key=user, post_key=post).exists():
+            return bundle;
+
         bundle.obj = PostEmotions(user_key = user, post_key = post, emotion = emotion)
         bundle.obj.save()
         return bundle
