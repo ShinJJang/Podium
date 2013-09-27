@@ -16,7 +16,7 @@ v1_api.register(FriendshipNotisResource())
 v1_api.register(FriendshipsResource())
 v1_api.register(FriendPostResource())
 v1_api.register(UserPictureResource())
-
+v1_api.register(PollResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home),
@@ -29,6 +29,8 @@ urlpatterns = patterns('',
     (r'^api/', include(v1_api.urls)),
     url(r'accounts/register/$', RegistrationViewUniqueEmail.as_view(), name='registration_register'),
     (r'^accounts/',include('registration.backends.default.urls')),
+    # temporary page
+    url(r'^poll/$', views.poll),
     # Uncomment the admin/doc line below to enable admin documentation:
     #url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

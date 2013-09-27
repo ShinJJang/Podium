@@ -1,0 +1,134 @@
+            <section id="p_timeline">
+                <div class="p_container">
+                    <section class="p_timelineContents">
+                        <div class="p_tItem p_container">
+                            <a href="#" class="p_tAdd p_tIcon"></a>
+                            <div class="p_tBox">
+                                <ul class="writeSelect cboth">
+                                    <li class="wText"><a href="#">Text</a></li>
+                                    <li class="wArticle disabled"><a href="#">Article</a></li>
+                                    <li class="wPhoto"><a href="#">Photo</a></li>
+                                    <li class="wVideo disabled"><a href="#">Video</a></li>
+                                    <li class="wFile disabled"><a href="#">File</a></li>
+                                    <li class="wPoll disabled"><a href="#">Poll</a></li>
+                                    <li class="wCode disabled"><a href="#">Code</a></li>
+                                    <li class="wEvent disabled"><a href="#">Event</a></li>
+                                </ul>
+                                <section>
+                                    <form id="form_post" method="post" action="">{% csrf_token %}
+                                        <input type="text" name="post">
+                                        <input type="submit" value="작성">
+                                    </form>
+                                </section>
+                            </div>
+                        </div>
+                        <div class="p_tItem p_container">
+                            <a href="#" class="p_tWidget p_tIcon"></a>
+                            <div class="p_tBox">
+                                <section class="p_tWidget cboth">
+                                    <div id="weatherBox" class="cboth">
+                                        <h2></h2>
+                                        <p class="weather"></p>
+                                    </div>
+                                    <div class="disabled widgetBox widget_wide cboth">
+                                        <h3>Schedule<a class="edit" href="#">Edit</a></h3>
+                                        <table class="scheduleTable widgetTable">
+                                            <tbody>
+                                                <tr class="cat_class">
+                                                    <td class="time">13:00 - 15:00</td>
+                                                    <th><strong>집체교육</strong> 네트워크 보안을 위한 방화벽 설계</th>
+                                                    <td class="location">해찬 7-1~7-3</td>
+                                                </tr>
+                                                <tr class="cat_class">
+                                                    <td class="time">16:00 - 18:00</td>
+                                                    <th><strong>집체교육</strong> Security 아키텍쳐의 이해와 적용</th>
+                                                    <td class="location">해찬 7-1~7-3</td>
+                                                </tr>
+                                                <tr class="cat_project">
+                                                    <td class="time">19:00 - 22:00</td>
+                                                    <th><strong>프로젝트</strong> 멘토링</th>
+                                                    <td class="location">아람 7-7</td>
+                                                </tr>
+                                                <tr class="cat_etc">
+                                                    <td class="time">22:00 - 24:00</td>
+                                                    <th><strong>기타</strong> 브론즈 탈출</th>
+                                                    <td class="location">소환사의 협곡</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="widgetBox widget_narrow_left">
+                                        <h3>Notice</h3>
+                                        <table class="widgetTable">
+                                            <tbody>
+                                                <tr>
+                                                    <td><a href="#">장학금 서류 내세요</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href="#">프로젝트 활동비 이렇게 쓰세요</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href="#">월요일에 전기 끊겨요</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href="#">방학 땐 문 닫아요</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="disabled widgetBox widget_narrow_right">
+                                        <h3>Hot Links<a class="edit" href="#">Edit</a></h3>
+                                        <table class="widgetTable">
+                                            <tbody>
+                                                <tr>
+                                                    <td><a href="#">강의실 예약</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href="#">프로젝트 관련 서류 모음</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href="#">우리 팀 Repository</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href="#">문명 소모임</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                        <div id="timeline"></div>
+                    </section>
+                    <nav class="p_timelineNav disabled">
+                        <h3 class="weekly">Browse by Week</h3>
+                        <ul>
+                            <li class="selected"><a href="#"><span>August 4th - 12th</span></a></li>
+                            <li><a href="#"><span>July 28th - August 3rd</span></a></li>
+                            <li><a href="#"><span>July 21th - 27th</span></a></li>
+                            <li><a href="#"><span>July 14th - 20th</span></a></li>
+                            <li><a href="#"><span>July 7th - 13th</span></a></li>
+                            <li><a href="#"><span>June 30th - July 6th</span></a></li>
+                            <li><a href="#"><span>June 23th - 29th</span></a></li>
+                            <li><a href="#"><span>June 16th - 22th</span></a></li>
+                            <li class="more"><a href="#"><span>More</span></a></li>
+                        </ul>
+                        <h3 class="moment">Browse by Moments</h3>
+                        <ul>
+                            <li class="selected"><a href="#"><span>방학</span></a></li>
+                            <li><a href="#"><span>4기 청계산 산행</span></a></li>
+                            <li><a href="#"><span>4기 발대식</span></a></li>
+                            <li><a href="#"><span>2013 여름 집체교육</span></a></li>
+                            <li><a href="#"><span>4기 오리엔테이션</span></a></li>
+                            <li><a href="#"><span>Lorem</span></a></li>
+                            <li><a href="#"><span>Ipsum</span></a></li>
+                            <li><a href="#"><span>Dolor</span></a></li>
+                            <li class="more"><a href="#"><span>More</span></a></li>
+                        </ul>
+                        <div id="siteInfo">
+                            <p class="copy">&copy; Podium 2013</p>
+                            <p><a href="#" class="about"><span>About</span></a> <sup>|</sup> <a href="#" class="developer"><span>Developer</span></a> <sup>|</sup> <a href="#" class="privacy"><span>개인정보보호</span></a> <sup>|</sup> <a href="#" class="eula"><span>이용약관</span></a></p>
+                        </div>
+                    </nav>
+                </div>
+            </section>

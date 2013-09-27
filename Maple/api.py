@@ -140,6 +140,17 @@ class FriendPostResource(ModelResource):
         paginator_class = EstimatedCountPaginator
         allowed_methods = ['get']
 
+class PollResource(ModelResource):
+    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+
+    class Meta:
+        queryset = Polls.objects.all()
+        resource_name = 'polls'
+        authorization= Authorization()
+        filtering = {
+            "post": ALL_WITH_RELATIONS,
+        }
+
 
 """
 detail_uri_kwargs()
