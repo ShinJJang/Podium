@@ -20,6 +20,17 @@ def home(request):
     return render(request,'index.html', ctx)
 
 @login_required
+def poll(request):
+    session = Session.objects.get(session_key = request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id = user_id)
+    ctx = Context({
+        'user':user,
+        'page_title':'Podium Poll'
+    })
+    return render(request,'poll.html', ctx)
+
+@login_required
 def pui(request):
     session = Session.objects.get(session_key = request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')

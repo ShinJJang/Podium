@@ -175,6 +175,18 @@ class PostEmotionsResource(ModelResource):
         bundle.obj.save()
         return bundle
 
+class PollResource(ModelResource):
+    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+
+    class Meta:
+        queryset = Polls.objects.all()
+        resource_name = 'polls'
+        authorization= Authorization()
+        filtering = {
+            "post": ALL_WITH_RELATIONS,
+        }
+
+
 """
 // tastypie 상속 가능한 method
 detail_uri_kwargs()

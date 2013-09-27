@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+import jsonfield
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
@@ -124,3 +125,7 @@ class FriendPosts(models.Model):
 class ChatTables(models.Model):
     from_chatting_user = models.ForeignKey(User, related_name = 'from_ChatTable_user')
     to_chatting_user = models.ForeignKey(User, related_name = 'to_ChatTable_user')
+
+class Polls(models.Model):
+    post_key = models.ForeignKey(Posts, related_name = 'polls')
+    poll = jsonfield.JSONField()

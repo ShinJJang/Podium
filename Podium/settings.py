@@ -132,7 +132,8 @@ INSTALLED_APPS = (
     'django_jenkins',
     'Maple',
     'tastypie',
-    'registration'
+    'registration',
+    'jsonfield'
 )
 
 # registration required option
