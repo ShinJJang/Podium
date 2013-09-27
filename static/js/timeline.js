@@ -65,6 +65,7 @@ function PostTopPolling() {
             if(data.objects.length != 0)
             {
                 $("#post_public_template").tmpl(data.objects).prependTo("#timeline");
+                timeRefresh();
                 post_top_url = data.meta.previous;
                 console.log("1 previous url:  " + post_top_url);
                 if(!data.meta.previous)
@@ -75,8 +76,6 @@ function PostTopPolling() {
                     console.log("1 next url:  " + post_bottom_url);
                     isBottominit = 1;
                 }
-                timeRefresh();
-//                focusComment();
             }
         }
         });
@@ -85,8 +84,29 @@ function PostTopPolling() {
 // when screen on top, call PostTopPolling
 $(document).ready(function() {
   PostTopPolling();
-  setTimeout(function(){$("#p_timeline").waypoint(function(){postBottom();}, { offset: 'bottom-in-view' });}, 1000);
+  setTimeout(function(){$("#timeline").waypoint(function(){postBottom();}, { offset: 'bottom-in-view' });}, 1000);
   setTimeout(function(){$("#p_timeline").waypoint(function(){PostTopPolling()}, { offset: '0' });}, 5000);
+
+  // dynamic timeago
+  // Korean
+  $.timeago.settings.strings = {
+    suffixAgo: "전",
+    suffixFromNow: "후",
+    seconds: "1분 이내",
+    minute: "1분",
+    minutes: "%d분",
+    hour: "1시간",
+    hours: "%d시간",
+    day: "하루",
+    days: "%d일",
+    month: "한 달",
+    months: "%d달",
+    year: "1년",
+    years: "%d년",
+    wordSeparator: " "
+  };
+
+  setTimeout(function(){timeRefresh();console.log("timeago called");}, 2000);
 });
 
 function postBottom() {
@@ -193,31 +213,8 @@ $(document).on("click", ".form_emotion :submit", function(event){
         return false;
 });
 
-// dynamic timeago
-jQuery(document).ready(function() {
-    // Korean
-    jQuery.timeago.settings.strings = {
-        suffixAgo: "전",
-        suffixFromNow: "후",
-        seconds: "1분 이내",
-        minute: "1분",
-        minutes: "%d분",
-        hour: "1시간",
-        hours: "%d시간",
-        day: "하루",
-        days: "%d일",
-        month: "한 달",
-        months: "%d달",
-        year: "1년",
-        years: "%d년",
-        wordSeparator: " "
-   };
-
-  setTimeout(function(){timeRefresh();}, 5000);
-});
-
 function timeRefresh() {
-    jQuery("abbr.timeago").timeago();
+    $("abbr.timeago").timeago();
 }
 
 // TODO - Counting emotion
