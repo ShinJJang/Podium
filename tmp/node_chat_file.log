@@ -3149,3 +3149,30 @@
 {"level":"info","message":"lacidjunout","timestamp":"2013-08-29T23:15:53.044Z"}
 {"level":"info","message":"disconnect user id = 11to2","timestamp":"2013-08-29T23:15:53.046Z"}
 {"level":"info","message":"send to django data : user_id=11to2&room_name=1to2&type=DELETE","timestamp":"2013-08-29T23:15:53.048Z"}
+{"level":"info","message":"sessionId =undefined connect","timestamp":"2013-09-27T03:15:50.177Z"}
+{"level":"info","message":"client id = oIywKJRj_TF1Cpe3aiv7","timestamp":"2013-09-27T03:15:50.199Z"}
+{"room_name":"1to3","user_id":"1","username":"admin","level":"info","message":"","timestamp":"2013-09-27T03:15:50.203Z"}
+{"level":"info","message":"socket.username = admin","timestamp":"2013-09-27T03:15:50.203Z"}
+{"level":"info","message":"username = admin user_id = 1 room_name = 1to3","timestamp":"2013-09-27T03:15:50.203Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-09-27T03:15:50.204Z"}
+{"level":"info","message":"sessionId =undefined connect","timestamp":"2013-09-27T03:15:53.021Z"}
+{"level":"info","message":"client id = R2tdeUHE9_PEJWiiaiv8","timestamp":"2013-09-27T03:15:53.035Z"}
+{"room_name":"1to2","user_id":"1","username":"admin","level":"info","message":"","timestamp":"2013-09-27T03:15:53.037Z"}
+{"level":"info","message":"socket.username = admin","timestamp":"2013-09-27T03:15:53.038Z"}
+{"level":"info","message":"username = admin user_id = 1 room_name = 1to2","timestamp":"2013-09-27T03:15:53.039Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-09-27T03:15:53.039Z"}
+{"level":"info","message":"adminout","timestamp":"2013-09-27T03:18:06.733Z"}
+{"level":"info","message":"disconnect user id = 11to3","timestamp":"2013-09-27T03:18:06.735Z"}
+{"level":"info","message":"send to django data : user_id=11to3&room_name=1to3&type=DELETE","timestamp":"2013-09-27T03:18:06.752Z"}
+{"level":"info","message":"adminout","timestamp":"2013-09-27T03:18:06.756Z"}
+{"level":"info","message":"disconnect user id = 11to2","timestamp":"2013-09-27T03:18:06.756Z"}
+{"level":"info","message":"send to django data : user_id=11to2&room_name=1to2&type=DELETE","timestamp":"2013-09-27T03:18:06.758Z"}
+{"level":"info","message":"sessionId =undefined connect","timestamp":"2013-09-27T03:33:44.199Z"}
+{"level":"info","message":"client id = BP8-ZJeQyeamElqWaiv9","timestamp":"2013-09-27T03:33:44.224Z"}
+{"room_name":"1to3","user_id":"1","username":"admin","level":"info","message":"","timestamp":"2013-09-27T03:33:44.226Z"}
+{"level":"info","message":"socket.username = admin","timestamp":"2013-09-27T03:33:44.226Z"}
+{"level":"info","message":"username = admin user_id = 1 room_name = 1to3","timestamp":"2013-09-27T03:33:44.227Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-09-27T03:33:44.227Z"}
+{"level":"info","message":"adminout","timestamp":"2013-09-27T03:33:48.078Z"}
+{"level":"info","message":"disconnect user id = 11to3","timestamp":"2013-09-27T03:33:48.078Z"}
+{"level":"info","message":"send to django data : user_id=11to3&room_name=1to3&type=DELETE","timestamp":"2013-09-27T03:33:48.079Z"}
