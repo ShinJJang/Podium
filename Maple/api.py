@@ -18,7 +18,7 @@ class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
         resource_name = 'user'
-        fields = ['email', 'username', 'last_login']
+        fields = ['id', 'email', 'username', 'last_login']
         authorization= Authorization()
 
 class UserProfileResource(ModelResource):
