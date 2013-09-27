@@ -102,7 +102,11 @@
                 #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wEvent a { background-image:url(../images/timeline_event.png); }
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm input.postFormText { vertical-align: top; height:56px; border:1px #eaeaea solid; border-radius: 5px; padding:5px 4px; margin:10px; width:560px; }
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm input.postFormSubmit { vertical-align: top; height:30px; border:1px #eaeaea solid; border-radius: 5px; padding:5px 4px; margin:10px 10px 10px 530px; width:50px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm input.postFormSubmit { vertical-align: top; height:30px; border:1px #eaeaea solid; border-radius: 5px; padding:5px 4px; margin:0px 0px 10px 205px; width:50px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm a { margin:0px 20px; width: 50px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm select { border:1px #eaeaea solid; margin:0px 10px; width: 50px; }
+
+
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle { padding:19px; border-bottom:1px #eaeaea solid; }
 
