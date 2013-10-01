@@ -83,30 +83,29 @@ function PostTopPolling() {
 
 // when screen on top, call PostTopPolling
 $(document).ready(function() {
-  PostTopPolling();
-  setTimeout(function(){$("#timeline").waypoint(function(){postBottom();}, { offset: 'bottom-in-view' });}, 1000);
-  setTimeout(function(){$("#p_timeline").waypoint(function(){PostTopPolling()}, { offset: '0' });}, 5000);
+    PostTopPolling();
+    setTimeout(function(){$("#timeline").waypoint(function(){postBottom();}, { offset: 'bottom-in-view' });}, 1000);
+    setTimeout(function(){$("#p_timeline").waypoint(function(){PostTopPolling()}, { offset: '0' });}, 5000);
 
-  // dynamic timeago
-  // Korean
-  $.timeago.settings.strings = {
-    suffixAgo: "전",
-    suffixFromNow: "후",
-    seconds: "1분 이내",
-    minute: "1분",
-    minutes: "%d분",
-    hour: "1시간",
-    hours: "%d시간",
-    day: "하루",
-    days: "%d일",
-    month: "한 달",
-    months: "%d달",
-    year: "1년",
-    years: "%d년",
-    wordSeparator: " "
-  };
+    // dynamic timeago(Korean)
+    $.timeago.settings.strings = {
+        suffixAgo: "전",
+        suffixFromNow: "후",
+        seconds: "1분 이내",
+        minute: "1분",
+        minutes: "%d분",
+        hour: "1시간",
+        hours: "%d시간",
+        day: "하루",
+        days: "%d일",
+        month: "한 달",
+        months: "%d달",
+        year: "1년",
+        years: "%d년",
+        wordSeparator: " "
+    };
 
-  setTimeout(function(){timeRefresh();console.log("timeago called");}, 2000);
+    setTimeout(function(){timeRefresh();console.log("timeago called");}, 2000);
 });
 
 function postBottom() {
@@ -129,52 +128,27 @@ function postBottom() {
         }
         });
 }
-
-// when on post, call pollComment
-function focusComment(){
-    $(".p_commentList").waypoint(function(){
-        var tagid = $(this).attr("id");
-        if (!tagid)
-            return false;
-        var postid = tagid.replace("commentList", "");
-        pollComment(postid);
-        (function poll() {
-            console.log(postid);
-            setTimeout(function(){$.ajax({complete:poll()});pollComment(postid);}, 60000);
-        })();
-    }, { offset: "bottom-in-view"});
-}
-// TODO(ym):comment polling work with dynamical creation
-$(document).on("waypoint", { offset: "bottom-in-view"}, ".p_commentList", function(){
-    var tagid = $(this).attr("id");
-        if (!tagid)
-            return false;
-        var postid = tagid.replace("commentList", "");
-        pollComment(postid);
-        (function poll() {
-            console.log(postid);
-            setTimeout(function(){$.ajax({complete:poll()});pollComment(postid);}, 60000);
-        })();
-})
-
 // polling comment
 function pollComment(post_id) {
     if(!post_id)
         return;
 
-    get_uri = "/api/v1/comment/?post=" + post_id; // api inner parameter ?limit=20&offset=0"
+    var feedback_api = "/api/v1/comment/?post=" + post_id; // api inner parameter ?limit=20&offset=0"
 
     if(comment_offsets[post_id]){
-        get_uri = "/api/v1/comment/?limit=30&offset=" + comment_offsets[post_id];
+        feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=30&offset=" + comment_offsets[post_id];
     }
+
+    console.log("Polling comment url :  " + feedback_api);
     $.ajax({
-        url: get_uri,
+        url: feedback_api,
         type: "GET",
         dataType: "json",
         success: function(data) {
             if(data.objects.length != 0)
             {
-                $("#comment_template").tmpl(data.objects).appendTo("#commentList"+post_id);
+                console.log(data.objects);
+                $("#comment_template").tmpl(data.objects).appendTo("#commentList" + post_id);
                 comment_offsets[post_id] = data.meta.offset + data.objects.length;
                 console.log("댓글 폴링한 마지막 오프셋 :"+comment_offsets[post_id]);
             }
@@ -183,11 +157,20 @@ function pollComment(post_id) {
 }
 
 // comment toggle
+// comment polling on post focused
 $(document).on("click", ".p_responses", function(){
-                    $(this).parent().children("section").toggle();
-                    $(this).toggleClass("opened");
-                    return false;
-                });
+        $(this).parent().children("section").toggle();
+        $(this).toggleClass("opened");
+
+        var tag_id = $(this).siblings(".p_comment").children(".p_commentList").attr("id");
+        console.log(tag_id);
+        if (!tag_id)
+            return false;
+        var postid = tag_id.replace("commentList", "");
+
+        pollComment(postid);
+        return false;
+});
 
 // emotion click
 $(document).on("click", ".form_emotion :submit", function(event){
