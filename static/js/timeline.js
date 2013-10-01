@@ -129,7 +129,6 @@ function postBottom() {
         });
 }
 // polling comment
-// TODO(ym) - polling not latest, what you post. and adjust offset.
 function pollComment(post_id) {
     if(!post_id)
         return;
@@ -137,7 +136,7 @@ function pollComment(post_id) {
     var feedback_api = "/api/v1/comment/?post=" + post_id; // api inner parameter ?limit=20&offset=0"
 
     if(comment_offsets[post_id]){
-        feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=1&offset=0"
+        feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=30&id__gt=" + comment_offsets[post_id];
         // feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=30&offset=" + comment_offsets[post_id];
     }
 
@@ -149,9 +148,9 @@ function pollComment(post_id) {
         success: function(data) {
             if(data.objects.length != 0)
             {
-                console.log(data.objects);
+                console.log(data);
                 $("#comment_template").tmpl(data.objects.reverse()).appendTo("#commentList" + post_id);
-                comment_offsets[post_id] = data.meta.offset + data.objects.length;
+                comment_offsets[post_id] = data.objects[data.objects.length - 1].id;
                 console.log("댓글 폴링한 마지막 오프셋 :"+comment_offsets[post_id]);
             }
         }
@@ -159,11 +158,12 @@ function pollComment(post_id) {
 }
 
 // comment toggle
-// comment polling on post focused
-// TODO(ym) - Comment poll with interval when open
 $(document).on("click", ".p_responses", function(){
         $(this).parent().children("section").toggle();
         var resp = $(this).toggleClass("opened");
+
+        // comment polling on post focused
+        // TODO(ym) - Comment poll with interval when open
         if (resp && resp.context.className.search("opened") != -1){
             var tag_id = $(this).siblings(".p_comment").children(".p_commentList").attr("id");
             if (!tag_id)

@@ -70,6 +70,7 @@ class CommentResource(ModelResource):
         include_resource_uri = False
         authorization= Authorization()
         filtering = {
+            "id": ['gt'],
             "user": ALL_WITH_RELATIONS,
             "post": ALL_WITH_RELATIONS,
         }
