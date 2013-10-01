@@ -46,7 +46,7 @@ $(document).on("submit", "#form_comment",function(event) {
                 201: function(data) {
                     console.log("post submit response");
                     console.log(data);
-                    pollComment($("input[name=post_key]").val());
+                    pollComment(data.post_key);
                 }
             }
         });
@@ -129,6 +129,7 @@ function postBottom() {
         });
 }
 // polling comment
+// TODO(ym) - polling not latest, what you post. and adjust offset.
 function pollComment(post_id) {
     if(!post_id)
         return;
@@ -136,7 +137,8 @@ function pollComment(post_id) {
     var feedback_api = "/api/v1/comment/?post=" + post_id; // api inner parameter ?limit=20&offset=0"
 
     if(comment_offsets[post_id]){
-        feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=30&offset=" + comment_offsets[post_id];
+        feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=1&offset=0"
+        // feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=30&offset=" + comment_offsets[post_id];
     }
 
     console.log("Polling comment url :  " + feedback_api);
@@ -148,7 +150,7 @@ function pollComment(post_id) {
             if(data.objects.length != 0)
             {
                 console.log(data.objects);
-                $("#comment_template").tmpl(data.objects).appendTo("#commentList" + post_id);
+                $("#comment_template").tmpl(data.objects.reverse()).appendTo("#commentList" + post_id);
                 comment_offsets[post_id] = data.meta.offset + data.objects.length;
                 console.log("댓글 폴링한 마지막 오프셋 :"+comment_offsets[post_id]);
             }
@@ -158,17 +160,18 @@ function pollComment(post_id) {
 
 // comment toggle
 // comment polling on post focused
+// TODO(ym) - Comment poll with interval when open
 $(document).on("click", ".p_responses", function(){
         $(this).parent().children("section").toggle();
-        $(this).toggleClass("opened");
+        var resp = $(this).toggleClass("opened");
+        if (resp && resp.context.className.search("opened") != -1){
+            var tag_id = $(this).siblings(".p_comment").children(".p_commentList").attr("id");
+            if (!tag_id)
+                return false;
+            var postid = tag_id.replace("commentList", "");
 
-        var tag_id = $(this).siblings(".p_comment").children(".p_commentList").attr("id");
-        console.log(tag_id);
-        if (!tag_id)
-            return false;
-        var postid = tag_id.replace("commentList", "");
-
-        pollComment(postid);
+            pollComment(postid);
+        }
         return false;
 });
 
