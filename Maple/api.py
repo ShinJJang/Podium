@@ -99,7 +99,7 @@ class FriendshipNotisResource(ModelResource): #create
         }
 
     def obj_create(self, bundle, **kwargs):
-        noti_from_user = User.objects.get(bundle.request.user) #bundle.request.user
+        noti_from_user = bundle.request.user
         friend_id = bundle.data['friend_id']
         noti_to_user = User.objects.get(pk = friend_id)
         bundle.obj = FriendshipNotis(friend_noti_from_user_key = noti_from_user, friend_noti_to_user_key = noti_to_user)
@@ -121,7 +121,7 @@ class FriendshipsResource(ModelResource): #polling get or create
         }
 
     def obj_create(self, bundle, **kwargs):
-        user = User.objects.get(user = bundle.request.user)
+        user = bundle.request.user
         friend_id = bundle.data['friend_id']
         friend_user = User.objects.get(pk = friend_id)
         bundle.obj = Friendships(user_key = user, friend_user_key = friend_user)
