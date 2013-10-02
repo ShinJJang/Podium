@@ -203,6 +203,5 @@ function timeRefresh() {
     $("abbr.timeago").timeago();
 }
 
-// TODO - Counting emotion
 // TODO - Gruop post create
 // TODO - Post crate using open scope

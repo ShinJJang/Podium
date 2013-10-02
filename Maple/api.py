@@ -60,6 +60,11 @@ class PostResource(ModelResource):
         bundle.obj.save()
         return bundle
 
+    def dehydrate(self, bundle):
+        bundle.data['comment_count'] = bundle.obj.comments_set.all().count();
+        bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count();
+        return bundle;
+
 class CommentResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user_key', full=True)
     post = fields.ForeignKey(PostResource, 'post_key', full=False)
