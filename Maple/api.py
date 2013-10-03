@@ -20,6 +20,10 @@ class UserResource(ModelResource):
         resource_name = 'user'
         fields = ['id', 'email', 'username', 'last_login']
         authorization= Authorization()
+        include_resource_uri = False
+        filtering = {
+            "id": ['exact']
+        }
 
 class UserProfileResource(ModelResource):
     user = fields.OneToOneField(UserResource, 'user', full=True)

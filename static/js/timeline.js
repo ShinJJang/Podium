@@ -1,4 +1,4 @@
-var post_top_url = "/api/v1/friendposts/";
+var post_top_url = "http://" + window.location.host + "/api/v1/friendposts/?" + timeline_js_parameter_top_post_polling;
 var post_bottom_url = "/api/v1/friendposts/";
 var comment_offsets = new Object();
 var isBottominit = 0;
@@ -64,12 +64,12 @@ function PostTopPolling() {
             console.log(data)
             if(data.objects.length != 0)
             {
-                $("#post_public_template").tmpl(data.objects).prependTo("#timeline");
+                $("#post_public_template").tmpl(data.objects).prependTo("#timeline_posts");
                 timeRefresh();
                 post_top_url = data.meta.previous;
                 console.log("1 previous url:  " + post_top_url);
                 if(!data.meta.previous)
-                    post_top_url = "api/v1/friendposts/?limit=1&id__gt=" + data.objects[0].id;
+                    post_top_url = "http://" + window.location.host + "/api/v1/friendposts/?limit=1&id__gt=" + data.objects[0].id + "&" + timeline_js_parameter_top_post_polling;
                 console.log("2 previous url:  " + post_top_url);
                 if(isBottominit==0) {
                     post_bottom_url = (!data.meta.next) ? null : data.meta.next + "&id__lte=" + data.objects[0].id;
@@ -84,7 +84,7 @@ function PostTopPolling() {
 // when screen on top, call PostTopPolling
 $(document).ready(function() {
     PostTopPolling();
-    setTimeout(function(){$("#timeline").waypoint(function(){postBottom();}, { offset: 'bottom-in-view' });}, 1000);
+    setTimeout(function(){$("#timeline_posts").waypoint(function(){postBottom();}, { offset: 'bottom-in-view' });}, 1000);
     setTimeout(function(){$("#p_timeline").waypoint(function(){PostTopPolling()}, { offset: '0' });}, 5000);
 
     // dynamic timeago(Korean)
@@ -120,7 +120,7 @@ function postBottom() {
             console.log(data);
             if(data.objects.length != 0)
             {
-                $("#post_public_template").tmpl(data.objects).appendTo("#timeline");
+                $("#post_public_template").tmpl(data.objects).appendTo("#timeline_posts");
                 post_bottom_url = data.meta.next;
                 console.log("2 next url:  "+post_bottom_url);
                 timeRefresh();
