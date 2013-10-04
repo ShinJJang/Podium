@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -17,14 +18,28 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 post_save.connect(create_user_profile, sender=User)
 
+class Groups(models.Model):
+    group_name = models.CharField(max_length=30)
+    discription = models.CharField(max_length=4096)
+    created = models.DateTimeField(auto_now=True)
+    group_users = models.ManyToManyField(UserProfile)
+
 class Posts(models.Model):
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     post = models.CharField(max_length=4096)
     created = models.DateTimeField(auto_now=True)
+    group = models.ForeignKey(Groups, null=True)
+    open_scope = models.IntegerField(default=0) # 0 = public, 1 = private
+
 
 def create_friend_post(sender, instance, created, **kwargs):
     if created:
         write_user = instance.user_key
+
+        # 자신에게 글 저장
+        FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
+
+        # 친구들에게 글 저장
         friendships = Friendships.objects.filter(user_key=write_user)
         for friendship in friendships:
              posts, created = FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
@@ -32,7 +47,7 @@ def create_friend_post(sender, instance, created, **kwargs):
 post_save.connect(create_friend_post, sender=Posts)
 
 class Comments(models.Model):
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)
     comment = models.CharField(max_length=1024)
     created = models.DateTimeField(auto_now=True)
@@ -44,8 +59,9 @@ class Emotions(models.Model):
         (LIKE, 'like'),
         (GOOD, 'good'),
     )
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     emotion = models.CharField(max_length=2, choices=EMOTION_CHOICES) # default = None?
+    created = models.DateTimeField(auto_now=True)
 
 class PostEmotions(Emotions):
     post_key = models.ForeignKey(Posts)
@@ -60,14 +76,14 @@ class UserPictures(models.Model):
     created = models.DateTimeField(auto_now=True)
 
 class PostPictures(models.Model):
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)
     picture = models.FileField(upload_to = 'upload/%y/%m/%d')
     name = models.CharField(max_length=30,null=False)
     created = models.DateTimeField(auto_now=True)
 
 class Files(models.Model):
-    user_key = models.ForeignKey(UserProfile)
+    user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)
     file = models.FileField(upload_to = 'upload/%y/%m/%d')
     name = models.CharField(max_length=30,null=False)
@@ -75,13 +91,13 @@ class Files(models.Model):
 
 # Relation with friend
 class Friendships(models.Model):
-    user_key = models.ForeignKey(UserProfile, related_name='my_key')
-    friend_user_key = models.ForeignKey(UserProfile, related_name='friend_key')
+    user_key = models.ForeignKey(User, related_name='my_key')
+    friend_user_key = models.ForeignKey(User, related_name='friend_key')
 
 # Relation sending friend request
 class FriendshipNotis(models.Model):
-    friend_noti_from_user_key = models.ForeignKey(UserProfile, related_name='request_from')
-    friend_noti_to_user_key = models.ForeignKey(UserProfile, related_name='request_to')
+    friend_noti_from_user_key = models.ForeignKey(User, related_name='request_from')
+    friend_noti_to_user_key = models.ForeignKey(User, related_name='request_to')
 
 class UserChats(models.Model):
     chat_from_user_key = models.ForeignKey(User, related_name = 'UserChats_from_user') #chat_user
@@ -103,7 +119,7 @@ class Notices(models.Model):
     # need to add files
 
 class FriendPosts(models.Model):
-    user_key = models.ForeignKey(UserProfile, related_name='my_userprofile_key')
+    user_key = models.ForeignKey(User, related_name='my_user_key')
     friend_post_key = models.ForeignKey(Posts, related_name='friend_post_key')
 
 class ChatTables(models.Model):

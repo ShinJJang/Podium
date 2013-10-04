@@ -25,7 +25,7 @@
             </div>
         </header>
         <div id="p_profileContents" class="p_container">
-            <section class="p_timelineContents">
+            <section id="timeline_posts" class="p_timelineContents">
                 <div class="p_tItem p_container">
                     <a href="#" class="p_tUser p_tIcon"></a>
                     <div class="p_tBox">
@@ -126,8 +126,6 @@
             });
         });
 
-
-
         var noti_check_friend = setInterval(function () {
             $('#form_noti_check_friend').submit(function (event) {
                 var noti_check_friend_url = "/api/v1/friend_noti/?noti_to_user=" + user_id; //자기 자신의 유저 아이디
@@ -167,5 +165,11 @@
             });
             return false;
         });
+
+        // timeline.js의 arg : top polling url의 parameter
+        var timeline_js_parameter_top_post_polling = "post__user__id={{ user_pageowner.id }}";
+        console.log("timeline_js_parameter_top_post_polling = " + timeline_js_parameter_top_post_polling);
     </script>
+    {% include 'post_public.html' %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/timeline.js"></script>
 {% endblock %}

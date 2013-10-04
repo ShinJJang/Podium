@@ -1,6 +1,6 @@
 <section id="p_timeline">
                 <div class="p_container">
-                    <section class="p_timelineContents">
+                    <section id="timeline_widget" class="p_timelineContents">
                         <div class="p_tItem p_container">
                             <a href="#" class="p_tAdd p_tIcon"></a>
                             <div class="p_tBox">
@@ -14,10 +14,23 @@
                                     <li class="wCode disabled"><a href="#">Code</a></li>
                                     <li class="wEvent disabled"><a href="#">Event</a></li>
                                 </ul>
-                                <section>
+                                <section class="p_postForm">
                                     <form id="form_post" method="post" action="">{% csrf_token %}
-                                        <input type="text" name="post">
-                                        <input type="submit" value="작성">
+                                        <input type="text" class="postFormText" name="post" placeholder="네 인생을 낭비해!!!">
+                                        <a class="text">그룹</a>
+                                        <select value="그룹">
+                                            {% if groups %}
+                                                {% for group in groups %}
+                                                    <option>{{ group.groupname }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                        <a class="text">공개범위</a>
+                                        <select value="공개범위">
+                                            <option vlaue="public">공개</option>
+                                            <option vlaue="private">비공개</option>
+                                        </select>
+                                        <input type="submit" class="postFormSubmit" value="작성">
                                     </form>
                                 </section>
                             </div>
@@ -98,7 +111,8 @@
                                 </section>
                             </div>
                         </div>
-                        <div id="timeline"></div>
+                    </section>
+                    <section id="timeline_posts" class="p_timelineContents">
                     </section>
                     <nav class="p_timelineNav disabled">
                         <h3 class="weekly">Browse by Week</h3>

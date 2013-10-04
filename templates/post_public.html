@@ -1,26 +1,30 @@
 <script id="post_public_template" type="text/x-jquery-tmpl">
     <div class="p_tItem p_container public">
-        <a href="#" class="p_tUser p_tIcon"></a>
+        <a href="/people/${ post.user.id }" class="p_tUser p_tIcon"></a>
         <div class="p_tBox">
             <article class="p_tArticle">
                 <div class="p_container">
-                    <p class="p_tUserName"><a href="#">${ user.user.username }</a></p>
+                    <p class="p_tUserName"><a href="/people/${ post.user.id }">${ post.user.username }</a></p>
                     <div class="p_tText">
-                        <p>${ post }</p>
+                        <p>${ post.post }</p>
                     </div>
-                    <p class="p_tPermalink public"><a class="timestamp" href="#">15시간 전 ${ created }</a></p>
+                    <p class="p_tPermalink public"><a class="timestamp" href="#"><abbr class="timeago" title=${ post.created }></abbr></a></p>
                 </div>
             </article>
             <aside class="p_tAside">
                 <header class="p_responses">
                     <div class="p_container">
-                        <p class="p_emotion"><a href="#"><strong>감정</strong>/ 13</a></p>
-                        <p class="p_comment"><a href="#"><strong>댓글</strong>/ 23</a></p>
+                        <p class="p_emotion"><a href="#"><strong>감정</strong>/ ${ post.emotion_count }</a></p>
+                        <p class="p_comment"><a href="#"><strong>댓글</strong>/ ${ post.comment_count }</a></p>
                     </div>
                 </header>
                 <section class="p_emotion">
                     <div class="p_container">
-                        Hello
+                        <form class="form_emotion" method="post" action=".">{% csrf_token %}
+                            <input name="emotion" type="submit" value="좋아요" tag="E1">
+                            <input name="emotion" type="submit" value="멋져요" tag="E2">
+                            <input name="post_key" type="hidden" value="${ id }">
+                        </form>
                     </div>
                 </section>
                 <section class="p_comment">
@@ -46,7 +50,7 @@
 </script>
 <script id="comment_template" type="text/x-jquery-tmpl">
     <li>
-        <strong class="commentAuthor"><a href="#"><span class="commentProfile"></span>${ user.user.username }</a></strong>
+        <strong class="commentAuthor"><a href="/people/${ user.id }"><span class="commentProfile"></span>${ user.username }</a></strong>
         ${ comment }
         <a href="#" class="timestamp">/ 2시간 전</a>
     </li>

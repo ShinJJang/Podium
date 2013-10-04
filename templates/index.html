@@ -9,6 +9,12 @@
 {% endblock %}
 
 {% block add_scripts %}
+    <script type="text/javascript">
+        // timeline.js의 arg : top polling url의 parameter
+        var timeline_js_parameter_top_post_polling = "";
+        console.log("timeline_js_parameter_top_post_polling = " + timeline_js_parameter_top_post_polling);
+    </script>
     {% include 'post_public.html' %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/timeline.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/poll.js"></script>
 {% endblock %}
