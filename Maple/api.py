@@ -60,7 +60,13 @@ class PostResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         user = bundle.request.user
         post = bundle.data['post']
-        bundle.obj = Posts(user_key=user, post=post)
+        group_id = bundle.data['group']
+        if(group_id):
+            group = Groups.objects.get(pk=group_id)
+        else:
+            group = None
+        open_scope = bundle.data['open_scope']
+        bundle.obj = Posts(user_key=user, post=post, group=group, open_scope=open_scope)
         bundle.obj.save()
         return bundle
 

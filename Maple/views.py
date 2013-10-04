@@ -6,15 +6,18 @@ from django.template import Context
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
-from .models import  ChatNotis, ChatComments, UserChats, ChatTables
+from .models import  ChatNotis, ChatComments, UserChats, ChatTables, Groups
 
 @login_required
 def home(request):
     session = Session.objects.get(session_key = request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
     ctx = Context({
         'user':user,
+        'groups':groups,
         'page_title':'Podium'
     })
     return render(request,'index.html', ctx)

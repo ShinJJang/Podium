@@ -7,8 +7,27 @@ var isBottominit = 0;
 $("#form_post").submit(function(event) {
     alert("@");
     var feedback_api = "/api/v1/post/";
+    var group =  $("select[name=group]").val();
+    var open_scope = $("select[name=open_scope]").val();
+    switch (open_scope) {
+        case "public":
+            open_scope = 0;
+            break;
+        case "private":
+            open_scope = 1;
+            break;
+        default:
+            open_scope = 0;
+            break;
+    }
+    if (group != "" && open_scope == 1){
+        alert("비공개 그룹글은 지원하지 않습니다.\n"+group+"\n"+open_scope);
+        return false;
+    }
     var data = JSON.stringify({
-        "post": $("input[name=post]").val()
+        "post": $("input[name=post]").val(),
+        "group": group,
+        "open_scope": open_scope
     });
     console.log(data);
     $.ajax({
