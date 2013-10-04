@@ -9,6 +9,8 @@ from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization, Authorization
 from .paginator import EstimatedCountPaginator
 
+import json
+
 import logging
 l = logging.getLogger('django.db.backends')
 l.setLevel(logging.DEBUG)
@@ -60,7 +62,8 @@ class PostResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         user = bundle.request.user
         post = bundle.data['post']
-        bundle.obj = Posts(user_key=user, post=post)
+        aType = bundle.data['aType']
+        bundle.obj = Posts(user_key=user, post=post, attachment_type=aType)
         bundle.obj.save()
         return bundle
 
@@ -195,6 +198,25 @@ class PollResource(ModelResource):
         filtering = {
             "post": ALL_WITH_RELATIONS,
         }
+
+    #def get_object_list(self, request):
+    #    poll_obj = super(PollResource, self).get_object_list(request)
+    #    for p in poll_obj:
+    #        p.poll = p.poll.encode('utf-8')
+    #        print p.poll
+    #    return poll_obj
+
+    def dehydrate_poll(self, bundle):
+        return json.loads(bundle.data['poll'])
+
+    def obj_create(self, bundle, **kwargs):
+        post_key = bundle.data['post_key']
+        post = Posts.objects.get(pk=post_key)
+        poll = bundle.data['poll']
+        bundle.obj = Polls(post_key=post, poll=poll)
+        bundle.obj.save()
+        return bundle
+
 
 
 """

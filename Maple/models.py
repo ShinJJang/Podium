@@ -30,6 +30,7 @@ class Posts(models.Model):
     created = models.DateTimeField(auto_now=True)
     group = models.ForeignKey(Groups, null=True)
     open_scope = models.IntegerField(default=0) # 0 = public, 1 = private
+    attachment_type = models.IntegerField(default=0) # 0 = not attached, 1 = photo, 2 = video, 3 = file, 4 = poll
 
 
 def create_friend_post(sender, instance, created, **kwargs):
@@ -128,4 +129,4 @@ class ChatTables(models.Model):
 
 class Polls(models.Model):
     post_key = models.ForeignKey(Posts, related_name = 'polls')
-    poll = jsonfield.JSONField()
+    poll = jsonfield.JSONField
