@@ -199,16 +199,6 @@ class PollResource(ModelResource):
             "post": ALL_WITH_RELATIONS,
         }
 
-    #def get_object_list(self, request):
-    #    poll_obj = super(PollResource, self).get_object_list(request)
-    #    for p in poll_obj:
-    #        p.poll = p.poll.encode('utf-8')
-    #        print p.poll
-    #    return poll_obj
-
-    def dehydrate_poll(self, bundle):
-        return json.loads(bundle.data['poll'])
-
     def obj_create(self, bundle, **kwargs):
         post_key = bundle.data['post_key']
         post = Posts.objects.get(pk=post_key)

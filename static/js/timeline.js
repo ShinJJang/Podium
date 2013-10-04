@@ -136,12 +136,12 @@ function PostTopPolling() {
 
                 $(".p_poll_unloaded").each(function(){
                     $.ajax({
-                        url: "/api/v1/polls/?post_id=" + $(this).attr("id").substring(5),
+                        url: "/api/v1/polls/?post=" + $(this).attr("id").substring(5),
                         type: "GET",
                         dataType: "json",
                         success: function(data) {
                             console.log("poll data: ");
-                            console.log($.parseJSON(data.objects[0].poll));
+                            console.log(data.objects);
                         }
                     });
                     $(this).addClass("p_poll").removeClass("p_poll_unloaded");
