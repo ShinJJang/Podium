@@ -22,7 +22,7 @@ class Groups(models.Model):
     discription = models.CharField(max_length=4096)
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now=True)
-    group_users = models.ManyToManyField(User, related_name='group_users')
+    group_users = models.ManyToManyField(User, related_name='group_user_set')
 
 class Posts(models.Model):
     user_key = models.ForeignKey(User)

@@ -4,7 +4,14 @@
         <div class="p_tBox">
             <article class="p_tArticle">
                 <div class="p_container">
-                    <p class="p_tUserName"><a href="/people/${ post.user.id }">${ post.user.username }</a></p>
+                    <p class="p_tUserName">
+                        <a href="/people/${ post.user.id }">${ post.user.username }</a> >
+                        {% templatetag openblock %}if post.group_name{% templatetag closeblock %}
+                            <a href="/group/${ post.group_id }">${ post.group_name }</a>
+                        {% templatetag openblock %}else post.open_scope == 0{% templatetag closeblock  %}
+                            <a href="/people/${ post.user.id }">${ post.user.username }</a>
+                        {% templatetag openblock %}/if{% templatetag closeblock  %}
+                    </p>
                     <div class="p_tText">
                         <p>${ post.post }</p>
                     </div>

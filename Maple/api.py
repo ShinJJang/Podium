@@ -61,18 +61,22 @@ class PostResource(ModelResource):
         user = bundle.request.user
         post = bundle.data['post']
         group_id = bundle.data['group']
+        open_scope = bundle.data['open_scope']
         if(group_id):
             group = Groups.objects.get(pk=group_id)
+            bundle.obj = Posts(user_key=user, post=post, group=group, open_scope=open_scope)
         else:
-            group = None
-        open_scope = bundle.data['open_scope']
-        bundle.obj = Posts(user_key=user, post=post, group=group, open_scope=open_scope)
+            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope)
+
         bundle.obj.save()
         return bundle
 
     def dehydrate(self, bundle):
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count();
         bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count();
+        if(bundle.obj.group):
+            bundle.data['group_name'] = bundle.obj.group.group_name;
+            bundle.data['group_id'] = bundle.obj.group.id;
         return bundle;
 
 class CommentResource(ModelResource):
@@ -201,7 +205,6 @@ class PollResource(ModelResource):
         filtering = {
             "post": ALL_WITH_RELATIONS,
         }
-
 
 """
 // tastypie 상속 가능한 method
