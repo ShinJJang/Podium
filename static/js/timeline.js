@@ -41,6 +41,8 @@ $("#form_post").submit(function(event) {
                 /*post로 생성 후 생성한 json response*/
                 console.log("post submit response");
                 console.log(data);
+                PostTopPolling();
+                $("input[name=post]").val("");
             }
         }
     });
@@ -66,6 +68,7 @@ $(document).on("submit", "#form_comment",function(event) {
                     console.log("post submit response");
                     console.log(data);
                     pollComment(data.post_key);
+                    $("input[name=comment]").val("");
                 }
             }
         });
