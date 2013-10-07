@@ -7,7 +7,7 @@ var isBottominit = 0;
 $("#form_post").submit(function(event) {
     alert("@");
     var feedback_api = "/api/v1/post/";
-    var group =  $("select[name=group]").val();
+    var group =  $("select[name=group]").val()? $("select[name=group]").val() : "";
     var open_scope = $("select[name=open_scope]").val();
     switch (open_scope) {
         case "public":
@@ -185,7 +185,6 @@ $(document).on("click", ".p_responses", function(){
         var resp = $(this).toggleClass("opened");
 
         // comment polling on post focused
-        // TODO(ym) - Comment poll with interval when open
         if (resp && resp.context.className.search("opened") != -1){
             var tag_id = $(this).siblings(".p_comment").children(".p_commentList").attr("id");
             if (!tag_id)
@@ -225,5 +224,4 @@ function timeRefresh() {
     $("abbr.timeago").timeago();
 }
 
-// TODO - Gruop post create
 // TODO - Post crate using open scope

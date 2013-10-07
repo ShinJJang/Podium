@@ -56,7 +56,7 @@ class PostResource(ModelResource):
             "post": ALL,
         }
         always_return_data = True
-
+# TODO - group null 처리 또는 target user와 통합
     def obj_create(self, bundle, **kwargs):
         user = bundle.request.user
         post = bundle.data['post']
