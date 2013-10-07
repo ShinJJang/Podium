@@ -25,6 +25,44 @@
             </div>
         </header>
         <div id="p_profileContents" class="p_container">
+            <section class="p_timelineContents">
+                <div class="p_tItem p_container">
+                <a href="#" class="p_tAdd p_tIcon"></a>
+                <div class="p_tBox">
+                    <ul class="writeSelect cboth">
+                        <li class="wText"><a href="#">Text</a></li>
+                        <li class="wArticle disabled"><a href="#">Article</a></li>
+                        <li class="wPhoto"><a href="#">Photo</a></li>
+                        <li class="wVideo disabled"><a href="#">Video</a></li>
+                        <li class="wFile disabled"><a href="#">File</a></li>
+                        <li class="wPoll disabled"><a href="#">Poll</a></li>
+                        <li class="wCode disabled"><a href="#">Code</a></li>
+                        <li class="wEvent disabled"><a href="#">Event</a></li>
+                    </ul>
+                    <section class="p_postForm">
+                        <form id="form_post" method="post" action="">{% csrf_token %}
+                            <input type="text" class="postFormText" name="post" placeholder="네 인생을 낭비해!!!">
+{#                            <a class="text">그룹</a>#}
+{#                            <select name="group">#}
+{#                                <option></option>#}
+{#                                {% if groups %}#}
+{#                                    {% for group in groups %}#}
+{#                                        <option value="{{ group.id }}">{{ group.group_name }}</option>#}
+{#                                    {% endfor %}#}
+{#                                {% endif %}#}
+{#                            </select>#}
+                            <input type="hidden" name="target_user" value="{{ user_pageowner.id }}">
+                            <a class="text">공개범위</a>
+                            <select name="open_scope">
+                                <option value="public">공개</option>
+                                <option value="private">비공개</option>
+                            </select>
+                            <input type="submit" class="postFormSubmit" value="작성">
+                        </form>
+                    </section>
+                </div>
+            </div>
+            </section>
             <section id="timeline_posts" class="p_timelineContents">
                 <div class="p_tItem p_container">
                     <a href="#" class="p_tUser p_tIcon"></a>
@@ -80,6 +118,9 @@
 {% block add_scripts %}
     <script type="text/javascript">
         $(function(){
+            if ({{ user_pageowner.id }} == {{ user.id }}){
+                return false;
+            }
             var request_friend_url = "/api/v1/friend_noti/";
             var data = JSON.stringify({
                 "friend_id": {{ user_pageowner.id }}
