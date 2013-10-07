@@ -52,9 +52,10 @@ $("#form_post").submit(function(event) {
 // comment create
 $(document).on("submit", "#form_comment",function(event) {
         var feedback_api = "/api/v1/comment/";
+        var post_key = $(this).find("input[name=post_key]").val();
         var data = JSON.stringify({
             "comment": $(this).find("input[name=comment]").val(),
-            "post_key": $(this).find("input[name=post_key]").val()
+            "post_key": post_key
         });
         console.log(data);
         $.ajax({
@@ -63,12 +64,15 @@ $(document).on("submit", "#form_comment",function(event) {
             contentType: "application/json",
             data: data,
             dataType: "json",
+            context: this,
             statusCode: {
                 201: function(data) {
                     console.log("post submit response");
                     console.log(data);
                     pollComment(data.post_key);
                     $("input[name=comment]").val("");
+                    var comment_count = $("#commentList"+post_key+" li").size();
+                    $(this).parent().siblings("header").find(".p_comment").html("<a herf='#'><strong>댓글</strong>/ "+comment_count+"</a>");
                 }
             }
         });
