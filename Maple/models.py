@@ -130,3 +130,4 @@ class ChatTables(models.Model):
 class Polls(models.Model):
     post_key = models.ForeignKey(Posts, related_name = 'polls')
     poll = models.CharField(max_length=4000)
+    # poll = jsonfield.JSONfield

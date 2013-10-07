@@ -121,6 +121,7 @@ function PostTopPolling() {
             console.log(data)
             if(data.objects.length != 0)
             {
+                console.log(data.objects);
                 $("#post_public_template").tmpl(data.objects).prependTo("#timeline_posts");
                 timeRefresh();
                 post_top_url = data.meta.previous;
@@ -135,16 +136,18 @@ function PostTopPolling() {
                 }
 
                 $(".p_poll_unloaded").each(function(){
+                    var targetDiv = $(this);
                     $.ajax({
                         url: "/api/v1/polls/?post=" + $(this).attr("id").substring(5),
                         type: "GET",
                         dataType: "json",
                         success: function(data) {
-                            console.log("poll data: ");
-                            console.log(data.objects);
+                            for(obj in data.objects) {
+                                data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
+                            }
+                            $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
                         }
                     });
-                    $(this).addClass("p_poll").removeClass("p_poll_unloaded");
                 })
             }
         }
