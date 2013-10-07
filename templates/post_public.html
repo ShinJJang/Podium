@@ -59,6 +59,6 @@
     <li>
         <strong class="commentAuthor"><a href="/people/${ user.id }"><span class="commentProfile"></span>${ user.username }</a></strong>
         ${ comment }
-        <a href="#" class="timestamp">/ 2시간 전</a>
+        <a href="#" class="timestamp">/ <abbr class="timeago" title=${ created }></abbr></a>
     </li>
 </script>
