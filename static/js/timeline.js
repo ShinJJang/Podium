@@ -176,6 +176,7 @@ function pollComment(post_id) {
             {
                 console.log(data);
                 $("#comment_template").tmpl(data.objects.reverse()).appendTo("#commentList" + post_id);
+                timeRefresh();
                 comment_offsets[post_id] = data.objects[data.objects.length - 1].id;
                 console.log("댓글 폴링한 마지막 오프셋 :"+comment_offsets[post_id]);
             }
