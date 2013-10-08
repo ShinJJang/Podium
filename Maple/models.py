@@ -13,25 +13,25 @@ class UserProfile(models.Model):
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        profile, created = UserProfile.objects.get_or_create(user=instance)
+        UserProfile.objects.get_or_create(user=instance)
 
 post_save.connect(create_user_profile, sender=User)
 
 class Groups(models.Model):
     group_name = models.CharField(max_length=30)
-    discription = models.CharField(max_length=4096)
+    description = models.CharField(max_length=4096)
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now=True)
-    group_users = models.ManyToManyField(User, related_name='group_user_set')
+    isProject = models.BooleanField()
 
 class Posts(models.Model):
-    user_key = models.ForeignKey(User)
+    user_key = models.ForeignKey(User, related_name='user_key')
     post = models.CharField(max_length=4096)
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now=True)
     group = models.ForeignKey(Groups, null=True)
-    open_scope = models.IntegerField(default=0) # 0 = public, 1 = private
-    # target user field will be added
+    open_scope = models.IntegerField(default=0) # 0 = public, 1 = private, 2 = target user, 3 = group
+    target_user = models.ForeignKey(User, null=True, related_name='target_user')
 
 def create_friend_post(sender, instance, created, **kwargs):
     if created:
@@ -41,9 +41,16 @@ def create_friend_post(sender, instance, created, **kwargs):
         FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
 
         # 친구들에게 글 저장
-        friendships = Friendships.objects.filter(user_key=write_user)
-        for friendship in friendships:
-             posts, created = FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
+        if(instance.open_scope == 0 | instance.open_scope == 2):
+            friendships = Friendships.objects.filter(user_key=write_user)
+            for friendship in friendships:
+                 FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
+
+        elif(instance.open_scope == 3):
+            memberships = Memberships.objects.filter(group_key=instance.group.pk);
+            for membership in memberships:
+                FriendPosts.objects.get_or_create(user_key=membership, friend_post_key=instance)
+            GroupPosts.objects.get_or_create(group_key=instance.group, post_key=instance)
 
 post_save.connect(create_friend_post, sender=Posts)
 
@@ -134,3 +141,11 @@ class ChatTables(models.Model):
 class Polls(models.Model):
     post_key = models.ForeignKey(Posts, related_name = 'polls')
     poll = jsonfield.JSONField()
+
+class GroupPosts(models.Model):
+    group_key = models.ForeignKey(Groups)
+    post_key = models.ForeignKey(Posts)
+
+class Memberships(models.Model):
+    group_key = models.ForeignKey(Groups)
+    user_key = models.ForeignKey(User)
