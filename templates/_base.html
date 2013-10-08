@@ -54,8 +54,13 @@
                         <h2>Timeline</h2>
                         <ul id="nav_timeline">
                             <li id="nav_everything" class="selected"><a href="#"><span class="nav_icon"></span><span class="nav_label">Everything</span></a></li>
-                            <li id="nav_private"><a href="#"><span class="nav_icon"></span><span class="nav_label">Private</span></a></li>
+                            <li id="nav_private"><a href="/private"><span class="nav_icon"></span><span class="nav_label">Private</span></a></li>
                             <li id="nav_project"><a href="#"><span class="nav_icon"></span><span class="nav_label">Project</span></a></li>
+                            {% if groups %}
+                                {% for group in groups %}
+                                    <li id="nav_project"><a href="/group/{{ group.id }}"><span class="nav_icon"></span><span class="nav_label">{{ group.group_name }}</span></a></li>
+                                {% endfor %}
+                            {% endif %}
                             <li id="nav_favorite"><a href="#"><span class="nav_icon"></span><span class="nav_label">Favorite</span></a></li>
                         </ul>
                         <h2>NETWORK</h2>

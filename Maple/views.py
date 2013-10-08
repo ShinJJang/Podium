@@ -169,3 +169,13 @@ def chat_comment(request): #chat_noti 만들어야 함
             return HttpResponse("Everything worked :)")
         except Exception, e:
             return HttpResponseServerError(str(e))
+
+@login_required
+def private(request):
+    session = Session.objects.get(session_key = request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
+    ctx = Context({
+        'user':user
+    })
+    return render(request,'private.html',ctx)
