@@ -7,8 +7,9 @@ var isBottominit = 0;
 $("#form_post").submit(function(event) {
     alert("@");
     var feedback_api = "/api/v1/post/";
-    var group =  $("select[name=group]").val()? $("select[name=group]").val() : "";
     var open_scope = $("select[name=open_scope]").val();
+    var group =  $("select[name=group]").val();
+    var target_user = $("input[name=target_user]").val();
     switch (open_scope) {
         case "public":
             open_scope = 0;
@@ -20,13 +21,21 @@ $("#form_post").submit(function(event) {
             open_scope = 0;
             break;
     }
-    if (group != "" && open_scope == 1){
+    if (group && open_scope == 1){
         alert("비공개 그룹글은 지원하지 않습니다.\n"+group+"\n"+open_scope);
         return false;
     }
+    if(target_user){
+        var target = target_user;
+        open_scope = 2;
+    }
+    else if (group){
+        var target = group;
+        open_scope = 3;
+    }
     var data = JSON.stringify({
         "post": $("input[name=post]").val(),
-        "group": group,
+        "target": target,
         "open_scope": open_scope
     });
     console.log(data);
