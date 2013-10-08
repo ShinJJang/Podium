@@ -219,6 +219,9 @@ class GroupResource(ModelResource):
         queryset = Groups.objects.all()
         resource_name = 'groups'
         authorization = Authorization()
+        filtering = {
+            "id": ALL
+        }
 
 """
 // tastypie 상속 가능한 method
