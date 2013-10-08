@@ -42,12 +42,12 @@ def create_friend_post(sender, instance, created, **kwargs):
 
         # 친구들에게 글 저장
         if(instance.open_scope == 0 | instance.open_scope == 2):
-            friendships = Friendships.objects.filter(user_key=write_user)
+            friendships = Friendships.objects.filter(user_key=write_user) # TODO - friendship
             for friendship in friendships:
                  FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
 
         elif(instance.open_scope == 3):
-            memberships = Memberships.objects.filter(group_key=instance.group.pk);
+            memberships = Memberships.objects.filter(group_key=instance.group.pk); # TODO - membership
             for membership in memberships:
                 FriendPosts.objects.get_or_create(user_key=membership, friend_post_key=instance)
             GroupPosts.objects.get_or_create(group_key=instance.group, post_key=instance)
