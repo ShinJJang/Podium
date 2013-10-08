@@ -45,7 +45,6 @@ class UserPictureResource(ModelResource):
 
 class PostResource(ModelResource):
     user = fields.ToOneField(UserResource, 'user_key', full=True)
-
     class Meta:
         queryset = Posts.objects.all()
         resource_name = 'post'
@@ -60,13 +59,15 @@ class PostResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         user = bundle.request.user
         post = bundle.data['post']
-        group_id = bundle.data['group']
         open_scope = bundle.data['open_scope']
-        if(group_id):
-            group = Groups.objects.get(pk=group_id)
-            bundle.obj = Posts(user_key=user, post=post, group=group, open_scope=open_scope)
-        else:
+        if(open_scope == 0) or (open_scope == 1): # public to self or private
             bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope)
+        elif(open_scope == 2): # public to friend
+            target_user = User.objects.get(pk= bundle.data['target'])
+            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, target_user=target_user)
+        elif(open_scope == 3): # group
+            group = Groups.objects.get(pk= bundle.data['target'])
+            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, group=group)
 
         bundle.obj.save()
         return bundle
@@ -77,6 +78,9 @@ class PostResource(ModelResource):
         if(bundle.obj.group):
             bundle.data['group_name'] = bundle.obj.group.group_name;
             bundle.data['group_id'] = bundle.obj.group.id;
+        elif(bundle.obj.target_user):
+            bundle.data['target_user_name'] = bundle.obj.target_user.username;
+            bundle.data['target_user_id'] = bundle.obj.target_user.id;
         return bundle;
 
 class CommentResource(ModelResource):
