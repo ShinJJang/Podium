@@ -201,7 +201,7 @@
         });
 
         // timeline.js의 arg : top polling url의 parameter
-        var timeline_js_parameter_top_post_polling = "post__open_scope=2";
+        var timeline_js_parameter_top_post_polling = "user__id={{ user_pageowner.id }}&post__open_scope=2";
         console.log("timeline_js_parameter_top_post_polling = " + timeline_js_parameter_top_post_polling);
     </script>
     {% include 'post_public.html' %}

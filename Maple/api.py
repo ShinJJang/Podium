@@ -176,10 +176,6 @@ class FriendPostResource(ModelResource):
         # paginator_class = EstimatedCountPaginator
         allowed_methods = ['get']
 
-    def get_object_list(self, request):
-         this_user_posts = super(FriendPostResource, self).get_object_list(request).filter(user_key=request.user)
-         return this_user_posts
-
 class PostEmotionsResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user')
     post = fields.ForeignKey(PostResource, 'post')
