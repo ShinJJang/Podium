@@ -1,5 +1,5 @@
 var post_top_url = "http://" + window.location.host + "/api/v1/friendposts/?" + timeline_js_parameter_top_post_polling;
-var post_bottom_url = "/api/v1/friendposts/";
+var post_bottom_url = null;
 var comment_offsets = new Object();
 var isBottominit = 0;
 
