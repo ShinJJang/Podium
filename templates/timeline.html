@@ -26,6 +26,7 @@
                                                 {% endfor %}
                                             {% endif %}
                                         </select>
+                                        <input type="hidden" name="target_user" value="{{ user.id }}">
                                         <a class="text">공개범위</a>
                                         <select name="open_scope">
                                             <option value="public">공개</option>
