@@ -5,12 +5,12 @@
             <article class="p_tArticle">
                 <div class="p_container">
                     <p class="p_tUserName">
-                        <a href="/people/${ post.user.id }">${ post.user.username }</a> >
-                        {% templatetag openblock %}if post.group_name{% templatetag closeblock %}
-                            <a href="/group/${ post.group_id }">${ post.group_name }</a>
-                        {% templatetag openblock %}else post.open_scope == 0{% templatetag closeblock  %}
-                            <a href="/people/${ post.user.id }">${ post.user.username }</a>
-                        {% templatetag openblock %}/if{% templatetag closeblock  %}
+                        <a href="/people/${ post.user.id }">${ post.user.username }</a>
+                        {% templatetag openblock %}if post.open_scope == 2{% templatetag closeblock %}
+                            > <a href="/people/${ post.target_user_id }">${ post.target_user_name }</a>
+                        {% templatetag openblock %}else post.open_scope == 3{% templatetag closeblock %}
+                            > <a href="/group/${ post.group_id }">${ post.group_name }</a>
+                        {% templatetag openblock %}/if{% templatetag closeblock %}
                     </p>
                     <div class="p_tText">
                         <p>${ post.post }</p>
@@ -30,12 +30,12 @@
                         <form class="form_emotion" method="post" action=".">{% csrf_token %}
                             <input name="emotion" type="submit" value="좋아요" tag="E1">
                             <input name="emotion" type="submit" value="멋져요" tag="E2">
-                            <input name="post_key" type="hidden" value="${ id }">
+                            <input name="post_key" type="hidden" value="${ post.id }">
                         </form>
                     </div>
                 </section>
                 <section class="p_comment">
-                    <ul class="p_commentList" id="commentList${id}">
+                    <ul class="p_commentList" id="commentList${ post.id }">
                         <li>
                             <strong class="commentAuthor"><a href="#"><span class="commentProfile"></span>최태건</a></strong>
                             Hello, world!<br />
@@ -46,7 +46,7 @@
                     </ul>
                     <form id="form_comment" method="post" action=".">{% csrf_token %}
                         <div class="p_commentForm">
-                            <input name="post_key" type="hidden" value="${ id }">
+                            <input name="post_key" type="hidden" value="${ post.id }">
                             <span class="commentProfile"></span><input name="comment" type="text" class="commentFormText" placeholder="댓글을 입력하세요">
                         </div>
                     </form>
