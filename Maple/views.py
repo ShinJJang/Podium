@@ -50,9 +50,12 @@ def people(request, people_id):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
     user_pageowner = User.objects.get(id = people_id)
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
     ctx = Context({
         'user':user,
-        'user_pageowner':user_pageowner
+        'user_pageowner':user_pageowner,
+        'groups':groups
     })
     return render(request,'profile.html',ctx)
 
@@ -175,8 +178,11 @@ def private(request):
     session = Session.objects.get(session_key = request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
     ctx = Context({
-        'user':user
+        'user':user,
+        'groups':groups
     })
     return render(request,'private.html',ctx)
 
@@ -186,8 +192,11 @@ def group(request, group_id):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
     group = Groups.objects.get(id = group_id)
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
     ctx = Context({
         'user':user,
-        'group':group
+        'group':group,
+        'groups':groups
     })
     return render(request,'group.html',ctx)
