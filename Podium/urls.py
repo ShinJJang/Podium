@@ -34,6 +34,7 @@ urlpatterns = patterns('',
     # temporary page
     url(r'^poll/$', views.poll),
     url(r'^private/$', views.private),
+    url(r'^group/(?P<group_id>\d+)/$', 'Maple.views.group', name='group'),
     # Uncomment the admin/doc line below to enable admin documentation:
     #url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

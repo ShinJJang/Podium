@@ -179,3 +179,15 @@ def private(request):
         'user':user
     })
     return render(request,'private.html',ctx)
+
+@login_required
+def group(request, group_id):
+    session = Session.objects.get(session_key = request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
+    group = Groups.objects.get(id = group_id)
+    ctx = Context({
+        'user':user,
+        'group':group
+    })
+    return render(request,'group.html',ctx)
