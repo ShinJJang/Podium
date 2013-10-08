@@ -42,9 +42,9 @@
                     <section class="p_postForm">
                         <form id="form_post" method="post" action="">{% csrf_token %}
                             <input type="text" class="postFormText" name="post" placeholder="네 인생을 낭비해!!!">
-                            {% if user_pageowner != user %}
+{#                            {% if user_pageowner != user %}#}
                                 <input type="hidden" name="target_user" value="{{ user_pageowner.id }}">
-                            {% endif %}
+{#                            {% endif %}#}
                             <a class="text">공개범위</a>
                             <select name="open_scope">
                                 <option value="public">공개</option>
@@ -201,7 +201,7 @@
         });
 
         // timeline.js의 arg : top polling url의 parameter
-        var timeline_js_parameter_top_post_polling = "post__user__id={{ user_pageowner.id }}";
+        var timeline_js_parameter_top_post_polling = "post__open_scope=2";
         console.log("timeline_js_parameter_top_post_polling = " + timeline_js_parameter_top_post_polling);
     </script>
     {% include 'post_public.html' %}
