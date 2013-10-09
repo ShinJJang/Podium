@@ -41,9 +41,19 @@
                         <li class="wEvent disabled"><a href="#">Event</a></li>
                     </ul>
                     <section class="p_postForm">
-                        <form id="form_post" method="post" action="">{% csrf_token %}
-                            <input type="text" class="postFormText" name="post" placeholder="네 인생을 낭비해!!!">
-                            <input type="submit" class="postFormSubmit" value="작성">
+                    <form id="form_post" method="post" action="">{% csrf_token %}
+                        <textarea class="postFormText" name="post" name="post" placeholder="네 인생을 낭비해!!!"></textarea>
+                        <div id="postAttach"></div>
+                            <div class="postTools cboth">
+                                <p class="postOptions">
+                                    <label class="text">공개범위</label>
+                                    <select name="open_scope" value="공개범위">
+                                        <option value="public">공개</option>
+                                        <option value="private">비공개</option>
+                                    </select>
+                                </p>
+                                <input type="submit" class="postFormSubmit" value="작성">
+                            </div>
                         </form>
                     </section>
                 </div>

@@ -30,16 +30,18 @@ $(document).on("submit", "#form_post", function(event) {
         alert("비공개 그룹글은 지원하지 않습니다.\n"+group+"\n"+open_scope);
         return false;
     }
-    else if (group){
+
+    if (group){
         var target = group;
         open_scope = 3;
     }
-    else if(target_user){
+    else if(open_scope != 1 && target_user){
         var target = target_user;
         open_scope = 2;
     }
+
     var data = JSON.stringify({
-        "post": $("input[name=post]").val(),
+        "post": $("textarea[name=post]").val(),
         "target": target,
         "open_scope": open_scope,
         "aType": aType

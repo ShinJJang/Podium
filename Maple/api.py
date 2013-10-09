@@ -82,7 +82,7 @@ class PostResource(ModelResource):
         return bundle
 
     def dehydrate(self, bundle):
-        bundle.data['test'] = Posts.objects.filter(comments__pk=1)[0] # will delete
+        #bundle.data['test'] = Posts.objects.filter(comments__pk=1)[0] # will delete
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
         bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count()
         if(bundle.obj.group):
