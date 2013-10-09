@@ -234,6 +234,15 @@ class GroupResource(ModelResource):
             "id": ALL
         }
 
+    def obj_create(self, bundle, **kwargs):
+        group_name = bundle.data['group_name']
+        description = bundle.data['description']
+        is_project = bundle.data['is_project']
+        open_scope = bundle.data['open_scope']
+        bundle.obj = Groups(group_name=group_name, description=description, isProject=is_project, open_scope=open_scope)
+        bundle.obj.save()
+        return bundle
+
 """
 // tastypie 상속 가능한 method
 detail_uri_kwargs()

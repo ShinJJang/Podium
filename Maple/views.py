@@ -200,3 +200,16 @@ def group(request, group_id):
         'groups':groups
     })
     return render(request,'group.html',ctx)
+
+@login_required
+def group_create(request):
+    session = Session.objects.get(session_key = request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
+    ctx = Context({
+        'user':user,
+        'groups':groups
+    })
+    return render(request,'group_create.html',ctx)

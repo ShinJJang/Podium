@@ -1,0 +1,35 @@
+{% extends "_base.html" %}
+
+{% block title %}
+    {{ page_title  }}
+{% endblock %}
+
+{% block content %}
+    <section id="p_timeline">
+        <div class="p_container pui">
+            <div class="box">
+                <div class="text">
+                    <form id="form_post" method="post" action="">{% csrf_token %}
+                        <label class="text">그룹이름</label><input type="text" name="group_name">
+                        <label class="text">설명</label><textarea class="postFormText" name="description" placeholder="네 인생을 낭비해!!!"></textarea>
+                        <label class="text">프로젝트?</label><input type="checkbox" name="is_project">
+                        <label class="text">공개범위</label>
+                        <select name="open_scope">
+                            <option value="open">모두에게 공개</option>
+                            <option value="semi-open">멤버들에게만 공개</option>
+                            <option value="close">비공개</option>
+                        </select>
+                        <label class="text">멤버추가</label><input type="text" name="search_friend">
+                        <input class="btn tooltip-parent tooltip-hover" type="submit" name="search_friend" value="생성">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block add_scripts %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/group_create.js"></script>
+    <script type="text/javascript">
+    </script>
+{% endblock %}

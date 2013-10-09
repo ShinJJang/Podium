@@ -23,6 +23,7 @@ class Groups(models.Model):
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now=True)
     isProject = models.BooleanField()
+    open_scope = models.IntegerField(default=0) # 0 = open, 1 = semi-open, 2 = close
 
 class Posts(models.Model):
     user_key = models.ForeignKey(User, related_name='user_key')

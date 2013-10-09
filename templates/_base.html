@@ -3,6 +3,7 @@
     <head>
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{{STATIC_URL}}css/jquery.jscrollpane.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="{{STATIC_URL}}css/pui.css" type="text/css" media="screen">
         <link rel="stylesheet" href="{{STATIC_URL}}css/rainbow.css" type="text/css" media="screen">
         <link rel="stylesheet" href="{{STATIC_URL}}css/base.css" type="text/css" media="screen">
         <link rel="stylesheet" href="{{STATIC_URL}}css/layout.css" type="text/css" media="screen">
@@ -55,7 +56,7 @@
                         <ul id="nav_timeline">
                             <li id="nav_everything" class="selected"><a href="#"><span class="nav_icon"></span><span class="nav_label">Everything</span></a></li>
                             <li id="nav_private"><a href="/private"><span class="nav_icon"></span><span class="nav_label">Private</span></a></li>
-                            <li id="nav_project"><a href="#"><span class="nav_icon"></span><span class="nav_label">Project</span></a></li>
+                            <li id="nav_project"><a href="/group_create"><span class="nav_icon"></span><span class="nav_label">+Project Create</span></a></li>
                             {% if groups %}
                                 {% for group in groups %}
                                     <li id="nav_project"><a href="/group/{{ group.id }}"><span class="nav_icon"></span><span class="nav_label">{{ group.group_name }}</span></a></li>
