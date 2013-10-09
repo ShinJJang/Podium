@@ -2,11 +2,16 @@ var post_top_url = "http://" + window.location.host + "/api/v1/friendposts/?" + 
 var post_bottom_url = null;
 var comment_offsets = new Object();
 var isBottominit = 0;
+var post_attach = false;
+var attach_type = null;
 
 // post create
-$("#form_post").submit(function(event) {
+$(document).on("submit", "#form_post", function(event) {
     alert("@");
     var feedback_api = "/api/v1/post/";
+    var aType=0;
+    if($("#attach_poll").length > 0) aType=4;
+
     var open_scope = $("select[name=open_scope]").val();
     var group =  $("select[name=group]").val();
     var target_user = $("input[name=target_user]").val();
@@ -36,7 +41,8 @@ $("#form_post").submit(function(event) {
     var data = JSON.stringify({
         "post": $("input[name=post]").val(),
         "target": target,
-        "open_scope": open_scope
+        "open_scope": open_scope,
+        "aType": aType
     });
     console.log(data);
     $.ajax({
@@ -52,6 +58,56 @@ $("#form_post").submit(function(event) {
                 console.log(data);
                 PostTopPolling();
                 $("input[name=post]").val("");
+
+                var postId = data.id;
+                //  첨부 모듈
+                if($("#postAttach").children().length>0 && postId) {
+
+                    if($("#attach_poll").length > 0) {
+                        var a_feedback_api = "/api/v1/polls/";
+
+                        var poll_elements = new Array();
+                        console.log("attachElement is")
+                        $(".attachElement").each(function(index){
+                            var element_obj = {
+                                label: $(this).val(),
+                                users: new Array()
+                            };
+                            poll_elements.push(element_obj);
+                        });
+
+                        var poll_data = JSON.stringify({
+                            "title": $("#pollTitle").val(),
+                            "options": poll_elements
+                        });
+
+                        var a_data = JSON.stringify({
+                            "post_key": postId,
+                            "poll": poll_data
+                        });
+
+                        $.ajax({
+                            url: a_feedback_api,
+                            type: "POST",
+                            contentType: "application/json",
+                            data: a_data,
+                            dataType: "json",
+                            statusCode: {
+                                201: function(data) {
+                                    console.log("poll submit response");
+                                    console.log(data);
+                                }
+                            }
+                        });
+                    }
+                }
+
+                // Form Initialize
+                $("textarea[name=post]").val("");
+                post_attach = false;
+                attach_type = null;
+
+                $("#postAttach").html("");
             }
         }
     });
@@ -99,6 +155,7 @@ function PostTopPolling() {
             console.log(data)
             if(data.objects.length != 0)
             {
+                console.log(data.objects);
                 $("#post_public_template").tmpl(data.objects).prependTo("#timeline_posts");
                 timeRefresh();
                 post_top_url = data.meta.previous;
@@ -111,6 +168,21 @@ function PostTopPolling() {
                     console.log("1 next url:  " + post_bottom_url);
                     isBottominit = 1;
                 }
+
+                $(".p_poll_unloaded").each(function(){
+                    var targetDiv = $(this);
+                    $.ajax({
+                        url: "/api/v1/polls/?post=" + $(this).attr("id").substring(5),
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            for(obj in data.objects) {
+                                data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
+                            }
+                            $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
+                        }
+                    });
+                })
             }
         }
         });
@@ -212,7 +284,7 @@ $(document).on("click", ".p_responses", function(){
 
 // emotion click
 $(document).on("click", ".form_emotion :submit", function(event){
-        var feedback_api = "/api/v1/postemotions/"
+        var feedback_api = "/api/v1/postemotions/";
         var data = JSON.stringify({
             "emotion": $(this).attr('tag'),
             "post_key": $(this).siblings("input[name=post_key]").val()
@@ -238,4 +310,38 @@ function timeRefresh() {
     $("abbr.timeago").timeago();
 }
 
-// TODO - Post crate using open scope
+// attach something
+$(function(){
+    $(".writeSelect .wPoll").click(function(){
+        if(!post_attach) {
+            post_attach=true;
+            attach_type="poll"
+            $("#postAttach").html('<div id="attach_poll"></div>');
+            var attachForm = $("#attach_poll");
+            var attachTitle = document.createElement("input");
+            attachTitle.className="attachTitle";
+            attachTitle.id="pollTitle";
+            attachTitle.setAttribute("type","text");
+            attachTitle.setAttribute("placeholder","설문조사 제목");
+            document.getElementById("attach_poll").appendChild(attachTitle);
+            var attachElements = document.createElement("ul");
+            attachElements.id="pollElement";
+            document.getElementById("attach_poll").appendChild(attachElements);
+            $("#pollElement").html('<li><input type="text" class="attachElement" placeholder="항목 1"></li><li><input type="text" class="attachElement" placeholder="항목 2"></li><li><a href="#" id="add_poll">새 항목 추가</a></li>');
+
+            $("#add_poll").click(function(){
+                var newElement = document.createElement("li");
+                newElement.appendChild(document.createElement("input"));
+                newElement.firstChild.setAttribute("type","text");
+                newElement.firstChild.setAttribute("class","attachElement");
+                newElement.firstChild.setAttribute("placeholder","항목 "+ (parseInt($(".attachElement:last").attr("placeholder").substring(3))+1));
+                $("#add_poll").parent().before(newElement);
+            });
+        }
+        console.log(post_attach);
+    });
+})
+
+function getPoll(post_id){
+    console.log(post_id);
+}

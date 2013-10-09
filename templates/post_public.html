@@ -15,6 +15,10 @@
                     <div class="p_tText">
                         <p>${ post.post }</p>
                     </div>
+                    {% templatetag openblock %}if post.attachment_type == 4{% templatetag closeblock %}
+                        <ul id="poll-${ post.id }" class="p_attachment p_poll_unloaded">
+                        </ul>
+                    {% templatetag openblock %}/if{% templatetag closeblock %}
                     <p class="p_tPermalink public"><a class="timestamp" href="#"><abbr class="timeago" title=${ post.created }></abbr></a></p>
                 </div>
             </article>
@@ -60,5 +64,10 @@
         <strong class="commentAuthor"><a href="/people/${ user.id }"><span class="commentProfile"></span>${ user.username }</a></strong>
         ${ comment }
         <a href="#" class="timestamp">/ <abbr class="timeago" title=${ created }></abbr></a>
+    </li>
+</script>
+<script id="poll_template" type="text/x-jquery-tmpl">
+    <li>
+        <a class="pollItem"><strong>${ label }</strong></a>
     </li>
 </script>

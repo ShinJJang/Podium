@@ -9,6 +9,8 @@ from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization, Authorization
 from .paginator import EstimatedCountPaginator
 
+import json
+
 import logging
 l = logging.getLogger('django.db.backends')
 l.setLevel(logging.DEBUG)
@@ -66,20 +68,21 @@ class PostResource(ModelResource):
         user = bundle.request.user
         post = bundle.data['post']
         open_scope = bundle.data['open_scope']
+        aType = bundle.data['aType']
         if(open_scope == 0) or (open_scope == 1): # public to self or private
-            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope)
+            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType)
         elif(open_scope == 2): # public to friend
             target_user = User.objects.get(pk= bundle.data['target'])
-            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, target_user=target_user)
+            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType, target_user=target_user)
         elif(open_scope == 3): # group
             group = Groups.objects.get(pk= bundle.data['target'])
-            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, group=group)
+            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType, group=group)
 
         bundle.obj.save()
         return bundle
 
     def dehydrate(self, bundle):
-        bundle.data['test'] = Posts.objects.filter(comments__pk=1)[0]
+        bundle.data['test'] = Posts.objects.filter(comments__pk=1)[0] # will delete
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
         bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count()
         if(bundle.obj.group):
@@ -212,6 +215,14 @@ class PollResource(ModelResource):
         filtering = {
             "post": ALL_WITH_RELATIONS,
         }
+
+    def obj_create(self, bundle, **kwargs):
+        post_key = bundle.data['post_key']
+        post = Posts.objects.get(pk=post_key)
+        poll = bundle.data['poll']
+        bundle.obj = Polls(post_key=post, poll=poll)
+        bundle.obj.save()
+        return bundle
 
 class GroupResource(ModelResource):
 

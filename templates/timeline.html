@@ -1,121 +1,128 @@
-<section id="p_timeline">
+            <section id="p_timeline">
                 <div class="p_container">
-                    <section id="timeline_widget" class="p_timelineContents">
-                        <div class="p_tItem p_container">
-                            <a href="#" class="p_tAdd p_tIcon"></a>
-                            <div class="p_tBox">
-                                <ul class="writeSelect cboth">
-                                    <li class="wText"><a href="#">Text</a></li>
-                                    <li class="wArticle disabled"><a href="#">Article</a></li>
-                                    <li class="wPhoto"><a href="#">Photo</a></li>
-                                    <li class="wVideo disabled"><a href="#">Video</a></li>
-                                    <li class="wFile disabled"><a href="#">File</a></li>
-                                    <li class="wPoll disabled"><a href="#">Poll</a></li>
-                                    <li class="wCode disabled"><a href="#">Code</a></li>
-                                    <li class="wEvent disabled"><a href="#">Event</a></li>
-                                </ul>
-                                <section class="p_postForm">
-                                    <form id="form_post" method="post" action="">{% csrf_token %}
-                                        <input type="text" class="postFormText" name="post" placeholder="네 인생을 낭비해!!!">
-                                        <a class="text">그룹</a>
-                                        <select name="group">
-                                            <option></option>
-                                            {% if groups %}
-                                                {% for group in groups %}
-                                                    <option value="{{ group.id }}">{{ group.group_name }}</option>
-                                                {% endfor %}
-                                            {% endif %}
-                                        </select>
-                                        <input type="hidden" name="target_user" value="{{ user.id }}">
-                                        <a class="text">공개범위</a>
-                                        <select name="open_scope">
-                                            <option value="public">공개</option>
-                                            <option value="private">비공개</option>
-                                        </select>
-                                        <input type="submit" class="postFormSubmit" value="작성">
-                                    </form>
-                                </section>
+                    <div class="p_timelineContents">
+                        <section id="timeline_widget">
+                            <div class="p_tItem p_container">
+                                <a href="#" class="p_tAdd p_tIcon"></a>
+                                <div class="p_tBox">
+                                    <ul class="writeSelect cboth">
+                                        <li class="wText"><a href="#">Text</a></li>
+                                        <li class="wArticle disabled"><a href="#">Article</a></li>
+                                        <li class="wPhoto disabled"><a href="#">Photo</a></li>
+                                        <li class="wVideo disabled"><a href="#">Video</a></li>
+                                        <li class="wFile disabled"><a href="#">File</a></li>
+                                        <li class="wPoll"><a href="#">Poll</a></li>
+                                        <li class="wCode disabled"><a href="#">Code</a></li>
+                                        <li class="wEvent disabled"><a href="#">Event</a></li>
+                                    </ul>
+                                    <section class="p_postForm">
+                                        <form id="form_post" method="post" action="">{% csrf_token %}
+                                            <textarea class="postFormText" id="post" name="post" placeholder="네 인생을 낭비해!!!"></textarea>
+                                            <div id="postAttach"></div>
+                                            <div class="postTools cboth">
+                                                <p class="postOptions">
+                                                    <label class="text">그룹</label>
+                                                    <select value="그룹">
+                                                        <option></option>
+                                                        {% if groups %}
+                                                            {% for group in groups %}
+                                                                <option value="{{ group.id }}">{{ group.group_name }}</option>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    </select>
+                                                    <input type="hidden" name="target_user" value="{{ user.id }}">
+                                                    <label class="text">공개범위</label>
+                                                    <select value="공개범위">
+                                                        <option vlaue="public">공개</option>
+                                                        <option vlaue="private">비공개</option>
+                                                    </select>
+                                                </p>
+                                                <input type="submit" class="postFormSubmit" value="작성">
+                                            </div>
+                                        </form>
+                                    </section>
+                                </div>
                             </div>
-                        </div>
-                        <div class="p_tItem p_container">
-                            <a href="#" class="p_tWidget p_tIcon"></a>
-                            <div class="p_tBox">
-                                <section class="p_tWidget cboth">
-                                    <div id="weatherBox" class="cboth">
-                                        <h2></h2>
-                                        <p class="weather"></p>
-                                    </div>
-                                    <div class="disabled widgetBox widget_wide cboth">
-                                        <h3>Schedule<a class="edit" href="#">Edit</a></h3>
-                                        <table class="scheduleTable widgetTable">
-                                            <tbody>
-                                                <tr class="cat_class">
-                                                    <td class="time">13:00 - 15:00</td>
-                                                    <th><strong>집체교육</strong> 네트워크 보안을 위한 방화벽 설계</th>
-                                                    <td class="location">해찬 7-1~7-3</td>
-                                                </tr>
-                                                <tr class="cat_class">
-                                                    <td class="time">16:00 - 18:00</td>
-                                                    <th><strong>집체교육</strong> Security 아키텍쳐의 이해와 적용</th>
-                                                    <td class="location">해찬 7-1~7-3</td>
-                                                </tr>
-                                                <tr class="cat_project">
-                                                    <td class="time">19:00 - 22:00</td>
-                                                    <th><strong>프로젝트</strong> 멘토링</th>
-                                                    <td class="location">아람 7-7</td>
-                                                </tr>
-                                                <tr class="cat_etc">
-                                                    <td class="time">22:00 - 24:00</td>
-                                                    <th><strong>기타</strong> 브론즈 탈출</th>
-                                                    <td class="location">소환사의 협곡</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="widgetBox widget_narrow_left">
-                                        <h3>Notice</h3>
-                                        <table class="widgetTable">
-                                            <tbody>
-                                                <tr>
-                                                    <td><a href="#">장학금 서류 내세요</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">프로젝트 활동비 이렇게 쓰세요</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">월요일에 전기 끊겨요</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">방학 땐 문 닫아요</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="disabled widgetBox widget_narrow_right">
-                                        <h3>Hot Links<a class="edit" href="#">Edit</a></h3>
-                                        <table class="widgetTable">
-                                            <tbody>
-                                                <tr>
-                                                    <td><a href="#">강의실 예약</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">프로젝트 관련 서류 모음</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">우리 팀 Repository</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">문명 소모임</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </section>
+                            <div class="p_tItem p_container">
+                                <a href="#" class="p_tWidget p_tIcon"></a>
+                                <div class="p_tBox">
+                                    <section class="p_tWidget cboth">
+                                        <div id="weatherBox" class="cboth">
+                                            <h2></h2>
+                                            <p class="weather"></p>
+                                        </div>
+                                        <div class="disabled widgetBox widget_wide cboth">
+                                            <h3>Schedule<a class="edit" href="#">Edit</a></h3>
+                                            <table class="scheduleTable widgetTable">
+                                                <tbody>
+                                                    <tr class="cat_class">
+                                                        <td class="time">13:00 - 15:00</td>
+                                                        <th><strong>집체교육</strong> 네트워크 보안을 위한 방화벽 설계</th>
+                                                        <td class="location">해찬 7-1~7-3</td>
+                                                    </tr>
+                                                    <tr class="cat_class">
+                                                        <td class="time">16:00 - 18:00</td>
+                                                        <th><strong>집체교육</strong> Security 아키텍쳐의 이해와 적용</th>
+                                                        <td class="location">해찬 7-1~7-3</td>
+                                                    </tr>
+                                                    <tr class="cat_project">
+                                                        <td class="time">19:00 - 22:00</td>
+                                                        <th><strong>프로젝트</strong> 멘토링</th>
+                                                        <td class="location">아람 7-7</td>
+                                                    </tr>
+                                                    <tr class="cat_etc">
+                                                        <td class="time">22:00 - 24:00</td>
+                                                        <th><strong>기타</strong> 브론즈 탈출</th>
+                                                        <td class="location">소환사의 협곡</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="widgetBox widget_narrow_left">
+                                            <h3>Notice</h3>
+                                            <table class="widgetTable">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><a href="#">장학금 서류 내세요</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="#">프로젝트 활동비 이렇게 쓰세요</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="#">월요일에 전기 끊겨요</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="#">방학 땐 문 닫아요</a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="disabled widgetBox widget_narrow_right">
+                                            <h3>Hot Links<a class="edit" href="#">Edit</a></h3>
+                                            <table class="widgetTable">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><a href="#">강의실 예약</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="#">프로젝트 관련 서류 모음</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="#">우리 팀 Repository</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="#">문명 소모임</a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </section>
+                                </div>
                             </div>
-                        </div>
-                    </section>
-                    <section id="timeline_posts" class="p_timelineContents">
-                    </section>
+                        </section>
+                        <section id="timeline_posts">
+                        </section>
+                    </div>
                     <nav class="p_timelineNav disabled">
                         <h3 class="weekly">Browse by Week</h3>
                         <ul>
