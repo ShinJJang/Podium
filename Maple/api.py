@@ -233,6 +233,8 @@ class GroupResource(ModelResource):
         filtering = {
             "id": ALL
         }
+        always_return_data = True
+        always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
         group_name = bundle.data['group_name']
