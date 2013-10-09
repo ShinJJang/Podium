@@ -36,6 +36,7 @@ $(document).on("submit", "#form_post", function(event) {
         statusCode: {
             201: function(data) {
                 console.log("그룹 생성");
+                $("#group_response").append("<span class='tooltip tooltip-bottom'>"+data.group_name+"이 생성되었습니다.</span>")
             }
         }});
     return false;
