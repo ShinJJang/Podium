@@ -35,7 +35,7 @@ $(document).on("submit", "#form_post", function(event) {
         var target = group;
         open_scope = 3;
     }
-    else if(open_scope != 1 && target_user){
+    else if(target_user){
         var target = target_user;
         open_scope = 2;
     }

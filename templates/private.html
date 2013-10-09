@@ -10,7 +10,7 @@
             <div id="p_peopleCover">
                 <div id="p_peopleName">
                     <span id="p_peoplePicture">
-                        {% with user_pageowner.userpictures_set.all|first as userpicture %}
+                        {% with user.userpictures_set.all|first as userpicture %}
                             {% if userpicture %}
                                 <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="peoplePicture" />
                             {% else %}
@@ -18,7 +18,7 @@
                             {% endif %}
                         {% endwith %}
                     </span>
-                    <h1>{{ user_pageowner.username }}</h1>
+                    <h1>{{ user.username }}</h1>
                     <p id="friendStatus">
                     </p>
                 </div>

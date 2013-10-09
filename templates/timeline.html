@@ -22,7 +22,7 @@
                                             <div class="postTools cboth">
                                                 <p class="postOptions">
                                                     <label class="text">그룹</label>
-                                                    <select value="그룹">
+                                                    <select name="group" value="그룹">
                                                         <option></option>
                                                         {% if groups %}
                                                             {% for group in groups %}
@@ -30,7 +30,6 @@
                                                             {% endfor %}
                                                         {% endif %}
                                                     </select>
-                                                    <input type="hidden" name="target_user" value="{{ user.id }}">
                                                     <label class="text">공개범위</label>
                                                     <select name="open_scope" value="공개범위">
                                                         <option value="public">공개</option>
