@@ -51,7 +51,7 @@ def create_friend_post(sender, instance, created, **kwargs):
         elif(instance.open_scope == 3):
             memberships = Memberships.objects.filter(group_key=instance.group.pk); # TODO - membership
             for membership in memberships:
-                FriendPosts.objects.get_or_create(user_key=membership, friend_post_key=instance)
+                FriendPosts.objects.get_or_create(user_key=membership.user_key, friend_post_key=instance)
             GroupPosts.objects.get_or_create(group_key=instance.group, post_key=instance)
 
 post_save.connect(create_friend_post, sender=Posts)
