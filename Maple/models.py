@@ -130,3 +130,25 @@ class ChatTables(models.Model):
 class Polls(models.Model):
     post_key = models.ForeignKey(Posts, related_name = 'polls')
     poll = models.CharField(max_length=4000)
+
+
+
+
+class ChatInformation(models.Model):
+    room_name = models.CharField(max_length=255)
+    count_participant = models.SmallIntegerField(default=1)
+
+class ChatMessages(models.Model):
+    chatInfo_key = models.ForeignKey(ChatInformation)
+    user_key = models.ForeignKey(User)
+    comment = models.CharField(max_length=2048)
+
+class Participants(models.Model):
+    chatInfo_key = models.ForeignKey(ChatInformation)
+    user_key = models.ForeignKey(User)
+    socket_connect = models.BooleanField(default = False)
+
+class ChatNotifications(models.Model):
+    chatInfo_key = models.ForeignKey(ChatInformation)
+    from_user_key = models.ForeignKey(User, related_name = 'from_user')
+    to_user_key = models.ForeignKey(User, related_name = 'to_user')

@@ -3176,3 +3176,92 @@
 {"level":"info","message":"adminout","timestamp":"2013-09-27T03:33:48.078Z"}
 {"level":"info","message":"disconnect user id = 11to3","timestamp":"2013-09-27T03:33:48.078Z"}
 {"level":"info","message":"send to django data : user_id=11to3&room_name=1to3&type=DELETE","timestamp":"2013-09-27T03:33:48.079Z"}
+{"level":"info","message":"sessionId =e04evcn6yxn2xl96qsveq6kdjmr2zdqa connect","timestamp":"2013-10-08T11:01:44.862Z"}
+{"level":"info","message":"client id = qurbiBeJPdOS74KHuVPQ","timestamp":"2013-10-08T11:01:44.878Z"}
+{"room_name":"2to1","user_id":"2","username":"테스트유저1","level":"info","message":"","timestamp":"2013-10-08T11:01:44.886Z"}
+{"level":"info","message":"socket.username = 테스트유저1","timestamp":"2013-10-08T11:01:44.887Z"}
+{"level":"info","message":"username = 테스트유저1 user_id = 2 room_name = 2to1","timestamp":"2013-10-08T11:01:44.887Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-10-08T11:01:44.887Z"}
+{"level":"info","message":"테스트유저1out","timestamp":"2013-10-08T11:02:07.768Z"}
+{"level":"info","message":"disconnect user id = 22to1","timestamp":"2013-10-08T11:02:07.769Z"}
+{"level":"info","message":"send to django data : user_id=22to1&room_name=2to1&type=DELETE","timestamp":"2013-10-08T11:02:07.774Z"}
+{"level":"info","message":"sessionId =e04evcn6yxn2xl96qsveq6kdjmr2zdqa connect","timestamp":"2013-10-08T11:02:15.917Z"}
+{"level":"info","message":"client id = bphoJMks5PwPRVELuVPR","timestamp":"2013-10-08T11:02:15.926Z"}
+{"room_name":"2to1","user_id":"2","username":"테스트유저1","level":"info","message":"","timestamp":"2013-10-08T11:02:15.932Z"}
+{"level":"info","message":"socket.username = 테스트유저1","timestamp":"2013-10-08T11:02:15.933Z"}
+{"level":"info","message":"username = 테스트유저1 user_id = 2 room_name = 2to1","timestamp":"2013-10-08T11:02:15.933Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-10-08T11:02:15.933Z"}
+{"level":"info","message":"sessionId =1yfmug0h411nkq8vqc3g8oz6yfed4kni connect","timestamp":"2013-10-08T11:02:16.142Z"}
+{"level":"info","message":"client id = K3ZLtZNeoEArWfE3uVPS","timestamp":"2013-10-08T11:02:16.150Z"}
+{"room_name":"2to1","user_id":"1","username":"lacidjun","level":"info","message":"","timestamp":"2013-10-08T11:02:16.161Z"}
+{"level":"info","message":"socket.username = lacidjun","timestamp":"2013-10-08T11:02:16.162Z"}
+{"level":"info","message":"username = lacidjun user_id = 1 room_name = 2to1","timestamp":"2013-10-08T11:02:16.162Z"}
+{"level":"info","message":"user in sockets :[object Object]","timestamp":"2013-10-08T11:02:16.162Z"}
+{"level":"info","message":"테스트유저1: [ddd] from client message","timestamp":"2013-10-08T11:02:25.869Z"}
+{"level":"info","message":"send to django data : comment=ddd&user_id=2&room_name=2to1&type=POST","timestamp":"2013-10-08T11:02:25.871Z"}
+{"level":"info","message":"테스트유저1: [아아아아] from client message","timestamp":"2013-10-08T11:02:28.080Z"}
+{"level":"info","message":"send to django data : comment=%EC%95%84%EC%95%84%EC%95%84%EC%95%84&user_id=2&room_name=2to1&type=POST","timestamp":"2013-10-08T11:02:28.081Z"}
+{"level":"info","message":"테스트유저1: [맞네] from client message","timestamp":"2013-10-08T11:02:29.399Z"}
+{"level":"info","message":"send to django data : comment=%EB%A7%9E%EB%84%A4&user_id=2&room_name=2to1&type=POST","timestamp":"2013-10-08T11:02:29.400Z"}
+{"level":"info","message":"lacidjun: [이거 오애리ㅐ] from client message","timestamp":"2013-10-08T11:02:34.650Z"}
+{"level":"info","message":"send to django data : comment=%EC%9D%B4%EA%B1%B0%20%EC%98%A4%EC%95%A0%EB%A6%AC%E3%85%90&user_id=1&room_name=2to1&type=POST","timestamp":"2013-10-08T11:02:34.654Z"}
+{"level":"info","message":"lacidjun: [오마이가도] from client message","timestamp":"2013-10-08T11:02:38.548Z"}
+{"level":"info","message":"send to django data : comment=%EC%98%A4%EB%A7%88%EC%9D%B4%EA%B0%80%EB%8F%84&user_id=1&room_name=2to1&type=POST","timestamp":"2013-10-08T11:02:38.549Z"}
+{"level":"info","message":"sessionId =riz20lq1hgb08nrjpd2kdd3lnl09uyx6 connect","timestamp":"2013-10-08T15:47:57.744Z"}
+{"level":"info","message":"client id = 4cq3yBKFhxn2JXrouVPT","timestamp":"2013-10-08T15:47:57.762Z"}
+{"level":"info","message":"sessionId =4du1qdrqqw3v7a4gvt5fmdmtsghfpnse connect","timestamp":"2013-10-08T15:47:58.363Z"}
+{"level":"info","message":"client id = KWXVIp5DcHB5lSINuVPU","timestamp":"2013-10-08T15:47:58.370Z"}
+{"level":"info","message":"sessionId =riz20lq1hgb08nrjpd2kdd3lnl09uyx6 connect","timestamp":"2013-10-08T15:48:02.663Z"}
+{"level":"info","message":"client id = F4ivxZOxttBfmolJuVPV","timestamp":"2013-10-08T15:48:02.668Z"}
+{"level":"info","message":"sessionId =4du1qdrqqw3v7a4gvt5fmdmtsghfpnse connect","timestamp":"2013-10-08T15:48:03.344Z"}
+{"level":"info","message":"client id = FUQCjv0BtJWxCE3kuVPW","timestamp":"2013-10-08T15:48:03.350Z"}
+{"level":"info","message":"sessionId =riz20lq1hgb08nrjpd2kdd3lnl09uyx6 connect","timestamp":"2013-10-08T15:48:07.662Z"}
+{"level":"info","message":"client id = QqhsaS4BXdsj894quVPX","timestamp":"2013-10-08T15:48:07.667Z"}
+{"level":"info","message":"sessionId =4du1qdrqqw3v7a4gvt5fmdmtsghfpnse connect","timestamp":"2013-10-08T15:48:08.353Z"}
+{"level":"info","message":"client id = GcTaZITLxEuRaAXzuVPY","timestamp":"2013-10-08T15:48:08.358Z"}
+{"level":"info","message":"sessionId =riz20lq1hgb08nrjpd2kdd3lnl09uyx6 connect","timestamp":"2013-10-08T15:48:12.653Z"}
+{"level":"info","message":"client id = YO-psih3sTqWd0y7uVPZ","timestamp":"2013-10-08T15:48:12.658Z"}
+{"level":"info","message":"sessionId =4du1qdrqqw3v7a4gvt5fmdmtsghfpnse connect","timestamp":"2013-10-08T15:48:13.375Z"}
+{"level":"info","message":"client id = P8cIjy3ql3Y0kBd5uVPa","timestamp":"2013-10-08T15:48:13.380Z"}
+{"level":"info","message":"sessionId =riz20lq1hgb08nrjpd2kdd3lnl09uyx6 connect","timestamp":"2013-10-08T15:48:17.662Z"}
+{"level":"info","message":"client id = CDXukfcWCi0LO2YCuVPb","timestamp":"2013-10-08T15:48:17.666Z"}
+{"level":"info","message":"sessionId =4du1qdrqqw3v7a4gvt5fmdmtsghfpnse connect","timestamp":"2013-10-08T15:48:18.354Z"}
+{"level":"info","message":"client id = pHrn9854edy4ZNE7uVPc","timestamp":"2013-10-08T15:48:18.359Z"}
+{"level":"info","message":"sessionId =riz20lq1hgb08nrjpd2kdd3lnl09uyx6 connect","timestamp":"2013-10-08T15:48:22.670Z"}
+{"level":"info","message":"client id = Pbj1oe8-A6fBeHFsuVPd","timestamp":"2013-10-08T15:48:22.675Z"}
+{"level":"info","message":"sessionId =4du1qdrqqw3v7a4gvt5fmdmtsghfpnse connect","timestamp":"2013-10-08T15:48:23.363Z"}
+{"level":"info","message":"client id = XDrOxvqmAmxp0iOOuVPe","timestamp":"2013-10-08T15:48:23.368Z"}
+{"level":"info","message":"sessionId =riz20lq1hgb08nrjpd2kdd3lnl09uyx6 connect","timestamp":"2013-10-08T15:48:27.665Z"}
+{"level":"info","message":"client id = YVNftJt_4B5s1oiouVPf","timestamp":"2013-10-08T15:48:27.670Z"}
+{"level":"info","message":"sessionId =4du1qdrqqw3v7a4gvt5fmdmtsghfpnse connect","timestamp":"2013-10-08T15:48:28.397Z"}
+{"level":"info","message":"client id = w3BCHvtdCV67WjhQuVPg","timestamp":"2013-10-08T15:48:28.405Z"}
+{"level":"info","message":"sessionId =riz20lq1hgb08nrjpd2kdd3lnl09uyx6 connect","timestamp":"2013-10-08T15:48:32.676Z"}
+{"level":"info","message":"client id = X3E1XRJu8qPrk03-uVPh","timestamp":"2013-10-08T15:48:32.681Z"}
+{"level":"info","message":"sessionId =4du1qdrqqw3v7a4gvt5fmdmtsghfpnse connect","timestamp":"2013-10-08T15:48:33.376Z"}
+{"level":"info","message":"client id = Z1iOf97CvrIaVexEuVPi","timestamp":"2013-10-08T15:48:33.381Z"}
+{"level":"info","message":"sessionId =riz20lq1hgb08nrjpd2kdd3lnl09uyx6 connect","timestamp":"2013-10-08T15:48:37.663Z"}
+{"level":"info","message":"client id = yC9N92pnGNioBnatuVPj","timestamp":"2013-10-08T15:48:37.669Z"}
+{"level":"info","message":"sessionId =4du1qdrqqw3v7a4gvt5fmdmtsghfpnse connect","timestamp":"2013-10-08T15:48:38.373Z"}
+{"level":"info","message":"client id = bq7Ao_xa10sbDcImuVPk","timestamp":"2013-10-08T15:48:38.378Z"}
+{"level":"info","message":"sessionId =riz20lq1hgb08nrjpd2kdd3lnl09uyx6 connect","timestamp":"2013-10-08T15:48:42.672Z"}
+{"level":"info","message":"client id = Gep8WGI3hIHj90dAuVPl","timestamp":"2013-10-08T15:48:42.679Z"}
+{"level":"info","message":"sessionId =4du1qdrqqw3v7a4gvt5fmdmtsghfpnse connect","timestamp":"2013-10-08T15:48:43.392Z"}
+{"level":"info","message":"client id = QXFW8mWc04NZfHmsuVPm","timestamp":"2013-10-08T15:48:43.401Z"}
+{"level":"info","message":"sessionId =riz20lq1hgb08nrjpd2kdd3lnl09uyx6 connect","timestamp":"2013-10-08T15:48:47.682Z"}
+{"level":"info","message":"client id = 4q5Tnne5-riPD6fbuVPn","timestamp":"2013-10-08T15:48:47.760Z"}
+{"level":"info","message":"sessionId =4du1qdrqqw3v7a4gvt5fmdmtsghfpnse connect","timestamp":"2013-10-08T15:48:48.393Z"}
+{"level":"info","message":"client id = 2clShpY_b5x-IuJfuVPo","timestamp":"2013-10-08T15:48:48.399Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-10-08T15:48:51.617Z"}
+{"level":"info","message":"테스트유저1out","timestamp":"2013-10-08T15:48:51.625Z"}
+{"level":"info","message":"disconnect user id = 22to1","timestamp":"2013-10-08T15:48:51.626Z"}
+{"level":"info","message":"send to django data : user_id=22to1&room_name=2to1&type=DELETE","timestamp":"2013-10-08T15:48:51.626Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-10-08T15:48:51.627Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-10-08T15:48:51.635Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-10-08T15:48:51.639Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-10-08T15:48:51.642Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-10-08T15:48:51.645Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-10-08T15:48:51.647Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-10-08T15:48:51.651Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-10-08T15:48:51.653Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-10-08T15:48:51.657Z"}
+{"level":"info","message":"undefinedout","timestamp":"2013-10-08T15:48:51.660Z"}
