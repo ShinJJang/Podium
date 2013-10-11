@@ -13,7 +13,7 @@
                         {% templatetag openblock %}/if{% templatetag closeblock %}
                     </p>
                     <div class="p_tText">
-                        <p>${ post.post }</p>
+                        {% templatetag openvariable %}html post.post{% templatetag closevariable %}
                     </div>
                     {% templatetag openblock %}if post.attachment_type == 4{% templatetag closeblock %}
                         <ul id="poll-${ post.id }" class="p_attachment p_poll_unloaded">
@@ -68,6 +68,6 @@
 </script>
 <script id="poll_template" type="text/x-jquery-tmpl">
     <li>
-        <a class="pollItem"><strong>${ label }</strong></a>
+        <div class="pollItem"><strong>${ label }</strong><span class="tooltip-parent tooltip-hover">${ users.length }</span></div>
     </li>
 </script>

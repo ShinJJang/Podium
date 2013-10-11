@@ -224,6 +224,12 @@ class PollResource(ModelResource):
         bundle.obj.save()
         return bundle
 
+    def obj_update(self, bundle, **kwargs):
+        bundle = super(PollResource, self).obj_update(bundle, **kwargs)
+        print bundle.obj
+        bundle.obj.save()
+        return bundle
+
 class GroupResource(ModelResource):
 
     class Meta:

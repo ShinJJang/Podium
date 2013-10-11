@@ -5,6 +5,24 @@ var isBottominit = 0;
 var post_attach = false;
 var attach_type = null;
 
+tinymce.init({
+    selector: "textarea[name=post_rich]",
+    theme: "modern",
+    plugins: [
+        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+        "searchreplace wordcount visualblocks visualchars code fullscreen",
+        "insertdatetime media nonbreaking save table contextmenu directionality",
+        "emoticons template paste textcolor"
+    ],
+    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link",
+    toolbar2: "forecolor backcolor emoticons",
+    image_advtab: true,
+    templates: [
+        {title: 'Test template 1', content: 'Test 1'},
+        {title: 'Test template 2', content: 'Test 2'}
+    ]
+});
+
 // post create
 $(document).on("submit", "#form_post", function(event) {
     alert("@");
@@ -116,6 +134,76 @@ $(document).on("submit", "#form_post", function(event) {
     return false;
 });
 
+// post create
+$(document).on("submit", "#form_post_rich", function(event) {
+    alert("@");
+    var feedback_api = "/api/v1/post/";
+    var aType=0;
+
+    var open_scope = $("select[name=open_scope]").val();
+    var group =  $("select[name=group]").val();
+    var target_user = $("input[name=target_user]").val();
+    switch (open_scope) {
+        case "public":
+            open_scope = 0;
+            break;
+        case "private":
+            open_scope = 1;
+            break;
+        default:
+            open_scope = 0;
+            break;
+    }
+    if (group && open_scope == 1){
+        alert("비공개 그룹글은 지원하지 않습니다.\n"+group+"\n"+open_scope);
+        return false;
+    }
+
+    if (group){
+        var target = group;
+        open_scope = 3;
+    }
+    else if(target_user){
+        var target = target_user;
+        open_scope = 2;
+    }
+
+    var data = JSON.stringify({
+        "post": $("textarea[name=post_rich]").val(),
+        "target": target,
+        "open_scope": open_scope,
+        "aType": aType
+    });
+    console.log(data);
+    $.ajax({
+        url: feedback_api,
+        type: "POST",
+        contentType: "application/json",
+        data: data,
+        dataType: "json",
+        statusCode: {
+            201: function(data) {
+                /*post로 생성 후 생성한 json response*/
+                console.log("post submit response");
+                console.log(data);
+                PostTopPolling();
+                $("input[name=post]").val("");
+
+                var postId = data.id;
+
+                // Form Initialize
+                $("textarea[name=post_rich]").val("");
+                post_attach = false;
+                attach_type = null;
+
+                tinymce.activeEditor.setContent('');
+            }
+        }
+    });
+    return false;
+});
+
+
 // comment create
 $(document).on("submit", "#form_comment",function(event) {
         var feedback_api = "/api/v1/comment/";
@@ -181,7 +269,10 @@ function PostTopPolling() {
                             for(obj in data.objects) {
                                 data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
                             }
+                            $(targetDiv).append('<li class="pollTitle">'+data.objects[0].poll.title+'</li>');
                             $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
+                            $(targetDiv).removeClass("p_poll_unloaded");
+                            $(targetDiv).addClass("p_poll");
                         }
                     });
                 })
@@ -314,7 +405,7 @@ function timeRefresh() {
 
 // attach something
 $(function(){
-    $(".writeSelect .wPoll").click(function(){
+    $(".attachSelect .wPoll").click(function(){
         if(!post_attach) {
             post_attach=true;
             attach_type="poll"
@@ -341,6 +432,19 @@ $(function(){
             });
         }
         console.log(post_attach);
+    });
+
+    $("#toPlain").click(function(){
+        $("#plainTextInput").show();
+        $("#richTextInput").hide();
+        $("#toRich").removeClass("selected");
+        $(this).addClass("selected");
+    });
+    $("#toRich").click(function(){
+        $("#plainTextInput").hide();
+        $("#richTextInput").show();
+        $("#toPlain").removeClass("selected");
+        $(this).addClass("selected");
     });
 })
 

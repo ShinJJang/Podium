@@ -32,7 +32,7 @@ class Posts(models.Model):
     group = models.ForeignKey(Groups, null=True)
     open_scope = models.IntegerField(default=0) # 0 = public, 1 = private, 2 = target user, 3 = group
     target_user = models.ForeignKey(User, null=True, related_name='target_user')
-    attachment_type = models.IntegerField(default=0) # 0 = not attached, 1 = photo, 2 = video, 3 = file, 4 = poll
+    attachment_type = models.IntegerField(default=0) # 0 = not attached, 1 = photo, 2 = video, 3 = file, 4 = poll, 5 = rich text
 
 def create_friend_post(sender, instance, created, **kwargs):
     if created:

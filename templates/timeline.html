@@ -4,41 +4,71 @@
                         <section id="timeline_widget">
                             <div class="p_tItem p_container">
                                 <a href="#" class="p_tAdd p_tIcon"></a>
-                                <div class="p_tBox">
+                                <div class="p_tBox pui">
                                     <ul class="writeSelect cboth">
-                                        <li class="wText"><a href="#">Text</a></li>
-                                        <li class="wArticle disabled"><a href="#">Article</a></li>
-                                        <li class="wPhoto disabled"><a href="#">Photo</a></li>
-                                        <li class="wVideo disabled"><a href="#">Video</a></li>
-                                        <li class="wFile disabled"><a href="#">File</a></li>
-                                        <li class="wPoll"><a href="#">Poll</a></li>
-                                        <li class="wCode disabled"><a href="#">Code</a></li>
-                                        <li class="wEvent disabled"><a href="#">Event</a></li>
+                                        <li id="toPlain" class="selected"><a href="#">Plain Text</a></li>
+                                        <li id="toRich"><a href="#">Rich Text</a></li>
                                     </ul>
                                     <section class="p_postForm">
-                                        <form id="form_post" method="post" action="">{% csrf_token %}
-                                            <textarea class="postFormText" id="post" name="post" placeholder="네 인생을 낭비해!!!"></textarea>
-                                            <div id="postAttach"></div>
-                                            <div class="postTools cboth">
-                                                <p class="postOptions">
-                                                    <label class="text">그룹</label>
-                                                    <select name="group" value="그룹">
-                                                        <option></option>
-                                                        {% if groups %}
-                                                            {% for group in groups %}
-                                                                <option value="{{ group.id }}">{{ group.group_name }}</option>
-                                                            {% endfor %}
-                                                        {% endif %}
-                                                    </select>
-                                                    <label class="text">공개범위</label>
-                                                    <select name="open_scope" value="공개범위">
-                                                        <option value="public">공개</option>
-                                                        <option value="private">비공개</option>
-                                                    </select>
-                                                </p>
-                                                <input type="submit" class="postFormSubmit" value="작성">
-                                            </div>
-                                        </form>
+                                        <div id="plainTextInput">
+                                            <form id="form_post" method="post" action="">{% csrf_token %}
+                                                <textarea class="postFormText" id="post" name="post" placeholder="네 인생을 낭비해!!!"></textarea>
+                                                <ul class="attachSelect pui">
+                                                    <li>ADD</li>
+                                                    <li class="wPhoto disabled"><a href="#" class="tooltip-parent tooltip-hover"><span class="tooltip tooltip-bottom">Photo</span></a></li>
+                                                    <li class="wVideo disabled"><a href="#" class="tooltip-parent tooltip-hover"><span class="tooltip tooltip-bottom">Video</span></a></li>
+                                                    <li class="wFile disabled"><a href="#" class="tooltip-parent tooltip-hover"><span class="tooltip tooltip-bottom">File</span></a></li>
+                                                    <li class="wPoll"><a href="#" class="tooltip-parent tooltip-hover"><span class="tooltip tooltip-bottom">Poll</span></a></li>
+                                                    <li class="wCode disabled"><a href="#" class="tooltip-parent tooltip-hover"><span class="tooltip tooltip-bottom">Code</span></a></li>
+                                                    <li class="wEvent disabled"><a href="#" class="tooltip-parent tooltip-hover"><span class="tooltip tooltip-bottom">Event</span></a></li>
+                                                </ul>
+                                                <div class="cboth" id="postAttach"></div>
+                                                <div class="postTools cboth">
+                                                    <p class="postOptions">
+                                                        <label class="text">그룹</label>
+                                                        <select name="group" value="그룹">
+                                                            <option></option>
+                                                            {% if groups %}
+                                                                {% for group in groups %}
+                                                                    <option value="{{ group.id }}">{{ group.group_name }}</option>
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        </select>
+                                                        <label class="text">공개범위</label>
+                                                        <select name="open_scope" value="공개범위">
+                                                            <option value="public">공개</option>
+                                                            <option value="private">비공개</option>
+                                                        </select>
+                                                    </p>
+                                                    <input type="submit" class="postFormSubmit" value="작성">
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div id="richTextInput">
+                                            <form id="form_post_rich" method="post" action="">{% csrf_token %}
+                                                <textarea class="postFormText" id="post_rich" name="post_rich" placeholder="네 인생을 낭비해!!!"></textarea>
+                                                <div class="postTools cboth">
+                                                    <p class="postOptions">
+                                                        <label class="text">그룹</label>
+                                                        <select name="group" value="그룹">
+                                                            <option></option>
+                                                            {% if groups %}
+                                                                {% for group in groups %}
+                                                                    <option value="{{ group.id }}">{{ group.group_name }}</option>
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        </select>
+                                                        <label class="text">공개범위</label>
+                                                        <select name="open_scope" value="공개범위">
+                                                            <option value="public">공개</option>
+                                                            <option value="private">비공개</option>
+                                                        </select>
+                                                    </p>
+                                                    <input type="submit" class="postFormSubmit" value="작성">
+                                                </div>
+                                            </form>
+                                        </div>
                                     </section>
                                 </div>
                             </div>
