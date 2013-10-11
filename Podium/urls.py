@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.conf import settings
 from Maple import views
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -19,6 +20,7 @@ v1_api.register(UserPictureResource())
 v1_api.register(PostEmotionsResource())
 v1_api.register(PollResource())
 v1_api.register(GroupResource())
+v1_api.register(FilesResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home),

@@ -96,7 +96,7 @@ class PostPictures(models.Model):
 class Files(models.Model):
     user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)
-    file = models.FileField(upload_to = 'upload/%y/%m/%d')
+    file = models.FileField(upload_to = 'upload')
     name = models.CharField(max_length=30,null=False)
     created = models.DateTimeField(auto_now=True)
 

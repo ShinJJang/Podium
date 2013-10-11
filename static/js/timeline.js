@@ -120,6 +120,32 @@ $(document).on("submit", "#form_post", function(event) {
                             }
                         });
                     }
+
+                    if($("#attach_file").length > 0) {
+                        console.log("file test");
+                        var file_feedback_api = "/api/v1/files/";
+                        var formdata = new FormData();
+                        formdata.append('file_content', $("#fileContent").val().replace(/C:\\fakepath\\/i, ''));
+                        formdata.append('file_name', $("#fileName").val());
+                        formdata.append('post_id', postId);
+                        //$("#fileTitle").val($("#fileTitle").val())
+                        $.ajax({
+                            url: file_feedback_api,
+                            type: "POST",
+                            data: formdata,
+                            processData: false,
+                            contentType: false,
+                            statusCode: {
+                                201: function(data) {
+                                    console.log("file submit response");
+                                    console.log(data);
+                                },
+                                500: function(data) {
+                                    console.log(data);
+                                }
+                            }
+                        });
+                    }
                 }
 
                 // Form Initialize
@@ -408,7 +434,7 @@ $(function(){
     $(".attachSelect .wPoll").click(function(){
         if(!post_attach) {
             post_attach=true;
-            attach_type="poll"
+            attach_type="poll";
             $("#postAttach").html('<div id="attach_poll"></div>');
             var attachForm = $("#attach_poll");
             var attachTitle = document.createElement("input");
@@ -433,7 +459,28 @@ $(function(){
         }
         console.log(post_attach);
     });
+    $(".attachSelect .wFile").click(function(){
+        if(!post_attach) {
+            post_attach=true;
+            attach_type="file";
+            //$("#postAttach").html('<form method="" action="" name="upload_form" id="upload_form" ><input type="file" name="file" id="file" /><input type="button" value="Upload" id="upload"/></form>');
+            $("#postAttach").html('<div id="attach_file"></div>');
+            var attachForm = $("#attach_file");
+            var attachFile = document.createElement("input");
+            attachFile.className = "attachFile";
+            attachFile.id = "fileContent";
+            attachFile.setAttribute("type", "file");
 
+            var attachFileName = document.createElement("input");
+            attachFileName.id = "fileName";
+            attachFileName.setAttribute("type", "text");
+
+            document.getElementById("attach_file").appendChild(attachFile);
+            document.getElementById("attach_file").appendChild(attachFileName);
+
+        }
+        console.log(post_attach);
+    });
     $("#toPlain").click(function(){
         $("#plainTextInput").show();
         $("#richTextInput").hide();

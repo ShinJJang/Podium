@@ -12,9 +12,9 @@ from .paginator import EstimatedCountPaginator
 import json
 
 import logging
-l = logging.getLogger('django.db.backends')
-l.setLevel(logging.DEBUG)
-l.addHandler(logging.StreamHandler())
+# l = logging.getLogger('django.db.backends')
+# l.setLevel(logging.DEBUG)
+# l.addHandler(logging.StreamHandler())
 
 class UserResource(ModelResource):
     class Meta:
@@ -239,6 +239,45 @@ class GroupResource(ModelResource):
         filtering = {
             "id": ALL
         }
+
+class MultipartResource(object):
+    def deserialize(self, request, data, format=None):
+        print 'test111111111111111'
+        if not format:
+            format = request.META.get('CONTENT_TYPE', 'application/json')
+
+        if format == 'application/x-www-form-urlencoded':
+            return request.POST
+
+        if format.startswith('multipart'):
+            data = request.POST.copy()
+            data.update(request.FILES)
+            print data
+            return data
+        return super(MultipartResource, self).deserialize(request, data, format)
+
+
+class FilesResource(MultipartResource, ModelResource):
+    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+
+    class Meta:
+        queryset = Files.objects.all()
+        resource_name = 'files'
+        authorization= Authorization()
+        filtering = {
+            "post": ALL_WITH_RELATIONS,
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        print "test"
+        print bundle.data
+        file_content = bundle.data['file_content']
+        file_name = bundle.data['file_name']
+        post_key = bundle.data['post_id']
+        post = Posts.objects.get(pk=post_key)
+        new_file = Files(user_key = bundle.request.user, post_key = post, file = file_content, name = file_name)
+        new_file.save()
+        return bundle
 
 """
 // tastypie 상속 가능한 method
