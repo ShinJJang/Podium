@@ -7,15 +7,18 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.db.models import Q
-from .models import  ChatNotis, ChatComments, UserChats, ChatTables, ChatInformation, ChatMessages, ChatNotifications, Participants
+from .models import  ChatNotis, ChatComments, UserChats, ChatTables, ChatInformation, ChatMessages, ChatNotifications, Participants, Groups
 
 @login_required
 def home(request):
     session = Session.objects.get(session_key = request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
     ctx = Context({
         'user':user,
+        'groups':groups,
         'page_title':'Podium'
     })
     return render(request,'index.html', ctx)
@@ -48,9 +51,12 @@ def people(request, people_id):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
     user_pageowner = User.objects.get(id = people_id)
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
     ctx = Context({
         'user':user,
-        'user_pageowner':user_pageowner
+        'user_pageowner':user_pageowner,
+        'groups':groups
     })
     return render(request,'profile.html',ctx)
 
@@ -265,3 +271,30 @@ def chat_messages(request): #chat_noti 만들어야 함
         except Exception, e:
             return HttpResponseServerError(str(e))
 
+@login_required
+def private(request):
+    session = Session.objects.get(session_key = request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
+    ctx = Context({
+        'user':user,
+        'groups':groups
+    })
+    return render(request,'private.html',ctx)
+
+@login_required
+def group(request, group_id):
+    session = Session.objects.get(session_key = request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
+    group = Groups.objects.get(id = group_id)
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
+    ctx = Context({
+        'user':user,
+        'group':group,
+        'groups':groups
+    })
+    return render(request,'group.html',ctx)

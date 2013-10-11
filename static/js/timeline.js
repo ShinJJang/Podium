@@ -1,5 +1,5 @@
 var post_top_url = "http://" + window.location.host + "/api/v1/friendposts/?" + timeline_js_parameter_top_post_polling;
-var post_bottom_url = "/api/v1/friendposts/";
+var post_bottom_url = null;
 var comment_offsets = new Object();
 var isBottominit = 0;
 var post_attach = false;
@@ -9,12 +9,41 @@ var attach_type = null;
 $(document).on("submit", "#form_post", function(event) {
     alert("@");
     var feedback_api = "/api/v1/post/";
-
     var aType=0;
     if($("#attach_poll").length > 0) aType=4;
 
+    var open_scope = $("select[name=open_scope]").val();
+    var group =  $("select[name=group]").val();
+    var target_user = $("input[name=target_user]").val();
+    switch (open_scope) {
+        case "public":
+            open_scope = 0;
+            break;
+        case "private":
+            open_scope = 1;
+            break;
+        default:
+            open_scope = 0;
+            break;
+    }
+    if (group && open_scope == 1){
+        alert("비공개 그룹글은 지원하지 않습니다.\n"+group+"\n"+open_scope);
+        return false;
+    }
+
+    if (group){
+        var target = group;
+        open_scope = 3;
+    }
+    else if(target_user){
+        var target = target_user;
+        open_scope = 2;
+    }
+
     var data = JSON.stringify({
         "post": $("textarea[name=post]").val(),
+        "target": target,
+        "open_scope": open_scope,
         "aType": aType
     });
     console.log(data);
@@ -29,6 +58,8 @@ $(document).on("submit", "#form_post", function(event) {
                 /*post로 생성 후 생성한 json response*/
                 console.log("post submit response");
                 console.log(data);
+                PostTopPolling();
+                $("input[name=post]").val("");
 
                 var postId = data.id;
                 //  첨부 모듈
@@ -88,9 +119,10 @@ $(document).on("submit", "#form_post", function(event) {
 // comment create
 $(document).on("submit", "#form_comment",function(event) {
         var feedback_api = "/api/v1/comment/";
+        var post_key = $(this).find("input[name=post_key]").val();
         var data = JSON.stringify({
             "comment": $(this).find("input[name=comment]").val(),
-            "post_key": $(this).find("input[name=post_key]").val()
+            "post_key": post_key
         });
         console.log(data);
         $.ajax({
@@ -99,11 +131,15 @@ $(document).on("submit", "#form_comment",function(event) {
             contentType: "application/json",
             data: data,
             dataType: "json",
+            context: this,
             statusCode: {
                 201: function(data) {
                     console.log("post submit response");
                     console.log(data);
                     pollComment(data.post_key);
+                    $("input[name=comment]").val("");
+                    var comment_count = $("#commentList"+post_key+" li").size();
+                    $(this).parent().siblings("header").find(".p_comment").html("<a herf='#'><strong>댓글</strong>/ "+comment_count+"</a>");
                 }
             }
         });
@@ -121,6 +157,7 @@ function PostTopPolling() {
             console.log(data)
             if(data.objects.length != 0)
             {
+                console.log(data.objects);
                 $("#post_public_template").tmpl(data.objects).prependTo("#timeline_posts");
                 timeRefresh();
                 post_top_url = data.meta.previous;
@@ -135,16 +172,18 @@ function PostTopPolling() {
                 }
 
                 $(".p_poll_unloaded").each(function(){
+                    var targetDiv = $(this);
                     $.ajax({
                         url: "/api/v1/polls/?post=" + $(this).attr("id").substring(5),
                         type: "GET",
                         dataType: "json",
                         success: function(data) {
-                            console.log("poll data: ");
-                            console.log(data.objects);
+                            for(obj in data.objects) {
+                                data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
+                            }
+                            $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
                         }
                     });
-                    $(this).addClass("p_poll").removeClass("p_poll_unloaded");
                 })
             }
         }
@@ -220,6 +259,7 @@ function pollComment(post_id) {
             {
                 console.log(data);
                 $("#comment_template").tmpl(data.objects.reverse()).appendTo("#commentList" + post_id);
+                timeRefresh();
                 comment_offsets[post_id] = data.objects[data.objects.length - 1].id;
                 console.log("댓글 폴링한 마지막 오프셋 :"+comment_offsets[post_id]);
             }
@@ -233,7 +273,6 @@ $(document).on("click", ".p_responses", function(){
         var resp = $(this).toggleClass("opened");
 
         // comment polling on post focused
-        // TODO(ym) - Comment poll with interval when open
         if (resp && resp.context.className.search("opened") != -1){
             var tag_id = $(this).siblings(".p_comment").children(".p_commentList").attr("id");
             if (!tag_id)
@@ -308,6 +347,3 @@ $(function(){
 function getPoll(post_id){
     console.log(post_id);
 }
-
-// TODO - Gruop post create
-// TODO - Post crate using open scope

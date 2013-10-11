@@ -47,6 +47,8 @@ class UserPictureResource(ModelResource):
 
 class PostResource(ModelResource):
     user = fields.ToOneField(UserResource, 'user_key', full=True)
+    target_user = fields.ToOneField(UserResource, 'target_user', full=True, null=True)
+    group = fields.ToOneField('Maple.api.GroupResource', 'group', full=True, null=True)
 
     class Meta:
         queryset = Posts.objects.all()
@@ -56,21 +58,40 @@ class PostResource(ModelResource):
         filtering = {
             "user": ALL_WITH_RELATIONS,
             "post": ALL,
+            "target_user": ALL_WITH_RELATIONS,
+            "group": ALL_WITH_RELATIONS,
+            "open_scope": ALL
         }
         always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
         user = bundle.request.user
         post = bundle.data['post']
+        open_scope = bundle.data['open_scope']
         aType = bundle.data['aType']
-        bundle.obj = Posts(user_key=user, post=post, attachment_type=aType)
+        if(open_scope == 0) or (open_scope == 1): # public to self or private
+            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType)
+        elif(open_scope == 2): # public to friend
+            target_user = User.objects.get(pk= bundle.data['target'])
+            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType, target_user=target_user)
+        elif(open_scope == 3): # group
+            group = Groups.objects.get(pk= bundle.data['target'])
+            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType, group=group)
+
         bundle.obj.save()
         return bundle
 
     def dehydrate(self, bundle):
-        bundle.data['comment_count'] = bundle.obj.comments_set.all().count();
-        bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count();
-        return bundle;
+        #bundle.data['test'] = Posts.objects.filter(comments__pk=1)[0] # will delete
+        bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
+        bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count()
+        if(bundle.obj.group):
+            bundle.data['group_name'] = bundle.obj.group.group_name
+            bundle.data['group_id'] = bundle.obj.group.id
+        elif(bundle.obj.target_user):
+            bundle.data['target_user_name'] = bundle.obj.target_user.username
+            bundle.data['target_user_id'] = bundle.obj.target_user.id
+        return bundle
 
 class CommentResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user_key', full=True)
@@ -158,10 +179,6 @@ class FriendPostResource(ModelResource):
         # paginator_class = EstimatedCountPaginator
         allowed_methods = ['get']
 
-    # def get_object_list(self, request):
-    #     this_user_posts = super(FriendPostResource, self).get_object_list(request).filter(user_key=request.user)
-    #     return this_user_posts
-
 class PostEmotionsResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user')
     post = fields.ForeignKey(PostResource, 'post')
@@ -207,7 +224,15 @@ class PollResource(ModelResource):
         bundle.obj.save()
         return bundle
 
+class GroupResource(ModelResource):
 
+    class Meta:
+        queryset = Groups.objects.all()
+        resource_name = 'groups'
+        authorization = Authorization()
+        filtering = {
+            "id": ALL
+        }
 
 """
 // tastypie 상속 가능한 method

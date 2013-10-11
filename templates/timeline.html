@@ -22,17 +22,18 @@
                                             <div class="postTools cboth">
                                                 <p class="postOptions">
                                                     <label class="text">그룹</label>
-                                                    <select value="그룹">
+                                                    <select name="group" value="그룹">
+                                                        <option></option>
                                                         {% if groups %}
                                                             {% for group in groups %}
-                                                                <option>{{ group.groupname }}</option>
+                                                                <option value="{{ group.id }}">{{ group.group_name }}</option>
                                                             {% endfor %}
                                                         {% endif %}
                                                     </select>
                                                     <label class="text">공개범위</label>
-                                                    <select value="공개범위">
-                                                        <option vlaue="public">공개</option>
-                                                        <option vlaue="private">비공개</option>
+                                                    <select name="open_scope" value="공개범위">
+                                                        <option value="public">공개</option>
+                                                        <option value="private">비공개</option>
                                                     </select>
                                                 </p>
                                                 <input type="submit" class="postFormSubmit" value="작성">

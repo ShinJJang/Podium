@@ -18,6 +18,7 @@ v1_api.register(FriendPostResource())
 v1_api.register(UserPictureResource())
 v1_api.register(PostEmotionsResource())
 v1_api.register(PollResource())
+v1_api.register(GroupResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home),
@@ -32,6 +33,8 @@ urlpatterns = patterns('',
     (r'^accounts/',include('registration.backends.default.urls')),
     # temporary page
     url(r'^poll/$', views.poll),
+    url(r'^private/$', views.private),
+    url(r'^group/(?P<group_id>\d+)/$', 'Maple.views.group', name='group'),
     # Uncomment the admin/doc line below to enable admin documentation:
     #url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
