@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # RESTful API controller
 # tastypie framework using
+from django.db.models import Q
 from django.contrib.auth.models import User
 from .models import *
 from tastypie import fields
@@ -10,6 +11,7 @@ from tastypie.authorization import DjangoAuthorization, Authorization
 from .paginator import EstimatedCountPaginator
 
 import json
+import operator
 
 import logging
 l = logging.getLogger('django.db.backends')
@@ -82,7 +84,9 @@ class PostResource(ModelResource):
         return bundle
 
     def dehydrate(self, bundle):
-        #bundle.data['test'] = Posts.objects.filter(comments__pk=1)[0] # will delete
+        pks = [ "1", "2", "3", "4" ]
+        query = reduce(operator.and_, [ Q(comments__pk=x) for x in pks ] )
+        bundle.data['answer'] = Posts.objects.filter(query).distinct()
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
         bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count()
         if(bundle.obj.group):
