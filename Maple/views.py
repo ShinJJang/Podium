@@ -7,7 +7,23 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.db.models import Q
-from .models import  ChatNotis, ChatComments, UserChats, ChatTables, ChatInformation, ChatMessages, ChatNotifications, Participants, Groups
+from .models import  ChatNotis, ChatComments, UserChats, ChatTables, ChatInformation, ChatMessages, ChatNotifications, Participants, Groups, Files, Posts
+from django.conf import settings
+
+from base64 import b64encode
+from datetime import datetime, timedelta
+from json import dumps
+from mimetypes import guess_type
+from os import path
+from uuid import uuid4
+import hmac
+import hashlib
+import sha
+
+from ajaxuploader.backends.s3 import S3UploadBackend
+from ajaxuploader.views import AjaxFileUploader
+from boto.s3.connection import boto, Key, S3Connection
+
 
 @login_required
 def home(request):
@@ -298,3 +314,53 @@ def group(request, group_id):
         'groups':groups
     })
     return render(request,'group.html',ctx)
+
+@login_required
+@csrf_exempt
+def file_upload(request):
+    print 'asdasd'
+    print request.method
+    print request.FILES.get('file_content')
+    if request.method == 'POST':
+        post = Posts.objects.get(id = request.POST['post_id'])
+        new_file = Files(file = request.FILES['file_content'], user_key = post.user_key, post_key = post, name = request.POST['file_name'])
+        new_file.save()
+        return HttpResponse("file_upload success")
+    return HttpResponse("no_file")
+
+@csrf_exempt
+def static(request, filename):
+    try:
+        with open(path.join(settings.STATIC_ROOT, path.basename(filename))) as handle:
+            response = HttpResponse(handle.read())
+            mimetype, encoding = guess_type(filename)
+            if mimetype:
+                response['Content-Type'] = mimetype
+            return response
+    except IOError:
+        return HttpResponse("No such file or directory", status=404)
+
+@csrf_exempt
+def get_upload_params(request):
+    def make_policy():
+        policy_object = {
+            "expiration": (datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
+            "conditions": [
+                { "bucket": "somapodium" },
+                { "acl": "public-read" },
+                ["starts-with", "$key", "uploads/"],
+                { "success_action_status": "201" }
+            ]
+        }
+        return b64encode(dumps(policy_object).replace('\n', '').replace('\r', ''))
+
+    def sign_policy(policy):
+        return b64encode(hmac.new("flwBllFUCpi0YG5juUFM8w3tIN73/jdoTx93qmac", policy, hashlib.sha1).digest())
+
+    policy = make_policy()
+    return HttpResponse(dumps({
+        "policy": policy,
+        "signature": sign_policy(policy),
+        "key": "uploads/" + uuid4().hex + ".bin",
+        "success_action_redirect": "/"
+    }), content_type="application/json")

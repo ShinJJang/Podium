@@ -242,7 +242,6 @@ class GroupResource(ModelResource):
 
 class MultipartResource(object):
     def deserialize(self, request, data, format=None):
-        print 'test111111111111111'
         if not format:
             format = request.META.get('CONTENT_TYPE', 'application/json')
 
@@ -252,8 +251,6 @@ class MultipartResource(object):
         if format.startswith('multipart'):
             data = request.POST.copy()
             data.update(request.FILES)
-            print data
-            return data
         return super(MultipartResource, self).deserialize(request, data, format)
 
 
@@ -269,8 +266,6 @@ class FilesResource(MultipartResource, ModelResource):
         }
 
     def obj_create(self, bundle, **kwargs):
-        print "test"
-        print bundle.data
         file_content = bundle.data['file_content']
         file_name = bundle.data['file_name']
         post_key = bundle.data['post_id']

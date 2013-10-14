@@ -23,6 +23,7 @@ tinymce.init({
     ]
 });
 
+
 // post create
 $(document).on("submit", "#form_post", function(event) {
     alert("@");
@@ -123,18 +124,18 @@ $(document).on("submit", "#form_post", function(event) {
 
                     if($("#attach_file").length > 0) {
                         console.log("file test");
-                        var file_feedback_api = "/api/v1/files/";
-                        var formdata = new FormData();
-                        formdata.append('file_content', $("#fileContent").val().replace(/C:\\fakepath\\/i, ''));
-                        formdata.append('file_name', $("#fileName").val());
-                        formdata.append('post_id', postId);
+                        var file_upload_url = "/file_upload";
+                        var form_data = new FormData();
+                        form_data.append('file_content', $("#fileContent").val().replace(/C:\\fakepath\\/i, ''));
+                        //form_data.append('file_name', $("#fileName").val());
+                        //form_data.append('post_id', postId);
                         //$("#fileTitle").val($("#fileTitle").val())
                         $.ajax({
-                            url: file_feedback_api,
+                            url: file_upload_url,
                             type: "POST",
-                            data: formdata,
+                            data: form_data,
                             processData: false,
-                            contentType: false,
+                            contentType: "multipart/form-data",
                             statusCode: {
                                 201: function(data) {
                                     console.log("file submit response");
@@ -464,21 +465,54 @@ $(function(){
             post_attach=true;
             attach_type="file";
             //$("#postAttach").html('<form method="" action="" name="upload_form" id="upload_form" ><input type="file" name="file" id="file" /><input type="button" value="Upload" id="upload"/></form>');
-            $("#postAttach").html('<div id="attach_file"></div>');
-            var attachForm = $("#attach_file");
+            $("#postAttach").html('<div id="invisible"></div>');
+
+            var attachForm = document.createElement("form");
+            attachForm.setAttribute("action","https://somapodium.s3.amazonaws.com");
+            attachForm.setAttribute("method", "post");
+            attachForm.setAttribute("enctype", "multipart/form-data");
+            attachForm.id = "upload_form";
+
+            var attachKey = document.createElement("input");
+            attachKey.setAttribute("type", "hidden");
+            attachKey.setAttribute("name", "key");
+            var attachPolicy = document.createElement("input");
+            attachPolicy.setAttribute("type", "hidden");
+            attachPolicy.setAttribute("name", "key");
+            var attachSignature = document.createElement("input");
+            attachSignature.setAttribute("type", "hidden");
+            attachSignature.setAttribute("name", "key");
+
+            var attachAccessKeyId = document.createElement("input");
+            attachAccessKeyId.setAttribute("type", "hidden");
+            attachAccessKeyId.setAttribute("name", "AWSAccessKeyId");
+            attachAccessKeyId.setAttribute("value", "AKIAJKZRCQKYZ7EHIXYA");
+
+            var attachAcl = document.createElement("input");
+            attachAcl.setAttribute("type", "hidden");
+            attachAcl.setAttribute("name", "acl");
+            attachAcl.setAttribute("value", "public-read");
+
+            var attachSuccess = document.createElement("input");
+            attachSuccess.setAttribute("type", "hidden");
+            attachSuccess.setAttribute("name", "success_action_status");
+            attachSuccess.setAttribute("value", "201");
+
             var attachFile = document.createElement("input");
-            attachFile.className = "attachFile";
-            attachFile.id = "fileContent";
+            attachFile.id = "file_info";
             attachFile.setAttribute("type", "file");
+            attachFile.setAttribute("name", "file");
 
-            var attachFileName = document.createElement("input");
-            attachFileName.id = "fileName";
-            attachFileName.setAttribute("type", "text");
-
-            document.getElementById("attach_file").appendChild(attachFile);
-            document.getElementById("attach_file").appendChild(attachFileName);
-
+            document.getElementById("upload_form").appendChild(attachKey);
+            document.getElementById("upload_form").appendChild(attachPolicy);
+            document.getElementById("upload_form").appendChild(attachSignature);
+            document.getElementById("upload_form").appendChild(attachAccessKeyId);
+            document.getElementById("upload_form").appendChild(attachAcl);
+            document.getElementById("upload_form").appendChild(attachSuccess);
+            document.getElementById("upload_form").appendChild(attachFile);
+            document.getElementById("invisible").appendChild(attachForm);
         }
+
         console.log(post_attach);
     });
     $("#toPlain").click(function(){
@@ -498,3 +532,4 @@ $(function(){
 function getPoll(post_id){
     console.log(post_id);
 }
+
