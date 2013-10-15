@@ -286,7 +286,7 @@ class MembershipNotisResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         group = Groups.objects.get(pk=bundle.data['noti_group_key'])
         user = User.objects.get(pk=bundle.data['noti_user_key'])
-        bundle.obj = Memberships(noti_group_key=group, noti_user_key=user)
+        bundle.obj = MembershipNotis(noti_group_key=group, noti_user_key=user)
         bundle.obj.save()
         return bundle
 
