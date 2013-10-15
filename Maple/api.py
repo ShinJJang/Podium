@@ -154,8 +154,8 @@ class FriendshipsResource(ModelResource): #polling get or create
         include_resource_uri = False
         authorization= Authorization()
         filtering = {
-            "user": ALL_WITH_RELATIONS,
-            "friend_user": ALL_WITH_RELATIONS,
+            "user_key": ALL_WITH_RELATIONS,
+            "friend_user": ALL_WITH_RELATIONS
         }
 
     def obj_create(self, bundle, **kwargs):

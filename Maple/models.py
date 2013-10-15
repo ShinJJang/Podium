@@ -105,6 +105,13 @@ class Files(models.Model):
 class Friendships(models.Model):
     user_key = models.ForeignKey(User, related_name='my_key')
     friend_user_key = models.ForeignKey(User, related_name='friend_key')
+    created = models.DateTimeField(auto_now=True)
+
+def create_friendship_each(sender, instance, created, **kwargs):
+    if created:
+        Friendships.objects.get_or_create(user_key = instance.friend_user_key, friend_user_key = instance.user_key)
+
+post_save.connect(create_friendship_each, sender=Friendships)
 
 # Relation sending friend request
 class FriendshipNotis(models.Model):
