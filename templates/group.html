@@ -27,7 +27,6 @@
                         </div>
                     </div>
                     <p id="friendStatus">
-                        <a href="#" id="addFriend">그룹 신청</a>
                     </p>
                 </div>
             </div>
@@ -76,95 +75,76 @@
 
 {% block add_scripts %}
     <script type="text/javascript">
-{#        $(function(){#}
-{#            if ({{ user_pageowner.id }} == {{ user.id }}){#}
-{#                return false;#}
-{#            }#}
-{#            var request_friend_url = "/api/v1/friend_noti/";#}
-{#            var data = JSON.stringify({#}
-{#                "friend_id": {{ user_pageowner.id }}#}
-{#            });#}
-{#            $.ajax({#}
-{#                type: "GET",#}
-{#                url: request_friend_url,#}
-{#                contentType: "application/json",#}
-{#                data: data,#}
-{#                dataType: "json",#}
-{#                statusCode: {#}
-{#                    200: function (data) {#}
-{#                        /*post로 Noti 생성한 후 json response*/#}
-{#                        if(data.meta.total_count) {#}
-{#                            $("#friendStatus").html('<span class="friend">친구</span>');#}
-{#                        }#}
-{#                        else {#}
-{#                            $("#friendStatus").html('<a href="#" id="addFriend">친구 추가</span>');#}
-{##}
-{#                            $('#addFriend').click(function (event) {#}
-{#                                var request_friend_url = "/api/v1/friend_noti/";#}
-{#                                var data = JSON.stringify({#}
-{#                                    "friend_id": {{ user_pageowner.id }}#}
-{#                                });#}
-{#                                console.log("friend id = " + data.friend_id);#}
-{#                                $.ajax({#}
-{#                                    type: "POST",#}
-{#                                    url: request_friend_url,#}
-{#                                    contentType: "application/json",#}
-{#                                    data: data,#}
-{#                                    dataType: "json",#}
-{#                                    statusCode: {#}
-{#                                        201: function (data) {#}
-{#                                            /*post로 Noti 생성한 후 json response*/#}
-{#                                            console.log("request friend to django server, [response] = [" + data + "]");#}
-{#                                            $("#friendStatus").html('<span class="friend">친구</span>');#}
-{#                                        }#}
-{#                                    }#}
-{#                                });#}
-{#                            });#}
-{#                        }#}
-{#                    }#}
-{#                }#}
-{#            });#}
-{#        });#}
-{##}
-{#        var noti_check_friend = setInterval(function () {#}
-{#            $('#form_noti_check_friend').submit(function (event) {#}
-{#                var noti_check_friend_url = "/api/v1/friend_noti/?noti_to_user=" + user_id; //자기 자신의 유저 아이디#}
-{#                $.ajax({#}
-{#                    type: "GET",#}
-{#                    url: noti_check_friend_url,#}
-{#                    contentType: "application/json",#}
-{#                    dataType: "json",#}
-{#                    statusCode: {#}
-{#                        200: function (data) {#}
-{#                            console.log("request friend to django server, [response] = [" + data + "]");#}
-{#                            accept_friend_request(data.friend_id); //accept or reject but, now always accept#}
-{#                        }#}
-{#                    }#}
-{#                });#}
-{#                return false;#}
-{#            });#}
-{#        }, 5000);#}
-{##}
-{#        var accept_friend_request = (function(friend_id) {#}
-{#            console.log('friend_id = ' + friend_id);#}
-{#            var accept_friendship_url = "/api/v1/friendship/";#}
-{#            accept_friend_data = JSON.stringify({#}
-{#               friend_id : friend_id#}
-{#            });#}
-{#            $.ajax({#}
-{#                type: 'POST',#}
-{#                url: accept_friend_request_url,#}
-{#                contentType: "application/json",#}
-{#                data: accept_friend_data,#}
-{#                dataType: "json",#}
-{#                statusCode: {#}
-{#                    201: function (data) {#}
-{#                        console.log("accept_friendship, [response] = [" + data + "]");#}
-{#                    }#}
-{#                }#}
-{#            });#}
-{#            return false;#}
-{#        });#}
+
+        var request_membership = function(){
+            $('#addFriend').click(function() {
+                var request_friend_url = "/api/v1/membershipnotis/";
+                var data = JSON.stringify({
+                    "noti_group_key": {{ group.id }},
+                    "noti_user_key": {{ user.id }}
+                });
+                $.ajax({
+                    type: "POST",
+                    url: request_friend_url,
+                    contentType: "application/json",
+                    data: data,
+                    dataType: "json",
+                    statusCode: {
+                        201: function (data) {
+                            console.log("request membership!");
+                            $("#friendStatus").html('<span class="friend">요청 중</span>');
+                        }
+                    }
+                });
+            });
+        };
+
+        var check_membership_noti = function(){
+            var feedback_url = "/api/v1/membershipnotis/?noti_group_key={{ group.id }}&noti_user_key={{ user.id }}";
+            $.ajax({
+                type: "GET",
+                url: feedback_url,
+                contentType: "application/json",
+                dataType: "json",
+                statusCode: {
+                    200: function (data) {
+                        if(data.meta.total_count) {
+                            console.log("already request member!");
+                            $("#friendStatus").html('<span class="friend">요청 중</span>');
+                        }
+                        else {
+                            console.log("not member!")
+                            $("#friendStatus").html('<a href="#" id="addFriend">그룹 신청</span>');
+                            request_membership();
+                            return false;
+                        }
+                    }
+                }
+            });
+        };
+
+        $(function(){
+            var feedback_url = "/api/v1/memberships/?group_key={{ group.id }}&user_key={{ user.id }}";
+            $.ajax({
+                type: "GET",
+                url: feedback_url,
+                contentType: "application/json",
+                dataType: "json",
+                statusCode: {
+                    200: function (data) {
+                        console.log("membership data");
+                        console.log(data);
+                        if(data.meta.total_count) {
+                            console.log("already member!");
+                            $("#friendStatus").html('<span class="friend">가입됨</span>');
+                        }
+                        else {
+                            check_membership_noti();
+                        }
+                    }
+                }
+            });
+        });
         $("select[name=group]").hide();
 
         // timeline.js의 arg : top polling url의 parameter

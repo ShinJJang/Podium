@@ -19,6 +19,8 @@ v1_api.register(UserPictureResource())
 v1_api.register(PostEmotionsResource())
 v1_api.register(PollResource())
 v1_api.register(GroupResource())
+v1_api.register(MembershipsResource())
+v1_api.register(MembershipNotisResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home),

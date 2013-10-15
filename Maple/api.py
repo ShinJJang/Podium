@@ -238,7 +238,6 @@ class GroupResource(ModelResource):
             "id": ALL
         }
         always_return_data = True
-        always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
         group_name = bundle.data['group_name']
@@ -248,6 +247,50 @@ class GroupResource(ModelResource):
         bundle.obj = Groups(group_name=group_name, description=description, isProject=is_project, open_scope=open_scope)
         bundle.obj.save()
         return bundle
+
+class MembershipsResource(ModelResource):
+    group_key = fields.ForeignKey(GroupResource, 'group_key', full=False)
+    user_key = fields.ForeignKey(UserResource, 'user_key', full=True)
+
+    class Meta:
+        queryset = Memberships.objects.all()
+        resource_name = 'memberships'
+        authorization = Authorization()
+        filtering = {
+            "group_key": ALL_WITH_RELATIONS,
+            "user_key": ALL_WITH_RELATIONS
+        }
+        always_return_data = True
+
+    def obj_create(self, bundle, **kwargs):
+        group = Groups.objects.get(pk=bundle.data['group_key'])
+        user = User.objects.get(pk=bundle.data['user_key'])
+        bundle.obj = Memberships(group_key=group, user_key=user)
+        bundle.obj.save()
+        return bundle
+
+class MembershipNotisResource(ModelResource):
+    noti_group_key = fields.ForeignKey(GroupResource, 'noti_group_key', full=False)
+    noti_user_key = fields.ForeignKey(UserResource, 'noti_user_key', full=True)
+
+    class Meta:
+        queryset = MembershipNotis.objects.all()
+        resource_name = 'membershipnotis'
+        authorization = Authorization()
+        filtering = {
+            "noti_group_key": ALL_WITH_RELATIONS,
+            "noti_user_key": ALL_WITH_RELATIONS
+        }
+        always_return_data = True
+
+    def obj_create(self, bundle, **kwargs):
+        group = Groups.objects.get(pk=bundle.data['noti_group_key'])
+        user = User.objects.get(pk=bundle.data['noti_user_key'])
+        bundle.obj = Memberships(noti_group_key=group, noti_user_key=user)
+        bundle.obj.save()
+        return bundle
+
+
 
 """
 // tastypie 상속 가능한 method

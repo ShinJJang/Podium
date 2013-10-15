@@ -152,3 +152,10 @@ class GroupPosts(models.Model):
 class Memberships(models.Model):
     group_key = models.ForeignKey(Groups)
     user_key = models.ForeignKey(User)
+    permission = models.IntegerField(default=0)  # 0 = common, 1 = master
+    created = models.DateTimeField(auto_now=True)
+
+class MembershipNotis(models.Model):
+    noti_group_key = models.ForeignKey(Groups)
+    noti_user_key = models.ForeignKey(User)
+    created = models.DateTimeField(auto_now=True)

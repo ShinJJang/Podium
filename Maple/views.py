@@ -6,7 +6,7 @@ from django.template import Context
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
-from .models import  ChatNotis, ChatComments, UserChats, ChatTables, Groups
+from .models import  ChatNotis, ChatComments, UserChats, ChatTables, Groups, Memberships
 
 @login_required
 def home(request):
