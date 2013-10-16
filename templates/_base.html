@@ -48,7 +48,7 @@
                                 <span class="username">{{ user.username }}</span>
                             </a>
                         </li>
-                        <li id="nav_request"><a href="#"><span class="nav_icon"></span><span class="nav_label">Request</span><span class="nav_no">4</span></a></li>
+                        <li id="nav_request"><a href="#"><span class="nav_icon"></span><span class="nav_label">Request</span><span id="friend_noti_count" class="nav_no">4</span></a></li>
                         <li id="nav_notification" class="disabled"><a href="#"><span class="nav_icon"></span><span class="nav_label">Notification</span><span class="nav_no">56</span></a></li>
                     </ul>
                     <div id="nav_items">
@@ -109,10 +109,12 @@
             <script type="text/javascript" src="{{ STATIC_URL }}js/rainbow.min.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/waypoints.min.js"></script>
             <script type="text/javascript" src="{{STATIC_URL}}js/jquery.timeago.js"></script>
+            <script type="text/javascript">
+                var user_id = {{ user.id }};
+            </script>
+            <script type="text/javascript" src="{{ STATIC_URL }}js/sidebar.js"></script>
         {% endblock %}
         {% block add_scripts %}
-            {% include 'post_public.html' %}
-            <script type="text/javascript" src="{{ STATIC_URL }}js/search.js"></script>
         {% endblock %}
     </body>
 </html>

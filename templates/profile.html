@@ -110,7 +110,7 @@
             });
         }
 
-        var acceopt_friendship = function(noti_id){
+        var accept_friendship = function(noti_id){
             $('#addFriend').click(function() {
                 var request_friend_url = "/api/v1/friendship/";
                 var data = JSON.stringify({
@@ -127,6 +127,7 @@
                             delete_friendship_noti(noti_id);
                             console.log("accept friendship!");
                             $("#friendStatus").html('<span class="friend">친구</span>');
+                            get_friendship_notis();
                         }
                     }
                 });
@@ -146,7 +147,7 @@
                             console.log("you got request friendship!");
                             $("#friendStatus").html('<a href="#" id="addFriend">친구 수락</a>');
                             var noti_id = data.objects.pop().id;
-                            acceopt_friendship(noti_id);
+                            accept_friendship(noti_id);
                             return false;
                         }
                         else {
