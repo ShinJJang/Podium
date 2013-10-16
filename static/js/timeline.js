@@ -59,8 +59,18 @@ $(document).on("submit", "#form_post", function(event) {
         open_scope = 2;
     }
 
+    if($("#attach_video").length > 0) {
+        var urlRegEx = new RegExp("^(http|https)://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*$");
+        var videoAddress = $("#videoAddress").val();
+
+        if(urlRegEx.test(videoAddress)==false) {
+            alert("첨부된 주소가 올바르지 않습니다.")
+            return false;
+        }
+    }
+
     var data = JSON.stringify({
-        "post": $("textarea[name=post]").val(),
+        "post": $("textarea[name=post]").val().replace(/</g,"&lt;"),
         "target": target,
         "open_scope": open_scope,
         "aType": aType
@@ -146,6 +156,37 @@ $(document).on("submit", "#form_post", function(event) {
                                 }
                             }
                         });
+                    }
+
+                    if($("#attach_video").length > 0) {
+                        var a_video_api = "/api/v1/videos/";
+
+                        var urlRegEx = new RegExp("^(http|https)://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*$");
+                        var videoAddress = $("#videoAddress").val();
+
+                        if(urlRegEx.test(videoAddress)) {
+                            var data = JSON.stringify({
+                                "post_id": postId,
+                                "video": videoAddress
+                            });
+
+                            $.ajax({
+                                url: a_video_api,
+                                type: "POST",
+                                contentType: "application/json",
+                                data: a_data,
+                                dataType: "json",
+                                statusCode: {
+                                    201: function(data) {
+                                        console.log("poll submit response");
+                                        console.log(data);
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            // error handling
+                        }
                     }
                 }
 
@@ -269,11 +310,22 @@ function PostTopPolling() {
         dataType: "json",
         success: function(data) {
             console.log("TOP POLL POST  url:" + post_top_url);
-            console.log(data)
             if(data.objects.length != 0)
             {
-                console.log(data.objects);
+                for(var dataObj in data.objects) {
+                    try {
+                        var codeReg = /\[code(.*?)]\n{0,1}/i;
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace(codeReg,"<pre><code data-$1>");
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("data- language","data-language");
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("[/code]","</code></pre>");
+                    } catch (e) {
+                        console.log("code parsing exception: " + e);
+                    }
+                }
                 $("#post_public_template").tmpl(data.objects).prependTo("#timeline_posts");
+
+                Rainbow.color();
+
                 timeRefresh();
                 post_top_url = data.meta.previous;
                 console.log("1 previous url:  " + post_top_url);
@@ -300,9 +352,10 @@ function PostTopPolling() {
                             $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
                             $(targetDiv).removeClass("p_poll_unloaded");
                             $(targetDiv).addClass("p_poll");
+                            bindPoll($(targetDiv).attr("id"));
                         }
                     });
-                })
+                });
             }
         }
         });
@@ -347,11 +400,41 @@ function postBottom() {
             console.log(data);
             if(data.objects.length != 0)
             {
+                for(var dataObj in data.objects) {
+                    try {
+                        var codeReg = /\[code(.*?)]\n{0,1}/i;
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace(codeReg,"<pre><code data-$1>");
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("data- language","data-language");
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("[/code]","</code></pre>");
+                    } catch (e) {
+                        console.log("code parsing exception: " + e);
+                    }
+                }
                 $("#post_public_template").tmpl(data.objects).appendTo("#timeline_posts");
+                Rainbow.color();
                 post_bottom_url = data.meta.next;
                 console.log("2 next url:  "+post_bottom_url);
                 timeRefresh();
             }
+
+            $(".p_poll_unloaded").each(function(){
+                var targetDiv = $(this);
+                $.ajax({
+                    url: "/api/v1/polls/?post=" + $(this).attr("id").substring(5),
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        for(obj in data.objects) {
+                            data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
+                        }
+                        $(targetDiv).append('<li class="pollTitle">'+data.objects[0].poll.title+'</li>');
+                        $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
+                        $(targetDiv).removeClass("p_poll_unloaded");
+                        $(targetDiv).addClass("p_poll");
+                        bindPoll($(targetDiv).attr("id"));
+                    }
+                });
+            });
         }
         });
 }
@@ -460,6 +543,27 @@ $(function(){
         }
         console.log(post_attach);
     });
+
+    // Simply add code tag on the textarea.
+    $(".attachSelect .wCode").click(function(){
+        $("#post").val($("#post").val()+"[code language=\"language\"]\n\n[/code]");
+    });
+
+    // Attach video's address on YouTube
+    $(".attachSelect .wVideo").click(function(){
+        if(!post_attach) {
+            post_attach=true;
+            attach_type="video";
+            $("#postAttach").html('<div id="attach_video"></div>');
+            var attachAddress = document.createElement("input");
+            attachAddress.className="attachTitle";
+            attachAddress.id="videoAddress";
+            attachAddress.setAttribute("type","text");
+            attachAddress.setAttribute("placeholder","YouTube 주소");
+            document.getElementById("attach_video").appendChild(attachAddress);
+        }
+    });
+
     $(".attachSelect .wFile").click(function(){
         if(!post_attach) {
             post_attach=true;
@@ -531,8 +635,17 @@ $(function(){
     });
 })
 
-function getPoll(post_id){
-    console.log(post_id);
+function bindPoll(targetDiv){
+    $("#" + targetDiv + " li").click(function(){
+        $.ajax({
+            url: "/api/v1/polls/?id=" + targetDiv.substring(5) + "&item=" + ($(this).index()-1),
+            type: "PUT",
+            dataType: "json",
+            success: function(data) {
+                console.log(data);
+            }
+        });
+    })
 }
 
 

@@ -21,6 +21,7 @@ v1_api.register(PostEmotionsResource())
 v1_api.register(PollResource())
 v1_api.register(GroupResource())
 v1_api.register(FilesResource())
+v1_api.register(VideoResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home),

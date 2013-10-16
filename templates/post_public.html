@@ -1,5 +1,5 @@
 <script id="post_public_template" type="text/x-jquery-tmpl">
-    <div class="p_tItem p_container public">
+    <div class="p_tItem p_container public pui">
         <a href="/people/${ post.user.id }" class="p_tUser p_tIcon"></a>
         <div class="p_tBox">
             <article class="p_tArticle">
@@ -13,7 +13,7 @@
                         {% templatetag openblock %}/if{% templatetag closeblock %}
                     </p>
                     <div class="p_tText">
-                        {% templatetag openvariable %}html post.post{% templatetag closevariable %}
+                        {% templatetag openblock %}html post.post{% templatetag closeblock %}
                     </div>
                     {% templatetag openblock %}if post.attachment_type == 4{% templatetag closeblock %}
                         <ul id="poll-${ post.id }" class="p_attachment p_poll_unloaded">

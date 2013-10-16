@@ -274,6 +274,26 @@ class FilesResource(MultipartResource, ModelResource):
         new_file.save()
         return bundle
 
+class VideoResource(ModelResource):
+    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+
+    class Meta:
+        queryset = Polls.objects.all()
+        resource_name = 'vudeis'
+        authorization= Authorization()
+        filtering = {
+            "post": ALL_WITH_RELATIONS,
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        post_key = bundle.data['post_key']
+        post = Posts.objects.get(pk=post_key)
+        video = bundle.data['video']
+        bundle.obj = Videos(post_key=post, video=video)
+        bundle.obj.save()
+        return bundle
+
+
 """
 // tastypie 상속 가능한 method
 detail_uri_kwargs()
