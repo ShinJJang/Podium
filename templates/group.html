@@ -68,6 +68,17 @@
                 <section id="timeline_posts">
                 </section>
             </div>
+            <nav class="p_timelineNav">
+                <h3 class="weekly">그룹 가입 요청</h3>
+                <ul id="member_request">
+                    <li><a href="#"><span>August 4th - 12th</span></a></li>
+                    <li class="more"><a href="#"><span>More</span></a></li>
+                </ul>
+                <div id="siteInfo">
+                    <p class="copy">&copy; Podium 2013</p>
+                    <p><a href="#" class="about"><span>About</span></a> <sup>|</sup> <a href="#" class="developer"><span>Developer</span></a> <sup>|</sup> <a href="#" class="privacy"><span>개인정보보호</span></a> <sup>|</sup> <a href="#" class="eula"><span>이용약관</span></a></p>
+                </div>
+            </nav>
         </div>
     </section>
 
@@ -75,6 +86,67 @@
 
 {% block add_scripts %}
     <script type="text/javascript">
+        var delete_membership_noti = function(noti_id){
+            var request_friend_url = "/api/v1/membershipnotis/?pk="+noti_id;
+            $.ajax({
+                type: "DELETE",
+                url: request_friend_url,
+                contentType: "application/json",
+                dataType: "json",
+                statusCode: {
+                    201: function (data) {
+                        console.log("member noti deleted");
+                    }
+                }
+            });
+        }
+
+        var acceopt_membership = function(){
+            $('#member_request').click(function() {
+                var noti_id = $("this li a").attr("href");
+                console.log(noti_id);
+                var request_friend_url = "/api/v1/memberships/";
+                var data = JSON.stringify({
+                    "group_key": {{ group.id }},
+                    "user_key": {{ user.id }}
+                });
+                $.ajax({
+                    type: "POST",
+                    url: request_friend_url,
+                    contentType: "application/json",
+                    data: data,
+                    dataType: "json",
+                    statusCode: {
+                        201: function (data) {
+                            console.log("member accept click");
+                            delete_membership_noti(noti_id);
+                            $("#friendStatus").html('<span class="friend">가입됨</span>');
+                        }
+                    }
+                });
+            });
+        }
+
+        var get_member_request= function(){
+            var feedback_url = "/api/v1/membershipnotis/?noti_group_key={{ group.id }}&limit=8";
+            $.ajax({
+                type: "GET",
+                url: feedback_url,
+                contentType: "application/json",
+                dataType: "json",
+                statusCode: {
+                    200: function(data) {
+                        console.log("get member request");
+                        console.log(data);
+{#                        $("#member_request").append("<li><a href="+data.objects[0].id+"><span>"+data.objects[0].noti_user_key.username+"</span></a></li>");#}
+                        $("#member_request").append("<li><a href='#' name="+data.objects[0].id+"><span>"+data.objects[0].noti_user_key.username+"</span></a></li>");
+                        acceopt_membership();
+                        return false;
+                    }
+                }
+            });
+        };
+        get_member_request();
 
         var request_membership = function(){
             $('#addFriend').click(function() {

@@ -159,7 +159,7 @@ class GroupPosts(models.Model):
 class Memberships(models.Model):
     group_key = models.ForeignKey(Groups)
     user_key = models.ForeignKey(User)
-    permission = models.IntegerField(default=0)  # 0 = common, 1 = master
+    permission = models.IntegerField(default=0)  # 0 = common, 1 = manager, 2 = owner
     created = models.DateTimeField(auto_now=True)
 
 class MembershipNotis(models.Model):
