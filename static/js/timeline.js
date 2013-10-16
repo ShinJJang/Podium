@@ -465,8 +465,9 @@ $(function(){
             post_attach=true;
             attach_type="file";
             //$("#postAttach").html('<form method="" action="" name="upload_form" id="upload_form" ><input type="file" name="file" id="file" /><input type="button" value="Upload" id="upload"/></form>');
-            $("#postAttach").html('<div id="invisible"></div>');
+            $("#postAttach").html('<div id="invisible"><form action="https://somapodium.s3.amazonaws.com" method="post" enctype="multipart/form-data" id="upload_form"><input type="hidden" name="key"></input><input type="hidden" name="AWSAccessKeyId" value="AKIAJKZRCQKYZ7EHIXYA"></input><input type="hidden" name="acl" value="public-read"></input><input type="hidden" name="policy"></input><input type="hidden" name="signature"></input><input type="hidden" name="success_action_status" value="201"></input><input type="file" id="file_info" name="file"></input></form></div><div id="wrapper"><input type="button" id="upload_button" value="upload"/><div id="progress_container"><div id="progress_bar"></div></div></div><div id="status_container">Status: <span id="status">idle</span></div>');
 
+            /*
             var attachForm = document.createElement("form");
             attachForm.setAttribute("action","https://somapodium.s3.amazonaws.com");
             attachForm.setAttribute("method", "post");
@@ -511,6 +512,7 @@ $(function(){
             document.getElementById("upload_form").appendChild(attachSuccess);
             document.getElementById("upload_form").appendChild(attachFile);
             document.getElementById("invisible").appendChild(attachForm);
+            */
         }
 
         console.log(post_attach);
@@ -532,4 +534,5 @@ $(function(){
 function getPoll(post_id){
     console.log(post_id);
 }
+
 

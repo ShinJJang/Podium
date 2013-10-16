@@ -20,34 +20,6 @@
     <meta name="viewport" content="initial-scale=1,user-scalable=no"/>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.3.3/coffee-script.min.js"></script>
 
-    <script type="text/coffeescript">
-        log = (status) ->
-            $("#status").html status
-        $ ->
-            $("#upload_button").click ->
-                $("input[type=file]").click()
-            log "button click"
-            form = $("#upload_form")
-            form.fileupload
-                dataType: "xml"
-                add: (event, data) ->
-                    log "fetching params"
-                    $.get("{% url 'params' %}").done (params) ->
-                        form.find('input[name=key]').val(params.key)
-                        form.find('input[name=policy]').val(params.policy)
-                        form.find('input[name=signature]').val(params.signature)
-                        data.submit()
-                send: (event, data) ->
-                    log "sending"
-                progress: (event, data) ->
-                    $("#progress_bar").css "width", "#{Math.round((event.loaded / event.total) * 1000) / 10}%"
-                fail: (event, data) ->
-                    log "failure"
-                done: (event, data) ->
-                    log "file uploaded to " + decodeURIComponent $(data.result).find("Location").text()
-
-
-    </script>
 </head>
 <body>
 <header id="p_header">
