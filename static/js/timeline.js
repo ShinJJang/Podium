@@ -569,56 +569,22 @@ $(function(){
             post_attach=true;
             attach_type="file";
             //$("#postAttach").html('<form method="" action="" name="upload_form" id="upload_form" ><input type="file" name="file" id="file" /><input type="button" value="Upload" id="upload"/></form>');
-            $("#postAttach").html('<div id="invisible"><form action="https://somapodium.s3.amazonaws.com" method="post" enctype="multipart/form-data" id="upload_form"><input type="hidden" name="key"></input><input type="hidden" name="AWSAccessKeyId" value="AKIAJKZRCQKYZ7EHIXYA"></input><input type="hidden" name="acl" value="public-read"></input><input type="hidden" name="policy"></input><input type="hidden" name="signature"></input><input type="hidden" name="success_action_status" value="201"></input><input type="file" id="file_info" name="file"></input></form></div><div id="wrapper"><input type="button" id="upload_button" value="upload"/><div id="progress_container"><div id="progress_bar"></div></div></div><div id="status_container">Status: <span id="status">idle</span></div>');
-
-            /*
-            var attachForm = document.createElement("form");
-            attachForm.setAttribute("action","https://somapodium.s3.amazonaws.com");
-            attachForm.setAttribute("method", "post");
-            attachForm.setAttribute("enctype", "multipart/form-data");
-            attachForm.id = "upload_form";
-
-            var attachKey = document.createElement("input");
-            attachKey.setAttribute("type", "hidden");
-            attachKey.setAttribute("name", "key");
-            var attachPolicy = document.createElement("input");
-            attachPolicy.setAttribute("type", "hidden");
-            attachPolicy.setAttribute("name", "key");
-            var attachSignature = document.createElement("input");
-            attachSignature.setAttribute("type", "hidden");
-            attachSignature.setAttribute("name", "key");
-
-            var attachAccessKeyId = document.createElement("input");
-            attachAccessKeyId.setAttribute("type", "hidden");
-            attachAccessKeyId.setAttribute("name", "AWSAccessKeyId");
-            attachAccessKeyId.setAttribute("value", "AKIAJKZRCQKYZ7EHIXYA");
-
-            var attachAcl = document.createElement("input");
-            attachAcl.setAttribute("type", "hidden");
-            attachAcl.setAttribute("name", "acl");
-            attachAcl.setAttribute("value", "public-read");
-
-            var attachSuccess = document.createElement("input");
-            attachSuccess.setAttribute("type", "hidden");
-            attachSuccess.setAttribute("name", "success_action_status");
-            attachSuccess.setAttribute("value", "201");
-
+            //$("#postAttach").html('<div id="invisible"><form action="https://somapodium.s3.amazonaws.com" method="post" enctype="multipart/form-data" id="upload_form"><input type="hidden" name="key"></input><input type="hidden" name="AWSAccessKeyId" value="AKIAJKZRCQKYZ7EHIXYA"></input><input type="hidden" name="acl" value="public-read"></input><input type="hidden" name="policy"></input><input type="hidden" name="signature"></input><input type="hidden" name="success_action_status" value="201"></input><input type="file" id="file_info" name="file"></input></form></div><div id="wrapper"><input type="button" id="upload_button" value="upload"/><div id="progress_container"><div id="progress_bar"></div></div></div><div id="status_container">Status: <span id="status">idle</span></div>');
+            $("#postAttach").html('<div id="attach_file"></div>');
             var attachFile = document.createElement("input");
-            attachFile.id = "file_info";
+            attachFile.id = "post_file";
             attachFile.setAttribute("type", "file");
-            attachFile.setAttribute("name", "file");
+            attachFile.setAttribute("onchange", "s3_upload();");
 
-            document.getElementById("upload_form").appendChild(attachKey);
-            document.getElementById("upload_form").appendChild(attachPolicy);
-            document.getElementById("upload_form").appendChild(attachSignature);
-            document.getElementById("upload_form").appendChild(attachAccessKeyId);
-            document.getElementById("upload_form").appendChild(attachAcl);
-            document.getElementById("upload_form").appendChild(attachSuccess);
-            document.getElementById("upload_form").appendChild(attachFile);
-            document.getElementById("invisible").appendChild(attachForm);
-            */
+            $("#attach_file").html('<p id="status">Please select a file </p>');
+            //var attachPreview = document.createElement("input");
+            //attachPreview.id = "file_status";
+            //attachPreview.setAttribute("value", "please select a file");
+
+            document.getElementById("attach_file").appendChild(attachFile);
+            //document.getElementById("attach_file").appendChild(attachPreview);
+
         }
-
         console.log(post_attach);
     });
     $("#toPlain").click(function(){
@@ -648,4 +614,20 @@ function bindPoll(targetDiv){
     })
 }
 
+function s3_upload(){
+    var s3upload = new S3Upload({
+        file_dom_selector: '#post_file',
+        s3_sign_put_url: '/sign_s3/',
+
+        onProgress: function(percent, message) {
+            $('#status').html('Upload progress: ' + percent + '%' + message);
+        },
+        onFinishS3Put: function(url) {
+            $('#status').html('Upload completed. Uploaded to: '+ url);
+        },
+        onError: function(status) {
+            $('#status').html('Upload error: ' + status);
+        }
+    });
+}
 

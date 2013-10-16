@@ -37,6 +37,7 @@ urlpatterns = patterns('',
     (r'^accounts/',include('registration.backends.default.urls')),
     # temporary page
     url(r'^poll/$', views.poll),
+    url(r'^sign_s3/$', views.sign_s3),
     url(r'^params$', 'Maple.views.get_upload_params', name='params'),
     url(r'^static/(?P<filename>[^/]+)$', 'static', name='static'),
     url(r'^private/$', views.private),
