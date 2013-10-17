@@ -20,7 +20,7 @@ v1_api.register(UserPictureResource())
 v1_api.register(PostEmotionsResource())
 v1_api.register(PollResource())
 v1_api.register(GroupResource())
-v1_api.register(FilesResource())
+v1_api.register(UserFilesResource())
 v1_api.register(VideoResource())
 
 urlpatterns = patterns('',
@@ -38,6 +38,7 @@ urlpatterns = patterns('',
     # temporary page
     url(r'^poll/$', views.poll),
     url(r'^sign_s3/$', views.sign_s3),
+    url(r'^get_file_count/$', views.get_file_count),
     url(r'^params$', 'Maple.views.get_upload_params', name='params'),
     url(r'^static/(?P<filename>[^/]+)$', 'static', name='static'),
     url(r'^private/$', views.private),

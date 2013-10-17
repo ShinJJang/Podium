@@ -93,6 +93,17 @@ class PostPictures(models.Model):
     name = models.CharField(max_length=30,null=False)
     created = models.DateTimeField(auto_now=True)
 
+class UserFileCount(models.Model):
+    user_key = models.ForeignKey(User)
+    file_count = models.IntegerField(auto_created=True)
+
+class UserFiles(models.Model):
+    user_key = models.ForeignKey(User)
+    post_key = models.ForeignKey(Posts)
+    file_link = models.CharField(max_length=1000, null=False)
+    created = models.DateTimeField(auto_now=True)
+    file_type = models.CharField(max_length=100, null=False)
+
 class Files(models.Model):
     user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)

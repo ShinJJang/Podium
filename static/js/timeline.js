@@ -25,14 +25,14 @@ tinymce.init({
 
 
 // post create
-$(document).on("submit", "#form_post", function(event) {
+$(document).on("submit", "#form_post", function (event) {
     alert("@");
     var feedback_api = "/api/v1/post/";
-    var aType=0;
-    if($("#attach_poll").length > 0) aType=4;
-
+    var aType = 0;
+    if ($("#attach_poll").length > 0) aType = 4;
+    else if ($("#attach_file").length > 0) aType = 3;
     var open_scope = $("select[name=open_scope]").val();
-    var group =  $("select[name=group]").val();
+    var group = $("select[name=group]").val();
     var target_user = $("input[name=target_user]").val();
     switch (open_scope) {
         case "public":
@@ -45,32 +45,32 @@ $(document).on("submit", "#form_post", function(event) {
             open_scope = 0;
             break;
     }
-    if (group && open_scope == 1){
-        alert("비공개 그룹글은 지원하지 않습니다.\n"+group+"\n"+open_scope);
+    if (group && open_scope == 1) {
+        alert("비공개 그룹글은 지원하지 않습니다.\n" + group + "\n" + open_scope);
         return false;
     }
 
-    if (group){
+    if (group) {
         var target = group;
         open_scope = 3;
     }
-    else if(target_user){
+    else if (target_user) {
         var target = target_user;
         open_scope = 2;
     }
 
-    if($("#attach_video").length > 0) {
+    if ($("#attach_video").length > 0) {
         var urlRegEx = new RegExp("^(http|https)://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*$");
         var videoAddress = $("#videoAddress").val();
 
-        if(urlRegEx.test(videoAddress)==false) {
+        if (urlRegEx.test(videoAddress) == false) {
             alert("첨부된 주소가 올바르지 않습니다.")
             return false;
         }
     }
 
     var data = JSON.stringify({
-        "post": $("textarea[name=post]").val().replace(/</g,"&lt;"),
+        "post": $("textarea[name=post]").val().replace(/</g, "&lt;"),
         "target": target,
         "open_scope": open_scope,
         "aType": aType
@@ -83,7 +83,7 @@ $(document).on("submit", "#form_post", function(event) {
         data: data,
         dataType: "json",
         statusCode: {
-            201: function(data) {
+            201: function (data) {
                 /*post로 생성 후 생성한 json response*/
                 console.log("post submit response");
                 console.log(data);
@@ -92,14 +92,14 @@ $(document).on("submit", "#form_post", function(event) {
 
                 var postId = data.id;
                 //  첨부 모듈
-                if($("#postAttach").children().length>0 && postId) {
+                if ($("#postAttach").children().length > 0 && postId) {
 
-                    if($("#attach_poll").length > 0) {
+                    if ($("#attach_poll").length > 0) {
                         var a_feedback_api = "/api/v1/polls/";
 
                         var poll_elements = new Array();
                         console.log("attachElement is")
-                        $(".attachElement").each(function(index){
+                        $(".attachElement").each(function (index) {
                             var element_obj = {
                                 label: $(this).val(),
                                 users: new Array()
@@ -124,7 +124,7 @@ $(document).on("submit", "#form_post", function(event) {
                             data: a_data,
                             dataType: "json",
                             statusCode: {
-                                201: function(data) {
+                                201: function (data) {
                                     console.log("poll submit response");
                                     console.log(data);
                                 }
@@ -132,39 +132,41 @@ $(document).on("submit", "#form_post", function(event) {
                         });
                     }
 
-                    if($("#attach_file").length > 0) {
+                    if ($("#attach_file").length > 0) {
                         console.log("file test");
-                        var file_upload_url = "/file_upload";
-                        var form_data = new FormData();
-                        form_data.append('file_content', $("#fileContent").val().replace(/C:\\fakepath\\/i, ''));
-                        //form_data.append('file_name', $("#fileName").val());
-                        //form_data.append('post_id', postId);
-                        //$("#fileTitle").val($("#fileTitle").val())
+                        var file_upload_url = "/api/v1/user_files/";
+                        file_link = $('#post_file_url_info').val();
+                        file_type = $('#post_file_type').val();
+                        var user_file_data = JSON.stringify({
+                            "post_key": postId,
+                            "file_link": file_link,
+                            "file_type": file_type
+                        });
                         $.ajax({
                             url: file_upload_url,
                             type: "POST",
-                            data: form_data,
-                            processData: false,
-                            contentType: "multipart/form-data",
+                            contentType: "application/json",
+                            data: user_file_data,
+                            dataType: "json",
                             statusCode: {
-                                201: function(data) {
+                                201: function (data) {
                                     console.log("file submit response");
                                     console.log(data);
                                 },
-                                500: function(data) {
+                                500: function (data) {
                                     console.log(data);
                                 }
                             }
                         });
                     }
 
-                    if($("#attach_video").length > 0) {
+                    if ($("#attach_video").length > 0) {
                         var a_video_api = "/api/v1/videos/";
 
                         var urlRegEx = new RegExp("^(http|https)://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*$");
                         var videoAddress = $("#videoAddress").val();
 
-                        if(urlRegEx.test(videoAddress)) {
+                        if (urlRegEx.test(videoAddress)) {
                             var data = JSON.stringify({
                                 "post_id": postId,
                                 "video": videoAddress
@@ -177,7 +179,7 @@ $(document).on("submit", "#form_post", function(event) {
                                 data: a_data,
                                 dataType: "json",
                                 statusCode: {
-                                    201: function(data) {
+                                    201: function (data) {
                                         console.log("poll submit response");
                                         console.log(data);
                                     }
@@ -203,13 +205,13 @@ $(document).on("submit", "#form_post", function(event) {
 });
 
 // post create
-$(document).on("submit", "#form_post_rich", function(event) {
+$(document).on("submit", "#form_post_rich", function (event) {
     alert("@");
     var feedback_api = "/api/v1/post/";
-    var aType=0;
+    var aType = 0;
 
     var open_scope = $("select[name=open_scope]").val();
-    var group =  $("select[name=group]").val();
+    var group = $("select[name=group]").val();
     var target_user = $("input[name=target_user]").val();
     switch (open_scope) {
         case "public":
@@ -222,16 +224,16 @@ $(document).on("submit", "#form_post_rich", function(event) {
             open_scope = 0;
             break;
     }
-    if (group && open_scope == 1){
-        alert("비공개 그룹글은 지원하지 않습니다.\n"+group+"\n"+open_scope);
+    if (group && open_scope == 1) {
+        alert("비공개 그룹글은 지원하지 않습니다.\n" + group + "\n" + open_scope);
         return false;
     }
 
-    if (group){
+    if (group) {
         var target = group;
         open_scope = 3;
     }
-    else if(target_user){
+    else if (target_user) {
         var target = target_user;
         open_scope = 2;
     }
@@ -250,7 +252,7 @@ $(document).on("submit", "#form_post_rich", function(event) {
         data: data,
         dataType: "json",
         statusCode: {
-            201: function(data) {
+            201: function (data) {
                 /*post로 생성 후 생성한 json response*/
                 console.log("post submit response");
                 console.log(data);
@@ -273,33 +275,33 @@ $(document).on("submit", "#form_post_rich", function(event) {
 
 
 // comment create
-$(document).on("submit", "#form_comment",function(event) {
-        var feedback_api = "/api/v1/comment/";
-        var post_key = $(this).find("input[name=post_key]").val();
-        var data = JSON.stringify({
-            "comment": $(this).find("input[name=comment]").val(),
-            "post_key": post_key
-        });
-        console.log(data);
-        $.ajax({
-            url: feedback_api,
-            type: "POST",
-            contentType: "application/json",
-            data: data,
-            dataType: "json",
-            context: this,
-            statusCode: {
-                201: function(data) {
-                    console.log("post submit response");
-                    console.log(data);
-                    pollComment(data.post_key);
-                    $("input[name=comment]").val("");
-                    var comment_count = $("#commentList"+post_key+" li").size();
-                    $(this).parent().siblings("header").find(".p_comment").html("<a herf='#'><strong>댓글</strong>/ "+comment_count+"</a>");
-                }
+$(document).on("submit", "#form_comment", function (event) {
+    var feedback_api = "/api/v1/comment/";
+    var post_key = $(this).find("input[name=post_key]").val();
+    var data = JSON.stringify({
+        "comment": $(this).find("input[name=comment]").val(),
+        "post_key": post_key
+    });
+    console.log(data);
+    $.ajax({
+        url: feedback_api,
+        type: "POST",
+        contentType: "application/json",
+        data: data,
+        dataType: "json",
+        context: this,
+        statusCode: {
+            201: function (data) {
+                console.log("post submit response");
+                console.log(data);
+                pollComment(data.post_key);
+                $("input[name=comment]").val("");
+                var comment_count = $("#commentList" + post_key + " li").size();
+                $(this).parent().siblings("header").find(".p_comment").html("<a herf='#'><strong>댓글</strong>/ " + comment_count + "</a>");
             }
-        });
-        return false;
+        }
+    });
+    return false;
 });
 
 // polling post
@@ -308,16 +310,15 @@ function PostTopPolling() {
         url: post_top_url,
         type: "GET",
         dataType: "json",
-        success: function(data) {
+        success: function (data) {
             console.log("TOP POLL POST  url:" + post_top_url);
-            if(data.objects.length != 0)
-            {
-                for(var dataObj in data.objects) {
+            if (data.objects.length != 0) {
+                for (var dataObj in data.objects) {
                     try {
                         var codeReg = /\[code(.*?)]\n{0,1}/i;
-                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace(codeReg,"<pre><code data-$1>");
-                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("data- language","data-language");
-                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("[/code]","</code></pre>");
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace(codeReg, "<pre><code data-$1>");
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("data- language", "data-language");
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("[/code]", "</code></pre>");
                     } catch (e) {
                         console.log("code parsing exception: " + e);
                     }
@@ -329,43 +330,81 @@ function PostTopPolling() {
                 timeRefresh();
                 post_top_url = data.meta.previous;
                 console.log("1 previous url:  " + post_top_url);
-                if(!data.meta.previous)
+                if (!data.meta.previous)
                     post_top_url = "http://" + window.location.host + "/api/v1/friendposts/?limit=1&id__gt=" + data.objects[0].id + "&" + timeline_js_parameter_top_post_polling;
                 console.log("2 previous url:  " + post_top_url);
-                if(isBottominit==0) {
+                if (isBottominit == 0) {
                     post_bottom_url = (!data.meta.next) ? null : data.meta.next + "&id__lte=" + data.objects[0].id;
                     console.log("1 next url:  " + post_bottom_url);
                     isBottominit = 1;
                 }
 
-                $(".p_poll_unloaded").each(function(){
+                $(".p_file_unloaded").each(function () {
                     var targetDiv = $(this);
+                    console.log("file__targetDIV", targetDiv);
+                    console.log("file_unload");
+                    $.ajax({
+                        url: "/api/v1/user_files/?post=" + $(this).attr("id").substring(5),
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            for (obj in data.objects) {
+                                data.objects[obj] = data.objects[obj];
+                                console.log("data object = " + data.objects[obj].file_link);
+                            }
+                            var file_name = data.objects[0].file_link.split("/");
+                            $(targetDiv).append('<a href="' + data.objects[0].file_link +'">' + file_name[5] + '</li>');
+                            console.log(data.objects[0].file_link);
+                            //$("#file_template").tmpl(data.objects[0].file_type).appendTo(targetDiv);
+                            $(targetDiv).removeClass("p_file_unloaded");
+                            console.log("after remove file__targetDIV", targetDiv);
+                            $(targetDiv).addClass("p_file");
+                            console.log("after add file__targetDIV", targetDiv);
+                        }
+                    });
+                });
+
+                $(".p_poll_unloaded").each(function () {
+                    var targetDiv = $(this);
+
                     $.ajax({
                         url: "/api/v1/polls/?post=" + $(this).attr("id").substring(5),
                         type: "GET",
                         dataType: "json",
-                        success: function(data) {
-                            for(obj in data.objects) {
+                        success: function (data) {
+                            for (obj in data.objects) {
+                                console.log(data.objects[obj]);
+                                console.log(data.objects[obj].poll);
                                 data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
                             }
-                            $(targetDiv).append('<li class="pollTitle">'+data.objects[0].poll.title+'</li>');
+                            $(targetDiv).append('<li class="pollTitle">' + data.objects[0].poll.title + '</li>');
                             $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
                             $(targetDiv).removeClass("p_poll_unloaded");
+
                             $(targetDiv).addClass("p_poll");
                             bindPoll($(targetDiv).attr("id"));
                         }
                     });
                 });
+
             }
         }
-        });
+    });
 }
 
 // when screen on top, call PostTopPolling
-$(document).ready(function() {
+$(document).ready(function () {
     PostTopPolling();
-    setTimeout(function(){$("#timeline_posts").waypoint(function(){postBottom();}, { offset: 'bottom-in-view' });}, 1000);
-    setTimeout(function(){$("#p_timeline").waypoint(function(){PostTopPolling()}, { offset: '0' });}, 5000);
+    setTimeout(function () {
+        $("#timeline_posts").waypoint(function () {
+            postBottom();
+        }, { offset: 'bottom-in-view' });
+    }, 1000);
+    setTimeout(function () {
+        $("#p_timeline").waypoint(function () {
+            PostTopPolling()
+        }, { offset: '0' });
+    }, 5000);
 
     // dynamic timeago(Korean)
     $.timeago.settings.strings = {
@@ -385,27 +424,29 @@ $(document).ready(function() {
         wordSeparator: " "
     };
 
-    setTimeout(function(){timeRefresh();console.log("timeago called");}, 2000);
+    setTimeout(function () {
+        timeRefresh();
+        console.log("timeago called");
+    }, 2000);
 });
 
 function postBottom() {
-    if(!post_bottom_url)
+    if (!post_bottom_url)
         return;
     $.ajax({
         url: post_bottom_url,
         type: "GET",
         dataType: "json",
-        success: function(data) {
+        success: function (data) {
             console.log("BOTTOM POLL POST   url:" + post_bottom_url);
             console.log(data);
-            if(data.objects.length != 0)
-            {
-                for(var dataObj in data.objects) {
+            if (data.objects.length != 0) {
+                for (var dataObj in data.objects) {
                     try {
                         var codeReg = /\[code(.*?)]\n{0,1}/i;
-                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace(codeReg,"<pre><code data-$1>");
-                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("data- language","data-language");
-                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("[/code]","</code></pre>");
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace(codeReg, "<pre><code data-$1>");
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("data- language", "data-language");
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("[/code]", "</code></pre>");
                     } catch (e) {
                         console.log("code parsing exception: " + e);
                     }
@@ -413,21 +454,42 @@ function postBottom() {
                 $("#post_public_template").tmpl(data.objects).appendTo("#timeline_posts");
                 Rainbow.color();
                 post_bottom_url = data.meta.next;
-                console.log("2 next url:  "+post_bottom_url);
+                console.log("2 next url:  " + post_bottom_url);
                 timeRefresh();
             }
 
-            $(".p_poll_unloaded").each(function(){
+            $(".p_file_unloaded").each(function () {
+                var targetDiv = $(this);
+                console.log("file_unload");
+                $.ajax({
+                    url: "/api/v1/user_files/?post=" + $(this).attr("id").substring(5),
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        for (obj in data.objects) {
+                            data.objects[obj] = data.objects[obj];
+                            console.log("data object = " + data.objects[obj].file_link);
+                        }
+                        $(targetDiv).append('<li class="fileTitle">' + data.objects[0].file_link + '</li>');
+                        console.log(data.objects[0].file_link);
+                        //$("#file_template").tmpl(data.objects[0].file_type).appendTo(targetDiv);
+                        $(targetDiv).removeClass("p_file_unloaded");
+                        $(targetDiv).addClass("p_file");
+                    }
+                });
+            });
+
+            $(".p_poll_unloaded").each(function () {
                 var targetDiv = $(this);
                 $.ajax({
                     url: "/api/v1/polls/?post=" + $(this).attr("id").substring(5),
                     type: "GET",
                     dataType: "json",
-                    success: function(data) {
-                        for(obj in data.objects) {
+                    success: function (data) {
+                        for (obj in data.objects) {
                             data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
                         }
-                        $(targetDiv).append('<li class="pollTitle">'+data.objects[0].poll.title+'</li>');
+                        $(targetDiv).append('<li class="pollTitle">' + data.objects[0].poll.title + '</li>');
                         $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
                         $(targetDiv).removeClass("p_poll_unloaded");
                         $(targetDiv).addClass("p_poll");
@@ -436,16 +498,16 @@ function postBottom() {
                 });
             });
         }
-        });
+    });
 }
 // polling comment
 function pollComment(post_id) {
-    if(!post_id)
+    if (!post_id)
         return;
 
     var feedback_api = "/api/v1/comment/?post=" + post_id; // api inner parameter ?limit=20&offset=0"
 
-    if(comment_offsets[post_id]){
+    if (comment_offsets[post_id]) {
         feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=30&id__gt=" + comment_offsets[post_id];
         // feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=30&offset=" + comment_offsets[post_id];
     }
@@ -455,58 +517,57 @@ function pollComment(post_id) {
         url: feedback_api,
         type: "GET",
         dataType: "json",
-        success: function(data) {
-            if(data.objects.length != 0)
-            {
+        success: function (data) {
+            if (data.objects.length != 0) {
                 console.log(data);
                 $("#comment_template").tmpl(data.objects.reverse()).appendTo("#commentList" + post_id);
                 timeRefresh();
                 comment_offsets[post_id] = data.objects[data.objects.length - 1].id;
-                console.log("댓글 폴링한 마지막 오프셋 :"+comment_offsets[post_id]);
+                console.log("댓글 폴링한 마지막 오프셋 :" + comment_offsets[post_id]);
             }
         }
-        });
+    });
 }
 
 // comment toggle
-$(document).on("click", ".p_responses", function(){
-        $(this).parent().children("section").toggle();
-        var resp = $(this).toggleClass("opened");
+$(document).on("click", ".p_responses", function () {
+    $(this).parent().children("section").toggle();
+    var resp = $(this).toggleClass("opened");
 
-        // comment polling on post focused
-        if (resp && resp.context.className.search("opened") != -1){
-            var tag_id = $(this).siblings(".p_comment").children(".p_commentList").attr("id");
-            if (!tag_id)
-                return false;
-            var postid = tag_id.replace("commentList", "");
+    // comment polling on post focused
+    if (resp && resp.context.className.search("opened") != -1) {
+        var tag_id = $(this).siblings(".p_comment").children(".p_commentList").attr("id");
+        if (!tag_id)
+            return false;
+        var postid = tag_id.replace("commentList", "");
 
-            pollComment(postid);
-        }
-        return false;
+        pollComment(postid);
+    }
+    return false;
 });
 
 // emotion click
-$(document).on("click", ".form_emotion :submit", function(event){
-        var feedback_api = "/api/v1/postemotions/";
-        var data = JSON.stringify({
-            "emotion": $(this).attr('tag'),
-            "post_key": $(this).siblings("input[name=post_key]").val()
-        });
-        console.log(data);
-        $.ajax({
-            url: feedback_api,
-            type: "POST",
-            contentType: "application/json",
-            data: data,
-            dataType: "json",
-            statusCode: {
-                201: function(data) {
-                    console.log("post emotion submit response");
-                    console.log(data);
-                }
+$(document).on("click", ".form_emotion :submit", function (event) {
+    var feedback_api = "/api/v1/postemotions/";
+    var data = JSON.stringify({
+        "emotion": $(this).attr('tag'),
+        "post_key": $(this).siblings("input[name=post_key]").val()
+    });
+    console.log(data);
+    $.ajax({
+        url: feedback_api,
+        type: "POST",
+        contentType: "application/json",
+        data: data,
+        dataType: "json",
+        statusCode: {
+            201: function (data) {
+                console.log("post emotion submit response");
+                console.log(data);
             }
-        });
-        return false;
+        }
+    });
+    return false;
 });
 
 function timeRefresh() {
@@ -514,30 +575,30 @@ function timeRefresh() {
 }
 
 // attach something
-$(function(){
-    $(".attachSelect .wPoll").click(function(){
-        if(!post_attach) {
-            post_attach=true;
-            attach_type="poll";
+$(function () {
+    $(".attachSelect .wPoll").click(function () {
+        if (!post_attach) {
+            post_attach = true;
+            attach_type = "poll";
             $("#postAttach").html('<div id="attach_poll"></div>');
             var attachForm = $("#attach_poll");
             var attachTitle = document.createElement("input");
-            attachTitle.className="attachTitle";
-            attachTitle.id="pollTitle";
-            attachTitle.setAttribute("type","text");
-            attachTitle.setAttribute("placeholder","설문조사 제목");
+            attachTitle.className = "attachTitle";
+            attachTitle.id = "pollTitle";
+            attachTitle.setAttribute("type", "text");
+            attachTitle.setAttribute("placeholder", "설문조사 제목");
             document.getElementById("attach_poll").appendChild(attachTitle);
             var attachElements = document.createElement("ul");
-            attachElements.id="pollElement";
+            attachElements.id = "pollElement";
             document.getElementById("attach_poll").appendChild(attachElements);
             $("#pollElement").html('<li><input type="text" class="attachElement" placeholder="항목 1"></li><li><input type="text" class="attachElement" placeholder="항목 2"></li><li><a href="#" id="add_poll">새 항목 추가</a></li>');
 
-            $("#add_poll").click(function(){
+            $("#add_poll").click(function () {
                 var newElement = document.createElement("li");
                 newElement.appendChild(document.createElement("input"));
-                newElement.firstChild.setAttribute("type","text");
-                newElement.firstChild.setAttribute("class","attachElement");
-                newElement.firstChild.setAttribute("placeholder","항목 "+ (parseInt($(".attachElement:last").attr("placeholder").substring(3))+1));
+                newElement.firstChild.setAttribute("type", "text");
+                newElement.firstChild.setAttribute("class", "attachElement");
+                newElement.firstChild.setAttribute("placeholder", "항목 " + (parseInt($(".attachElement:last").attr("placeholder").substring(3)) + 1));
                 $("#add_poll").parent().before(newElement);
             });
         }
@@ -545,55 +606,74 @@ $(function(){
     });
 
     // Simply add code tag on the textarea.
-    $(".attachSelect .wCode").click(function(){
-        $("#post").val($("#post").val()+"[code language=\"language\"]\n\n[/code]");
+    $(".attachSelect .wCode").click(function () {
+        $("#post").val($("#post").val() + "[code language=\"language\"]\n\n[/code]");
     });
 
     // Attach video's address on YouTube
-    $(".attachSelect .wVideo").click(function(){
-        if(!post_attach) {
-            post_attach=true;
-            attach_type="video";
+    $(".attachSelect .wVideo").click(function () {
+        if (!post_attach) {
+            post_attach = true;
+            attach_type = "video";
             $("#postAttach").html('<div id="attach_video"></div>');
             var attachAddress = document.createElement("input");
-            attachAddress.className="attachTitle";
-            attachAddress.id="videoAddress";
-            attachAddress.setAttribute("type","text");
-            attachAddress.setAttribute("placeholder","YouTube 주소");
+            attachAddress.className = "attachTitle";
+            attachAddress.id = "videoAddress";
+            attachAddress.setAttribute("type", "text");
+            attachAddress.setAttribute("placeholder", "YouTube 주소");
             document.getElementById("attach_video").appendChild(attachAddress);
         }
     });
 
-    $(".attachSelect .wFile").click(function(){
-        if(!post_attach) {
-            post_attach=true;
-            attach_type="file";
+    $(".attachSelect .wFile").click(function () {
+        if (!post_attach) {
+            post_attach = true;
+            attach_type = "file";
             //$("#postAttach").html('<form method="" action="" name="upload_form" id="upload_form" ><input type="file" name="file" id="file" /><input type="button" value="Upload" id="upload"/></form>');
             //$("#postAttach").html('<div id="invisible"><form action="https://somapodium.s3.amazonaws.com" method="post" enctype="multipart/form-data" id="upload_form"><input type="hidden" name="key"></input><input type="hidden" name="AWSAccessKeyId" value="AKIAJKZRCQKYZ7EHIXYA"></input><input type="hidden" name="acl" value="public-read"></input><input type="hidden" name="policy"></input><input type="hidden" name="signature"></input><input type="hidden" name="success_action_status" value="201"></input><input type="file" id="file_info" name="file"></input></form></div><div id="wrapper"><input type="button" id="upload_button" value="upload"/><div id="progress_container"><div id="progress_bar"></div></div></div><div id="status_container">Status: <span id="status">idle</span></div>');
-            $("#postAttach").html('<div id="attach_file"></div>');
+            $("#postAttach").html('<div id="attach_file"></div><div id="attach_file_info"></div><div id="attach_file_type"></div><div id="is_file"></div><div id="user_file_count"></div>');
+            $("#attach_file").html('<div id="status">Please select a file</div>');
+
+            //$("#attach_file").html('<input type="hidden" id="is_exist_uploaded_file" value="12"></input>');
             var attachFile = document.createElement("input");
             attachFile.id = "post_file";
             attachFile.setAttribute("type", "file");
-            attachFile.setAttribute("onchange", "s3_upload();");
+            attachFile.setAttribute("onchange", "s3_upload_put();");
 
-            $("#attach_file").html('<p id="status">Please select a file </p>');
+            $("#attach_file_info").html('<input type="hidden" id="post_file_url_info" value="" >');
+            $("#attach_file_type").html('<input type="hidden" id="post_file_type" value="" >');
+            $("#is_file").html('<input type="hidden" id="is_exist_uploaded_file" value="0" >');
+            $("#user_file_count").html('<input type="hidden" id="user_file_count_info" value="" >');
+            //var attachFileUrl = document.createElement("<input type='hidden' name='post_file_url_info' value=''>");
+            //attachFileUrl.setAttribute("name", "post_file_url_info");
+            //attachFileUrl.setAttribute("type", "hidden");
+            //attachFileUrl.setAttribute("value", "");
+
+
+            var attachFileCancelButton = document.createElement("button");
+            attachFileCancelButton.id = "post_file_delete_button";
+            attachFileCancelButton.setAttribute("type", "button");
+            attachFileCancelButton.setAttribute("value", "업로드파일삭제");
+            attachFileCancelButton.setAttribute("onclick", "s3_upload_delete()");
+
             //var attachPreview = document.createElement("input");
             //attachPreview.id = "file_status";
             //attachPreview.setAttribute("value", "please select a file");
 
             document.getElementById("attach_file").appendChild(attachFile);
-            //document.getElementById("attach_file").appendChild(attachPreview);
+            //document.getElementById("status").appendChild(attachFileUrl);
+            document.getElementById("attach_file").appendChild(attachFileCancelButton);
 
         }
         console.log(post_attach);
     });
-    $("#toPlain").click(function(){
+    $("#toPlain").click(function () {
         $("#plainTextInput").show();
         $("#richTextInput").hide();
         $("#toRich").removeClass("selected");
         $(this).addClass("selected");
     });
-    $("#toRich").click(function(){
+    $("#toRich").click(function () {
         $("#plainTextInput").hide();
         $("#richTextInput").show();
         $("#toPlain").removeClass("selected");
@@ -601,33 +681,100 @@ $(function(){
     });
 })
 
-function bindPoll(targetDiv){
-    $("#" + targetDiv + " li").click(function(){
+function bindPoll(targetDiv) {
+    $("#" + targetDiv + " li").click(function () {
         $.ajax({
-            url: "/api/v1/polls/?id=" + targetDiv.substring(5) + "&item=" + ($(this).index()-1),
+            url: "/api/v1/polls/?id=" + targetDiv.substring(5) + "&item=" + ($(this).index() - 1),
             type: "PUT",
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
                 console.log(data);
             }
         });
     })
 }
 
-function s3_upload(){
-    var s3upload = new S3Upload({
-        file_dom_selector: '#post_file',
-        s3_sign_put_url: '/sign_s3/',
+function s3_upload_put() {
+    //console.log("s3 upload = " + $("#is_exist_uploaded_file").val());
+    if ($("#is_exist_uploaded_file").val() == "1") {
+        console.log("s3 upload = " + $("#is_exist_uploaded_file").val);
+        alert("안대 지우고 올려");
+    }
+    else {
+        var feedback_api = "/get_file_count/";
+        var file_count = "";
+        $.ajax({
+            url: feedback_api,
+            type: "GET",
+            contentType: "application/json",
+            dataType: "xml",
+            statusCode: {
+                200: function (data) {
+                    $('#user_file_count_info').val(data.responseText);
+                    timeRefresh();
+                    var s3upload = new S3Upload({
+                        opt_method: "PUT",
+                        opt_user_file_count: $('#user_file_count_info').val(),
+                        file_dom_selector: '#post_file',
+                        s3_sign_put_url: '/sign_s3/',
+                        onProgress: function (percent, message) {
+                            $('#status').html('Upload progress: ' + percent + '%' + message);
+                        },
+                        onFinishS3Put: function (url, file) {
+                            var parse_url = url.split("/");
 
-        onProgress: function(percent, message) {
-            $('#status').html('Upload progress: ' + percent + '%' + message);
-        },
-        onFinishS3Put: function(url) {
-            $('#status').html('Upload completed. Uploaded to: '+ url);
-        },
-        onError: function(status) {
-            $('#status').html('Upload error: ' + status);
+                            $('#post_file_url_info').val(url);
+                            $('#post_file_type').val(file.type);
+                            $("#is_exist_uploaded_file").val("1");
+                            $('#status').html('<a href=' + url + ' > Upload completed ' + parse_url[5] + '</a');
+
+                        },
+                        onError: function (status) {
+                            $('#status').html('Upload error: ' + status);
+                        }
+                    });
+                }
+            }
+        });
+    }
+}
+
+function s3_upload_delete() {
+    if ($("#is_exist_uploaded_file").val() == "0") {
+        alert("안대 올리고 지워");
+    }
+    else {
+        if ($.support.msie) {
+            // ie 일때 input[type=file] init.
+            $("#post_file").replaceWith($("#post_file").clone(true));
+        } else {
+            // other browser 일때 input[type=file] init.
+            $("#post_file").val("");
         }
-    });
+
+        console.log("file info =" + $('#post_file_url_info').val());
+        var count_and_name = $('#post_file_url_info').val().split("/");
+        var s3upload = new S3Upload({
+            opt_user_file_count: count_and_name[4],
+            opt_key_file_name: count_and_name[5],
+            opt_key_file_type: $('#post_file_type').val(),
+            opt_method: "DELETE",
+            //file_dom_selector: '#post_file',
+            s3_sign_put_url: '/sign_s3/',
+            onProgress: function (percent, message) {
+                $('#status').html('Upload progress: ' + percent + '%' + message);
+            },
+            onFinishS3Put: function (url, type) {
+                console.log("onFinishS3Put url = " + url);
+                var parse_url = url.split("/");
+                //console.log(parse_url[0] +"," + parse_url[1] + "," + parse_url[2]);
+                $("#status").html("Please select a file");
+                $("#is_exist_uploaded_file").val("0");
+            },
+            onError: function (status) {
+                $('#status').html('Upload error: ' + status);
+            }
+        });
+    }
 }
 

@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.db.models import Q
-from .models import ChatNotis, ChatComments, UserChats, ChatTables, ChatInformation, ChatMessages, ChatNotifications, Participants, Groups, Files, Posts
+from .models import *
 from django.conf import settings
 
 from base64 import b64encode
@@ -390,25 +390,29 @@ def get_upload_params(request):
     }), content_type="application/json")
 
 
-def sign_s3(request):
+def sign_s3(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
+
     AWS_ACCESS_KEY = "AKIAJKZRCQKYZ7EHIXYA"
     AWS_SECRET_KEY = "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"
     S3_BUCKET = "somapodium"
-    print "s3 sign test"
     object_name = request.GET.get('s3_object_name')
-    print object_name
-    #object_name = unicode(object_name).encode("utf-8")
-    print object_name
     mime_type = request.GET.get('s3_object_type')
+    method = request.GET.get('s3_method')
+    file_count = request.GET.get('s3_file_count')
+    print file_count
     expires = int(time.time() + 10)
     amz_headers = "x-amz-acl:public-read"
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
 
-    put_request = "PUT\n\n%s\n%d\n%s\n/%s/%s" % (mime_type, expires, amz_headers, S3_BUCKET, "test_file/" + object_name)
+    put_request = "%s\n\n%s\n%d\n%s\n/%s/%s/%s/%s" % (method, mime_type, expires, amz_headers, S3_BUCKET, str(user_id), file_count, object_name)
+    put_request = unicode(put_request).encode("utf-8")
     hashed = hmac.new(AWS_SECRET_KEY, put_request, hashlib.sha1)
 
     signature = b64encode(hashed.digest())
 
-    url = 'https://%s.s3.amazonaws.com/test_file/%s' % (S3_BUCKET, object_name)
+    url = 'https://%s.s3.amazonaws.com/%s/%s/%s' % (S3_BUCKET, str(user_id), file_count, object_name)
     signed_request = '%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s' % (url, AWS_ACCESS_KEY, expires, signature)
     print url
     print signed_request
@@ -416,3 +420,11 @@ def sign_s3(request):
         'signed_request': signed_request,
         'url': url
     }), content_type='application/json')
+
+def get_file_count(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    object_file_count, user_file_count = UserFileCount.objects.get_or_create(user_key = user)
+    print object_file_count.file_count
+    return HttpResponse(object_file_count.file_count)
