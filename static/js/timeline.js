@@ -341,8 +341,6 @@ function PostTopPolling() {
 
                 $(".p_file_unloaded").each(function () {
                     var targetDiv = $(this);
-                    console.log("file__targetDIV", targetDiv);
-                    console.log("file_unload");
                     $.ajax({
                         url: "/api/v1/user_files/?post=" + $(this).attr("id").substring(5),
                         type: "GET",
@@ -350,16 +348,12 @@ function PostTopPolling() {
                         success: function (data) {
                             for (obj in data.objects) {
                                 data.objects[obj] = data.objects[obj];
-                                console.log("data object = " + data.objects[obj].file_link);
                             }
                             var file_name = data.objects[0].file_link.split("/");
                             $(targetDiv).append('<a href="' + data.objects[0].file_link +'">' + file_name[5] + '</li>');
-                            console.log(data.objects[0].file_link);
                             //$("#file_template").tmpl(data.objects[0].file_type).appendTo(targetDiv);
                             $(targetDiv).removeClass("p_file_unloaded");
-                            console.log("after remove file__targetDIV", targetDiv);
                             $(targetDiv).addClass("p_file");
-                            console.log("after add file__targetDIV", targetDiv);
                         }
                     });
                 });
@@ -459,25 +453,23 @@ function postBottom() {
             }
 
             $(".p_file_unloaded").each(function () {
-                var targetDiv = $(this);
-                console.log("file_unload");
-                $.ajax({
-                    url: "/api/v1/user_files/?post=" + $(this).attr("id").substring(5),
-                    type: "GET",
-                    dataType: "json",
-                    success: function (data) {
-                        for (obj in data.objects) {
-                            data.objects[obj] = data.objects[obj];
-                            console.log("data object = " + data.objects[obj].file_link);
+                    var targetDiv = $(this);
+                    $.ajax({
+                        url: "/api/v1/user_files/?post=" + $(this).attr("id").substring(5),
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            for (obj in data.objects) {
+                                data.objects[obj] = data.objects[obj];
+                            }
+                            var file_name = data.objects[0].file_link.split("/");
+                            $(targetDiv).append('<a href="' + data.objects[0].file_link +'">' + file_name[5] + '</li>');
+                            //$("#file_template").tmpl(data.objects[0].file_type).appendTo(targetDiv);
+                            $(targetDiv).removeClass("p_file_unloaded");
+                            $(targetDiv).addClass("p_file");
                         }
-                        $(targetDiv).append('<li class="fileTitle">' + data.objects[0].file_link + '</li>');
-                        console.log(data.objects[0].file_link);
-                        //$("#file_template").tmpl(data.objects[0].file_type).appendTo(targetDiv);
-                        $(targetDiv).removeClass("p_file_unloaded");
-                        $(targetDiv).addClass("p_file");
-                    }
+                    });
                 });
-            });
 
             $(".p_poll_unloaded").each(function () {
                 var targetDiv = $(this);
