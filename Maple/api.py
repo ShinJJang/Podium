@@ -246,6 +246,15 @@ class GroupResource(ModelResource):
         open_scope = bundle.data['open_scope']
         bundle.obj = Groups(group_name=group_name, description=description, isProject=is_project, open_scope=open_scope)
         bundle.obj.save()
+        # creator is owner
+        Memberships.objects.create(group_key=bundle.obj, user_key=bundle.request.user, permission=2)
+        # 초대 -> 바로 가입됨
+        member_request_list = bundle.data['members']
+        if member_request_list:
+            for user_key in member_request_list:
+                user = User.objects.get(id=user_key)
+                Memberships.objects.create(group_key=bundle.obj, user_key=user, permission=0)
+
         return bundle
 
 class MembershipsResource(ModelResource):

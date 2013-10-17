@@ -23,7 +23,8 @@ $(document).on("submit", "#form_post", function(event) {
         "group_name": $("input[name=group_name]").val(),
         "description": $("textarea[name=description]").val(),
         "is_project": $("input[name=is_project]").val(),
-        "open_scope": open_scope
+        "open_scope": open_scope,
+        "members": null
 //        "member":
     });
     console.log(data);
