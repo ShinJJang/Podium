@@ -396,10 +396,10 @@ def sign_s3(request): #request에 메서드, 유저아이디는 x db조회, 파�
     AWS_SECRET_KEY = "flwBllFUCpi0YG5juUFM8w3tIN73/jdoTx93qmac"
     S3_BUCKET = "somapodium"
     object_name = request.GET.get('s3_object_name')
+    #object_name = object_name.decode("utf-8")
     mime_type = request.GET.get('s3_object_type')
     method = request.GET.get('s3_method')
     file_count = request.GET.get('s3_file_count')
-    print file_count
     expires = int(time.time() + 10)
     amz_headers = "x-amz-acl:public-read"
     session = Session.objects.get(session_key=request.session._session_key)
@@ -407,7 +407,7 @@ def sign_s3(request): #request에 메서드, 유저아이디는 x db조회, 파�
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
 
     put_request = "%s\n\n%s\n%d\n%s\n/%s/%s/%s/%s" % (method, mime_type, expires, amz_headers, S3_BUCKET, str(user_id), file_count, object_name)
-    put_request = unicode(put_request).encode("utf-8")
+    #put_request = unicode(put_request).encode("utf-8")
     hashed = hmac.new(AWS_SECRET_KEY, put_request, hashlib.sha1)
 
     signature = b64encode(hashed.digest())

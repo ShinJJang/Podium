@@ -87,14 +87,16 @@
                 type = opts && opts.type || file.type;
                 name = opts && opts.name || file.name;
             }
-            xhr.open('GET', this.s3_sign_put_url + '?s3_object_type=' + type + '&s3_object_name=' + name + '&s3_method=' + opts.opt_method + '&s3_file_count=' + opts.opt_user_file_count, true); //파일 번호를 추가해야겠다.
-            xhr.overrideMimeType('text/plain; charset=UTF-8');
+            xhr.open('GET', this.s3_sign_put_url + '?s3_object_type=' + type + '&s3_object_name=' + encodeURIComponent(name) + '&s3_method=' + opts.opt_method + '&s3_file_count=' + opts.opt_user_file_count, true); //파일 번호를 추가해야겠다.
+            xhr.overrideMimeType('text/plain;' + type);
             xhr.onreadystatechange = function (e) {
                 var result;
                 if (this.readyState === 4 && this.status === 200) {
                     try {
                         result = JSON.parse(this.responseText);
-                        console.log("result.singned_request = " + result.signed_request);
+                        console.log("result.singned_request------------ = " + result.signed_request);
+                        result.signed_request = result.signed_request.replace(/\+/g, "%2B");
+                        console.log("result.singned_request------------ = " + result.signed_request);
                     } catch (error) {
                         this_s3upload.onError('Signing server returned some ugly/empty JSON: "' + this.responseText + '"');
                         return false;
@@ -112,7 +114,14 @@
             var this_s3upload, type, xhr;
             this_s3upload = this;
             console.log(" uploadToS3 url = " + url);
-            console.log(" uploadToS3 public_url = " + public_url);
+            console.log(" uploadToS3 public _ url = " + public_url);
+            temp_url = url.split("/");
+            file_name = temp_url[5].split("?");
+            console.log(" file name ===" +  file.name);
+            console.log(" file name = " + encodeURIComponent(file_name[0]));
+            url = url.replace(file.name, encodeURIComponent(file.name));
+
+            console.log(" uploadToS3 public_url = " + url);
             console.log("uploadToS3 opts = " + opts.opt_method);
             //url = encodeURIComponent(url);
             if (opts.opt_method == "DELETE") {
@@ -121,6 +130,7 @@
             else if (opts.opt_method == "PUT") {
                 type = opts && opts.type || file.type;
             }
+
             xhr = this.createCORSRequest(opts.opt_method, url);
             if (!xhr) {
                 this.onError('CORS not supported');
@@ -137,7 +147,8 @@
                         return this_s3upload.onError('Upload error: ' + xhr.status, file);
                     }
                 };
-                xhr.onerror = function () {
+                xhr.onerror = function (e) {
+                    console.log(e);
                     return this_s3upload.onError('XHR error.', file);
                 };
                 xhr.upload.onprogress = function (e) {
@@ -150,6 +161,7 @@
             }
             xhr.setRequestHeader('Content-Type', type);
             console.log("type = " + type);
+            console.log("xhr info" + xhr.data);
             xhr.setRequestHeader('x-amz-acl', 'public-read');
             return xhr.send(file);
         };

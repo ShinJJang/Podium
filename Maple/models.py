@@ -95,7 +95,7 @@ class PostPictures(models.Model):
 
 class UserFileCount(models.Model):
     user_key = models.ForeignKey(User)
-    file_count = models.IntegerField(auto_created=True)
+    file_count = models.IntegerField(auto_created=True, default=0)
 
 class UserFiles(models.Model):
     user_key = models.ForeignKey(User)
