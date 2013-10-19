@@ -1,0 +1,10 @@
+{% with obj=result.object %}
+    <div>
+        <a href="#collapse_{{ obj.id }}">
+            {{ obj.username }}
+        </a>
+        <div style="padding: 8px 15px;">
+            Email: {{ obj.email }}
+        </div>
+    </div>
+{% endwith %}

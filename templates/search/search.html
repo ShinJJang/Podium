@@ -1,0 +1,26 @@
+{#{% extends '_base.html' %}#}
+
+{% block content %}
+    <form type="get" action=".">
+        <input type="text" name="q">
+        <button type="submit">Search</button>
+    </form>
+    {% if query %}
+        {% for result in page.object_list %}
+            <h1></h1>
+            <p>
+                {% include 'search/_result_object.html' %}
+                {% empty %}
+
+                    No results found.
+            </p>
+        {% endfor %}
+
+        {% if page.has_previous or page.has_next %}
+            <div>{% if page.has_previous %}<a href="?q={{ query }}&page={{ page.previous_page_number }}">{% endif %}« Previous{% if page.has_previous %}</a>{% endif %}
+             |
+            {% if page.has_next %}<a href="?q={{ query }}&page={{ page.next_page_number }}">{% endif %}Next »{% if page.has_next %}</a>{% endif %}</div>
+        {% endif %}
+
+    {% endif %}
+{% endblock %}
