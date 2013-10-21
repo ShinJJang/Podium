@@ -87,7 +87,7 @@
                 type = opts && opts.type || file.type;
                 name = opts && opts.name || file.name;
             }
-            xhr.open('GET', this.s3_sign_put_url + '?s3_object_type=' + type + '&s3_object_name=' + encodeURIComponent(name) + '&s3_method=' + opts.opt_method + '&s3_file_count=' + opts.opt_user_file_count, true); //파일 번호를 추가해야겠다.
+            xhr.open('GET', this.s3_sign_put_url + '?s3_object_type=' + type + '&s3_object_name=' + name + '&s3_method=' + opts.opt_method + '&s3_file_count=' + opts.opt_user_file_count, true); //파일 번호를 추가해야겠다.
             xhr.overrideMimeType('text/plain;' + type);
             xhr.onreadystatechange = function (e) {
                 var result;
@@ -117,13 +117,13 @@
             console.log(" uploadToS3 public _ url = " + public_url);
             temp_url = url.split("/");
             file_name = temp_url[5].split("?");
-            console.log(" file name ===" +  file.name);
-            console.log(" file name = " + encodeURIComponent(file_name[0]));
-            url = url.replace(file.name, encodeURIComponent(file.name));
+            if (opts.opt_key_file_name) {
+                url = url.replace(opts.opt_key_file_name, encodeURIComponent(opts.opt_key_file_name));
+            }
+            else {
+                url = url.replace(file.name, encodeURIComponent(file.name));
+            }
 
-            console.log(" uploadToS3 public_url = " + url);
-            console.log("uploadToS3 opts = " + opts.opt_method);
-            //url = encodeURIComponent(url);
             if (opts.opt_method == "DELETE") {
                 type = opts.opt_key_file_type
             }
