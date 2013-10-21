@@ -213,10 +213,3 @@ def group_create(request):
         'groups':groups
     })
     return render(request,'group_create.html',ctx)
-
-from .forms import PostsSearchForm
-
-def posts(request):
-    form = PostsSearchForm(request.GET)
-    posts = form.search()
-    return render_to_response('posts.html', {'posts': posts})
