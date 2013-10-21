@@ -17,7 +17,7 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
 
 class UserIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    username = indexes.CharField(model_attr='username')
+    username = indexes.EdgeNgramField(model_attr='username')
     email = indexes.CharField(model_attr='email')
 
     def get_model(self):

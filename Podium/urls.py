@@ -38,11 +38,11 @@ urlpatterns = patterns('',
     url(r'^private/$', views.private),
     url(r'^group/(?P<group_id>\d+)/$', 'Maple.views.group', name='group'),
     url(r'^group_create/$', 'Maple.views.group_create', name='group_create'),
+    url(r'^search/$', include('haystack.urls')),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     #url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^search_posts/$', 'Maple.views.posts'),
-    url(r'^search/$', include('haystack.urls'))
+    url(r'^admin/', include(admin.site.urls))
 )
