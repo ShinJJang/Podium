@@ -28,7 +28,7 @@
         #p_body #p_nav a .nav_icon { float:left; border:1px; display:block; width:28px; height:0px; padding-top:28px; margin:0 23px 0 7px; border-radius:20px; border:1px #ccc solid; box-shadow:inset 0 2px 5px rgba(0,0,0,0.33); background-color:#ccc; background-size: 30px 30px; background-position:50% 50%; background-repeat:no-repeat; overflow:hidden; }
         #p_body #p_nav a .nav_no { float:right; font-size:0.86em; font-weight:bold; }
 
-        #p_body #p_nav #nav_userProfile { z-index:10; padding:10px 0; position:fixed; box-shadow:0 0 10px rgba(0,0,0,0.5); }
+        #p_body #p_nav #nav_userProfile { z-index:10; padding:10px 0; position:fixed; box-shadow:0 0 10px rgba(0,0,0,0.5); font-weight:400; }
         #p_body #p_nav #nav_userProfile a { font-size:1em; }
         #p_body #p_nav #nav_userProfile #nav_profile a { font-size:1.29em; line-height:45px;}
         #p_body #p_nav #nav_userProfile a .nav_profile { float:left; display:block; width:43px; height:43px; margin:0 15px 0 0; border-radius:30px; border:1px #ccc solid; box-shadow:inset 0 2px 5px rgba(0,0,0,0.33); overflow:hidden; }
@@ -53,7 +53,7 @@
         #p_body #p_messages > .p_container { width:88px; height:100%; box-sizing:border-box; }
         #p_body #p_messages #p_chat { padding:15px 0 0; }
 
-        #p_body #p_messages h2 { width:75px; font-size:0.76em; text-transform:uppercase; color:#999999; font-weight:500; text-shadow: 0 -1px 0 rgba(0,0,0,0.33); text-align: center; margin-bottom:10px; }
+        #p_body #p_messages h2 { width:75px; font-size:0.76em; text-transform:uppercase; color:#999999; font-weight:400; text-shadow: 0 -1px 0 rgba(0,0,0,0.33); text-align: center; margin-bottom:10px; }
 
         #p_body #p_messages ul.userList { width:45px; padding:0 15px; margin:0; margin-bottom:25px; }
         #p_body #p_messages ul.userList li { margin-bottom:10px; }
@@ -86,29 +86,39 @@
 
             #p_body #p_timeline .p_timelineContents .p_tBox { float:right; width:618px; border:1px #eaeaea solid; box-shadow:0px 1px 2px rgba(0,0,0,0.33); background:#fff; border-radius:10px; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect { padding:10px 24px 10px 34px; }
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li { float:left; width:60px; text-align:center; font-size:0.86em; margin-right:10px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox #richTextInput { display:none; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li a { width:60px; display:block; padding-top:55px; color:#999999; text-transform: uppercase; font-weight:bold; background-size:40px 40px; background-position:10px 10px; background-repeat:no-repeat; border-radius:5px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect { padding:20px 25px 0; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li { float:left; margin-right:5px; }
+
+                #p_body #p_timeline  .p_timelineContents .p_tBox .writeSelect li a { display:block; color:#999999; padding:0 10px 0 35px; height:30px; line-height:30px; text-transform: uppercase; font-weight:bold; background-size:20px 50px; background-image:url(../images/article_type.png); background-repeat:no-repeat; border-top-left-radius:5px; border-top-right-radius:5px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li a:hover { background-color:#f0f0f0; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wText a { background-image:url(../images/timeline_text.png); }
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wArticle a { background-image:url(../images/timeline_article.png); }
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wPhoto a { background-image:url(../images/timeline_photo.png); }
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wVideo a { background-image:url(../images/timeline_video.png); }
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wFile a { background-image:url(../images/timeline_file.png); }
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wPoll a { background-image:url(../images/timeline_poll.png); }
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wCode a { background-image:url(../images/timeline_code.png); }
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wEvent a { background-image:url(../images/timeline_event.png); }
+                #p_body #p_timeline  .p_timelineContents .p_tBox .writeSelect li.selected a { color:#fff; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm { padding:20px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li#toPlain a { background-position:5px 5px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li#toRich a { background-position:5px -25px; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .postTools { margin-top:15px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm { padding:0 20px 20px; }
+
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .postTools { margin-top:10px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .postOptions { float:left; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm textarea.postFormText { vertical-align: top; height:56px; border:1px #eaeaea solid; border-radius: 5px; padding:5px 4px; width:570px; display:block; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm textarea.postFormText { vertical-align: top; height:56px; border:1px #eaeaea solid; border-radius: 5px; padding:5px 4px; width:570px; display:block; box-shadow:inset 0 2px 4px #ddd; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm input.postFormSubmit { vertical-align: top; height:30px; border:1px #eaeaea solid; border-radius: 5px; padding:5px 4px; float:right; width:50px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm select { border:1px #eaeaea solid; margin:0px 10px; width: 50px; }
+
+                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect { margin:10px 0; float:right; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li { margin-left:10px; float:left; line-height:20px; font-size:0.86em; font-weight:bold; color:#999; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li a { width:20px; height:0; padding:20px 0 0 0; display:block; background-image:url(../images/icon_attach.png); background-size:20px 170px; background-repeat:no-repeat; }
+
+                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li.wVideo a { background-position:0 -30px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li.wFile a { background-position:0 -60px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li.wPoll a { background-position:0 -90px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li.wCode a { background-position:0 -120px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li.wEvent a { background-position:0 -150px; }
+
+                #p_body #p_timeline .p_timelineContents .p_tBox #postAttach { clear:both; }
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle { padding:19px; border-bottom:1px #eaeaea solid; }
 
@@ -122,6 +132,8 @@
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .p_tPermalink { margin-top:10px; font-size:0.86em; color:#8e8e8e; padding-left:18px; background-position:left 50%; background-repeat: no-repeat; background-size:12px 12px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .p_tPermalink a.timestamp { font-weight:bold; color:#8e8e8e; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .p_tPermalink a.timestamp:hover { color:#666; }
+
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_attachment { background:#f4f4f4; border:1px #dadada solid; padding:9px; margin-top:10px; }
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside { padding:0 19px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .p_responses { cursor:pointer; }
@@ -156,8 +168,8 @@
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table { width:100%; border-spacing: 0; border-collapse: collapse; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table td, #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table th { text-align: left; line-height:20px; height:20px; padding:0 5px; }
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table td.time { font-size:0.86em; font-weight:500; width:75px; letter-spacing: -1px; }
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table th strong { font-size:0.86em; font-weight:500; margin-right:5px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table td.time { font-size:0.86em; font-weight:400; width:75px; letter-spacing: -1px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table th strong { font-size:0.86em; font-weight:400; margin-right:5px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table td.location { text-align:right; }
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget table td a { display:block; color:#444; }
@@ -238,14 +250,7 @@
 
     #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget h3 a { background-image:url(../images/timeline_edit@2x.png); }
 
-    #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wText a { background-image:url(../images/timeline_text@2x.png); }
-    #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wArticle a { background-image:url(../images/timeline_article@2x.png); }
-    #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wPhoto a { background-image:url(../images/timeline_photo@2x.png); }
-    #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wVideo a { background-image:url(../images/timeline_video@2x.png); }
-    #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wFile a { background-image:url(../images/timeline_file@2x.png); }
-    #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wPoll a { background-image:url(../images/timeline_poll@2x.png); }
-    #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wCode a { background-image:url(../images/timeline_code@2x.png); }
-    #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li.wEvent a { background-image:url(../images/timeline_event@2x.png); }
+    #p_body #p_timeline  .p_timelineContents .p_tBox .writeSelect li a { background-image:url(../images/article_type@2x.png); }
 
     #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .p_responses .p_container { background-image:url(../images/timeline_more@2x.png); }
     #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .opened .p_container { background-image:url(../images/timeline_less@2x.png); }

@@ -38,17 +38,18 @@ io.configure(function () {
             logger.info("sessionId =" + data.cookie.sessionid + " connect");
             return accept(null, true);
         }
+        console.log(data);
         logger.error('socket connect error');
         return accept('error', false);
     });
-    io.set('log level', 1);
+    io.set('log level', 8);
 });
 
 var users = {};
 
 io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 방 이름을 합쳐 유니크하게 만듬
     logger.info('client id = ' + socket.id);
-
+    console.log(socket);
     socket.on('join', function (data) {
         logger.info(data);
         if (data.user_id != null) {
@@ -70,9 +71,6 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
 
     socket.on("disconnect", function () {
         logger.info(socket.username + 'out');
-        //socket.get(socket.user_id, function (error, room) {
-          //  io.sockets.in(room).emit('user_out', socket.username + " 이 나갔습니다.!");
-        //});
         io.sockets.in(users[socket.user_id].room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
 
         logger.info("disconnect user id = " + users[socket.user_id].user_id);

@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.conf import settings
 from Maple import views
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -21,6 +22,8 @@ v1_api.register(PollResource())
 v1_api.register(GroupResource())
 v1_api.register(MembershipsResource())
 v1_api.register(MembershipNotisResource())
+v1_api.register(UserFilesResource())
+v1_api.register(VideoResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home),
@@ -28,13 +31,16 @@ urlpatterns = patterns('',
     url(r'^people/(?P<people_id>\d+)/$', 'Maple.views.people', name='people'),
     url(r'^invite_chat/$', 'Maple.views.invite_chat', name='invite_chat'),
     url(r'^invited_chat/$', 'Maple.views.invited_chat', name='invited_chat'),
-    url(r'^chat_comment$', 'Maple.views.chat_comment', name='chat_comment'),
+    url(r'^chat_comment/$', 'Maple.views.chat_comment', name='chat_comment'),
+    url(r'^file_upload$', 'Maple.views.file_upload', name='file_upload'),
     url(r'^chat/$', 'Maple.views.chat', name='chat'),
     (r'^api/', include(v1_api.urls)),
     url(r'accounts/register/$', RegistrationViewUniqueEmail.as_view(), name='registration_register'),
     (r'^accounts/',include('registration.backends.default.urls')),
     # temporary page
     url(r'^poll/$', views.poll),
+    url(r'^sign_s3/$', views.sign_s3),
+    url(r'^get_file_count/$', views.get_file_count),
     url(r'^private/$', views.private),
     url(r'^group/(?P<group_id>\d+)/$', 'Maple.views.group', name='group'),
     url(r'^group_create/$', 'Maple.views.group_create', name='group_create'),

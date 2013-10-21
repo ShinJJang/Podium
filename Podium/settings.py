@@ -2,7 +2,6 @@
 import os.path
 
 BASE_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -53,7 +52,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = BASE_PATH + '/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -134,9 +133,17 @@ INSTALLED_APPS = (
     'tastypie',
     'registration',
     'jsonfield',
-    'haystack'
+    'haystack',
+    'ajaxuploader',
+    'boto',
 )
 
+#about amazon s3
+AWS_S3_BUCKET_URL = "https://somapodium.s3.amazonaws.com"
+AWS_UPLOAD_BUCKET_NAME = "somapodium"
+AWS_S3_BUCKET_NAME = "somapodium"
+AWS_UPLOAD_CLIENT_KEY = "AKIAJKZRCQKYZ7EHIXYA"
+AWS_UPLOAD_CLIENT_SECRET_KEY = "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"
 # registration required option
 ACCOUNT_ACTIVATION_DAYS = 7
 EMAIL_USE_TLS = True

@@ -33,7 +33,7 @@ class Posts(models.Model):
     group = models.ForeignKey(Groups, null=True)
     open_scope = models.IntegerField(default=0) # 0 = public, 1 = private, 2 = target user, 3 = group
     target_user = models.ForeignKey(User, null=True, related_name='target_user')
-    attachment_type = models.IntegerField(default=0) # 0 = not attached, 1 = photo, 2 = video, 3 = file, 4 = poll
+    attachment_type = models.IntegerField(default=0) # 0 = not attached, 1 = photo, 2 = video, 3 = file, 4 = poll, 5 = rich text
 
 def create_friend_post(sender, instance, created, **kwargs):
     if created:
@@ -94,10 +94,22 @@ class PostPictures(models.Model):
     name = models.CharField(max_length=30,null=False)
     created = models.DateTimeField(auto_now=True)
 
+class UserFileCount(models.Model):
+    user_key = models.ForeignKey(User)
+    file_count = models.IntegerField(auto_created=True, default=0)
+
+class UserFiles(models.Model):
+    user_key = models.ForeignKey(User)
+    post_key = models.ForeignKey(Posts)
+    file_link = models.CharField(max_length=1000, null=False)
+    file_name = models.CharField(max_length=500, null=False)
+    created = models.DateTimeField(auto_now=True)
+    file_type = models.CharField(max_length=100, null=False)
+
 class Files(models.Model):
     user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)
-    file = models.FileField(upload_to = 'upload/%y/%m/%d')
+    file = models.FileField(upload_to = 'upload')
     name = models.CharField(max_length=30,null=False)
     created = models.DateTimeField(auto_now=True)
 
@@ -150,6 +162,30 @@ class ChatTables(models.Model):
 class Polls(models.Model):
     post_key = models.ForeignKey(Posts, related_name = 'polls')
     poll = models.CharField(max_length=4000)
+
+class Videos(models.Model):
+    post_key = models.ForeignKey(Posts, related_name="videos")
+    video = models.CharField(max_length=1024)
+
+
+class ChatInformation(models.Model):
+    room_name = models.CharField(max_length=255)
+    count_participant = models.SmallIntegerField(default=1)
+
+class ChatMessages(models.Model):
+    chatInfo_key = models.ForeignKey(ChatInformation)
+    user_key = models.ForeignKey(User)
+    comment = models.CharField(max_length=2048)
+
+class Participants(models.Model):
+    chatInfo_key = models.ForeignKey(ChatInformation)
+    user_key = models.ForeignKey(User)
+    socket_connect = models.BooleanField(default = False)
+
+class ChatNotifications(models.Model):
+    chatInfo_key = models.ForeignKey(ChatInformation)
+    from_user_key = models.ForeignKey(User, related_name = 'from_user')
+    to_user_key = models.ForeignKey(User, related_name = 'to_user')
     # poll = jsonfield.JSONfield
 
 class GroupPosts(models.Model):
