@@ -336,60 +336,6 @@ def group(request, group_id):
     return render(request, 'group.html', ctx)
 
 
-@login_required
-@csrf_exempt
-def file_upload(request):
-    print 'asdasd'
-    print request.method
-    print request.FILES.get('file_content')
-    if request.method == 'POST':
-        post = Posts.objects.get(id=request.POST['post_id'])
-        new_file = Files(file=request.FILES['file_content'], user_key=post.user_key, post_key=post,
-                         name=request.POST['file_name'])
-        new_file.save()
-        return HttpResponse("file_upload success")
-    return HttpResponse("no_file")
-
-
-@csrf_exempt
-def static(request, filename):
-    try:
-        with open(path.join(settings.STATIC_ROOT, path.basename(filename))) as handle:
-            response = HttpResponse(handle.read())
-            mimetype, encoding = guess_type(filename)
-            if mimetype:
-                response['Content-Type'] = mimetype
-            return response
-    except IOError:
-        return HttpResponse("No such file or directory", status=404)
-
-
-@csrf_exempt
-def get_upload_params(request):
-    def make_policy():
-        policy_object = {
-            "expiration": (datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
-            "conditions": [
-                {"bucket": "somapodium"},
-                {"acl": "public-read"},
-                ["starts-with", "$key", "uploads/"],
-                {"success_action_status": "201"}
-            ]
-        }
-        return b64encode(dumps(policy_object).replace('\n', '').replace('\r', ''))
-
-    def sign_policy(policy):
-        return b64encode(hmac.new("flwBllFUCpi0YG5juUFM8w3tIN73/jdoTx93qmac", policy, hashlib.sha1).digest())
-
-    policy = make_policy()
-    return HttpResponse(dumps({
-        "policy": policy,
-        "signature": sign_policy(policy),
-        "key": "uploads/" + uuid4().hex + ".bin",
-        "success_action_redirect": "/"
-    }), content_type="application/json")
-
-
 def sign_s3(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
 
     AWS_ACCESS_KEY = "AKIAJKZRCQKYZ7EHIXYA"

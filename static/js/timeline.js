@@ -137,10 +137,13 @@ $(document).on("submit", "#form_post", function (event) {
                         var file_upload_url = "/api/v1/user_files/";
                         file_link = $('#post_file_url_info').val();
                         file_type = $('#post_file_type').val();
+                        file_name = $('#post_file_name').val();
+                        console.log("file_name is =" + file_name);
                         var user_file_data = JSON.stringify({
                             "post_key": postId,
                             "file_link": file_link,
-                            "file_type": file_type
+                            "file_type": file_type,
+                            "file_name": file_name
                         });
                         $.ajax({
                             url: file_upload_url,
@@ -349,9 +352,9 @@ function PostTopPolling() {
                             for (obj in data.objects) {
                                 data.objects[obj] = data.objects[obj];
                             }
-                            var file_name = data.objects[0].file_link.split("/");
-                            $(targetDiv).append('<a href="' + data.objects[0].file_link +'">' + file_name[5] + '</li>');
-                            //$("#file_template").tmpl(data.objects[0].file_type).appendTo(targetDiv);
+
+                            //var file_name = data.objects[0].file_link.split("/");
+                            $(targetDiv).append('<a href="' + data.objects[0].file_link + '">' + data.objects[0].file_name + '</li>');
                             $(targetDiv).removeClass("p_file_unloaded");
                             $(targetDiv).addClass("p_file");
                         }
@@ -453,23 +456,23 @@ function postBottom() {
             }
 
             $(".p_file_unloaded").each(function () {
-                    var targetDiv = $(this);
-                    $.ajax({
-                        url: "/api/v1/user_files/?post=" + $(this).attr("id").substring(5),
-                        type: "GET",
-                        dataType: "json",
-                        success: function (data) {
-                            for (obj in data.objects) {
-                                data.objects[obj] = data.objects[obj];
-                            }
-                            var file_name = data.objects[0].file_link.split("/");
-                            $(targetDiv).append('<a href="' + data.objects[0].file_link +'">' + file_name[5] + '</li>');
-                            //$("#file_template").tmpl(data.objects[0].file_type).appendTo(targetDiv);
-                            $(targetDiv).removeClass("p_file_unloaded");
-                            $(targetDiv).addClass("p_file");
+                var targetDiv = $(this);
+                $.ajax({
+                    url: "/api/v1/user_files/?post=" + $(this).attr("id").substring(5),
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        for (obj in data.objects) {
+                            data.objects[obj] = data.objects[obj];
                         }
-                    });
+                        var file_name = data.objects[0].file_link.split("/");
+                        $(targetDiv).append('<a href="' + data.objects[0].file_link + '">' + file_name[5] + '</li>');
+                        //$("#file_template").tmpl(data.objects[0].file_type).appendTo(targetDiv);
+                        $(targetDiv).removeClass("p_file_unloaded");
+                        $(targetDiv).addClass("p_file");
+                    }
                 });
+            });
 
             $(".p_poll_unloaded").each(function () {
                 var targetDiv = $(this);
@@ -623,10 +626,10 @@ $(function () {
             attach_type = "file";
             //$("#postAttach").html('<form method="" action="" name="upload_form" id="upload_form" ><input type="file" name="file" id="file" /><input type="button" value="Upload" id="upload"/></form>');
             //$("#postAttach").html('<div id="invisible"><form action="https://somapodium.s3.amazonaws.com" method="post" enctype="multipart/form-data" id="upload_form"><input type="hidden" name="key"></input><input type="hidden" name="AWSAccessKeyId" value="AKIAJKZRCQKYZ7EHIXYA"></input><input type="hidden" name="acl" value="public-read"></input><input type="hidden" name="policy"></input><input type="hidden" name="signature"></input><input type="hidden" name="success_action_status" value="201"></input><input type="file" id="file_info" name="file"></input></form></div><div id="wrapper"><input type="button" id="upload_button" value="upload"/><div id="progress_container"><div id="progress_bar"></div></div></div><div id="status_container">Status: <span id="status">idle</span></div>');
-            $("#postAttach").html('<div id="attach_file"></div><div id="attach_file_info"></div><div id="attach_file_type"></div><div id="is_file"></div><div id="user_file_count"></div>');
+            $("#postAttach").html('<div id="attach_file"></div><div id="attach_file_info"></div><div id="attach_file_type"></div><div id="attach_is_file"></div><div id="attach_file_count"></div><div id="attach_file_name"></div>');
             $("#attach_file").html('<div id="status">Please select a file</div>');
 
-            //$("#attach_file").html('<input type="hidden" id="is_exist_uploaded_file" value="12"></input>');
+            //$("#attach_file").html('<input type="hidden" id="post_is_file" value="12"></input>');
             var attachFile = document.createElement("input");
             attachFile.id = "post_file";
             attachFile.setAttribute("type", "file");
@@ -634,8 +637,9 @@ $(function () {
 
             $("#attach_file_info").html('<input type="hidden" id="post_file_url_info" value="" >');
             $("#attach_file_type").html('<input type="hidden" id="post_file_type" value="" >');
-            $("#is_file").html('<input type="hidden" id="is_exist_uploaded_file" value="0" >');
-            $("#user_file_count").html('<input type="hidden" id="user_file_count_info" value="" >');
+            $("#attach_is_file").html('<input type="hidden" id="post_is_file" value="0" >');
+            $("#attach_file_count").html('<input type="hidden" id="post_file_count" value="" >');
+            $("#attach_file_name").html('<input type="hidden" id="post_file_name" value="파일 이름" >');
             //var attachFileUrl = document.createElement("<input type='hidden' name='post_file_url_info' value=''>");
             //attachFileUrl.setAttribute("name", "post_file_url_info");
             //attachFileUrl.setAttribute("type", "hidden");
@@ -687,10 +691,37 @@ function bindPoll(targetDiv) {
 }
 
 function s3_upload_put() {
-    //console.log("s3 upload = " + $("#is_exist_uploaded_file").val());
-    if ($("#is_exist_uploaded_file").val() == "1") {
-        console.log("s3 upload = " + $("#is_exist_uploaded_file").val);
+    var check_file_name = $('#post_file').val();
+    console.log("check_file_name is = %s %s", check_file_name, $('#post_file')[0].files[0].size);
+    var extension = check_file_name.replace(/^.*\./, '');
+    var valid_extensions = ['hwp', 'jpg', 'ppt', 'pptx', 'doc', 'zip'];
+    //console.log("s3 upload = " + $("#post_is_file").val());
+    var file_size = 0;
+    if ($.support.msie) {
+        var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+        var sPath = $("#post_file")[0].value;
+        var objFile = objFSO.getFile(sPath);
+        var iSize = objFile.size;
+        iSize = iSize / 1024;
+    }
+    else {
+        iSize = ($("#post_file")[0].files[0].size / 1024);
+    }
+
+
+    if ($("#post_is_file").val() == "1") {
+        console.log("s3 upload = " + $("#post_is_file").val);
         alert("안대 지우고 올려");
+    }
+    else if ($.inArray(extension, valid_extensions) == -1) {
+        $("#status").html("Please select a file");
+        $("#post_is_file").val("0");
+        alert("Invalid extensions");
+    }
+    else if(iSize > 10000) {
+        $("#status").html("Please select a file");
+        $("#post_is_file").val("0");
+        alert("Invalid file size");
     }
     else {
         var feedback_api = "/get_file_count/";
@@ -702,11 +733,11 @@ function s3_upload_put() {
             dataType: "xml",
             statusCode: {
                 200: function (data) {
-                    $('#user_file_count_info').val(data.responseText);
+                    $('#post_file_count').val(data.responseText);
                     timeRefresh();
                     var s3upload = new S3Upload({
                         opt_method: "PUT",
-                        opt_user_file_count: $('#user_file_count_info').val(),
+                        opt_user_file_count: $('#post_file_count').val(),
                         file_dom_selector: '#post_file',
                         s3_sign_put_url: '/sign_s3/',
                         onProgress: function (percent, message) {
@@ -714,12 +745,12 @@ function s3_upload_put() {
                         },
                         onFinishS3Put: function (url, file) {
                             var parse_url = url.split("/");
-
                             $('#post_file_url_info').val(url);
                             $('#post_file_type').val(file.type);
-                            $("#is_exist_uploaded_file").val("1");
+                            console.log("finishS3Put file name =" + file.name);
+                            $('#post_file_name').val(file.name);
+                            $("#post_is_file").val("1");
                             $('#status').html('<a href=' + url + ' > Upload completed ' + parse_url[5] + '</a');
-
                         },
                         onError: function (status) {
                             $('#status').html('Upload error: ' + status);
@@ -732,7 +763,7 @@ function s3_upload_put() {
 }
 
 function s3_upload_delete() {
-    if ($("#is_exist_uploaded_file").val() == "0") {
+    if ($("#post_is_file").val() == "0") {
         alert("안대 올리고 지워");
     }
     else {
@@ -754,17 +785,17 @@ function s3_upload_delete() {
             //file_dom_selector: '#post_file',
             s3_sign_put_url: '/sign_s3/',
             onProgress: function (percent, message) {
-                $('#status').html('Upload progress: ' + percent + '%' + message);
+                $('#status').html('Delete progress: ' + percent + '%' + message);
             },
             onFinishS3Put: function (url, type) {
                 console.log("onFinishS3Put url = " + url);
                 var parse_url = url.split("/");
                 //console.log(parse_url[0] +"," + parse_url[1] + "," + parse_url[2]);
                 $("#status").html("Please select a file");
-                $("#is_exist_uploaded_file").val("0");
+                $("#post_is_file").val("0");
             },
             onError: function (status) {
-                $('#status').html('Upload error: ' + status);
+                $('#status').html('Delete error: ' + status);
             }
         });
     }

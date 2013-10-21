@@ -87,7 +87,9 @@
                 type = opts && opts.type || file.type;
                 name = opts && opts.name || file.name;
             }
-            xhr.open('GET', this.s3_sign_put_url + '?s3_object_type=' + type + '&s3_object_name=' + name + '&s3_method=' + opts.opt_method + '&s3_file_count=' + opts.opt_user_file_count, true); //파일 번호를 추가해야겠다.
+            var delete_space = encodeURIComponent(name).replace("%20", ""); //%20 delete
+            console.log("encodeURIComponent(name) = " + delete_space);
+            xhr.open('GET', this.s3_sign_put_url + '?s3_object_type=' + type + '&s3_object_name=' + encodeURIComponent(delete_space) + '&s3_method=' + opts.opt_method + '&s3_file_count=' + opts.opt_user_file_count, true); //파일 번호를 추가해야겠다.
             xhr.overrideMimeType('text/plain;' + type);
             xhr.onreadystatechange = function (e) {
                 var result;

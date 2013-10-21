@@ -39,8 +39,6 @@ urlpatterns = patterns('',
     url(r'^poll/$', views.poll),
     url(r'^sign_s3/$', views.sign_s3),
     url(r'^get_file_count/$', views.get_file_count),
-    url(r'^params$', 'Maple.views.get_upload_params', name='params'),
-    url(r'^static/(?P<filename>[^/]+)$', 'static', name='static'),
     url(r'^private/$', views.private),
     url(r'^group/(?P<group_id>\d+)/$', 'Maple.views.group', name='group'),
     # Uncomment the admin/doc line below to enable admin documentation:

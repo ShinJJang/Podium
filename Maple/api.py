@@ -267,7 +267,11 @@ class UserFilesResource(ModelResource):
         user_key = bundle.request.user
         file_type = bundle.data['file_type']
         file_link = bundle.data['file_link']
-        bundle.obj = UserFiles(post_key=post, user_key=user_key, file_link=file_link, file_type=file_type)
+        file_name = bundle.data['file_name']
+        print file_type
+        print file_link
+        print file_name
+        bundle.obj = UserFiles(post_key=post, user_key=user_key, file_link=file_link, file_type=file_type, file_name=file_name)
         bundle.obj.save()
         user_file_count = UserFileCount.objects.get(user_key=user_key)
         user_file_count.file_count = user_file_count.file_count + 1
