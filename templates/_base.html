@@ -12,6 +12,7 @@
           media="screen">
     <link rel="alternate stylesheet" href="{{ STATIC_URL }}css/color-sky.css" title="Podium Sky" type="text/css"
           media="screen">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/select2.css" type="text/css" media="screen">
 
     <link rel="apple-touch-icon" href="{{ STATIC_URL }}apple-icon-touch.png">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -144,7 +145,8 @@
     <script type="text/javascript">
         var user_id = {{ user.id }};
     </script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/sidebar.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/select2_locale_ko.js"></script>
 {% endblock %}
 {% block add_scripts %}
 {% endblock %}
