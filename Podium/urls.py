@@ -20,7 +20,9 @@ v1_api.register(UserPictureResource())
 v1_api.register(PostEmotionsResource())
 v1_api.register(PollResource())
 v1_api.register(GroupResource())
-v1_api.register(FilesResource())
+v1_api.register(MembershipsResource())
+v1_api.register(MembershipNotisResource())
+v1_api.register(UserFilesResource())
 v1_api.register(VideoResource())
 
 urlpatterns = patterns('',
@@ -30,20 +32,23 @@ urlpatterns = patterns('',
     url(r'^invite_chat/$', 'Maple.views.invite_chat', name='invite_chat'),
     url(r'^invited_chat/$', 'Maple.views.invited_chat', name='invited_chat'),
     url(r'^chat_comment/$', 'Maple.views.chat_comment', name='chat_comment'),
-    url(r'^file_upload$', 'Maple.views.file_upload', name='file_upload'),
+    #url(r'^file_upload$', 'Maple.views.file_upload', name='file_upload'),
     url(r'^chat/$', 'Maple.views.chat', name='chat'),
     (r'^api/', include(v1_api.urls)),
     url(r'accounts/register/$', RegistrationViewUniqueEmail.as_view(), name='registration_register'),
     (r'^accounts/',include('registration.backends.default.urls')),
     # temporary page
     url(r'^poll/$', views.poll),
-    url(r'^params$', 'Maple.views.get_upload_params', name='params'),
-    url(r'^static/(?P<filename>[^/]+)$', 'static', name='static'),
+    url(r'^sign_s3/$', views.sign_s3),
+    url(r'^get_file_count/$', views.get_file_count),
     url(r'^private/$', views.private),
     url(r'^group/(?P<group_id>\d+)/$', 'Maple.views.group', name='group'),
+    url(r'^group_create/$', 'Maple.views.group_create', name='group_create'),
+    url(r'^search/$', include('haystack.urls')),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     #url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls))
 )

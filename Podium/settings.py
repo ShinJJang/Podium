@@ -133,9 +133,9 @@ INSTALLED_APPS = (
     'tastypie',
     'registration',
     'jsonfield',
+    'haystack',
     'ajaxuploader',
     'boto',
-
 )
 
 #about amazon s3
@@ -197,3 +197,13 @@ JENKINS_TASKS = (
 )
 
 AUTH_PROFILE_MODULE = 'Maple.UserProfile'
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
+    },
+}
+
+#HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

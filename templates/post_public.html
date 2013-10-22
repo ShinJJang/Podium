@@ -27,6 +27,11 @@
                     <div class="p_tText">
                         {% templatetag openblock %}html post.post{% templatetag closeblock %}
                     </div>
+                    {% templatetag openblock %}if post.attachment_type == 3{% templatetag closeblock %}
+                        <ul id="file-${ post.id }" class="p_attachment p_file_unloaded">
+                        </ul>
+                    {% templatetag openblock %}/if{% templatetag closeblock %}
+
                     {% templatetag openblock %}if post.attachment_type == 4{% templatetag closeblock %}
                         <ul id="poll-${ post.id }" class="p_attachment p_poll_unloaded">
                         </ul>
@@ -81,5 +86,10 @@
 <script id="poll_template" type="text/x-jquery-tmpl">
     <li>
         <div class="pollItem"><strong>${ label }</strong><span class="tooltip-parent tooltip-hover">${ users.length }</span></div>
+    </li>
+</script>
+<script id="file_template" type="text/x-jquery-tmpl">
+    <li>
+        <div class="fileItem"><strong>${ label }</strong><span class="tooltip-parent tooltip-hover">${ users.length }</span></div>
     </li>
 </script>

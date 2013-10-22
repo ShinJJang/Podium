@@ -23,6 +23,7 @@ class Groups(models.Model):
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now=True)
     isProject = models.BooleanField()
+    open_scope = models.IntegerField(default=0) # 0 = open, 1 = semi-open, 2 = close
 
 class Posts(models.Model):
     user_key = models.ForeignKey(User, related_name='user_key')
@@ -50,7 +51,7 @@ def create_friend_post(sender, instance, created, **kwargs):
         elif(instance.open_scope == 3):
             memberships = Memberships.objects.filter(group_key=instance.group.pk); # TODO - membership
             for membership in memberships:
-                FriendPosts.objects.get_or_create(user_key=membership, friend_post_key=instance)
+                FriendPosts.objects.get_or_create(user_key=membership.user_key, friend_post_key=instance)
             GroupPosts.objects.get_or_create(group_key=instance.group, post_key=instance)
 
 post_save.connect(create_friend_post, sender=Posts)
@@ -93,6 +94,18 @@ class PostPictures(models.Model):
     name = models.CharField(max_length=30,null=False)
     created = models.DateTimeField(auto_now=True)
 
+class UserFileCount(models.Model):
+    user_key = models.ForeignKey(User)
+    file_count = models.IntegerField(auto_created=True, default=0)
+
+class UserFiles(models.Model):
+    user_key = models.ForeignKey(User)
+    post_key = models.ForeignKey(Posts)
+    file_link = models.CharField(max_length=1000, null=False)
+    file_name = models.CharField(max_length=500, null=False)
+    created = models.DateTimeField(auto_now=True)
+    file_type = models.CharField(max_length=100, null=False)
+
 class Files(models.Model):
     user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)
@@ -104,6 +117,13 @@ class Files(models.Model):
 class Friendships(models.Model):
     user_key = models.ForeignKey(User, related_name='my_key')
     friend_user_key = models.ForeignKey(User, related_name='friend_key')
+    created = models.DateTimeField(auto_now=True)
+
+def create_friendship_each(sender, instance, created, **kwargs):
+    if created:
+        Friendships.objects.get_or_create(user_key = instance.friend_user_key, friend_user_key = instance.user_key)
+
+post_save.connect(create_friendship_each, sender=Friendships)
 
 # Relation sending friend request
 class FriendshipNotis(models.Model):
@@ -175,3 +195,10 @@ class GroupPosts(models.Model):
 class Memberships(models.Model):
     group_key = models.ForeignKey(Groups)
     user_key = models.ForeignKey(User)
+    permission = models.IntegerField(default=0)  # 0 = common, 1 = manager, 2 = owner
+    created = models.DateTimeField(auto_now=True)
+
+class MembershipNotis(models.Model):
+    noti_group_key = models.ForeignKey(Groups)
+    noti_user_key = models.ForeignKey(User)
+    created = models.DateTimeField(auto_now=True)
