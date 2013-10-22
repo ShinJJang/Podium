@@ -26,11 +26,13 @@ tinymce.init({
 
 // post create
 $(document).on("submit", "#form_post", function (event) {
-    alert("@");
     var feedback_api = "/api/v1/post/";
+
     var aType = 0;
     if ($("#attach_poll").length > 0) aType = 4;
     else if ($("#attach_file").length > 0) aType = 3;
+    else if ($("#attach_video").length > 0) aType = 2;
+
     var open_scope = $("select[name=open_scope]").val();
     var group = $("select[name=group]").val();
     var target_user = $("input[name=target_user]").val();
@@ -60,11 +62,11 @@ $(document).on("submit", "#form_post", function (event) {
     }
 
     if ($("#attach_video").length > 0) {
-        var urlRegEx = new RegExp("^(http|https)://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*$");
+        var youtubeRegEx = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
         var videoAddress = $("#videoAddress").val();
 
-        if (urlRegEx.test(videoAddress) == false) {
-            alert("첨부된 주소가 올바르지 않습니다.")
+        if (youtubeRegEx.test(videoAddress) == false) {
+            alert("첨부된 주소가 올바르지 않습니다.");
             return false;
         }
     }
@@ -166,11 +168,11 @@ $(document).on("submit", "#form_post", function (event) {
                     if ($("#attach_video").length > 0) {
                         var a_video_api = "/api/v1/videos/";
 
-                        var urlRegEx = new RegExp("^(http|https)://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*$");
+                        var urlRegEx = new RegExp("^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*");
                         var videoAddress = $("#videoAddress").val();
 
                         if (urlRegEx.test(videoAddress)) {
-                            var data = JSON.stringify({
+                            var a_data = JSON.stringify({
                                 "post_id": postId,
                                 "video": videoAddress
                             });
@@ -341,6 +343,27 @@ function PostTopPolling() {
                     console.log("1 next url:  " + post_bottom_url);
                     isBottominit = 1;
                 }
+
+                $(".p_video_unloaded").each(function () {
+                    var targetDiv = $(this);
+
+                    $.ajax({
+                        url: "/api/v1/videos/?post=" + $(this).attr("id").substring(6),
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            var videoId;
+                            var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+                            var match = data.objects[0].video.match(regExp);
+                            console.log("Video:");
+                            console.log(match);
+                            if (match&&match[7].length==11){
+                                videoId = match[7];
+                                $(targetDiv).html('<iframe width="560" height="315" src="//www.youtube.com/embed/'+videoId+'" frameborder="0" allowfullscreen></iframe>');
+                            }
+                        }
+                    });
+                });
 
                 $(".p_file_unloaded").each(function () {
                     var targetDiv = $(this);
