@@ -15,6 +15,11 @@
                     <div class="p_tText">
                         {% templatetag openblock %}html post.post{% templatetag closeblock %}
                     </div>
+                    {% templatetag openblock %}if post.attachment_type == 2{% templatetag closeblock %}
+                        <div id="video-${ post.id }" class="p_attachment p_video_unloaded">
+                        </div>
+                    {% templatetag openblock %}/if{% templatetag closeblock %}
+
                     {% templatetag openblock %}if post.attachment_type == 3{% templatetag closeblock %}
                         <ul id="file-${ post.id }" class="p_attachment p_file_unloaded">
                         </ul>

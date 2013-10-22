@@ -390,15 +390,15 @@ class VideoResource(ModelResource):
     post = fields.ForeignKey(PostResource, 'post_key', full=False)
 
     class Meta:
-        queryset = Polls.objects.all()
-        resource_name = 'vudeis'
+        queryset = Videos.objects.all()
+        resource_name = 'videos'
         authorization = Authorization()
         filtering = {
             "post": ALL_WITH_RELATIONS,
         }
 
     def obj_create(self, bundle, **kwargs):
-        post_key = bundle.data['post_key']
+        post_key = bundle.data['post_id']
         post = Posts.objects.get(pk=post_key)
         video = bundle.data['video']
         bundle.obj = Videos(post_key=post, video=video)
