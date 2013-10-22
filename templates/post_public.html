@@ -1,6 +1,18 @@
 <script id="post_public_template" type="text/x-jquery-tmpl">
     <div class="p_tItem p_container public pui">
-        <a href="/people/${ post.user.id }" class="p_tUser p_tIcon"></a>
+        <a href="/people/${ post.user.id }" class="p_tUser">
+            <span class="nav_profile">
+                {% with post.user.userpictures_set.all|first as userpicture %}
+                    {% if post.userpicture %}
+                        <img src="{{ post.userpicture.picture }}" alt="{{ post.userpicture.name }}"
+                             class="userPicture"/>
+                    {% else %}
+                        <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진"
+                             class="userPicture"/>
+                    {% endif %}
+                {% endwith %}
+            </span>
+        </a>
         <div class="p_tBox">
             <article class="p_tArticle">
                 <div class="p_container">

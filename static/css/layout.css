@@ -80,7 +80,10 @@
 
             #p_body #p_timeline .p_timelineContents .p_tIcon { float:left; border:2px #ccc solid; box-shadow: inset 0px 2px 5px rgba(0,0,0,0.33); margin-top:13px; border-radius:40px; width:62px; height:0px; padding-top:62px; overflow:hidden; display:block; background-size:62px 62px; background-position:50% 50%; }
 
-            #p_body #p_timeline .p_timelineContents .p_tUser { background-image:url(../images/user_profile.jpg); }
+            #p_body #p_timeline .p_timelineContents .p_tUser { display:block; }
+            #p_body #p_timeline .p_timelineContents .p_tUser .nav_profile { float:left; display:block; width:62px; height:62px; margin:0 15px 0 0; border-radius:30px; border:1px #ccc solid; box-shadow:inset 0 2px 5px rgba(0,0,0,0.33); float:left; border:2px #ccc solid; box-shadow: inset 0px 2px 5px rgba(0,0,0,0.33); margin-top:13px; border-radius:40px; overflow:hidden; display:block; background-size:62px 62px; background-position:50% 50%; }
+            #p_body #p_timeline .p_timelineContents .p_tUser .nav_profile .userPicture { width:62px; height:62px; z-index:-1; }
+
             #p_body #p_timeline .p_timelineContents .p_tWidget { background-image:url(../images/timeline_widget.png); }
             #p_body #p_timeline .p_timelineContents .p_tAdd { background-image:url(../images/timeline_write.png); }
 

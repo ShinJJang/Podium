@@ -264,10 +264,12 @@ class PollResource(ModelResource):
 
     class Meta:
         queryset = Polls.objects.all()
+        allowed_methods = ('get', 'post', 'put', 'delete', 'patch')
+        list_allowed_methods = ['get', 'post','put', 'delete', 'patch']
         resource_name = 'polls'
         authorization = Authorization()
         filtering = {
-            "post": ALL_WITH_RELATIONS,
+            "post": ALL_WITH_RELATIONS
         }
 
     def obj_create(self, bundle, **kwargs):
@@ -279,8 +281,11 @@ class PollResource(ModelResource):
         return bundle
 
     def obj_update(self, bundle, **kwargs):
-        bundle = super(PollResource, self).obj_update(bundle, **kwargs)
-        print bundle.obj
+        user = bundle.request.user
+        poll_id = bundle.data['post_key']
+        poll_item = bundle.data['item']
+        bundle.obj = Polls.objects.filter(post_key=poll_id)
+
         bundle.obj.save()
         return bundle
 

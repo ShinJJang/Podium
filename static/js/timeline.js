@@ -700,11 +700,14 @@ $(function () {
     });
 })
 
+
 function bindPoll(targetDiv) {
     $("#" + targetDiv + " li").click(function () {
         $.ajax({
             url: "/api/v1/polls/?id=" + targetDiv.substring(5) + "&item=" + ($(this).index() - 1),
-            type: "PUT",
+            type: "PATCH",
+            contentType: "application/json",
+            data: data,
             dataType: "json",
             success: function (data) {
                 console.log(data);
