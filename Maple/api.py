@@ -128,9 +128,6 @@ class PostResource(ModelResource):
         return bundle
 
     def dehydrate(self, bundle):
-        pks = [ "1", "2", "3", "4" ]
-        query = reduce(operator.and_, [ Q(comments__pk=x) for x in pks ] )
-        bundle.data['answer'] = Posts.objects.filter(query).distinct()
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
         bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count()
         if (bundle.obj.group):
@@ -362,6 +359,7 @@ class MembershipNotisResource(ModelResource):
 
 class UserFilesResource(ModelResource):
     post = fields.ForeignKey(PostResource, 'post_key', full=False)
+
     class Meta:
         queryset = UserFiles.objects.all()
         resource_name = 'user_files'
@@ -405,46 +403,73 @@ class VideoResource(ModelResource):
         return bundle
 
 class ChatRoomResource(ModelResource):
-    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+
     class Meta:
-        queryset = UserFiles.objects.all()
-        resource_name = 'user_files'
+        queryset = ChatRoom.objects.all()
+        resource_name = 'chat_room'
         authorization = Authorization()
         filtering = {
-            "post": ALL
+            "id": ALL
         }
 
+    def obj_get(self, bundle, **kwargs):
+        participants = bundle.data['participants']
+        participants_count = bundle.data['participants_count']
+        pks = []
+        for participant in participants:
+            pks.append(participant)
+
+        query = reduce(operator.or_, [ Q(ChatParticipants__user_key=x) for x in pks ])
+        chat_room = ChatRoom.objects.filter(query, participant_count=participants_count).distinct()
+        if chat_room:
+            return chat_room
+        else:
+            self.obj_create(self, bundle, **kwargs)
+
+    def obj_create(self, bundle, **kwargs):
+        participants = bundle.data['participants']
+        participants_count = bundle.data['participants_count']
+        bundle.obj = ChatRoom.objects.create(chat_room_name="default", participant_count=participants_count)
+        bundle.obj.save()
+
+        for participant in participants:
+            append_user = User.objects.get(id=participant)
+            ChatParticipants.create(chat_room_key=bundle.obj, user_key=append_user)
+
+        return bundle
 
 class ChatNotificationResource(ModelResource):
-    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+    chat_room = fields.ForeignKey(ChatRoomResource, 'chat_room', full=False)
     class Meta:
         queryset = UserFiles.objects.all()
-        resource_name = 'user_files'
+        resource_name = 'chat_notis'
         authorization = Authorization()
         filtering = {
-            "post": ALL
+            "chat_room": ALL
         }
 
 
 class ChatParticipantsResource(ModelResource):
-    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+    chat_room = fields.ForeignKey(ChatRoomResource, 'chat_room', full=False)
+    user = fields.ForeignKey(UserResource, 'user_key', full=False)
     class Meta:
         queryset = UserFiles.objects.all()
-        resource_name = 'user_files'
+        resource_name = 'chat_participants'
         authorization = Authorization()
         filtering = {
-            "post": ALL
+            "chat_room": ALL,
+            "user": ALL
         }
 
 
 class UserChattingMessageResource(ModelResource):
-    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+    user = fields.ForeignKey(UserResource, 'user_key', full=False)
     class Meta:
         queryset = UserFiles.objects.all()
-        resource_name = 'user_files'
+        resource_name = 'user_chat'
         authorization = Authorization()
         filtering = {
-            "post": ALL
+            "user": ALL
         }
 
 
