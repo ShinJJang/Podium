@@ -216,3 +216,7 @@ class UserChattingMessage(models.Model):
     user_key = models.ForeignKey(User)
     chatting_message = models.CharField(max_length=1000)
     created = models.DateTimeField(auto_now=True)
+
+class TestModel(models.Model):
+    test = models.ForeignKey(ChatRoom)
+    testbaekmodel = models.CharField(max_length=1000)

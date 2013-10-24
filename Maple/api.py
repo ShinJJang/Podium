@@ -479,6 +479,7 @@ class UserChattingMessageResource(ModelResource):
             "chat_room_key": ALL,
             "user": ALL
         }
+
     def obj_create(self, bundle, **kwargs):
         message = bundle.data['comment']
         user_id = bundle.data['user_id']

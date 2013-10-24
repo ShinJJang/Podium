@@ -135,6 +135,7 @@ INSTALLED_APPS = (
     'jsonfield',
     'haystack',
     'boto',
+    'south'
 )
 
 #about amazon s3
@@ -205,4 +206,4 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-#HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
