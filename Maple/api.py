@@ -62,6 +62,8 @@ class UserResource(ModelResource):
 
         for result in page.object_list:
             bundle = self.build_bundle(obj=result.object, request=request)
+            if result.object == bundle.request.user:
+                continue
             bundle = self.full_dehydrate(bundle)
             objects.append(bundle)
 
