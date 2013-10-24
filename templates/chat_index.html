@@ -64,7 +64,7 @@
         minimumInputLength: 2,
         multiple: true,
         ajax: {
-            url: '/api/v1/user/search/?q='+$('.search-field input').val(),
+            url: '/api/v1/user/search/',
             dataType: 'json',
             data: function(term, page) {
                 return {
