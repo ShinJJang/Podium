@@ -16,11 +16,44 @@
             </li>
         {% endif %}
     {% endfor %}
-    <button class="invite_people">invite</button>
+    <form id="form_post" method="post" action="">{% csrf_token %}
+        <input type="text" id="chat_search_friend" style="width: 20px">
+    </form>
 </ul>
 
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
 <script type="text/javascript">
+    $('#chat_search_friend').select2({
+        placeholder: "초대할 친구를 찾아보세요!",
+        minimumInputLength: 2,
+        multiple: true,
+        ajax: {
+            url: '/api/v1/user/search/?q='+$('.search-field input').val(),
+            dataType: 'json',
+            data: function(term, page) {
+                return {
+                    q: term,
+                    page_limit: 10
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.objects
+                };
+            }
+        },
+        formatResult: formatResult,
+        formatSelection: formatSelection
+    });
+
+    function formatResult(node) {
+        return '<div>' + node.username + '</div>';
+    };
+
+    function formatSelection(node) {
+        return node.username;
+    };
+
     $(".invite_people").click(function () {
         alert("초대한다 너를");
         $.ajax({//여기서 유저 정보와 내정보를 보내 방이 있는지 없는지를 판별하여 만든다. 
