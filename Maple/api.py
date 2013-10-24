@@ -23,6 +23,7 @@ from tastypie.utils import trailing_slash
 from haystack.query import SearchQuerySet
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
+from tastypie.exceptions import BadRequest
 
 class UserResource(ModelResource):
     class Meta:
@@ -302,12 +303,14 @@ class GroupResource(ModelResource):
         description = bundle.data['description']
         is_project = bundle.data['is_project']
         open_scope = bundle.data['open_scope']
+        member_request_list = bundle.data['members']
+        if Groups.objects.filter(group_name=group_name).count() != 0:
+            raise BadRequest('이미 존재하는 그룹명입니다')
         bundle.obj = Groups(group_name=group_name, description=description, isProject=is_project, open_scope=open_scope)
         bundle.obj.save()
         # creator is owner
         Memberships.objects.create(group_key=bundle.obj, user_key=bundle.request.user, permission=2)
         # 초대 -> 바로 가입됨
-        member_request_list = bundle.data['members']
         if member_request_list:
             for user_key in member_request_list:
                 user = User.objects.get(id=user_key)

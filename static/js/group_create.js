@@ -19,13 +19,17 @@ $(document).on("submit", "#form_post", function(event) {
         default:
             open_scope = 0;
     }
+    var members = [];
+    $('.group_request_member_selected').each(function() {
+        members.push($(this).attr('value'));
+    });
+    console.log(members);
     var data = JSON.stringify({
         "group_name": $("input[name=group_name]").val(),
         "description": $("textarea[name=description]").val(),
         "is_project": $("input[name=is_project]").val(),
         "open_scope": open_scope,
-        "members": null
-//        "member":
+        "members": members
     });
     console.log(data);
     $.ajax({
