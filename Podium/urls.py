@@ -24,6 +24,10 @@ v1_api.register(MembershipsResource())
 v1_api.register(MembershipNotisResource())
 v1_api.register(UserFilesResource())
 v1_api.register(VideoResource())
+v1_api.register(ChatRoomResource())
+v1_api.register(ChatNotificationResource())
+v1_api.register(ChatParticipantsResource())
+v1_api.register(UserChattingMessageResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home),

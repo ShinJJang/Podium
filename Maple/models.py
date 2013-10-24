@@ -159,15 +159,15 @@ class MembershipNotis(models.Model):
     created = models.DateTimeField(auto_now=True)
 
 
+class ChatInformation(models.Model):
+    room_name = models.CharField(max_length=255)
+    count_participant = models.SmallIntegerField(default=1)
+
 class ChatNotifications(models.Model):
     chatInfo_key = models.ForeignKey(ChatInformation)
     from_user_key = models.ForeignKey(User, related_name = 'from_user')
     to_user_key = models.ForeignKey(User, related_name = 'to_user')
     # poll = jsonfield.JSONfield
-
-class ChatInformation(models.Model):
-    room_name = models.CharField(max_length=255)
-    count_participant = models.SmallIntegerField(default=1)
 
 class ChatMessages(models.Model):
     chatInfo_key = models.ForeignKey(ChatInformation)

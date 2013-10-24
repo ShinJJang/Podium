@@ -404,6 +404,50 @@ class VideoResource(ModelResource):
         bundle.obj.save()
         return bundle
 
+class ChatRoomResource(ModelResource):
+    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+    class Meta:
+        queryset = UserFiles.objects.all()
+        resource_name = 'user_files'
+        authorization = Authorization()
+        filtering = {
+            "post": ALL
+        }
+
+
+class ChatNotificationResource(ModelResource):
+    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+    class Meta:
+        queryset = UserFiles.objects.all()
+        resource_name = 'user_files'
+        authorization = Authorization()
+        filtering = {
+            "post": ALL
+        }
+
+
+class ChatParticipantsResource(ModelResource):
+    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+    class Meta:
+        queryset = UserFiles.objects.all()
+        resource_name = 'user_files'
+        authorization = Authorization()
+        filtering = {
+            "post": ALL
+        }
+
+
+class UserChattingMessageResource(ModelResource):
+    post = fields.ForeignKey(PostResource, 'post_key', full=False)
+    class Meta:
+        queryset = UserFiles.objects.all()
+        resource_name = 'user_files'
+        authorization = Authorization()
+        filtering = {
+            "post": ALL
+        }
+
+
 
 """
 // tastypie 상속 가능한 method
