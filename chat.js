@@ -93,6 +93,7 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
 
         var req = http.get(options, function (res) {
             res.setEncoding('utf8');
+            logger.info(res.statusCode);
             res.on('data', function (message) {
                 if (message != 'Everything worked :)') {
                     logger.log('Message: ' + message);
@@ -120,14 +121,14 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
         values = querystring.stringify({
             comment: message.message,
             user_id: message.user_id,
-            room_name: message.room_name,
+            room_id: message.room_name,
             type: 'POST'
         });
 
         var options = {
             host: 'localhost',
             port: 8000,
-            path: '/api/v1/user_chat/',
+            path: '/api/v1/user_chat_message/',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

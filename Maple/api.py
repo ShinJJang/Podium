@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from .models import *
 from tastypie import fields
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
+from tastypie.exceptions import HttpResponse, BadRequest
 from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization, Authorization
 from .paginator import EstimatedCountPaginator
@@ -14,9 +15,9 @@ import json
 import operator
 
 import logging
-# l = logging.getLogger('django.db.backends')
-# l.setLevel(logging.DEBUG)
-# l.addHandler(logging.StreamHandler())
+#l = logging.getLogger('django.db.backends')
+#l.setLevel(logging.DEBUG)
+#l.addHandler(logging.StreamHandler())
 
 from django.conf.urls import *
 from tastypie.utils import trailing_slash
@@ -414,53 +415,35 @@ class ChatRoomResource(ModelResource):
         }
         always_return_data = True
 
-    def obj_get(self, bundle, **kwargs):
-        print "test get method"
-        participants = bundle.data['participants']
-        participants_count = bundle.data['participants_count']
-        pks = []
-        for participant in participants:
-            pks.append(participant)
-
-        query = reduce(operator.or_, [ Q(ChatParticipants__user_key=x) for x in pks ])
-        chat_room = ChatRoom.objects.filter(query, participant_count=participants_count).distinct()
-        if chat_room:
-            return bundle
-        else:
-            self.obj_create(self, bundle, **kwargs)
-            return bundle
-
     def obj_create(self, bundle, **kwargs):
         print "test post method"
+        request_user = bundle.request.user
         participants = bundle.data['participants']
         participants_count = bundle.data['participants_count']
-        pks = []
-        for participant in participants:
-            pks.append(participant)
-        query = reduce(operator.or_, [Q(ChatParticipants__user_key=User.objects.get(id=x)) for x in pks])
         print "test for search room1"
-        print query
-        chat_room = ChatRoom.objects.filter(query).distinct()
+        chat_room = ChatRoom.objects.filter(chatparticipants__user_key=request_user).distinct().filter(participant_count=participants_count)
+        for participant in participants:
+            chat_room = chat_room.filter(chatparticipants__user_key=User.objects.get(id=participant))
         print chat_room
         if chat_room:
+            bundle.obj = ChatRoom.objects.get(pk=chat_room)
+            bundle.obj.save()
+            print bundle.obj.participant_count
             return bundle
         else:
-            self.obj_create(self, bundle, **kwargs)
             bundle.obj = ChatRoom.objects.create(chat_room_name="default", participant_count=participants_count)
             bundle.obj.save()
             room = bundle.obj
-            print participants
-            print participants_count
-
+            ChatParticipants.objects.create(chat_room_key=room, user_key=request_user) #트루일때 소켓연결햇다는 것
             for participant in participants:
                 append_user = User.objects.get(id=participant)
                 print append_user.id
-                print room
                 ChatParticipants.objects.create(chat_room_key=room, user_key=append_user)
             return bundle
 
 class ChatNotificationResource(ModelResource):
     chat_room = fields.ForeignKey(ChatRoomResource, 'chat_room', full=False)
+
     class Meta:
         queryset = UserFiles.objects.all()
         resource_name = 'chat_notis'
@@ -473,6 +456,7 @@ class ChatNotificationResource(ModelResource):
 class ChatParticipantsResource(ModelResource):
     chat_room = fields.ForeignKey(ChatRoomResource, 'chat_room', full=False)
     user = fields.ForeignKey(UserResource, 'user_key', full=False)
+
     class Meta:
         queryset = UserFiles.objects.all()
         resource_name = 'chat_participants'
@@ -484,14 +468,27 @@ class ChatParticipantsResource(ModelResource):
 
 
 class UserChattingMessageResource(ModelResource):
+    chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=False)
     user = fields.ForeignKey(UserResource, 'user_key', full=False)
+
     class Meta:
-        queryset = UserFiles.objects.all()
-        resource_name = 'user_chat'
+        queryset = UserChattingMessage.objects.all()
+        resource_name = 'user_chat_message'
         authorization = Authorization()
         filtering = {
+            "chat_room_key": ALL,
             "user": ALL
         }
+    def obj_create(self, bundle, **kwargs):
+        message = bundle.data['comment']
+        user_id = bundle.data['user_id']
+        room_id = bundle.data['room_id']
+        chat_room_key = ChatRoom.objects.get(id=room_id)
+        user_key = User.objects.get(id=user_id)
+        bundle.obj = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key,chatting_message=message)
+        bundle.obj.save()
+        return bundle
+
 
 
 

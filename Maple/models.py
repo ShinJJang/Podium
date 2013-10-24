@@ -212,6 +212,7 @@ class ChatParticipants(models.Model):
     connected_chat = models.BooleanField(default=False)
 
 class UserChattingMessage(models.Model):
+    chat_room_key = models.ForeignKey(ChatRoom)
     user_key = models.ForeignKey(User)
     chatting_message = models.CharField(max_length=1000)
-
+    created = models.DateTimeField(auto_now=True)
