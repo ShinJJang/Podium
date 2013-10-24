@@ -360,7 +360,7 @@ def invited_chat_poll(request):
 
 @csrf_exempt
 def chat_messages(request): #chat_noti 만들어야 함
-    if request.POST.get('type') == 'DELETE':
+    if request.POST.get('type') == 'DELETE': #참가자의 소켓 커넥트를 폴스로 바꿔야 한다.
         user_chat = UserChats.objects.get(chat_room_name=request.POST.get('room_name'))
         try:
             chat_table = ChatTables.objects.get(from_chatting_user=user_chat.chat_from_user_key,

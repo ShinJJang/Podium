@@ -127,7 +127,7 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
         var options = {
             host: 'localhost',
             port: 8000,
-            path: '/chat_comment',
+            path: '/api/v1/user_chat/',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
