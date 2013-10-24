@@ -360,9 +360,6 @@ class MembershipNotisResource(ModelResource):
         bundle.obj.save()
         return bundle
 
-
-
-
 class UserFilesResource(ModelResource):
     post = fields.ForeignKey(PostResource, 'post_key', full=False)
     class Meta:
@@ -380,9 +377,6 @@ class UserFilesResource(ModelResource):
         file_type = bundle.data['file_type']
         file_link = bundle.data['file_link']
         file_name = bundle.data['file_name']
-        print file_type
-        print file_link
-        print file_name
         bundle.obj = UserFiles(post_key=post, user_key=user_key, file_link=file_link, file_type=file_type, file_name=file_name)
         bundle.obj.save()
         user_file_count = UserFileCount.objects.get(user_key=user_key)

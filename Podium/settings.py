@@ -134,7 +134,6 @@ INSTALLED_APPS = (
     'registration',
     'jsonfield',
     'haystack',
-    'ajaxuploader',
     'boto',
 )
 

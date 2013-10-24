@@ -24,13 +24,6 @@ import json
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
-import sha
-
-from ajaxuploader.backends.s3 import S3UploadBackend
-from ajaxuploader.views import AjaxFileUploader
-from boto.s3.connection import boto, Key, S3Connection
-
-
 
 @login_required
 def home(request):
@@ -86,6 +79,89 @@ def people(request, people_id):
     })
     return render(request, 'profile.html', ctx)
 
+
+@login_required
+def private(request):
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
+    ctx = Context({
+        'user': user,
+        'groups': groups
+    })
+    return render(request, 'private.html', ctx)
+
+@login_required
+def group(request, group_id):
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    group = Groups.objects.get(id=group_id)
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
+    ctx = Context({
+        'user': user,
+        'group': group,
+        'groups': groups
+    })
+    return render(request,'group.html', ctx)
+
+@login_required
+def group_create(request):
+    session = Session.objects.get(session_key = request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
+    #groups = user.group_users.all()
+    groups = Groups.objects.all()
+    ctx = Context({
+        'user':user,
+        'groups':groups
+    })
+    return render(request,'group_create.html', ctx)
+
+
+def sign_s3(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
+
+    AWS_ACCESS_KEY = "AKIAJKZRCQKYZ7EHIXYA"
+    AWS_SECRET_KEY = "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"
+    S3_BUCKET = "somapodium"
+    object_name = request.GET.get('s3_object_name')
+    print object_name.encode('utf-8')
+    print dumps(object_name).decode("UTF-8")
+    print unicode(object_name).encode('utf-8')
+    mime_type = request.GET.get('s3_object_type')
+    method = request.GET.get('s3_method')
+    file_count = request.GET.get('s3_file_count')
+    expires = int(time.time() + 10)
+    amz_headers = "x-amz-acl:public-read"
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+
+    put_request = "%s\n\n%s\n%d\n%s\n/%s/%s/%s/%s" % (method, mime_type, expires, amz_headers, S3_BUCKET, str(user_id), file_count, object_name)
+    print unicode(put_request).encode("utf-8")
+    hashed = hmac.new(AWS_SECRET_KEY, put_request, hashlib.sha1)
+
+    signature = b64encode(hashed.digest())
+
+    url = 'https://%s.s3.amazonaws.com/%s/%s/%s' % (S3_BUCKET, str(user_id), file_count, object_name)
+    signed_request = '%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s' % (url, AWS_ACCESS_KEY, expires, signature)
+    print url
+    print signed_request
+    return HttpResponse(json.dumps({
+        'signed_request': signed_request,
+        'url': url
+    }), content_type='application/json')
+
+def get_file_count(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    object_file_count, user_file_count = UserFileCount.objects.get_or_create(user_key = user)
+    print object_file_count.file_count
+    return HttpResponse(object_file_count.file_count)
 
 @login_required
 def chat(request):
@@ -306,87 +382,3 @@ def chat_messages(request): #chat_noti 만들어야 함
         except Exception, e:
             return HttpResponseServerError(str(e))
 
-
-@login_required
-def private(request):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-    #groups = user.group_users.all()
-    groups = Groups.objects.all()
-    ctx = Context({
-        'user': user,
-        'groups': groups
-    })
-    return render(request, 'private.html', ctx)
-
-
-@login_required
-def group(request, group_id):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-    group = Groups.objects.get(id=group_id)
-    #groups = user.group_users.all()
-    groups = Groups.objects.all()
-    ctx = Context({
-        'user': user,
-        'group': group,
-        'groups': groups
-    })
-    return render(request,'group.html', ctx)
-
-@login_required
-def group_create(request):
-    session = Session.objects.get(session_key = request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
-    #groups = user.group_users.all()
-    groups = Groups.objects.all()
-    ctx = Context({
-        'user':user,
-        'groups':groups
-    })
-    return render(request,'group_create.html', ctx)
-
-
-def sign_s3(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
-
-    AWS_ACCESS_KEY = "AKIAJKZRCQKYZ7EHIXYA"
-    AWS_SECRET_KEY = "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"
-    S3_BUCKET = "somapodium"
-    object_name = request.GET.get('s3_object_name')
-    print object_name.encode('utf-8')
-    print dumps(object_name).decode("UTF-8")
-    print unicode(object_name).encode('utf-8')
-    mime_type = request.GET.get('s3_object_type')
-    method = request.GET.get('s3_method')
-    file_count = request.GET.get('s3_file_count')
-    expires = int(time.time() + 10)
-    amz_headers = "x-amz-acl:public-read"
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-
-    put_request = "%s\n\n%s\n%d\n%s\n/%s/%s/%s/%s" % (method, mime_type, expires, amz_headers, S3_BUCKET, str(user_id), file_count, object_name)
-    print unicode(put_request).encode("utf-8")
-    hashed = hmac.new(AWS_SECRET_KEY, put_request, hashlib.sha1)
-
-    signature = b64encode(hashed.digest())
-
-    url = 'https://%s.s3.amazonaws.com/%s/%s/%s' % (S3_BUCKET, str(user_id), file_count, object_name)
-    signed_request = '%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s' % (url, AWS_ACCESS_KEY, expires, signature)
-    print url
-    print signed_request
-    return HttpResponse(json.dumps({
-        'signed_request': signed_request,
-        'url': url
-    }), content_type='application/json')
-
-def get_file_count(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-    object_file_count, user_file_count = UserFileCount.objects.get_or_create(user_key = user)
-    print object_file_count.file_count
-    return HttpResponse(object_file_count.file_count)

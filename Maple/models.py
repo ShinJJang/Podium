@@ -106,13 +106,6 @@ class UserFiles(models.Model):
     created = models.DateTimeField(auto_now=True)
     file_type = models.CharField(max_length=100, null=False)
 
-class Files(models.Model):
-    user_key = models.ForeignKey(User)
-    post_key = models.ForeignKey(Posts)
-    file = models.FileField(upload_to = 'upload')
-    name = models.CharField(max_length=30,null=False)
-    created = models.DateTimeField(auto_now=True)
-
 # Relation with friend
 class Friendships(models.Model):
     user_key = models.ForeignKey(User, related_name='my_key')
@@ -131,19 +124,6 @@ class FriendshipNotis(models.Model):
     friend_noti_to_user_key = models.ForeignKey(User, related_name='request_to')
     created = models.DateTimeField(auto_now=True)
 
-class UserChats(models.Model):
-    chat_from_user_key = models.ForeignKey(User, related_name = 'UserChats_from_user') #chat_user
-    chat_to_user_key = models.ForeignKey(User, related_name = 'UserChats_to_user') #chat_with_user
-    chat_room_name = models.CharField(max_length=255)
-
-class ChatNotis(models.Model):
-    noti_from_user_key = models.ForeignKey(User, related_name = 'ChatNoti_from_user')#from_user
-    noti_to_user_key = models.ForeignKey(User, related_name = 'ChatNoti_to_user')#to_user
-
-class ChatComments(models.Model):
-    userChat_key = models.ForeignKey(UserChats)
-    chat_comment = models.CharField(max_length=255)
-
 class Notices(models.Model):
     subject = models.CharField(max_length=40)
     content = models.CharField(max_length=2000)
@@ -155,10 +135,6 @@ class FriendPosts(models.Model):
     user_key = models.ForeignKey(User, related_name='my_user_key')
     friend_post_key = models.ForeignKey(Posts, related_name='friend_post_key')
 
-class ChatTables(models.Model):
-    from_chatting_user = models.ForeignKey(User, related_name = 'from_ChatTable_user')
-    to_chatting_user = models.ForeignKey(User, related_name = 'to_ChatTable_user')
-
 class Polls(models.Model):
     post_key = models.ForeignKey(Posts, related_name = 'polls')
     poll = models.CharField(max_length=4000)
@@ -166,27 +142,6 @@ class Polls(models.Model):
 class Videos(models.Model):
     post_key = models.ForeignKey(Posts, related_name="videos")
     video = models.CharField(max_length=1024)
-
-
-class ChatInformation(models.Model):
-    room_name = models.CharField(max_length=255)
-    count_participant = models.SmallIntegerField(default=1)
-
-class ChatMessages(models.Model):
-    chatInfo_key = models.ForeignKey(ChatInformation)
-    user_key = models.ForeignKey(User)
-    comment = models.CharField(max_length=2048)
-
-class Participants(models.Model):
-    chatInfo_key = models.ForeignKey(ChatInformation)
-    user_key = models.ForeignKey(User)
-    socket_connect = models.BooleanField(default = False)
-
-class ChatNotifications(models.Model):
-    chatInfo_key = models.ForeignKey(ChatInformation)
-    from_user_key = models.ForeignKey(User, related_name = 'from_user')
-    to_user_key = models.ForeignKey(User, related_name = 'to_user')
-    # poll = jsonfield.JSONfield
 
 class GroupPosts(models.Model):
     group_key = models.ForeignKey(Groups)
@@ -202,3 +157,61 @@ class MembershipNotis(models.Model):
     noti_group_key = models.ForeignKey(Groups)
     noti_user_key = models.ForeignKey(User)
     created = models.DateTimeField(auto_now=True)
+
+
+class ChatNotifications(models.Model):
+    chatInfo_key = models.ForeignKey(ChatInformation)
+    from_user_key = models.ForeignKey(User, related_name = 'from_user')
+    to_user_key = models.ForeignKey(User, related_name = 'to_user')
+    # poll = jsonfield.JSONfield
+
+class ChatInformation(models.Model):
+    room_name = models.CharField(max_length=255)
+    count_participant = models.SmallIntegerField(default=1)
+
+class ChatMessages(models.Model):
+    chatInfo_key = models.ForeignKey(ChatInformation)
+    user_key = models.ForeignKey(User)
+    comment = models.CharField(max_length=2048)
+
+class UserChats(models.Model):
+    chat_from_user_key = models.ForeignKey(User, related_name = 'UserChats_from_user') #chat_user
+    chat_to_user_key = models.ForeignKey(User, related_name = 'UserChats_to_user') #chat_with_user
+    chat_room_name = models.CharField(max_length=255)
+
+class ChatNotis(models.Model):
+    noti_from_user_key = models.ForeignKey(User, related_name = 'ChatNoti_from_user')#from_user
+    noti_to_user_key = models.ForeignKey(User, related_name = 'ChatNoti_to_user')#to_user
+
+class ChatComments(models.Model):
+    userChat_key = models.ForeignKey(UserChats)
+    chat_comment = models.CharField(max_length=255)
+
+class Participants(models.Model):
+    chatInfo_key = models.ForeignKey(ChatInformation)
+    user_key = models.ForeignKey(User)
+    socket_connect = models.BooleanField(default = False)
+
+class ChatTables(models.Model):
+    from_chatting_user = models.ForeignKey(User, related_name = 'from_ChatTable_user')
+    to_chatting_user = models.ForeignKey(User, related_name = 'to_ChatTable_user')
+
+#revolution chat!
+class ChatRoom(models.Model):
+    chat_room_name = models.CharField(max_length=1000)
+    participant_count = models.IntegerField(default=0)
+
+class ChatNotification(models.Model):
+    chat_room_key = models.ForeignKey(ChatRoom)
+    from_user_key = models.ForeignKey(User, related_name = 'message_from_user')
+    to_user_key = models.ForeignKey(User, related_name = 'message_to_user')
+
+class ChatParticipants(models.Model):
+    chat_room_key = models.ForeignKey(ChatRoom)
+    user_key = models.ForeignKey(User)
+    connected_chat = models.BooleanField(default=False)
+
+class UserChattingMessage(models.Model):
+    user_key = models.ForeignKey(User)
+    chatting_message = models.CharField(max_length=1000)
+
