@@ -16,13 +16,24 @@
             </li>
         {% endif %}
     {% endfor %}
-    <form id="form_post" method="post" action="">{% csrf_token %}
+    <form id="chat_request_form" method="post" action="">{% csrf_token %}
         <input type="text" id="chat_search_friend" style="width: 20px">
+        <input type="submit" value="완료">
     </form>
 </ul>
 
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
 <script type="text/javascript">
+    $('#chat_request_form').submit(function(){
+        var friend_ids = '';
+        $('.chat_search_results').each(function(){
+            friend_ids += $(this).attr('id') + ', ';
+        });
+        console.log(friend_ids);
+        // ajax here
+        return false;
+    });
+
     $('#chat_search_friend').select2({
         placeholder: "초대할 친구를 찾아보세요!",
         minimumInputLength: 2,
@@ -47,11 +58,11 @@
     });
 
     function formatResult(node) {
-        return '<div>' + node.username + '</div>';
+        return '<div>'+node.username+'</div>';
     };
 
     function formatSelection(node) {
-        return node.username;
+        return '<div class="chat_search_results" id=result_'+node.id +'>' + node.username + '</div>';
     };
 
     $(".invite_people").click(function () {
