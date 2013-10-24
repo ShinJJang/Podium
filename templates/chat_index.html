@@ -18,18 +18,43 @@
     {% endfor %}
     <form id="chat_request_form" method="post" action="">{% csrf_token %}
         <input type="text" id="chat_search_friend" style="width: 20px">
-        <input type="submit" value="완료">
+        <input type="button" value="완료">
     </form>
 </ul>
 
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
 <script type="text/javascript">
-    $('#chat_request_form').submit(function(){
-        var friend_ids = '';
+    $('#chat_request_form').click(function(){
+        var friend_ids = [];
+        var friend_count = 0;
         $('.chat_search_results').each(function(){
-            friend_ids += $(this).attr('id') + ', ';
+            console.log($(this).val());
+            friend_ids.push($(this).val());
+            friend_count++;
         });
         console.log(friend_ids);
+        var request_data = JSON.stringify({
+            "participants": friend_ids,
+            "participants_count": friend_count
+        });
+        $.ajax({
+            type: 'POST',
+            url: '/api/v1/chat_room/',
+            contentType: "application/json",
+            dataType: 'json',
+            data: request_data ,
+            success: function (data) {
+                if (data != "0") {
+                    console.log(data);
+                }
+                else {
+                    console.log(data);
+                }
+            },
+            error: function () {
+                console.error(arguments);
+            }
+        });
         // ajax here
         return false;
     });
@@ -62,7 +87,7 @@
     };
 
     function formatSelection(node) {
-        return '<div class="chat_search_results" id=result_'+node.id +'>' + node.username + '</div>';
+        return '<div><input type="hidden" class="chat_search_results" value=' + node.id + '></input></div>';
     };
 
     $(".invite_people").click(function () {
@@ -147,7 +172,7 @@
                 console.log("invited_chat error [response] = [" + data + "]");
             }
         });
-    }, 5000);
+    }, 100000);
 
     var socket_chat_connection = (function (roomid) {
         var socket = io.connect('localhost', {port: 4000, 'force new connection': true});

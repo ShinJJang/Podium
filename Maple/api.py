@@ -369,6 +369,7 @@ class UserFilesResource(ModelResource):
         }
 
     def obj_create(self, bundle, **kwargs):
+        print "test "
         post_key = bundle.data['post_key']
         post = Posts.objects.get(pk=post_key)
         user_key = bundle.request.user
@@ -411,8 +412,10 @@ class ChatRoomResource(ModelResource):
         filtering = {
             "id": ALL
         }
+        always_return_data = True
 
     def obj_get(self, bundle, **kwargs):
+        print "test get method"
         participants = bundle.data['participants']
         participants_count = bundle.data['participants_count']
         pks = []
@@ -422,21 +425,39 @@ class ChatRoomResource(ModelResource):
         query = reduce(operator.or_, [ Q(ChatParticipants__user_key=x) for x in pks ])
         chat_room = ChatRoom.objects.filter(query, participant_count=participants_count).distinct()
         if chat_room:
-            return chat_room
+            return bundle
         else:
             self.obj_create(self, bundle, **kwargs)
+            return bundle
 
     def obj_create(self, bundle, **kwargs):
+        print "test post method"
         participants = bundle.data['participants']
         participants_count = bundle.data['participants_count']
-        bundle.obj = ChatRoom.objects.create(chat_room_name="default", participant_count=participants_count)
-        bundle.obj.save()
-
+        pks = []
         for participant in participants:
-            append_user = User.objects.get(id=participant)
-            ChatParticipants.create(chat_room_key=bundle.obj, user_key=append_user)
+            pks.append(participant)
+        query = reduce(operator.or_, [Q(ChatParticipants__user_key=User.objects.get(id=x)) for x in pks])
+        print "test for search room1"
+        print query
+        chat_room = ChatRoom.objects.filter(query).distinct()
+        print chat_room
+        if chat_room:
+            return bundle
+        else:
+            self.obj_create(self, bundle, **kwargs)
+            bundle.obj = ChatRoom.objects.create(chat_room_name="default", participant_count=participants_count)
+            bundle.obj.save()
+            room = bundle.obj
+            print participants
+            print participants_count
 
-        return bundle
+            for participant in participants:
+                append_user = User.objects.get(id=participant)
+                print append_user.id
+                print room
+                ChatParticipants.objects.create(chat_room_key=room, user_key=append_user)
+            return bundle
 
 class ChatNotificationResource(ModelResource):
     chat_room = fields.ForeignKey(ChatRoomResource, 'chat_room', full=False)

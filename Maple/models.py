@@ -190,7 +190,7 @@ class ChatComments(models.Model):
 class Participants(models.Model):
     chatInfo_key = models.ForeignKey(ChatInformation)
     user_key = models.ForeignKey(User)
-    socket_connect = models.BooleanField(default = False)
+    socket_connect = models.BooleanField(default=False)
 
 class ChatTables(models.Model):
     from_chatting_user = models.ForeignKey(User, related_name = 'from_ChatTable_user')
