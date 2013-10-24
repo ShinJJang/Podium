@@ -1,21 +1,21 @@
 <h2>CHATTING USERS</h2>
 <ul id="login_user_list" class="userList">
-    {% for user_in_list in users %}
-        {% if user_in_list.id != user.id %}
-            <li>
-                <a class="openChat" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">
-                    {% with user_in_list.userpictures_set.all|first as userpicture %}
-                        {% if userpicture %}
-                            <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="chatPicture" />
-                        {% else %}
-                            <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" />
-                        {% endif %}
-                    {% endwith %}
-                    <span class="username">{{ user_in_list.username }}</span>
-                </a>
-            </li>
-        {% endif %}
-    {% endfor %}
+{#    {% for user_in_list in users %}#}
+{#        {% if user_in_list.id != user.id %}#}
+{#            <li>#}
+{#                <a class="openChat" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">#}
+{#                    {% with user_in_list.userpictures_set.all|first as userpicture %}#}
+{#                        {% if userpicture %}#}
+{#                            <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="chatPicture" />#}
+{#                        {% else %}#}
+{#                            <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" />#}
+{#                        {% endif %}#}
+{#                    {% endwith %}#}
+{#                    <span class="username">{{ user_in_list.username }}</span>#}
+{#                </a>#}
+{#            </li>#}
+{#        {% endif %}#}
+{#    {% endfor %}#}
     <form id="chat_request_form" method="post" action="">{% csrf_token %}
         <input type="text" id="chat_search_friend" style="width: 20px">
         <input type="button" value="완료">
@@ -32,6 +32,7 @@
             friend_ids.push($(this).val());
             friend_count++;
         });
+        friend_count++;
         console.log(friend_ids);
         var request_data = JSON.stringify({
             "participants": friend_ids,
@@ -45,10 +46,16 @@
             data: request_data ,
             success: function (data) {
                 if (data != "0") {
-                    console.log(data);
+                    console.log(data.id);
+                    $('#p_chatBoxContainer').append($(data.id));
+                    socket_chat_connection(data.id);
+                    $('#p_chatBoxContainer #' + $(data.id).attr("id") + " ul").scrollTop(100000000);
+
+                    $('#' + $(data.id).attr("id")).show();
+                    //console.log($(data.id).attr("id"));
                 }
                 else {
-                    console.log(data);
+                    console.log(data.id);
                 }
             },
             error: function () {
