@@ -135,8 +135,14 @@ INSTALLED_APPS = (
     'jsonfield',
     'haystack',
     'boto',
-    'south'
+    'south',
+    'raven.contrib.django.raven_compat'
 )
+
+# Set your DSN value
+RAVEN_CONFIG = {
+    'dsn': 'http://b0f7a533a3d64de0aa102865b14f6afc:ec50bbe985ce43c28460439bed940b45@sentry.example.com/2',
+}
 
 #about amazon s3
 AWS_S3_BUCKET_URL = "https://somapodium.s3.amazonaws.com"
