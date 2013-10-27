@@ -1,7 +1,7 @@
 $(function(){
 	$("input, textarea").placeholder();
 	
-    $('#p_messages > .p_container').jScrollPane({horizontalGutter:5,verticalGutter:5,'showArrows': false,autoReinitialise: true, mouseWheelSpeed:30}).css("overflow","inherit");
+    $('#p_messages > .p_container').jScrollPane({horizontalGutter:5, verticalGutter:5,'showArrows': false, autoReinitialise: true, mouseWheelSpeed:30, contentWidth:'0px'}).css("overflow","inherit");
     
     
     $('.jspDrag').hide();
