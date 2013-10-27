@@ -377,7 +377,13 @@ function PostTopPolling() {
                             }
 
                             //var file_name = data.objects[0].file_link.split("/");
-                            $(targetDiv).append('<a href="' + data.objects[0].file_link + '">' + data.objects[0].file_name + '</li>');
+                            var imageExp = /.[jpg|png|jpeg|gif]$/;
+                            if(imageExp.test(data.objects[0].file_name)) {
+                                $(targetDiv).append('<a href="' + data.objects[0].file_link + '">' + '<img src="' + data.objects[0].file_link + '" alt="' + data.objects[0].file_name + '" />' + '</li>');
+                            }
+                            else {
+                                $(targetDiv).append('<a href="' + data.objects[0].file_link + '">' + data.objects[0].file_name + '</li>');
+                            }
                             $(targetDiv).removeClass("p_file_unloaded");
                             $(targetDiv).addClass("p_file");
                         }
@@ -703,8 +709,16 @@ $(function () {
 
 function bindPoll(targetDiv) {
     $("#" + targetDiv + " li").click(function () {
+        var data = JSON.stringify({
+            "objects" : [{
+                "post_key": parseInt(targetDiv.substring(5)),
+                "item": ($(this).index() - 1)
+            }]
+        });
+        console.log(data);
+
         $.ajax({
-            url: "/api/v1/polls/?id=" + targetDiv.substring(5) + "&item=" + ($(this).index() - 1),
+            url: "/api/v1/polls/",
             type: "PATCH",
             contentType: "application/json",
             data: data,

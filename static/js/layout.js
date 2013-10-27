@@ -1,7 +1,7 @@
 $(function(){
 	$("input, textarea").placeholder();
 	
-    $('#p_messages > .p_container').jScrollPane({horizontalGutter:5,verticalGutter:5,'showArrows': false,autoReinitialise: true, mouseWheelSpeed:30}).css("overflow","inherit");
+    $('#p_messages > .p_container').jScrollPane({horizontalGutter:5, verticalGutter:5,'showArrows': false, autoReinitialise: true, mouseWheelSpeed:30, contentWidth:'0px'}).css("overflow","inherit");
     
     
     $('.jspDrag').hide();
@@ -20,6 +20,15 @@ $(function(){
 	});
 
     $("#p_messages #p_chat").load('/chat');
+
+    $("#s2id_autogen1").focus(function(){
+        messageOpen=true;
+    });
+
+    $("#select2-drop").on("mouseover",function(){
+        messageOpen=true;
+        alert("!!!");
+    });
 
     var weatherCode = 28805879;
     w_getWeather(weatherCode);

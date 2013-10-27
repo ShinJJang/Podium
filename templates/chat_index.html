@@ -1,4 +1,21 @@
-<h2>CHATTING USERS</h2>
+<h2>CHATS</h2>
+<ul id="chat_list" class="userList">
+    <li>
+        <a class="openChat cboth" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">
+            <span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>
+            <span class="userName">백지훈</span>
+            <span class="recentMessage inbound read">빨리 하자</span>
+        </a>
+    </li>
+    <li>
+        <a class="openChat cboth" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">
+            <span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>
+            <span class="userName">신영민</span>
+            <span class="recentMessage outbound unread">등 좀 주물러.</span>
+        </a>
+    </li>
+</ul>
+<h2>FRIENDS</h2>
 <ul id="login_user_list" class="userList">
 {#    {% for user_in_list in users %}#}
 {#        {% if user_in_list.id != user.id %}#}
@@ -17,7 +34,7 @@
 {#        {% endif %}#}
 {#    {% endfor %}#}
     <form id="chat_request_form" method="post" action="">{% csrf_token %}
-        <input type="text" id="chat_search_friend" style="width: 20px">
+        <input type="text" id="chat_search_friend">
         <input type="button" value="완료">
     </form>
 </ul>
@@ -46,12 +63,16 @@
             data: request_data ,
             success: function (data) {
                 if (data != "0") {
-                    console.log(data.id);
-                    $('#p_chatBoxContainer').append($(data.id));
-                    socket_chat_connection(data.id);
-                    $('#p_chatBoxContainer #' + $(data.id).attr("id") + " ul").scrollTop(100000000);
+                    console.log("room" + data.id);
+                    console.log("user" + data);
+                    console.log(data.chat_room_name);
+                    console.log(data.participants[0]);
 
-                    $('#' + $(data.id).attr("id")).show();
+                    //$('#p_chatBoxContainer').append($(data.id));
+                    //socket_chat_connection(data.id);
+                    //$('#p_chatBoxContainer #' + $(data.id).attr("id") + " ul").scrollTop(100000000);
+
+                    //$('#' + $(data.id).attr("id")).show();
                     //console.log($(data.id).attr("id"));
                 }
                 else {
@@ -88,6 +109,48 @@
         formatResult: formatResult,
         formatSelection: formatSelection
     });
+
+    // message 창을 열지 말지 결정
+    var messageOpen = false;
+    var isChatSearchOn = false;
+
+    $("#chat_search_friend").on("select2-open", function(){
+        isChatSearchOn = true;
+    });
+
+    $("#chat_search_friend").on("select2-blur", function(){
+        isChatSearchOn = false;
+        closeChatBar();
+    })
+
+    $(function(){
+
+        $("#p_messages").hover(function(){
+            // #p_message에 mouseover시 창 열기
+            $("#p_messages").addClass("opened");
+            $("#p_messages").width("210px");
+            $("#p_messages>.p_container, #p_messages .jspContainer, #p_messages .jspPane").width("223px");
+            $("#p_timeline").css("margin-right","210px");
+            messageOpen=true;
+        }, function(){
+            closeChatBar();
+        });
+    });
+
+    function closeChatBar(){
+        // 마우스가 떠났을 때
+        if(!isChatSearchOn) messageOpen=false;
+
+        // 0.5초 안에 messageOpen이 true가 되지 않으면 창을 닫는다
+        setTimeout(function(){
+            if(!messageOpen) {
+                $("#p_messages").removeClass("opened");
+                $("#p_messages").width("75px");
+                $("#p_messages>.p_container, #p_messages .jspContainer, #p_messages .jspPane").width("88px");
+                $("#p_timeline").css("margin-right","75px");
+            }
+        }, 500);
+    }
 
     function formatResult(node) {
         return '<div>'+node.username+'</div>';
