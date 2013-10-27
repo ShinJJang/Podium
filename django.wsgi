@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.append('/var/django/Podium/Maple')
+sys.path.append('/var/django/Podium')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'Podium.settings'
 
 import django.core.handlers.wsgi
