@@ -420,7 +420,13 @@ class ChatRoomResource(ModelResource):
         }
         always_return_data = True
 
-    def obj_create(self, bundle, **kwargs):
+    def obj_get_list(self, bundle, **kwargs):
+        user_key = bundle.request.user
+        #user_key = User.objects.get(id=1)
+        chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user_key).distinct()
+        return chat_rooms
+
+    def obj_create(self, bundle, **kwargs): #채팅룸이 없으면 만들어지고 있으면 해당 룸 정보 리턴
         print "test post method"
         request_user = bundle.request.user
         participants = bundle.data['participants']

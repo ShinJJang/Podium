@@ -54,12 +54,12 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
         logger.info(data);
         if (data.user_id != null) {
             socket.username = data.username;
-            socket.user_id = data.user_id + data.room_name;
+            socket.user_id = data.user_id;
             logger.info('socket.username = ' + socket.username);
             //socket.room_name = data.room_name;
             users[socket.user_id] = {
                 user_name: data.username,
-                user_id: socket.user_id,
+                user_id: data.user_id,
                 room_name : data.room_name
             };
             logger.info('username = ' + data.username + ' user_id = ' + data.user_id + ' room_name = ' + data.room_name);
@@ -69,7 +69,7 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
         }
     });//this function is for socket room*/
 
-    socket.on("disconnect", function () {
+    socket.on("disconnect", function () { //disconnect시 소켓연결을 해제시켜준다.
         logger.info(socket.username + 'out');
         io.sockets.in(users[socket.user_id].room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
 
