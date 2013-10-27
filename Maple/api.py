@@ -281,14 +281,19 @@ class PollResource(ModelResource):
         bundle.obj.save()
         return bundle
 
-    def obj_update(self, bundle, **kwargs):
-        user = bundle.request.user
-        poll_id = bundle.data['post_key']
-        poll_item = bundle.data['item']
-        bundle.obj = Polls.objects.filter(post_key=poll_id)
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/(?P<post_key>\w[\w/-]*)/vote%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('vote'), name="api_vote"),
+        ]
 
+    def vote(self, bundle, **kwargs):
+        post_key = bundle.data['post_key']
+        post = Posts.objects.get(pk=post_key)
+        poll = bundle.data['poll']
+        bundle.obj = Polls(post_key=post, poll=poll)
         bundle.obj.save()
         return bundle
+
 
 
 class GroupResource(ModelResource):
