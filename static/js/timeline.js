@@ -377,7 +377,13 @@ function PostTopPolling() {
                             }
 
                             //var file_name = data.objects[0].file_link.split("/");
-                            $(targetDiv).append('<a href="' + data.objects[0].file_link + '">' + data.objects[0].file_name + '</li>');
+                            var imageExp = /.[jpg|png|jpeg|gif]$/;
+                            if(imageExp.test(data.objects[0].file_name)) {
+                                $(targetDiv).append('<a href="' + data.objects[0].file_link + '">' + '<img src="' + data.objects[0].file_link + '" alt="' + data.objects[0].file_name + '" />' + '</li>');
+                            }
+                            else {
+                                $(targetDiv).append('<a href="' + data.objects[0].file_link + '">' + data.objects[0].file_name + '</li>');
+                            }
                             $(targetDiv).removeClass("p_file_unloaded");
                             $(targetDiv).addClass("p_file");
                         }

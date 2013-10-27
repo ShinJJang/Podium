@@ -21,6 +21,15 @@ $(function(){
 
     $("#p_messages #p_chat").load('/chat');
 
+    $("#s2id_autogen1").focus(function(){
+        messageOpen=true;
+    });
+
+    $("#select2-drop").on("mouseover",function(){
+        messageOpen=true;
+        alert("!!!");
+    });
+
     var weatherCode = 28805879;
     w_getWeather(weatherCode);
 });
