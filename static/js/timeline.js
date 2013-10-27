@@ -703,8 +703,16 @@ $(function () {
 
 function bindPoll(targetDiv) {
     $("#" + targetDiv + " li").click(function () {
+        var data = JSON.stringify({
+            "objects" : [{
+                "post_key": parseInt(targetDiv.substring(5)),
+                "item": ($(this).index() - 1)
+            }]
+        });
+        console.log(data);
+
         $.ajax({
-            url: "/api/v1/polls/?id=" + targetDiv.substring(5) + "&item=" + ($(this).index() - 1),
+            url: "/api/v1/polls/",
             type: "PATCH",
             contentType: "application/json",
             data: data,
