@@ -46,12 +46,16 @@
             data: request_data ,
             success: function (data) {
                 if (data != "0") {
-                    console.log(data.id);
-//                    $('#p_chatBoxContainer').append($(data.id));
-//                    socket_chat_connection(data.id);
-//                    $('#p_chatBoxContainer #' + $(data.id).attr("id") + " ul").scrollTop(100000000);
+                    console.log("room" + data.id);
+                    console.log("user" + data);
+                    console.log(data.chat_room_name);
+                    console.log(data.participants[0]);
 
-//                    $('#' + $(data.id).attr("id")).show();
+                    //$('#p_chatBoxContainer').append($(data.id));
+                    //socket_chat_connection(data.id);
+                    //$('#p_chatBoxContainer #' + $(data.id).attr("id") + " ul").scrollTop(100000000);
+
+                    //$('#' + $(data.id).attr("id")).show();
                     //console.log($(data.id).attr("id"));
                 }
                 else {
