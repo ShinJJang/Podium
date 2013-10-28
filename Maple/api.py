@@ -437,8 +437,12 @@ class ChatRoomResource(ModelResource):
         always_return_data = True
 
     def obj_get_list(self, bundle, **kwargs):
-        user_key = bundle.request.user
-        #user_key = User.objects.get(id=1)
+        print "test get"
+        #user_key = bundle.request.user
+        user_key = bundle.request.GET['id']
+
+        print bundle
+
         chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user_key).distinct()
         return chat_rooms
 
@@ -481,15 +485,15 @@ class ChatNotificationResource(ModelResource):
 
 
 class ChatParticipantsResource(ModelResource):
-    chat_room = fields.ForeignKey(ChatRoomResource, 'chat_room', full=False)
+    chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=False)
     user = fields.ForeignKey(UserResource, 'user_key', full=False)
 
     class Meta:
-        queryset = UserFiles.objects.all()
+        queryset = ChatParticipants.objects.all()
         resource_name = 'chat_participants'
         authorization = Authorization()
         filtering = {
-            "chat_room": ALL,
+            "chat_room_key": ALL,
             "user": ALL
         }
 
