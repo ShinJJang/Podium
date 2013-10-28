@@ -102,7 +102,7 @@ def group(request, group_id):
 
     permission = -1
     try:
-        membership = Memberships.objects.get(user_key=user, group_key=group)
+        membership = Memberships.objects.filter(user_key=user, group_key=group)[0]
         permission = membership.permission
     except:
         pass
@@ -115,20 +115,41 @@ def group(request, group_id):
         'groups': groups,
         'permission': permission
     })
-    return render(request,'group.html', ctx)
+    return render(request, 'group.html', ctx)
 
 @login_required
 def group_create(request):
-    session = Session.objects.get(session_key = request.session._session_key)
+    session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
-    #groups = user.group_users.all()
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     groups = Groups.objects.all()
     ctx = Context({
-        'user':user,
-        'groups':groups
+        'user': user,
+        'groups': groups
     })
-    return render(request,'group_create.html', ctx)
+    return render(request, 'group_create.html', ctx)
+
+@login_required
+def group_settings(request, group_id):
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    group = Groups.objects.get(id=group_id)
+    groups = Groups.objects.all()
+
+    permission = -1
+    try:
+        membership = Memberships.objects.filter(user_key=user, group_key=group)[0]
+        permission = membership.permission
+    except:
+        pass
+
+    ctx = Context({
+        'user': user,
+        'groups': groups,
+        permission: permission
+    })
+    return render(request, 'group_settings.html', ctx)
 
 
 def sign_s3(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.

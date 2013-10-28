@@ -47,6 +47,7 @@ urlpatterns = patterns('',
     url(r'^get_file_count/$', views.get_file_count),
     url(r'^private/$', views.private),
     url(r'^group/(?P<group_id>\d+)/$', 'Maple.views.group', name='group'),
+    url(r'^group/(?P<group_id>\d+)/settings/$', 'Maple.views.group_settings', name='group_setting'),
     url(r'^group_create/$', 'Maple.views.group_create', name='group_create'),
     url(r'^search/$', include('haystack.urls')),
 
