@@ -426,8 +426,12 @@ class ChatRoomResource(ModelResource):
         always_return_data = True
 
     def obj_get_list(self, bundle, **kwargs):
-        user_key = bundle.request.user
-        #user_key = User.objects.get(id=1)
+        print "test get"
+        #user_key = bundle.request.user
+        user_key = bundle.request.GET['id']
+
+        print bundle
+
         chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user_key).distinct()
         return chat_rooms
 
