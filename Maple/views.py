@@ -99,12 +99,21 @@ def group(request, group_id):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     group = Groups.objects.get(id=group_id)
-    #groups = user.group_users.all()
+
+    permission = -1
+    try:
+        membership = Memberships.objects.get(user_key=user, group_key=group)
+        permission = membership.permission
+    except:
+        pass
+
+    #groups = user.membership__set.all() # TODO - sidebar에서 폴링으로 처리, 이후 views에서 groups 제거, gruop들의 updated 필드로 순서 정렬 필요
     groups = Groups.objects.all()
     ctx = Context({
         'user': user,
         'group': group,
-        'groups': groups
+        'groups': groups,
+        'permission': permission
     })
     return render(request,'group.html', ctx)
 
