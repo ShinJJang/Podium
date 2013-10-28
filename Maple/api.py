@@ -354,7 +354,7 @@ class MembershipNotisResource(ModelResource):
     class Meta:
         queryset = MembershipNotis.objects.all()
         resource_name = 'membershipnotis'
-        authorization = Authorization()
+        authorization = DjangoAuthorization()
         filtering = {
             "noti_group_key": ALL_WITH_RELATIONS,
             "noti_user_key": ALL_WITH_RELATIONS
@@ -367,6 +367,17 @@ class MembershipNotisResource(ModelResource):
         bundle.obj = MembershipNotis(noti_group_key=group, noti_user_key=user)
         bundle.obj.save()
         return bundle
+
+    # TODO - API GET 그룹 가입 요청, 권한 처리리
+   #def obj_get_list(self, bundle, **kwargs):
+    #    user = bundle.request.user
+    #    group = Groups.objects.get(id=bundle.data['noti_group_key'])
+    #    request_user_membership = Memberships.objects.get(group_key=group, user_key=user)
+    #
+    #    if request_user_membership.permission != 0:
+    #        return super(MembershipNotisResource, self).obj_get_list()
+    #    else:
+    #        raise BadRequest('Request user is not permitted to get membership Notification in this group.')
 
 class UserFilesResource(ModelResource):
     post = fields.ForeignKey(PostResource, 'post_key', full=False)
