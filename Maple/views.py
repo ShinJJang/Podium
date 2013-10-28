@@ -107,6 +107,9 @@ def group(request, group_id):
     except:
         pass
 
+    if group.open_scope == 2 and permission == -1:
+        return home(request)  # TODO - 비공개 그룹 페이지 안내 화면 추가 -> 주소 바꾸는 방법도
+
     #groups = user.membership__set.all() # TODO - sidebar에서 폴링으로 처리, 이후 views에서 groups 제거, gruop들의 updated 필드로 순서 정렬 필요
     groups = Groups.objects.all()
     ctx = Context({
