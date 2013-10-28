@@ -1,6 +1,3 @@
-/**
- * Created by deer on 13. 10. 17..
- */
 var get_friendship_notis = function(){
     var feedback_url = "/api/v1/friend_noti/?noti_to_user="+user_id;
     $.ajax({
