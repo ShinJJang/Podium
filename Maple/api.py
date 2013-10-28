@@ -470,15 +470,15 @@ class ChatNotificationResource(ModelResource):
 
 
 class ChatParticipantsResource(ModelResource):
-    chat_room = fields.ForeignKey(ChatRoomResource, 'chat_room', full=False)
+    chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=False)
     user = fields.ForeignKey(UserResource, 'user_key', full=False)
 
     class Meta:
-        queryset = UserFiles.objects.all()
+        queryset = ChatParticipants.objects.all()
         resource_name = 'chat_participants'
         authorization = Authorization()
         filtering = {
-            "chat_room": ALL,
+            "chat_room_key": ALL,
             "user": ALL
         }
 

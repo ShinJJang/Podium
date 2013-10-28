@@ -121,9 +121,41 @@
     $("#chat_search_friend").on("select2-blur", function(){
         isChatSearchOn = false;
         closeChatBar();
-    })
+    });
+
+    function getChatList(){
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/api/v1/chat_room',
+            success: function (data) {
+                for (var i in data.objects) {
+                    $.ajax({
+                        type: 'GET',
+                        dataType: 'json',
+                        url: '/api/v1/chat_participants?chat_room_key='+data.objects[i].id,
+                        success: function(data){
+                            if(data.objects.length == 2) {
+                                // 1:1
+                                var myId={{ user.id }};
+                                for(var j in data.objects) {
+                                    if(data.objects[j].user!="/api/v1/user/"+myId+"/"){
+                                        // 1:1 채팅 참여자
+                                        console.log(data.objects[j].user);
+                                    }
+                                }
+                            } else {
+                                // 1:다
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
 
     $(function(){
+        getChatList();
 
         $("#p_messages").hover(function(){
             // #p_message에 mouseover시 창 열기
