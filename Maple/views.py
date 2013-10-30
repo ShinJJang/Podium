@@ -143,7 +143,7 @@ def get_chat_list(request):
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-    chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user).distinct().order_by('userchattingmessage__created')
+    chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user).distinct().order_by('-userchattingmessage__created')
     chat_room = []
     for room in chat_rooms:
         chat_room_item = {}
@@ -154,6 +154,11 @@ def get_chat_list(request):
             participant_item = {}
             participant_item['participant_id'] = participant.user_key.id
             participant_item['participant_name'] = participant.user_key.username
+            try:
+                participant_picture = UserPictures.objects.filter(user_key=participant.user_key).order_by('-created')
+                participant_item['participant_picture'] = participant_picture.picture
+            except:
+                participant_item['participant_picture'] = 'null'
             chat_room_item['participant_' + str(i) + "'"] = participant_item
             i = i + 1
         chat_room.append(chat_room_item)
