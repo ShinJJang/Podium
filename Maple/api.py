@@ -330,6 +330,12 @@ class GroupResource(ModelResource):
 
         return bundle
 
+    def hydrate(self, bundle):  # 업데이트시, 체크
+        if Groups.objects.filter(group_name=bundle.data['group_name']).count() != 0:
+            raise BadRequest('이미 존재하는 그룹명입니다 하힛')
+
+        return bundle
+
 class MembershipsResource(ModelResource):
     group_key = fields.ForeignKey(GroupResource, 'group_key', full=True)
     user_key = fields.ForeignKey(UserResource, 'user_key', full=False)
