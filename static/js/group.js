@@ -34,15 +34,15 @@ var submit_group_form = function(event, feedback_api, method){
         data: data,
         dataType: "json",
         statusCode: {
+            200: function(data) {
+                console.log("그룹 수정");
+                group_list_poll();
+                $("#group_response").append("<span class='tooltip tooltip-bottom'>"+data.group_name+"이 수정되었습니다.</span>");
+            },
             201: function(data) {
                 console.log("그룹 생성");
                 group_list_poll();
                 $("#group_response").append("<span class='tooltip tooltip-bottom'>"+data.group_name+"이 생성되었습니다.</span>");
-            },
-            204: function(data) {
-                console.log("그룹 수정");
-                group_list_poll();
-                $("#group_response").append("<span class='tooltip tooltip-bottom'>"+data.group_name+"이 수정되었습니다.</span>");
             },
             400: function(data) {
                 console.log(data.responseText);
@@ -60,7 +60,7 @@ $(document).on("submit", "#group_create_form", function(event) {
 
 // group update
 $(document).on("submit", "#group_update_form", function(event) {
-    var feedback_api = "/api/v1/groups/" + group_id;
+    var feedback_api = "/api/v1/groups/"+group_id+"/";
     console.log(feedback_api);
     submit_group_form(event, feedback_api, "PUT");
     return false;
