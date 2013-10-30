@@ -1,19 +1,5 @@
 <h2>CHATS</h2>
 <ul id="chat_list" class="userList">
-    <li>
-        <a class="openChat cboth" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">
-            <span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>
-            <span class="userName">백지훈</span>
-            <span class="recentMessage inbound read">빨리 하자</span>
-        </a>
-    </li>
-    <li>
-        <a class="openChat cboth" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">
-            <span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>
-            <span class="userName">신영민</span>
-            <span class="recentMessage outbound unread">등 좀 주물러.</span>
-        </a>
-    </li>
 </ul>
 <h2>FRIENDS</h2>
 <ul id="login_user_list" class="userList">
@@ -133,7 +119,67 @@
                 200: function (data) {
                     result = JSON.parse(data.responseText);
                     for (var i in result) {
-                        console.log("success " + result[i].participant_name);
+                        console.log("chat list success:")
+                        console.log(result[i]);
+                        var j=0;
+                        var appendText = '<li><a class="openChat cboth" title="';
+                        if(result[i].participant_3==null) {
+                            if(result[i].participant_2!=null) {
+                                if(result[i].participant_1.participant_id!={{ user.id }}){
+                                    appendText = appendText
+                                            + result[i].participant_1.participant_name
+                                            + '" id="open_chat'
+                                            + result[i].participant_1.participant_id
+                                            + '" href="#">';
+                                    if(result[i].participant_1.participant_picture != '') {
+                                        appendText = appendText
+                                                + '<span class="userProfile"><img src="'
+                                                + result[i].participant_1.participant_picture
+                                                + '" alt="'
+                                                + + result[i].participant_1.participant_name
+                                                + '" class="chatPicture" /></span>';
+                                    } else {
+                                        appendText = appendText
+                                                + '<span class="userProfile">><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span></span>';
+                                    }
+                                    appendText = appendText
+                                            + '<span class="userName">' + result[i].participant_1.participant_name + '</span>';
+                                } else {
+                                    appendText = appendText
+                                            + result[i].participant_2.participant_name
+                                            + '" id="open_chat'
+                                            + result[i].participant_2.participant_id
+                                            + '" href="#">';
+                                    if(result[i].participant_2.participant_picture != '') {
+                                        appendText = appendText
+                                                + '<span class="userProfile"><img src="'
+                                                + result[i].participant_2.participant_picture
+                                                + '" alt="'
+                                                + + result[i].participant_2.participant_name
+                                                + '" class="chatPicture" /></span>';
+                                    } else {
+                                        appendText = appendText
+                                                + '<span class="userProfile">><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span></span>';
+                                    }
+                                    appendText = appendText
+                                            + '<span class="userName">' + result[i].participant_2.participant_name + '</span>';
+                                }
+
+                                if(result[i].last_message!='' && result[i].last_message_speaker == {{ user.id }}) {
+                                    appendText = appendText
+                                            + '<span class="recentMessage outbound"><span class="arrow"></span>'
+                                            + result[i].last_message.substring(0, 10)
+                                            + '⋯</span>';
+                                } else if(result[i].last_message!='') {
+                                    appendText = appendText
+                                            + '<span class="recentMessage inbound"><span class="arrow"></span>'
+                                            + result[i].last_message.substring(0, 10)
+                                            + '⋯</span>';
+                                }
+                            }
+                        }
+                        appendText = appendText + '</a></li>';
+                        $("#chat_list").append(appendText);
                     }
                 },
                 error: function(data) { //why error....
@@ -147,51 +193,8 @@
         });
     }
 
-    function getChatList(){
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: '/api/v1/chat_room',
-            success: function (data) {
-                for (var i in data.objects) {
-                    $.ajax({
-                        type: 'GET',
-                        dataType: 'json',
-                        url: '/api/v1/chat_participants?chat_room_key='+data.objects[i].id,
-                        success: function(data){
-                            var myId={{ user.id }};
-                            if(data.objects.length == 2) {
-                                // 1:1
-                                for(var j in data.objects) {
-                                    if(data.objects[j].user!="/api/v1/user/"+myId+"/"){
-                                        // 1:1 채팅 참여자
-                                        var user = data.objects[j].user.substring(13).slice(0,-1);
-                                        $.ajax({
-                                            type:'GET',
-                                            dataType:'json',
-                                            url:'api/v1/user?id=' + user,
-                                            success: function(data) {
-                                                console.log(data);
-                                            }
-                                        })
-                                    }
-                                }
-                            } else {
-                                // 1:다
-                            }
-                        }
-                    });
-                }
-            },
-            error: function(data) {
-                console.log(data);
-            }
-        });
-    }
-
     $(function(){
         getChattingList();
-        getChatList();
 
         $("#p_messages").hover(function(){
             // #p_message에 mouseover시 창 열기
@@ -234,44 +237,35 @@
         });
     });
     $(".openChat").click(function () {
-        var dataString = $(this).attr("id").substring(9);
-        $.ajax({
-            type: 'GET',
-            url: '/invite_chat',
-            data: 'chatting_user=' + dataString,
-            success: function (data) {
-                if (data != "0") {
-                    if ($('#' + $(data).attr("id")).is(':visible')) {
-                        console.log('hide');
-                        $('#' + $(data).attr("id")).hide();
-                    }
-                    else {
-                        console.log($(data).attr("id"));
-                        console.log(document.getElementById($(data).attr("id")));
-                        if (document.getElementById($(data).attr("id")) == null) {
-                            $('#p_chatBoxContainer').append($(data));
-                            socket_chat_connection($(data).attr("id"));
-                            $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
-                        }
-                        $('#' + $(data).attr("id")).show();
-                        console.log($(data).attr("id"));
-                    }
-                }
-                else {
-                    console.log('testets');
-                    if ($('#' + $(data).attr("id")).is(':visible')) {
-                        console.log('hide');
-                        $('#' + $(data).attr("id")).hide();
-                    }
-                    else {
-                        $('#' + $(data).attr("id")).show();
-                    }
-                }
-            },
-            error: function () {
-                console.error(arguments);
+        var chatroomId = $(this).attr("id").substring(9);
+
+        if (data != "0") {
+            if ($('#' + $(data).attr("id")).is(':visible')) {
+                console.log('hide');
+                $('#' + $(data).attr("id")).hide();
             }
-        });
+            else {
+                console.log($(data).attr("id"));
+                console.log(document.getElementById($(data).attr("id")));
+                if (document.getElementById($(data).attr("id")) == null) {
+                    $('#p_chatBoxContainer').append($(data));
+                    socket_chat_connection($(data).attr("id"));
+                    $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
+                }
+                $('#' + $(data).attr("id")).show();
+                console.log($(data).attr("id"));
+            }
+        }
+        else {
+            console.log('testets');
+            if ($('#' + $(data).attr("id")).is(':visible')) {
+                console.log('hide');
+                $('#' + $(data).attr("id")).hide();
+            }
+            else {
+                $('#' + $(data).attr("id")).show();
+            }
+        }
     });
 
     var invited_chat = setInterval(function () {

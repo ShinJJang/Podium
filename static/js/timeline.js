@@ -260,7 +260,6 @@ $(document).on("submit", "#form_post_rich", function (event) {
             201: function (data) {
                 /*post로 생성 후 생성한 json response*/
                 console.log("post submit response");
-                console.log(data);
                 PostTopPolling();
                 $("input[name=post]").val("");
 
@@ -317,7 +316,6 @@ function PostTopPolling() {
         dataType: "json",
         success: function (data) {
             console.log("TOP POLL POST  url:" + post_top_url);
-            console.log(data);
             if (data.objects.length != 0) {
                 for (var dataObj in data.objects) {
                     try {
@@ -466,7 +464,6 @@ function postBottom() {
         dataType: "json",
         success: function (data) {
             console.log("BOTTOM POLL POST   url:" + post_bottom_url);
-            console.log(data);
             if (data.objects.length != 0) {
                 for (var dataObj in data.objects) {
                     try {
@@ -735,7 +732,7 @@ function s3_upload_put() {
     var check_file_name = $('#post_file').val();
     console.log("check_file_name is = %s %s", check_file_name, $('#post_file')[0].files[0].size);
     var extension = check_file_name.replace(/^.*\./, '');
-    var valid_extensions = ['hwp', 'jpg', 'ppt', 'pptx', 'doc', 'zip'];
+    var valid_extensions = ['hwp', 'jpg', 'ppt', 'pptx', 'doc', 'zip', 'png','txt'];
     //console.log("s3 upload = " + $("#post_is_file").val());
     var file_size = 0;
     if ($.support.msie) {
