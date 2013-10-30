@@ -735,7 +735,7 @@ function s3_upload_put() {
     var check_file_name = $('#post_file').val();
     console.log("check_file_name is = %s %s", check_file_name, $('#post_file')[0].files[0].size);
     var extension = check_file_name.replace(/^.*\./, '');
-    var valid_extensions = ['hwp', 'jpg', 'ppt', 'pptx', 'doc', 'zip'];
+    var valid_extensions = ['hwp', 'jpg', 'ppt', 'pptx', 'doc', 'zip', 'png','txt'];
     //console.log("s3 upload = " + $("#post_is_file").val());
     var file_size = 0;
     if ($.support.msie) {
