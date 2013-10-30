@@ -138,6 +138,30 @@ def group_settings(request, group_id):
     })
     return render(request, 'group_settings.html', ctx)
 
+@login_required
+def get_chat_list(request):
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user).distinct().order_by('userchattingmessage__created')
+    chat_room = []
+    for room in chat_rooms:
+        chat_room_item = {}
+        chat_room_item['room_id'] = room.id
+        chat_room_participants = ChatParticipants.objects.filter(chat_room_key=room)
+        i = 1
+        for participant in chat_room_participants:
+            participant_item = {}
+            participant_item['participant_id'] = participant.user_key.id
+            participant_item['participant_name'] = participant.user_key.username
+            chat_room_item['participant_' + str(i) + "'"] = participant_item
+            i = i + 1
+        chat_room.append(chat_room_item)
+        i = 1
+
+
+    print chat_room
+    return HttpResponse(json.dumps(chat_room), content_type='application/json')
 
 def sign_s3(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
 
