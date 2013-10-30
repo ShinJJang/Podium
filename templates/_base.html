@@ -32,7 +32,19 @@
             <div id="p_topSearch_results"></div>
         </div>
         <ul id="p_headerLinks">
-            <li><a id="toSetting" href="#">Settings</a></li>
+            <li>
+                <div class="dropdown">
+                    <a class="dropdown_display" id="toSetting" href="#">Settings</a>
+                    <div class="dropdown_submenu" style="display: none; ">
+                        <ul class="display_submenu_root">
+                            <li><a href="/people/{{ user.id }}">My Profile</a></li>
+                            <li><a href="#settings">Settings</a></li>
+                            <li><a href="mailto:contact@podiumconcept.me?subject=니꺼못쓰겠다야&body=요로코롬 불편한디 으째쓴다냐">Send Feedback</a></li>
+                            <li><a href="/accounts/logout/">Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
         </ul>
     </div>
 </header>
