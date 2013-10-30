@@ -36,6 +36,8 @@ urlpatterns = patterns('',
     url(r'^invite_chat/$', 'Maple.views.invite_chat', name='invite_chat'),
     url(r'^invited_chat/$', 'Maple.views.invited_chat', name='invited_chat'),
     url(r'^chat_comment/$', 'Maple.views.chat_comment', name='chat_comment'),
+    url(r'^chat_list/$', 'Maple.views.get_chat_list', name='get_chat_list'),
+
     #url(r'^file_upload$', 'Maple.views.file_upload', name='file_upload'),
     url(r'^chat/$', 'Maple.views.chat', name='chat'),
     (r'^api/', include(v1_api.urls)),

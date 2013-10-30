@@ -317,6 +317,7 @@ function PostTopPolling() {
         dataType: "json",
         success: function (data) {
             console.log("TOP POLL POST  url:" + post_top_url);
+            console.log(data);
             if (data.objects.length != 0) {
                 for (var dataObj in data.objects) {
                     try {
