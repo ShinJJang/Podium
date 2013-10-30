@@ -2,15 +2,11 @@
     <div class="p_tItem p_container public pui">
         <a href="/people/${ post.user.id }" class="p_tUser">
             <span class="nav_profile">
-                {% with post.user.userpictures_set.all|first as userpicture %}
-                    {% if post.userpicture %}
-                        <img src="{{ post.userpicture.picture }}" alt="{{ post.userpicture.name }}"
-                             class="userPicture"/>
-                    {% else %}
-                        <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진"
-                             class="userPicture"/>
-                    {% endif %}
-                {% endwith %}
+                {% templatetag openblock %}if user_photo.length > 0{% templatetag closeblock %}
+                    <img src="${ user_photo[0].picture }" alt="${ user_photo[0].name }" class="userPicture"/>
+                {% templatetag openblock %}else{% templatetag closeblock %}
+                    <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="userPicture"/>
+                {% templatetag openblock %}/if{% templatetag closeblock %}
             </span>
         </a>
         <div class="p_tBox">
@@ -33,8 +29,8 @@
                     {% templatetag openblock %}/if{% templatetag closeblock %}
 
                     {% templatetag openblock %}if post.attachment_type == 3{% templatetag closeblock %}
-                        <ul id="file-${ post.id }" class="p_attachment p_file_unloaded">
-                        </ul>
+                        <div id="file-${ post.id }" class="p_attachment p_file_unloaded">
+                        </div>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
 
                     {% templatetag openblock %}if post.attachment_type == 4{% templatetag closeblock %}
@@ -94,7 +90,5 @@
     </li>
 </script>
 <script id="file_template" type="text/x-jquery-tmpl">
-    <li>
-        <div class="fileItem"><strong>${ label }</strong><span class="tooltip-parent tooltip-hover">${ users.length }</span></div>
-    </li>
+    <div class="fileItem"><strong>${ label }</strong><span class="tooltip-parent tooltip-hover">${ users.length }</span></div>
 </script>
