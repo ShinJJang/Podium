@@ -135,13 +135,21 @@
                         dataType: 'json',
                         url: '/api/v1/chat_participants?chat_room_key='+data.objects[i].id,
                         success: function(data){
+                            var myId={{ user.id }};
                             if(data.objects.length == 2) {
                                 // 1:1
-                                var myId={{ user.id }};
                                 for(var j in data.objects) {
                                     if(data.objects[j].user!="/api/v1/user/"+myId+"/"){
                                         // 1:1 채팅 참여자
-                                        console.log(data.objects[j].user);
+                                        var user = data.objects[j].user.substring(13).slice(0,-1);
+                                        $.ajax({
+                                            type:'GET',
+                                            dataType:'json',
+                                            url:'api/v1/user?id=' + user,
+                                            success: function(data) {
+                                                console.log(data);
+                                            }
+                                        })
                                     }
                                 }
                             } else {
@@ -150,6 +158,9 @@
                         }
                     });
                 }
+            },
+            error: function(data) {
+                console.log(data);
             }
         });
     }
