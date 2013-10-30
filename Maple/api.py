@@ -338,7 +338,7 @@ class GroupResource(ModelResource):
 
 class MembershipsResource(ModelResource):
     group_key = fields.ForeignKey(GroupResource, 'group_key', full=True)
-    user_key = fields.ForeignKey(UserResource, 'user_key', full=False)
+    user_key = fields.ForeignKey(UserResource, 'user_key', full=True)
 
     class Meta:
         queryset = Memberships.objects.all()
