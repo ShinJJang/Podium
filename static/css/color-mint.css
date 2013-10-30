@@ -7,17 +7,20 @@ a:hover, a:active, a:focus {
 	color:#76bab2;
 }
 
-body { background:#586160; }
+body { background:#f4f4f4; }
 
 #p_header { background: #76bab2; border-color:#38978c; }
 #p_header #p_topSearch input[type="text"] { background-image:url(../images/color-mint/top_search.png); }
 #p_body #p_nav #nav_userProfile a .nav_no { color:#ff7f7f }
-#p_body #p_nav #nav_userProfile { background:#424b4a; border-bottom:1px #2c3232 solid; }
+#p_body #p_nav #nav_userProfile { background:#ccc; }
 
-#p_body #p_nav .selected a { background:#384140; }
+#p_body #p_nav a { background:#fff; }
+
+#p_body #p_nav .selected a { background:#e0e0e0; }
+
+#p_body #p_timeline { background: #eaecec; box-shadow:0 0 5px rgba(0,0,0,0.1); }
 
 #p_body #p_timeline  .p_timelineContents .p_tBox .writeSelect li.selected a { background-color:#76bab2; }
-
 #p_body #p_timeline .p_timelineContents .p_tIcon { background-color:#76bab2; }
 
 #p_body #p_timeline .p_timelineNav ul li a { background-image:url(../images/color-mint/moment_item.png); }

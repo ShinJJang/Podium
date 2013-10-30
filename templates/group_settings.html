@@ -1,0 +1,42 @@
+{% extends "_base.html" %}
+
+{% block title %}
+    {{ page_title  }}
+{% endblock %}
+
+{% block content %}
+    <section id="p_timeline">
+        <div class="p_container pui">
+            <div class="box">
+                <div class="text">
+                    <p>그룹 설정</p>
+                    <form id="group_update_form" method="post" action="">{% csrf_token %}
+                        <pre>
+                        <label class="text">그룹이름</label><input type="text" name="group_name" value="{{ group.group_name }}">
+                        <label class="text">설명</label><textarea class="postFormText" name="description" placeholder="멤버들에게 소식을 전하세요.">{{ group.description }}</textarea>
+                        <label class="text">프로젝트?</label><input type="checkbox" name="is_project" {% if group.isProject %}checked{% endif %}>
+                        <label class="text">공개범위</label>
+                        <select name="open_scope">
+                            <option value="open" {% if group.open_scope == 0 %}selected{% endif %}>모두에게 공개</option>
+                            <option value="semi-open" {% if group.open_scope == 1 %}selected{% endif %}>멤버들에게만 공개</option>
+                            <option value="close" {% if group.open_scope == 2 %}selected{% endif %}>비공개</option>
+                        </select>
+                        </pre>
+                        <div class="text-center">
+                            <div id="group_response" class="tooltip-parent tooltip-hover">
+                                <input class="btn tooltip-parent tooltip-hover" type="submit" name="group_submit" value="수정">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block add_scripts %}
+    <script type="text/javascript">
+        var group_id = {{ group.id }}
+    </script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/group.js"></script>
+{% endblock %}

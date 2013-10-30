@@ -9,18 +9,9 @@
         <header>
             <div id="p_peopleCover">
                 <div id="p_peopleName">
-                    <span id="p_peoplePicture">
-                        {% with user_pageowner.userpictures_set.all|first as userpicture %}
-                            {% if userpicture %}
-                                <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="peoplePicture" />
-                            {% else %}
-                                <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="peoplePicture" />
-                            {% endif %}
-                        {% endwith %}
-                    </span>
-                    <h1>{{ group.group_name }}</h1>
                     <div class="pui">
                         <div class="box">
+                        <h1>{{ group.group_name }}</h1>
                             <div class="text">
                                 {{ group.description }}
                             </div>
@@ -34,6 +25,7 @@
         <div id="p_profileContents" class="p_container">
             <div class="p_timelineContents">
                 <section id="timeline_widget">
+                    {% if permission != -1 %}
                     <div class="p_tItem p_container">
                     <a href="#" class="p_tAdd p_tIcon"></a>
                     <div class="p_tBox">
@@ -64,16 +56,26 @@
                         </section>
                     </div>
                 </div>
+                {% endif %}
                 </section>
                 <section id="timeline_posts">
                 </section>
             </div>
             <nav class="p_timelineNav">
+            {% if permission == 1 or permission == 2 %}
+                <div class="dropdown">
+                    <a class="dropdown_display" id="toSetting" href="#">Settings</a>
+                    <div class="dropdown_submenu" style="display: none; ">
+                        <ul class="display_submenu_root">
+                            <li><a href="#">멤버 추가</a></li>
+                            <li><a href="members/">멤버 관리</a></li>
+                            <li><a href="settings/">그룹 설정</a></li>
+                        </ul>
+                    </div>
+                </div>
                 <h3 class="weekly">그룹 가입 요청</h3>
-                <ul id="member_request">
-                    <li><a href="#"><span>August 4th - 12th</span></a></li>
-                    <li class="more"><a href="#"><span>More</span></a></li>
-                </ul>
+                <ul id="member_request"></ul>
+            {% endif %}
                 <div id="siteInfo">
                     <p class="copy">&copy; Podium 2013</p>
                     <p><a href="#" class="about"><span>About</span></a> <sup>|</sup> <a href="#" class="developer"><span>Developer</span></a> <sup>|</sup> <a href="#" class="privacy"><span>개인정보보호</span></a> <sup>|</sup> <a href="#" class="eula"><span>이용약관</span></a></p>
@@ -87,24 +89,23 @@
 {% block add_scripts %}
     <script type="text/javascript">
         var delete_membership_noti = function(noti_id){
-            var request_friend_url = "/api/v1/membershipnotis/?pk="+noti_id;
+            var request_friend_url = "/api/v1/membershipnotis/"+noti_id+"/";
             $.ajax({
                 type: "DELETE",
                 url: request_friend_url,
                 contentType: "application/json",
                 dataType: "json",
                 statusCode: {
-                    201: function (data) {
-                        console.log("member noti deleted");
+                    204: function (data) {
+                        console.log("member noti deleted = " + noti_id);
                     }
                 }
             });
         }
 
-        var acceopt_membership = function(){
-            $('#member_request').click(function() {
-                var noti_id = $("this li a").attr("href");
-                console.log(noti_id);
+        var accept_membership = function(){
+            $("#member_request > li > a").click(function() {
+                var noti_id = $(this).attr("name");
                 var request_friend_url = "/api/v1/memberships/";
                 var data = JSON.stringify({
                     "group_key": {{ group.id }},
@@ -128,7 +129,7 @@
         }
 
         var get_member_request= function(){
-            var feedback_url = "/api/v1/membershipnotis/?noti_group_key={{ group.id }}&limit=8";
+            var feedback_url = "/api/v1/membershipnotis/?noti_group_key={{ group.id }}&limit=8"; // TODO - 그룹 가입 요청 일정 갯수 이상시, 관리페이지로 안내
             $.ajax({
                 type: "GET",
                 url: feedback_url,
@@ -138,15 +139,18 @@
                     200: function(data) {
                         console.log("get member request");
                         console.log(data);
-{#                        $("#member_request").append("<li><a href="+data.objects[0].id+"><span>"+data.objects[0].noti_user_key.username+"</span></a></li>");#}
-                        $("#member_request").append("<li><a href='#' name="+data.objects[0].id+"><span>"+data.objects[0].noti_user_key.username+"</span></a></li>");
-                        acceopt_membership();
+                        for(var index in data.objects) {
+                            $("#member_request").append("<li><a href='#' name="+data.objects[index].id+"><span>"+data.objects[index].noti_user_key.username+"</span></a></li>");
+                        }
+                        accept_membership();
                         return false;
                     }
                 }
             });
         };
+        {% if permission == 1 or permission == 2 %}
         get_member_request();
+        {% endif %}
 
         var request_membership = function(){
             $('#addFriend').click(function() {
@@ -164,7 +168,7 @@
                     statusCode: {
                         201: function (data) {
                             console.log("request membership!");
-                            $("#friendStatus").html('<span class="friend">요청 중</span>');
+                            $("#friendStatus").html('<span class="friend">요청 중</span>'); // TODO - 클릭시 요청 취소 Dropdown
                         }
                     }
                 });

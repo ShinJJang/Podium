@@ -32,7 +32,19 @@
             <div id="p_topSearch_results"></div>
         </div>
         <ul id="p_headerLinks">
-            <li><a id="toSetting" href="#">Settings</a></li>
+            <li>
+                <div class="dropdown">
+                    <a class="dropdown_display" id="toSetting" href="#">Settings</a>
+                    <div class="dropdown_submenu" style="display: none; ">
+                        <ul class="display_submenu_root">
+                            <li><a href="/people/{{ user.id }}">My Profile</a></li>
+                            <li><a href="#settings">Settings</a></li>
+                            <li><a href="mailto:contact@podiumconcept.me?subject=니꺼못쓰겠다야&body=요로코롬 불편한디 으째쓴다냐">Send Feedback</a></li>
+                            <li><a href="/accounts/logout/">Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
         </ul>
     </div>
 </header>
@@ -53,11 +65,11 @@
                                         {% endif %}
                                     {% endwith %}
                                 </span>
-                        <span class="username">{{ user.username }}</span>
+                        <span class="nav_label username">{{ user.username }}</span>
                     </a>
                 </li>
                 <li id="nav_request"><a href="#"><span class="nav_icon"></span><span
-                        class="nav_label">Request</span><span class="nav_no">4</span></a></li>
+                        class="nav_label">Request</span><span id="friend_noti_count" class="nav_no">4</span></a></li>
                 <li id="nav_notification" class="disabled"><a href="#"><span class="nav_icon"></span><span
                         class="nav_label">Notification</span><span class="nav_no">56</span></a></li>
             </ul>
@@ -70,12 +82,7 @@
                     </li>
                     <li id="nav_project"><a href="/group_create"><span class="nav_icon"></span><span
                             class="nav_label">+Project Create</span></a></li>
-                    {% if groups %}
-                        {% for group in groups %}
-                            <li id="nav_project"><a href="/group/{{ group.id }}"><span class="nav_icon"></span><span
-                                    class="nav_label">{{ group.group_name }}</span></a></li>
-                        {% endfor %}
-                    {% endif %}
+                    <div class="nav_group_list"></div>
                     <li id="nav_favorite"><a href="#"><span class="nav_icon"></span><span
                             class="nav_label">Favorite</span></a></li>
                 </ul>
@@ -147,6 +154,7 @@
     </script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/select2_locale_ko.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/sidebar.js"></script>
 {% endblock %}
 {% block add_scripts %}
 {% endblock %}

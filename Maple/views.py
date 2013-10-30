@@ -30,11 +30,8 @@ def home(request):
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)
-    #groups = user.group_users.all()
-    groups = Groups.objects.all()
     ctx = Context({
         'user': user,
-        'groups': groups,
         'page_title': 'Podium'
     })
     return render(request, 'index.html', ctx)
@@ -70,12 +67,9 @@ def people(request, people_id):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     user_pageowner = User.objects.get(id=people_id)
-    #groups = user.group_users.all()
-    groups = Groups.objects.all()
     ctx = Context({
         'user': user,
-        'user_pageowner': user_pageowner,
-        'groups': groups
+        'user_pageowner': user_pageowner
     })
     return render(request, 'profile.html', ctx)
 
@@ -85,11 +79,8 @@ def private(request):
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-    #groups = user.group_users.all()
-    groups = Groups.objects.all()
     ctx = Context({
         'user': user,
-        'groups': groups
     })
     return render(request, 'private.html', ctx)
 
@@ -99,28 +90,89 @@ def group(request, group_id):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     group = Groups.objects.get(id=group_id)
-    #groups = user.group_users.all()
-    groups = Groups.objects.all()
+
+    permission = -1
+    try:
+        membership = Memberships.objects.filter(user_key=user, group_key=group)[0]
+        permission = membership.permission
+    except:
+        pass
+
+    if group.open_scope == 2 and permission == -1:
+        return home(request)  # TODO - 비공개 그룹 페이지 안내 화면 추가 -> 주소 바꾸는 방법도
+
     ctx = Context({
         'user': user,
         'group': group,
-        'groups': groups
+        'permission': permission
     })
-    return render(request,'group.html', ctx)
+    return render(request, 'group.html', ctx)
 
 @login_required
 def group_create(request):
-    session = Session.objects.get(session_key = request.session._session_key)
+    session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id = user_id)   # 현재 로그인된 사용자
-    #groups = user.group_users.all()
-    groups = Groups.objects.all()
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     ctx = Context({
-        'user':user,
-        'groups':groups
+        'user': user,
     })
-    return render(request,'group_create.html', ctx)
+    return render(request, 'group_create.html', ctx)
 
+@login_required
+def group_settings(request, group_id):
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    group = Groups.objects.get(id=group_id)
+
+    permission = -1
+    try:
+        membership = Memberships.objects.filter(user_key=user, group_key=group)[0]
+        permission = membership.permission
+    except:
+        pass
+
+    ctx = Context({
+        'user': user,
+        'group': group,
+        'permission': permission
+    })
+    return render(request, 'group_settings.html', ctx)
+
+@login_required
+def get_chat_list(request):
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user).distinct().order_by('-userchattingmessage__created')
+    chat_room = []
+    for room in chat_rooms:
+        chat_room_item = {}
+        chat_room_item['room_id'] = room.id
+        last_message = UserChattingMessage.objects.filter(chat_room_key=room).order_by('-created')
+        try:
+            chat_room_item['last_message_speaker'] = last_message[0].chatting_message
+            chat_room_item['last_message'] = last_message[0].user_key.id
+        except:
+            chat_room_item['last_message_speaker'] = 'null'
+            chat_room_item['last_message'] = 'null'
+        chat_room_participants = ChatParticipants.objects.filter(chat_room_key=room)
+        i = 1
+        for participant in chat_room_participants:
+            participant_item = {}
+            participant_item['participant_id'] = participant.user_key.id
+            participant_item['participant_name'] = participant.user_key.username
+            participant_picture = UserPictures.objects.filter(user_key=participant.user_key).order_by('-created')
+            try:
+                participant_item['participant_picture'] = str(participant_picture[0].picture)
+            except:
+                participant_item['participant_picture'] = 'null'
+            chat_room_item['participant_' + str(i)] = participant_item
+            i = i + 1
+        chat_room.append(chat_room_item)
+        i = 1
+    print chat_room
+    return HttpResponse(json.dumps(chat_room), content_type='application/json')
 
 def sign_s3(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
 

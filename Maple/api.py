@@ -232,6 +232,10 @@ class FriendPostResource(ModelResource):
         # paginator_class = EstimatedCountPaginator
         allowed_methods = ['get']
 
+    def dehydrate(self, bundle):
+        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.user_key.userpictures_set.order_by('-created')[:1]]
+        return bundle
+
 
 class PostEmotionsResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user')
@@ -326,9 +330,15 @@ class GroupResource(ModelResource):
 
         return bundle
 
+    def hydrate(self, bundle):  # 업데이트시, 체크
+        if Groups.objects.filter(group_name=bundle.data['group_name']).count() != 0:
+            raise BadRequest('이미 존재하는 그룹명입니다 하힛')
+
+        return bundle
+
 class MembershipsResource(ModelResource):
-    group_key = fields.ForeignKey(GroupResource, 'group_key', full=False)
-    user_key = fields.ForeignKey(UserResource, 'user_key', full=True)
+    group_key = fields.ForeignKey(GroupResource, 'group_key', full=True)
+    user_key = fields.ForeignKey(UserResource, 'user_key', full=False)
 
     class Meta:
         queryset = Memberships.objects.all()
@@ -354,7 +364,7 @@ class MembershipNotisResource(ModelResource):
     class Meta:
         queryset = MembershipNotis.objects.all()
         resource_name = 'membershipnotis'
-        authorization = Authorization()
+        authorization = DjangoAuthorization()
         filtering = {
             "noti_group_key": ALL_WITH_RELATIONS,
             "noti_user_key": ALL_WITH_RELATIONS
@@ -367,6 +377,17 @@ class MembershipNotisResource(ModelResource):
         bundle.obj = MembershipNotis(noti_group_key=group, noti_user_key=user)
         bundle.obj.save()
         return bundle
+
+    # TODO - API GET 그룹 가입 요청, 권한 처리리
+   #def obj_get_list(self, bundle, **kwargs):
+    #    user = bundle.request.user
+    #    group = Groups.objects.get(id=bundle.data['noti_group_key'])
+    #    request_user_membership = Memberships.objects.get(group_key=group, user_key=user)
+    #
+    #    if request_user_membership.permission != 0:
+    #        return super(MembershipNotisResource, self).obj_get_list()
+    #    else:
+    #        raise BadRequest('Request user is not permitted to get membership Notification in this group.')
 
 class UserFilesResource(ModelResource):
     post = fields.ForeignKey(PostResource, 'post_key', full=False)
@@ -426,8 +447,11 @@ class ChatRoomResource(ModelResource):
         always_return_data = True
 
     def obj_get_list(self, bundle, **kwargs):
-        user_key = bundle.request.user
-        #user_key = User.objects.get(id=1)
+        print "test get"
+        user_key = bundle.request.user.id
+
+        print bundle
+
         chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user_key).distinct()
         return chat_rooms
 
@@ -470,15 +494,15 @@ class ChatNotificationResource(ModelResource):
 
 
 class ChatParticipantsResource(ModelResource):
-    chat_room = fields.ForeignKey(ChatRoomResource, 'chat_room', full=False)
+    chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=False)
     user = fields.ForeignKey(UserResource, 'user_key', full=False)
 
     class Meta:
-        queryset = UserFiles.objects.all()
+        queryset = ChatParticipants.objects.all()
         resource_name = 'chat_participants'
         authorization = Authorization()
         filtering = {
-            "chat_room": ALL,
+            "chat_room_key": ALL,
             "user": ALL
         }
 

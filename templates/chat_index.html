@@ -121,9 +121,77 @@
     $("#chat_search_friend").on("select2-blur", function(){
         isChatSearchOn = false;
         closeChatBar();
-    })
+    });
+
+    function getChattingList(){
+        $.ajax({
+            type: 'GET',
+            content_type: 'application/json',
+            dataType: 'xml',
+            url: '/chat_list?id=1',
+            statusCode: {
+                200: function (data) {
+                    result = JSON.parse(data.responseText);
+                    for (var i in result) {
+                        console.log("success " + result[i].participant_name);
+                    }
+                },
+                error: function(data) { //why error....
+                    result = JSON.parse(data.responseText);
+                    for (var i in result) {
+                        console.log("result" + result[i].roomid);
+                    }
+                }
+            }
+
+        });
+    }
+
+    function getChatList(){
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/api/v1/chat_room',
+            success: function (data) {
+                for (var i in data.objects) {
+                    $.ajax({
+                        type: 'GET',
+                        dataType: 'json',
+                        url: '/api/v1/chat_participants?chat_room_key='+data.objects[i].id,
+                        success: function(data){
+                            var myId={{ user.id }};
+                            if(data.objects.length == 2) {
+                                // 1:1
+                                for(var j in data.objects) {
+                                    if(data.objects[j].user!="/api/v1/user/"+myId+"/"){
+                                        // 1:1 채팅 참여자
+                                        var user = data.objects[j].user.substring(13).slice(0,-1);
+                                        $.ajax({
+                                            type:'GET',
+                                            dataType:'json',
+                                            url:'api/v1/user?id=' + user,
+                                            success: function(data) {
+                                                console.log(data);
+                                            }
+                                        })
+                                    }
+                                }
+                            } else {
+                                // 1:다
+                            }
+                        }
+                    });
+                }
+            },
+            error: function(data) {
+                console.log(data);
+            }
+        });
+    }
 
     $(function(){
+        getChattingList();
+        getChatList();
 
         $("#p_messages").hover(function(){
             // #p_message에 mouseover시 창 열기
