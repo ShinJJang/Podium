@@ -327,8 +327,8 @@ class GroupResource(ModelResource):
         return bundle
 
 class MembershipsResource(ModelResource):
-    group_key = fields.ForeignKey(GroupResource, 'group_key', full=False)
-    user_key = fields.ForeignKey(UserResource, 'user_key', full=True)
+    group_key = fields.ForeignKey(GroupResource, 'group_key', full=True)
+    user_key = fields.ForeignKey(UserResource, 'user_key', full=False)
 
     class Meta:
         queryset = Memberships.objects.all()

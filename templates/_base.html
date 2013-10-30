@@ -82,12 +82,7 @@
                     </li>
                     <li id="nav_project"><a href="/group_create"><span class="nav_icon"></span><span
                             class="nav_label">+Project Create</span></a></li>
-                    {% if groups %}
-                        {% for group in groups %}
-                            <li id="nav_project"><a href="/group/{{ group.id }}"><span class="nav_icon"></span><span
-                                    class="nav_label">{{ group.group_name }}</span></a></li>
-                        {% endfor %}
-                    {% endif %}
+                    <div class="nav_group_list"></div>
                     <li id="nav_favorite"><a href="#"><span class="nav_icon"></span><span
                             class="nav_label">Favorite</span></a></li>
                 </ul>

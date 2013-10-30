@@ -30,11 +30,8 @@ def home(request):
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)
-    #groups = user.group_users.all()
-    groups = Groups.objects.all()
     ctx = Context({
         'user': user,
-        'groups': groups,
         'page_title': 'Podium'
     })
     return render(request, 'index.html', ctx)
@@ -70,12 +67,9 @@ def people(request, people_id):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     user_pageowner = User.objects.get(id=people_id)
-    #groups = user.group_users.all()
-    groups = Groups.objects.all()
     ctx = Context({
         'user': user,
-        'user_pageowner': user_pageowner,
-        'groups': groups
+        'user_pageowner': user_pageowner
     })
     return render(request, 'profile.html', ctx)
 
@@ -85,11 +79,8 @@ def private(request):
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-    #groups = user.group_users.all()
-    groups = Groups.objects.all()
     ctx = Context({
         'user': user,
-        'groups': groups
     })
     return render(request, 'private.html', ctx)
 
@@ -110,12 +101,9 @@ def group(request, group_id):
     if group.open_scope == 2 and permission == -1:
         return home(request)  # TODO - 비공개 그룹 페이지 안내 화면 추가 -> 주소 바꾸는 방법도
 
-    #groups = user.membership__set.all() # TODO - sidebar에서 폴링으로 처리, 이후 views에서 groups 제거, gruop들의 updated 필드로 순서 정렬 필요
-    groups = Groups.objects.all()
     ctx = Context({
         'user': user,
         'group': group,
-        'groups': groups,
         'permission': permission
     })
     return render(request, 'group.html', ctx)
@@ -125,10 +113,8 @@ def group_create(request):
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-    groups = Groups.objects.all()
     ctx = Context({
         'user': user,
-        'groups': groups
     })
     return render(request, 'group_create.html', ctx)
 
@@ -138,7 +124,6 @@ def group_settings(request, group_id):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     group = Groups.objects.get(id=group_id)
-    groups = Groups.objects.all()
 
     permission = -1
     try:
@@ -149,7 +134,6 @@ def group_settings(request, group_id):
 
     ctx = Context({
         'user': user,
-        'groups': groups,
         permission: permission
     })
     return render(request, 'group_settings.html', ctx)
