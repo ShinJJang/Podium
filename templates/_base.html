@@ -55,7 +55,7 @@
                 <li id="nav_profile">
                     <a title="My Profile" href="/people/{{ user.id }}">
                                 <span class="nav_profile">
-                                    {% with user.userpictures_set.all|first as userpicture %}
+                                    {% with user.userpictures_set.all|dictsortreversed:'created'|first as userpicture %}
                                         {% if userpicture %}
                                             <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}"
                                                  class="userPicture"/>
