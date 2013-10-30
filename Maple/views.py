@@ -134,7 +134,8 @@ def group_settings(request, group_id):
 
     ctx = Context({
         'user': user,
-        permission: permission
+        'group': group,
+        'permission': permission
     })
     return render(request, 'group_settings.html', ctx)
 

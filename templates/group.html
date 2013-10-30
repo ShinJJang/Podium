@@ -63,11 +63,18 @@
             </div>
             <nav class="p_timelineNav">
             {% if permission == 1 or permission == 2 %}
+                <div class="dropdown">
+                    <a class="dropdown_display" id="toSetting" href="#">Settings</a>
+                    <div class="dropdown_submenu" style="display: none; ">
+                        <ul class="display_submenu_root">
+                            <li><a href="#">멤버 추가</a></li>
+                            <li><a href="members/">멤버 관리</a></li>
+                            <li><a href="settings/">그룹 설정</a></li>
+                        </ul>
+                    </div>
+                </div>
                 <h3 class="weekly">그룹 가입 요청</h3>
-                <ul id="member_request">
-{#                    TODO - 관리페이지로 리다이렉트#}
-                    <li class="more"><a href="settings/"><span>관리페이지로</span></a></li>
-                </ul>
+                <ul id="member_request"></ul>
             {% endif %}
                 <div id="siteInfo">
                     <p class="copy">&copy; Podium 2013</p>
