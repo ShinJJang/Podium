@@ -438,8 +438,7 @@ class ChatRoomResource(ModelResource):
 
     def obj_get_list(self, bundle, **kwargs):
         print "test get"
-        #user_key = bundle.request.user
-        user_key = bundle.request.GET['id']
+        user_key = bundle.request.user.id
 
         print bundle
 
