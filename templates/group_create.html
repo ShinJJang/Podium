@@ -10,7 +10,7 @@
             <div class="box">
                 <div class="text">
                     <p>그룹 생성</p>
-                    <form id="form_post" method="post" action="">{% csrf_token %}
+                    <form id="group_create_form" method="post" action="">{% csrf_token %}
                         <pre>
                         <label class="text">그룹이름</label><input type="text" name="group_name">
                         <label class="text">설명</label><textarea class="postFormText" name="description" placeholder="멤버들에게 소식을 전하세요."></textarea>
@@ -35,37 +35,5 @@
 {% endblock %}
 
 {% block add_scripts %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/group_create.js"></script>
-    <script type="text/javascript">
-        $('#group_search_friend').select2({
-            placeholder: "초대할 친구를 찾아보세요!",
-            minimumInputLength: 2,
-            multiple: true,
-            ajax: {
-                url: '/api/v1/user/search/',
-                dataType: 'json',
-                data: function(term, page) {
-                    return {
-                        q: term,
-                        page_limit: 10
-                    };
-                },
-                results: function(data, page) {
-                    return {
-                        results: data.objects
-                    };
-                }
-            },
-            formatResult: formatResult,
-            formatSelection: formatSelection
-        });
-
-        function formatResult(node) {
-            return '<div>' + node.username + '</div>';
-        };
-
-        function formatSelection(node) {
-            return '<div class="group_request_member_selected" value='+node.id+'>' + node.username + '</div>';
-        };
-    </script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/group.js"></script>
 {% endblock %}

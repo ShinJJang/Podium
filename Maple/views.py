@@ -134,7 +134,8 @@ def group_settings(request, group_id):
 
     ctx = Context({
         'user': user,
-        permission: permission
+        'group': group,
+        'permission': permission
     })
     return render(request, 'group_settings.html', ctx)
 
@@ -148,23 +149,28 @@ def get_chat_list(request):
     for room in chat_rooms:
         chat_room_item = {}
         chat_room_item['room_id'] = room.id
+        last_message = UserChattingMessage.objects.filter(chat_room_key=room).order_by('-created')
+        try:
+            chat_room_item['last_message_speaker'] = last_message[0].chatting_message
+            chat_room_item['last_message'] = last_message[0].user_key.id
+        except:
+            chat_room_item['last_message_speaker'] = 'null'
+            chat_room_item['last_message'] = 'null'
         chat_room_participants = ChatParticipants.objects.filter(chat_room_key=room)
         i = 1
         for participant in chat_room_participants:
             participant_item = {}
             participant_item['participant_id'] = participant.user_key.id
             participant_item['participant_name'] = participant.user_key.username
+            participant_picture = UserPictures.objects.filter(user_key=participant.user_key).order_by('-created')
             try:
-                participant_picture = UserPictures.objects.filter(user_key=participant.user_key).order_by('-created')
-                participant_item['participant_picture'] = participant_picture.picture
+                participant_item['participant_picture'] = participant_picture[0].picture
             except:
                 participant_item['participant_picture'] = 'null'
-            chat_room_item['participant_' + str(i) + "'"] = participant_item
+            chat_room_item['participant_' + str(i)] = participant_item
             i = i + 1
         chat_room.append(chat_room_item)
         i = 1
-
-
     print chat_room
     return HttpResponse(json.dumps(chat_room), content_type='application/json')
 
