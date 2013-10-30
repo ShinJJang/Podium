@@ -232,6 +232,10 @@ class FriendPostResource(ModelResource):
         # paginator_class = EstimatedCountPaginator
         allowed_methods = ['get']
 
+    def dehydrate(self, bundle):
+        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.user_key.userpictures_set.order_by('-created')[:1]]
+        return bundle
+
 
 class PostEmotionsResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user')
