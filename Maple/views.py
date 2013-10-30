@@ -154,8 +154,8 @@ def get_chat_list(request):
             chat_room_item['last_message_speaker'] = last_message[0].chatting_message
             chat_room_item['last_message'] = last_message[0].user_key.id
         except:
-            chat_room_item['last_message_speaker'] = 'null'
-            chat_room_item['last_message'] = 'null'
+            chat_room_item['last_message_speaker'] = ''
+            chat_room_item['last_message'] = ''
         chat_room_participants = ChatParticipants.objects.filter(chat_room_key=room)
         i = 1
         for participant in chat_room_participants:
@@ -166,7 +166,7 @@ def get_chat_list(request):
             try:
                 participant_item['participant_picture'] = str(participant_picture[0].picture)
             except:
-                participant_item['participant_picture'] = 'null'
+                participant_item['participant_picture'] = ''
             chat_room_item['participant_' + str(i)] = participant_item
             i = i + 1
         chat_room.append(chat_room_item)

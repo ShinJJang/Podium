@@ -260,7 +260,6 @@ $(document).on("submit", "#form_post_rich", function (event) {
             201: function (data) {
                 /*post로 생성 후 생성한 json response*/
                 console.log("post submit response");
-                console.log(data);
                 PostTopPolling();
                 $("input[name=post]").val("");
 
@@ -317,7 +316,6 @@ function PostTopPolling() {
         dataType: "json",
         success: function (data) {
             console.log("TOP POLL POST  url:" + post_top_url);
-            console.log(data);
             if (data.objects.length != 0) {
                 for (var dataObj in data.objects) {
                     try {
@@ -466,7 +464,6 @@ function postBottom() {
         dataType: "json",
         success: function (data) {
             console.log("BOTTOM POLL POST   url:" + post_bottom_url);
-            console.log(data);
             if (data.objects.length != 0) {
                 for (var dataObj in data.objects) {
                     try {
