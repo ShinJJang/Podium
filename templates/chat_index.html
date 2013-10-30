@@ -123,6 +123,30 @@
         closeChatBar();
     });
 
+    function getChattingList(){
+        $.ajax({
+            type: 'GET',
+            content_type: 'application/json',
+            dataType: 'xml',
+            url: '/chat_list?id=1',
+            statusCode: {
+                200: function (data) {
+                    result = JSON.parse(data.responseText);
+                    for (var i in result) {
+                        console.log("success " + result[i].participant_name);
+                    }
+                },
+                error: function(data) { //why error....
+                    result = JSON.parse(data.responseText);
+                    for (var i in result) {
+                        console.log("result" + result[i].roomid);
+                    }
+                }
+            }
+
+        });
+    }
+
     function getChatList(){
         $.ajax({
             type: 'GET',
@@ -166,6 +190,7 @@
     }
 
     $(function(){
+        getChattingList();
         getChatList();
 
         $("#p_messages").hover(function(){
