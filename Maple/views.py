@@ -164,7 +164,7 @@ def get_chat_list(request):
             participant_item['participant_name'] = participant.user_key.username
             participant_picture = UserPictures.objects.filter(user_key=participant.user_key).order_by('-created')
             try:
-                participant_item['participant_picture'] = participant_picture[0].picture
+                participant_item['participant_picture'] = str(participant_picture[0].picture)
             except:
                 participant_item['participant_picture'] = 'null'
             chat_room_item['participant_' + str(i)] = participant_item
