@@ -129,7 +129,9 @@
                                     appendText = appendText
                                             + result[i].participant_1.participant_name
                                             + '" id="open_chat'
-                                            + result[i].participant_1.participant_id
+                                            + result[i].room_id
+                                            + '" title="'
+                                            + result[i].room_name
                                             + '" href="#">';
                                     if(result[i].participant_1.participant_picture != '') {
                                         appendText = appendText
@@ -148,7 +150,9 @@
                                     appendText = appendText
                                             + result[i].participant_2.participant_name
                                             + '" id="open_chat'
-                                            + result[i].participant_2.participant_id
+                                            + result[i].room_id
+                                            + '" title="'
+                                            + result[i].room_name
                                             + '" href="#">';
                                     if(result[i].participant_2.participant_picture != '') {
                                         appendText = appendText
@@ -168,13 +172,13 @@
                                 if(result[i].last_message!='' && result[i].last_message_speaker == {{ user.id }}) {
                                     appendText = appendText
                                             + '<span class="recentMessage outbound"><span class="arrow"></span>'
-                                            + result[i].last_message.substring(0, 10)
-                                            + '⋯</span>';
+                                            + result[i].last_message
+                                            + '</span>';
                                 } else if(result[i].last_message!='') {
                                     appendText = appendText
                                             + '<span class="recentMessage inbound"><span class="arrow"></span>'
-                                            + result[i].last_message.substring(0, 10)
-                                            + '⋯</span>';
+                                            + result[i].last_message
+                                            + '</span>';
                                 }
                             }
                         }
@@ -238,8 +242,9 @@
     });
 
     $(document).on("click",".openChat",function () {
+        console.log($(this).attr("id"));
         var chatroomId = $(this).attr("id").substring(9);
-
+        console.log("chatroomid = " +chatroomId);
         var chatroomHTML = '<div class="chatBox" id="chatBox_'+ chatroomId + '">'
                 + '<h2>Title</h2>';
 {#    <ul>#}
@@ -266,6 +271,7 @@
                 + '<input type="hidden" class="user_name" value="{{ user.username }}" /></div>';
 
         $("#p_chatBoxContainer").prepend(chatroomHTML);
+        socket_chat_connection("chatBox_"+chatroomId);
 
 {#        if (data != "0") {#}
 {#            if ($('#' + $(data).attr("id")).is(':visible')) {#}
@@ -295,46 +301,47 @@
 {#            }#}
 {#        }#}
     });
-
-    var invited_chat = setInterval(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/invited_chat',
-            success: function (data) {
-                if (data != "0") {
-                    if ($('#' + $(data).attr("id")).is(':visible')) {
-                        console.log('hide');
-                        $('#' + $(data).attr("id")).hide();
-                    }
-                    else {
-                        console.log($(data).attr("id"));
-                        console.log(document.getElementById($(data).attr("id")));
-                        if (document.getElementById($(data).attr("id")) == null) {
-                            $('#p_chatBoxContainer').append($(data));
-                            socket_chat_connection($(data).attr("id"));
-                            $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
-                        }
-                        $('#' + $(data).attr("id")).show();
-                        console.log($(data).attr("id"));
-                    }
-                }
-                else {
-                    if ($('#' + $(data).attr("id")).is(':visible')) {
-                        console.log('hide');
-                        $('#' + $(data).attr("id")).hide();
-                    }
-                    else {
-                        $('#' + $(data).attr("id")).show();
-                    }
-                }
-            },
-            error: function (data) {
-                console.log("invited_chat error [response] = [" + data + "]");
-            }
-        });
-    }, 100000);
+{##}
+{#    var invited_chat = setInterval(function () {#}
+{#        $.ajax({#}
+{#            type: 'GET',#}
+{#            url: '/invited_chat',#}
+{#            success: function (data) {#}
+{#                if (data != "0") {#}
+{#                    if ($('#' + $(data).attr("id")).is(':visible')) {#}
+{#                        console.log('hide');#}
+{#                        $('#' + $(data).attr("id")).hide();#}
+{#                    }#}
+{#                    else {#}
+{#                        console.log($(data).attr("id"));#}
+{#                        console.log(document.getElementById($(data).attr("id")));#}
+{#                        if (document.getElementById($(data).attr("id")) == null) {#}
+{#                            $('#p_chatBoxContainer').append($(data));#}
+{#                            socket_chat_connection($(data).attr("id"));#}
+{#                            $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);#}
+{#                        }#}
+{#                        $('#' + $(data).attr("id")).show();#}
+{#                        console.log($(data).attr("id"));#}
+{#                    }#}
+{#                }#}
+{#                else {#}
+{#                    if ($('#' + $(data).attr("id")).is(':visible')) {#}
+{#                        console.log('hide');#}
+{#                        $('#' + $(data).attr("id")).hide();#}
+{#                    }#}
+{#                    else {#}
+{#                        $('#' + $(data).attr("id")).show();#}
+{#                    }#}
+{#                }#}
+{#            },#}
+{#            error: function (data) {#}
+{#                console.log("invited_chat error [response] = [" + data + "]");#}
+{#            }#}
+{#        });#}
+{#    }, 100000);#}
 
     var socket_chat_connection = (function (roomid) {
+        console.log(roomid);
         var socket = io.connect('localhost', {port: 4000, 'force new connection': true});
 
         socket.on('connect', function () {

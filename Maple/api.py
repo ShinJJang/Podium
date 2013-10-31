@@ -522,11 +522,15 @@ class UserChattingMessageResource(ModelResource):
 
     def obj_create(self, bundle, **kwargs):
         message = bundle.data['comment']
+        print message
         user_id = bundle.data['user_id']
         room_id = bundle.data['room_id']
         chat_room_key = ChatRoom.objects.get(id=room_id)
+        print chat_room_key
         user_key = User.objects.get(id=user_id)
-        bundle.obj = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key,chatting_message=message)
+        print user_key
+        bundle.obj = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key, chatting_message=message)
+        print bundle.obj
         bundle.obj.save()
         return bundle
 

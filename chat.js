@@ -96,7 +96,7 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
             logger.info(res.statusCode);
             res.on('data', function (message) {
                 if (message != 'Everything worked :)') {
-                    logger.log('Message: ' + message);
+                    logger.info('Message: ' + message);
                 }
             });
         });
@@ -111,19 +111,21 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
     });
 
     socket.on('send_message', function (message) {
-        var data = (message.user_name + ": " + message.message);
+        var chat_message = (message.user_name + ": " + message.message);
         //socket.get(socket.user_id, function (error, room) {
         logger.info(message.user_name + ': [' + message.message + '] from client message');
         //socket.broadcast.to(message.room_name).emit('message', data); //자기를 제외한 방의 사람들에게 데이터 전송
-        io.sockets.in(message.room_name).emit('message', data);
+        io.sockets.in(message.room_name).emit('message', chat_message);
 
         //send message to django fo chat_comment db
-        values = querystring.stringify({
+        var data = {
             comment: message.message,
             user_id: message.user_id,
-            room_id: message.room_name,
-            type: 'POST'
-        });
+            room_id: message.room_name
+        };
+
+        var dataString = JSON.stringify(data);
+
 
         var options = {
             host: 'localhost',
@@ -131,21 +133,30 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
             path: '/api/v1/user_chat_message/',
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': values.length
+                'Content-Type': 'application/json',
+                'Content-Length': dataString.length
             }
         };
 
-        var req = http.get(options, function (res) {
-            res.setEncoding('utf8');
-            res.on('data', function (message) {
-                if (message != 'Everything worked :)') {
-                    logger.log('Message: ' + message);
-                }
+        var req = http.get(options, function(res) {
+            res.setEncoding('utf-8');
+            var responseString = '';
+
+            res.on('data', function(data) {
+                responseString += data;
+            });
+
+            res.on('end', function() {
+                logger.info(responseString);
             });
         });
-        req.write(values);
-        logger.info('send to django data : ' + values);
+
+        req.on('error', function(e) {
+            logger.info(e);
+        });
+
+        req.write(dataString);
+        logger.info('send to django data : ' + dataString);
         req.end();
     });
 });

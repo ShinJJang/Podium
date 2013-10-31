@@ -144,8 +144,9 @@ def get_chat_list(request):
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-    chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user).distinct().order_by('-userchattingmessage__created')
+    chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user).annotate(models.Max('userchattingmessage__created')).order_by('-userchattingmessage__created__max')
     chat_room = []
+    print chat_rooms
     for room in chat_rooms:
         chat_room_item = {}
         chat_room_item['room_id'] = room.id
@@ -153,8 +154,8 @@ def get_chat_list(request):
         chat_room_item['participant_count'] = room.participant_count
         last_message = UserChattingMessage.objects.filter(chat_room_key=room).order_by('-created')
         try:
-            chat_room_item['last_message_speaker'] = last_message[0].chatting_message
-            chat_room_item['last_message'] = last_message[0].user_key.id
+            chat_room_item['last_message_speaker'] = last_message[0].user_key.id
+            chat_room_item['last_message'] = last_message[0].chatting_message
         except:
             chat_room_item['last_message_speaker'] = ''
             chat_room_item['last_message'] = ''
