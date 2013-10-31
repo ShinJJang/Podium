@@ -31,6 +31,8 @@
                 </div>
             </div>
             <div class="box">
+                <label class="text">멤버추가</label><input type="text" id="group_search_friend" style="width: 300px">
+                <input type="button" id="request_member" value="추가">
                 <div class="text member_list">
                 </div>
             </div>
@@ -41,98 +43,6 @@
 {% block add_scripts %}
     <script type="text/javascript">
         var group_id = {{ group.id }};
-
-        var get_member_list = function() {
-            var feedback_url = "/api/v1/memberships/?group_key="+group_id;
-            $.ajax({
-                type: "GET",
-                url: feedback_url,
-                contentType: "application/json",
-                dataType: "json",
-                statusCode: {
-                    200: function (data) {
-                        console.log("group user list get!");
-                        console.log(data);
-                        for(var index in data.objects){
-                            $(".member_list").append("<li name='"+data.objects[index].id+"' tag='"+data.objects[index].permission+"'><a href='#'>"+data.objects[index].user_key.username+"</a></li>");
-                        }
-                    }
-                }
-            });
-        }
-        get_member_list();
-
-        var dropdown_dom_generate = function(eventdom){
-            var member_id = $(eventdom).attr("name");
-            var member_permission = $(eventdom).attr("tag");
-            var data = {
-                "id": member_id,
-                "permission": member_permission
-            };
-            $("#select_member").tmpl(data).appendTo(eventdom);
-        };
-
-        $(document).on({
-            mouseenter: function() {
-                if($(this).find(".permission_click").size() == 0) {
-                    dropdown_dom_generate($(this));
-                }
-                else {
-                    $(this).find(".dropmid").toggle();
-                }
-            },
-            mouseleave: function() {
-                $(this).find(".dropmid").toggle();
-            }
-        }, ".member_list > li");
-
-        var update_member_for_permission = function(eventdom){
-            var membership_id = eventdom.attr("name");
-            var set_permission = eventdom.attr("tag");
-            var method;
-            switch (set_permission) {
-                case "0":
-                    method = "PATCH";
-                    break;
-                case "1":
-                    method = "PATCH";
-                    break;
-                case "-1":
-                    method = "DELETE";
-                    if(!confirm("Are you sure exclude this member at this group?")) {
-                        return false;
-                    }
-                    break;
-                default:
-                    break;
-            };
-            var feedback_url = "/api/v1/memberships/"+membership_id+"/"
-            var data = JSON.stringify({
-                "permission": set_permission
-            });
-            $.ajax({
-                type: method,
-                url: feedback_url,
-                contentType: "application/json",
-                data: data,
-                dataType: "json",
-                statusCode: {
-                    202: function(data) {
-                        console.log("permission update done!");
-                    },
-                    204: function(data) {
-                        console.log("selected member exclude at this group!")
-                    },
-                    404: function(data) {
-                        console.log("Not founded!")
-                    }
-                }
-            });
-        };
-
-        $(document).on("click", ".permission_click", function(){
-            update_member_for_permission($(this));
-        });
     </script>
     <script id="select_member" type="text/x-jquery-tmpl">
         <div class="dropbottom">

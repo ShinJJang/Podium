@@ -353,6 +353,10 @@ class MembershipsResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         group = Groups.objects.get(pk=bundle.data['group_key'])
         user = User.objects.get(pk=bundle.data['user_key'])
+
+        if Memberships.objects.filter(group_key=group, user_key=user).exists():
+            raise BadRequest("이미 존재하는 멤버입니다.")
+
         bundle.obj = Memberships(group_key=group, user_key=user)
         bundle.obj.save()
         return bundle
@@ -374,6 +378,10 @@ class MembershipNotisResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         group = Groups.objects.get(pk=bundle.data['noti_group_key'])
         user = User.objects.get(pk=bundle.data['noti_user_key'])
+
+        if Memberships.objects.filter(group_key=group, user_key=user).exists():
+            raise BadRequest("이미 존재하는 멤버입니다.")  # TODO - 400 이용하면 그룹 요청시 요긴할 것 - JS 수정
+
         bundle.obj = MembershipNotis(noti_group_key=group, noti_user_key=user)
         bundle.obj.save()
         return bundle
