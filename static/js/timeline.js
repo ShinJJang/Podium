@@ -629,6 +629,11 @@ $(function () {
 
     // Simply add code tag on the textarea.
     $(".attachSelect .wCode").click(function () {
+        var modalWindow = '<div id="codeModal" class="modalWrapper"><div class="modalMargin"></div><div id="codeModalBox" class="modalBox"><a href="#" id="closeModal"></a><h2>Attach Code</h2></div></div>';
+        $("body").append(modalWindow);
+        $("#codeModal").height($(document).height());
+        $("#codeModal .modalMargin").height($(window).height()/2);
+        $("#codeModal .modalBox").width("480px").height("360px").css("marginTop","-180px");
         $("#post").val($("#post").val() + "[code language=\"language\"]\n\n[/code]");
     });
 
