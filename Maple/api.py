@@ -521,6 +521,7 @@ class UserChattingMessageResource(ModelResource):
         }
 
     def obj_create(self, bundle, **kwargs):
+        print bundle.data
         message = bundle.data['comment']
         print message
         user_id = bundle.data['user_id']

@@ -386,7 +386,16 @@
             if (event.keyCode != 13) return;
             var value = entry_el.val();
             room = $(this).parent().attr("id").substring(8);
-            var msg = {room_name: room, user_id: userId.val(), type: 'chat', message: entry_el.val(), user_name: userName.val()} //user 사진 작게
+            var msg = JSON.stringify({
+                "room_name": room,
+                "user_id": userId.val(),
+                "message": entry_el.val(),
+                "user_name": userName.val()
+            });
+            //var msg = "{'room_name': room, 'user_id': userId.val(), type: 'chat', message: entry_el.val() + "\n", user_name: userName.val()}" //user 사진 작게
+            //var msgObj = eval('(' + msg + ')');
+            console.log(entry_el.val());
+            console.log('send message' + msg.message);
             if (msg) {
                 socket.emit('send_message', msg, function (data) {
                     console.log('send message to server [message] = [' + data + ']');

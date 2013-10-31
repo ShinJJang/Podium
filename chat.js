@@ -5,8 +5,6 @@ var cookie_reader = require('cookie');
 var querystring = require('querystring');
 var winston = require('winston');
 
-//winston.setLevels(winston.config.syslog.levels);
-
 var logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)({
@@ -47,7 +45,7 @@ io.configure(function () {
 
 var users = {};
 
-io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 방 이름을 합쳐 유니크하게 만듬
+io.sockets.on('connection', function (socket) {
     logger.info('client id = ' + socket.id);
     console.log(socket);
     socket.on('join', function (data) {
@@ -64,12 +62,13 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
             };
             logger.info('username = ' + data.username + ' user_id = ' + data.user_id + ' room_name = ' + data.room_name);
             socket.join(data.room_name);
+            logger.info("socket join to :" + data.room_name)
             socket.set(socket.user_id, data.room_name);
             logger.info('user in sockets :' + users);
         }
     });//this function is for socket room*/
 
-    socket.on("disconnect", function () { //disconnect시 소켓연결을 해제시켜준다.
+    socket.on("disconnect", function () { //  todo(baek) disconnect시 소켓연결을 해제시켜준다.
         logger.info(socket.username + 'out');
         io.sockets.in(users[socket.user_id].room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
 
@@ -106,35 +105,40 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
         delete users[socket.user_id];
     });
 
-    socket.on("disconnected_check", function (data) { //추후 구현
+    socket.on("disconnected_check", function (data) {
         logger.info(data);
     });
 
     socket.on('send_message', function (message) {
-        var chat_message = (message.user_name + ": " + message.message);
+        logger.info("message=" + message);
+        parse_message = JSON.parse(message);
+        logger.info("message in message = " + parse_message.message);
+        var chat_message = (parse_message.user_name + ": " + parse_message.message);
         //socket.get(socket.user_id, function (error, room) {
-        logger.info(message.user_name + ': [' + message.message + '] from client message');
+        logger.info(parse_message.user_name + ': [' + parse_message.message + '] from client message');
         //socket.broadcast.to(message.room_name).emit('message', data); //자기를 제외한 방의 사람들에게 데이터 전송
-        io.sockets.in(message.room_name).emit('message', chat_message);
-
+        var clients = io.sockets.clients(parse_message.room_name);
+        io.sockets.in(parse_message.room_name).emit('message', chat_message);
+        logger.info("participants:" + clients.length); // todo(baek) 카운트를 기반으로 방의 참가자수가 소켓에 연결되어 있지 않으면 노티피케이션 검사해서 노티하게
         //send message to django fo chat_comment db
-        var data = {
-            comment: message.message,
-            user_id: message.user_id,
-            room_id: message.room_name
-        };
 
-        var dataString = JSON.stringify(data);
+        var data = querystring.stringify({
+            comment: parse_message.message,
+            user_id: parse_message.user_id,
+            room_id: parse_message.room_name,
+            type: 'POST'
+        });
 
+        //var dataString = JSON.stringify(data);
 
         var options = {
             host: 'localhost',
             port: 8000,
-            path: '/api/v1/user_chat_message/',
+            path: '/chat_comment',
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': dataString.length
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': data.length
             }
         };
 
@@ -155,8 +159,8 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
             logger.info(e);
         });
 
-        req.write(dataString);
-        logger.info('send to django data : ' + dataString);
+        req.write(data);
+        logger.info('send to django data : ' + data);
         req.end();
     });
 });
