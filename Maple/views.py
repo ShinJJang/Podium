@@ -99,7 +99,7 @@ def group(request, group_id):
         pass
 
     if group.open_scope == 2 and permission == -1:
-        return home(request)  # TODO - 비공개 그룹 페이지 안내 화면 추가 -> 주소 바꾸는 방법도
+        return home(request)  # TODO #1 - 비공개 그룹 페이지 안내 화면 추가 -> 주소 바꾸는 방법도
 
     ctx = Context({
         'user': user,
@@ -131,6 +131,9 @@ def group_settings(request, group_id):
         permission = membership.permission
     except:
         pass
+
+    if permission < 1:
+        return home(request)    # TODO #1 - 비공개 그룹 페이지 안내 화면 추가 -> 주소 바꾸는 방법도
 
     ctx = Context({
         'user': user,
