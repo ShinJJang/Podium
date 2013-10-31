@@ -13,6 +13,7 @@
                         <div class="box">
                         <h1>{{ group.group_name }}</h1>
                             <div class="text">
+                                <h4>공개범위 {{ group.open_scope }}</h4>
                                 {{ group.description }}
                             </div>
                         </div>
@@ -62,19 +63,26 @@
                 </section>
             </div>
             <nav class="p_timelineNav">
-            {% if permission == 1 or permission == 2 %}
                 <div class="dropdown">
                     <a class="dropdown_display" id="toSetting" href="#">Settings</a>
                     <div class="dropdown_submenu" style="display: none; ">
                         <ul class="display_submenu_root">
-                            <li><a href="#">멤버 추가</a></li>
-                            <li><a href="members/">멤버 관리</a></li>
-                            <li><a href="settings/">그룹 설정</a></li>
+                        {% if permission > 0 %}
+                            <li><a class="group_menu_admin" href="members/">멤버 관리</a></li>
+                            <li><a class="group_menu_admin" href="settings/">그룹 설정</a></li>
+                        {% endif %}
+                            <li><a href="#">멤버 보기</a></li>
+                        {% if permission > -1 %}
+                            <li><a class="group_menu_admin member_leave" href="#">그룹 탈퇴</a></li>
+                        {% endif %}
                         </ul>
                     </div>
                 </div>
-                <h3 class="weekly">그룹 가입 요청</h3>
-                <ul id="member_request"></ul>
+            {% if permission > 0 %}
+                <div class="group_menu_admin">
+                    <h3 class="weekly">그룹 가입 요청</h3>
+                    <ul id="member_request"></ul>
+                </div>
             {% endif %}
                 <div id="siteInfo">
                     <p class="copy">&copy; Podium 2013</p>
@@ -88,6 +96,14 @@
 
 {% block add_scripts %}
     <script type="text/javascript">
+        {% if membership_id %}
+            var membership_id = {{ membership_id }};
+        {% else %}
+            var membership_id = null;
+        {% endif %}
+        var group_id = {{ group.id }};
+        var open_scope = {{ group.open_scope }}
+
         var delete_membership_noti = function(noti_id){
             var request_friend_url = "/api/v1/membershipnotis/"+noti_id+"/";
             $.ajax({
@@ -221,7 +237,29 @@
                 }
             });
         });
+
         $("select[name=group]").hide();
+
+        $(".member_leave").click(function() {
+            var feedback_api = "/api/v1/memberships/"+membership_id+"/"
+            $.ajax({
+                url: feedback_api,
+                type: "DELETE",
+                dataType: "json",
+                statusCode:{
+                    204: function(data) {
+                        console.log(data);
+                        console.log("I quit this group!");
+                        if(open_scope == 2)
+                            window.location.assign("/");
+                        else {
+                            $(".group_menu_admin").remove();
+                        }
+
+                    }
+                }
+            });
+        });
 
         // timeline.js의 arg : top polling url의 parameter
         var timeline_js_parameter_top_post_polling = "post__group__id={{ group.id }}";

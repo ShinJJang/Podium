@@ -91,10 +91,13 @@ def group(request, group_id):
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     group = Groups.objects.get(id=group_id)
 
+    membership_id = None
     permission = -1
     try:
         membership = Memberships.objects.filter(user_key=user, group_key=group)[0]
+        membership_id = membership.id
         permission = membership.permission
+
     except:
         pass
 
@@ -104,6 +107,7 @@ def group(request, group_id):
     ctx = Context({
         'user': user,
         'group': group,
+        'membership_id': membership_id,
         'permission': permission
     })
     return render(request, 'group.html', ctx)
