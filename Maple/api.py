@@ -331,8 +331,8 @@ class GroupResource(ModelResource):
         return bundle
 
     def hydrate(self, bundle):  # 업데이트시, 체크
-        if Groups.objects.filter(group_name=bundle.data['group_name']).count() != 0:
-            raise BadRequest('이미 존재하는 그룹명입니다 하힛')
+        if bundle.obj.group_name != bundle.data['group_name'] and Groups.objects.filter(group_name=bundle.data['group_name']).count() != 0:
+            raise BadRequest('이미 존재하는 그룹명입니다')
 
         return bundle
 
@@ -386,7 +386,7 @@ class MembershipNotisResource(ModelResource):
         bundle.obj.save()
         return bundle
 
-    # TODO - API GET 그룹 가입 요청, 권한 처리리
+    # TODO - API GET 그룹 가입 요청, 권한 처리
    #def obj_get_list(self, bundle, **kwargs):
     #    user = bundle.request.user
     #    group = Groups.objects.get(id=bundle.data['noti_group_key'])

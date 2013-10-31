@@ -22,7 +22,7 @@ var submit_group_form = function(event, feedback_api, method){
     var data = JSON.stringify({
         "group_name": $("input[name=group_name]").val(),
         "description": $("textarea[name=description]").val(),
-        "is_project": $("input[name=is_project]").val(),
+        "is_project": $("input[name=is_project]").is(":checked"),
         "open_scope": open_scope,
         "members": members
     });
@@ -100,6 +100,9 @@ function formatSelection(node) {
 
 // Group settings - member list with permission option
 var get_member_list = function() {
+    if($(".member_list").length == 0)
+        return false;
+
     var feedback_url = "/api/v1/memberships/?group_key="+group_id;
     $.ajax({
         type: "GET",
