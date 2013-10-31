@@ -54,7 +54,7 @@
                         console.log("group user list get!");
                         console.log(data);
                         for(var index in data.objects){
-                            $(".member_list").append("<li><a href='#' name='"+data.objects[index].id+"' tag='"+data.objects[index].permission+"'>"+data.objects[index].user_key.username+"</a></li>");
+                            $(".member_list").append("<li name='"+data.objects[index].id+"' tag='"+data.objects[index].permission+"'><a href='#'>"+data.objects[index].user_key.username+"</a></li>");
                         }
                     }
                 }
@@ -62,7 +62,7 @@
         }
         get_member_list();
 
-        var click_dropdown_make_for_permission = function(eventdom){
+        var dropdown_dom_generate = function(eventdom){
             var member_id = $(eventdom).attr("name");
             var member_permission = $(eventdom).attr("tag");
             var data = {
@@ -72,13 +72,21 @@
             $("#select_member").tmpl(data).appendTo(eventdom);
         };
 
-        $(document).on("mouseover", ".member_list > li > a", function(){
-            if($(this).find(".permission_click").size() == 0) {
-                click_dropdown_make_for_permission($(this));
+        $(document).on({
+            mouseenter: function() {
+                if($(this).find(".permission_click").size() == 0) {
+                    dropdown_dom_generate($(this));
+                }
+                else {
+                    $(this).find(".dropmid").toggle();
+                }
+            },
+            mouseleave: function() {
+                $(this).find(".dropmid").toggle();
             }
-        });
+        }, ".member_list > li");
 
-        var click_member_for_permission = function(eventdom){
+        var update_member_for_permission = function(eventdom){
             var membership_id = eventdom.attr("name");
             var set_permission = eventdom.attr("tag");
             var method;
@@ -91,6 +99,9 @@
                     break;
                 case "-1":
                     method = "DELETE";
+                    if(!confirm("Are you sure exclude this member at this group?")) {
+                        return false;
+                    }
                     break;
                 default:
                     break;
@@ -99,24 +110,28 @@
             var data = JSON.stringify({
                 "permission": set_permission
             });
-            console.log(data);
-            console.log(method);
             $.ajax({
                 type: method,
                 url: feedback_url,
                 contentType: "application/json",
                 data: data,
                 dataType: "json",
-                satusCode: {
-                    200: function(data) {
+                statusCode: {
+                    202: function(data) {
                         console.log("permission update done!");
+                    },
+                    204: function(data) {
+                        console.log("selected member exclude at this group!")
+                    },
+                    404: function(data) {
+                        console.log("Not founded!")
                     }
                 }
             });
         };
 
         $(document).on("click", ".permission_click", function(){
-            click_member_for_permission($(this));
+            update_member_for_permission($(this));
         });
     </script>
     <script id="select_member" type="text/x-jquery-tmpl">
@@ -124,11 +139,11 @@
             <div class="dropmid">
                 <ul>
                 {% templatetag openblock %}if permission == 1{% templatetag closeblock %}
-                    <li><a class="permission_click" href="#" name="${id}" tag="0">관리자에서 제외</a></li>
+                    <li class="permission_click" href="#" name="${id}" tag="0"><a>관리자에서 제외</a></li>
                 {% templatetag openblock %}else{% templatetag closeblock %}
-                    <li><a class="permission_click" href="#" name="${id}" tag="1">관리자로 설정</a></li>
+                    <li class="permission_click" href="#" name="${id}" tag="1"><a>관리자로 설정</a></li>
                 {% templatetag openblock %}/if{% templatetag closeblock %}
-                    <li><a class="permission_click" href="#" name="${id}" tag="-1">그룹에서 제외</a></li>
+                    <li class="permission_click" href="#" name="${id}" tag="-1"><a>그룹에서 제외</a></li>
                 </ul>
             </div>
         </div>
