@@ -23,7 +23,17 @@ class Groups(models.Model):
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now=True)
     isProject = models.BooleanField()
-    open_scope = models.IntegerField(default=0) # 0 = open, 1 = semi-open, 2 = close
+    open_scope = models.IntegerField(default=0)  # 0 = open, 1 = semi-open, 2 = close
+
+    def open_scope_str(self):
+        result = None
+        if self.open_scope == 0:
+            result = "모두에게 공개"
+        if self.open_scope == 1:
+            result = "멤버들에게만 공개"
+        if self.open_scope == 2:
+            result = "비공개"
+        return result
 
 class Posts(models.Model):
     user_key = models.ForeignKey(User, related_name='user_key')

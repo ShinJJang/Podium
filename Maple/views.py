@@ -182,7 +182,7 @@ def get_chat_list(request):
     print chat_room
     return HttpResponse(json.dumps(chat_room), content_type='application/json')
 
-def sign_s3(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
+def sign_s3(request):  #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
 
     AWS_ACCESS_KEY = "AKIAJKZRCQKYZ7EHIXYA"
     AWS_SECRET_KEY = "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"
@@ -215,7 +215,7 @@ def sign_s3(request): #request에 메서드, 유저아이디는 x db조회, 파�
         'url': url
     }), content_type='application/json')
 
-def get_file_count(request): #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
+def get_file_count(request):  #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
