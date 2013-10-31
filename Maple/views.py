@@ -149,6 +149,7 @@ def get_chat_list(request):
     for room in chat_rooms:
         chat_room_item = {}
         chat_room_item['room_id'] = room.id
+        chat_room_item['room_name'] = room.chat_room_name
         chat_room_item['participant_count'] = room.participant_count
         last_message = UserChattingMessage.objects.filter(chat_room_key=room).order_by('-created')
         try:
