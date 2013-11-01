@@ -110,20 +110,28 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('send_message', function (message) {
-        logger.info("message=" + message);
         parse_message = JSON.parse(message);
+
         logger.info("message in message = " + parse_message.message);
+
         var chat_message = (parse_message.user_name + ": " + parse_message.message);
-        //socket.get(socket.user_id, function (error, room) {
+
         logger.info(parse_message.user_name + ': [' + parse_message.message + '] from client message');
-        //socket.broadcast.to(message.room_name).emit('message', data); //자기를 제외한 방의 사람들에게 데이터 전송
+
+        var chat_message_to_client = JSON.stringify({
+            "user_name": parse_message.user_name,
+            "message": parse_message.message
+        });
+        io.sockets.in(parse_message.room_name).emit('message', chat_message_to_client);
+
         var clients = io.sockets.clients(parse_message.room_name);
-        io.sockets.in(parse_message.room_name).emit('message', chat_message);
+
         logger.info("participants:" + clients[0].id); // todo(baek) 카운트를 기반으로 방의 참가자수가 소켓에 연결되어 있지 않으면 노티피케이션 검사해서 노티하게
         logger.info("user id:" + socket.user_id);
+
         //send message to django fo chat_comment db
-        var noti_type = "";
-        var data = querystring.stringify({
+        var noti_type = "POST";
+        var chat_data_to_server = querystring.stringify({
             comment: parse_message.message,
             user_id: parse_message.user_id,
             room_id: parse_message.room_name,
@@ -139,7 +147,7 @@ io.sockets.on('connection', function (socket) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': data.length
+                'Content-Length': chat_data_to_server.length
             }
         };
 
@@ -160,8 +168,8 @@ io.sockets.on('connection', function (socket) {
             logger.info(e);
         });
 
-        req.write(data);
-        logger.info('send to django data : ' + data);
+        req.write(chat_data_to_server);
+        logger.info('send to django data : ' + chat_data_to_server);
         req.end();
     });
 });

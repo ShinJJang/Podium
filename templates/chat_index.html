@@ -346,9 +346,10 @@
         socket.emit('join', join_info);
 
         socket.on('message', function (message) {
-            var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            console.log('roomid : ' + roomid);
-            $('#' + roomid + ' ul').append('<li class="outbound">' + receive_data + '</li>');
+            var receive_data = JSON.parse(message);
+
+            //var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            $('#' + roomid + ' ul').append('<li class="outbound">' + receive_data.message + receive_data.user_name + '</li>');
             $('#' + roomid + ' ul').scrollTop(1000000000);
             entry_el.focus();
         });
