@@ -62,8 +62,8 @@ io.sockets.on('connection', function (socket) {
             };
             logger.info('username = ' + data.username + ' user_id = ' + data.user_id + ' room_name = ' + data.room_name);
             socket.join(data.room_name);
-            logger.info("socket join to :" + data.room_name)
-            socket.set(socket.user_id, data.room_name);
+            logger.info("socket join to :" + data.room_name);
+            //socket.set(socket.user_id, data.room_name);
             logger.info('user in sockets :' + users);
         }
     });//this function is for socket room*/
@@ -76,7 +76,7 @@ io.sockets.on('connection', function (socket) {
         values = querystring.stringify({
             user_id: users[socket.user_id].user_id,
             room_name: users[socket.user_id].room_name,
-            type: 'DELETE'
+            type: 'USER_OUT'
         });
 
         var options = {
@@ -119,14 +119,15 @@ io.sockets.on('connection', function (socket) {
         //socket.broadcast.to(message.room_name).emit('message', data); //자기를 제외한 방의 사람들에게 데이터 전송
         var clients = io.sockets.clients(parse_message.room_name);
         io.sockets.in(parse_message.room_name).emit('message', chat_message);
-        logger.info("participants:" + clients.length); // todo(baek) 카운트를 기반으로 방의 참가자수가 소켓에 연결되어 있지 않으면 노티피케이션 검사해서 노티하게
+        logger.info("participants:" + clients[0].id); // todo(baek) 카운트를 기반으로 방의 참가자수가 소켓에 연결되어 있지 않으면 노티피케이션 검사해서 노티하게
+        logger.info("user id:" + socket.user_id);
         //send message to django fo chat_comment db
-
+        var noti_type = "";
         var data = querystring.stringify({
             comment: parse_message.message,
             user_id: parse_message.user_id,
             room_id: parse_message.room_name,
-            type: 'POST'
+            type: noti_type
         });
 
         //var dataString = JSON.stringify(data);
