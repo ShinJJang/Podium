@@ -12,7 +12,8 @@ var get_friendship_notis = function(){
             }
         }
     });
-}();
+};
+get_friendship_notis();
 
 var group_list_poll = function(){
     var feedback_url = "/api/v1/memberships/?user_key="+user_id;
@@ -32,4 +33,5 @@ var group_list_poll = function(){
             }
         }
     });
-}();
+};
+group_list_poll();
