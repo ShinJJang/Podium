@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Podium for SW_Maestro</title>
+        <link rel="stylesheet" href="{{STATIC_URL}}css/base.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="{{STATIC_URL}}css/account.css" type="text/css" media="screen">
+
+        <link rel="apple-touch-icon" href="{{STATIC_URL}}apple-icon-touch.png">
+        <link rel="shortcut icon" href="/favicon.ico">
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no" />
+    </head>
+    <body>
+    {% block formContents %}
+    {% endblock %}
+    {% block scripts %}
+        <script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="{{STATIC_URL}}js/account.js"></script>
+        <script type="text/javascript" src="{{STATIC_ROOT}}ajaxuploader/js/fileuploader.js"></script>
+        <script type="text/javascript" src="{{STATIC_ROOT}}ajaxuploader/css/fileuploader.css" media="screen" rel="stylesheet" type="text/css"></script>
+    {% endblock %}
+
+    {% block add_scripts %}
+    {% endblock %}
+    </body>
+</html>

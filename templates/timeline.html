@@ -1,264 +1,223 @@
 <section id="p_timeline">
-                <div class="p_container">
-                    <section class="p_timelineContents">
-                        <div class="p_tItem p_container">
-                            <a href="#" class="p_tAdd p_tIcon"></a>
-                            <div class="p_tBox">
-                                <ul class="writeSelect cboth">
-                                    <li class="wText"><a href="#">Text</a></li>
-                                    <li class="wArticle"><a href="#">Article</a></li>
-                                    <li class="wPhoto"><a href="#">Photo</a></li>
-                                    <li class="wVideo"><a href="#">Video</a></li>
-                                    <li class="wFile"><a href="#">File</a></li>
-                                    <li class="wPoll"><a href="#">Poll</a></li>
-                                    <li class="wCode"><a href="#">Code</a></li>
-                                    <li class="wEvent"><a href="#">Event</a></li>
+<div class="p_container">
+    <div class="p_timelineContents">
+        <section id="timeline_widget">
+            <div class="p_tItem p_container">
+                <a href="#" class="p_tAdd p_tIcon"></a>
+
+                <div class="p_tBox pui">
+                    <ul class="writeSelect cboth">
+                        <li id="toPlain" class="selected"><a href="#">Plain Text</a></li>
+                        <li id="toRich"><a href="#">Rich Text</a></li>
+                    </ul>
+                    <section class="p_postForm">
+                        <div id="plainTextInput">
+                            <form id="form_post" method="post" action="">{% csrf_token %}
+                                <textarea class="postFormText" id="post" name="post"
+                                          placeholder="네 인생을 낭비해!!!"></textarea>
+                                <ul class="attachSelect pui">
+                                    <li>ADD</li>
+                                    <li class="wPhoto disabled"><a href="#" class="tooltip-parent tooltip-hover"><span
+                                            class="tooltip tooltip-bottom">Photo</span></a></li>
+                                    <li class="wVideo"><a href="#" class="tooltip-parent tooltip-hover"><span
+                                            class="tooltip tooltip-bottom">Video</span></a></li>
+                                    <li class="wFile"><a href="#" class="tooltip-parent tooltip-hover"><span
+                                            class="tooltip tooltip-bottom">File</span></a></li>
+                                    <li class="wPoll"><a href="#" class="tooltip-parent tooltip-hover"><span
+                                            class="tooltip tooltip-bottom">Poll</span></a></li>
+                                    <li class="wCode"><a href="#" class="tooltip-parent tooltip-hover"><span
+                                            class="tooltip tooltip-bottom">Code</span></a></li>
+                                    <li class="wEvent disabled"><a href="#" class="tooltip-parent tooltip-hover"><span
+                                            class="tooltip tooltip-bottom">Event</span></a></li>
                                 </ul>
-                                <section>
-                                    <form method="post" action=".">{% csrf_token %}
-                                        <ul>
-                                            {{ form.as_ul }}
-                                        </ul>
-                                        <input type="submit" value="작성"/>
-                                    </form>
-                                </section>
-                            </div>
+                                <div class="cboth" id="postAttach"></div>
+                                <div class="postTools cboth">
+                                    <p class="postOptions">
+                                        <label class="text">그룹</label>
+                                        <select name="group" value="그룹">
+                                            <option></option>
+                                            {% if groups %}
+                                                {% for group in groups %}
+                                                    <option value="{{ group.id }}">{{ group.group_name }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                        <label class="text">공개범위</label>
+                                        <select name="open_scope" value="공개범위">
+                                            <option value="public">공개</option>
+                                            <option value="private">비공개</option>
+                                        </select>
+                                    </p>
+                                    <input type="submit" class="postFormSubmit" value="작성">
+                                </div>
+                            </form>
                         </div>
-                        <div class="p_tItem p_container">
-                            <a href="#" class="p_tWidget p_tIcon"></a>
-                            <div class="p_tBox">
-                                <section class="p_tWidget cboth">
-                                    <div class="cboth">
-                                        <h2>2013년 8월 14일 (수)</h2>
-                                        <p class="weather sunny"><strong>구름조금</strong> 25℃~33℃</p>
-                                    </div>
-                                    <div class="widgetBox widget_wide cboth">
-                                        <h3>Schedule<a class="edit" href="#">Edit</a></h3>
-                                        <table class="scheduleTable widgetTable">
-                                            <tbody>
-                                                <tr class="cat_class">
-                                                    <td class="time">13:00 - 15:00</td>
-                                                    <th><strong>집체교육</strong> 네트워크 보안을 위한 방화벽 설계</th>
-                                                    <td class="location">해찬 7-1~7-3</td>
-                                                </tr>
-                                                <tr class="cat_class">
-                                                    <td class="time">16:00 - 18:00</td>
-                                                    <th><strong>집체교육</strong> Security 아키텍쳐의 이해와 적용</th>
-                                                    <td class="location">해찬 7-1~7-3</td>
-                                                </tr>
-                                                <tr class="cat_project">
-                                                    <td class="time">19:00 - 22:00</td>
-                                                    <th><strong>프로젝트</strong> 멘토링</th>
-                                                    <td class="location">아람 7-7</td>
-                                                </tr>
-                                                <tr class="cat_etc">
-                                                    <td class="time">22:00 - 24:00</td>
-                                                    <th><strong>기타</strong> 브론즈 탈출</th>
-                                                    <td class="location">소환사의 협곡</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="widgetBox widget_narrow_left">
-                                        <h3>Notice</h3>
-                                        <table class="widgetTable">
-                                            <tbody>
-                                                <tr>
-                                                    <td><a href="#">장학금 서류 내세요</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">프로젝트 활동비 이렇게 쓰세요</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">월요일에 전기 끊겨요</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">방학 땐 문 닫아요</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="widgetBox widget_narrow_right">
-                                        <h3>Hot Links<a class="edit" href="#">Edit</a></h3>
-                                        <table class="widgetTable">
-                                            <tbody>
-                                                <tr>
-                                                    <td><a href="#">강의실 예약</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">프로젝트 관련 서류 모음</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">우리 팀 Repository</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">문명 소모임</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </section>
-                            </div>
-                        </div>
-                        <div class="p_tItem p_container public">
-                            <a href="#" class="p_tUser p_tIcon"></a>
-                            <div class="p_tBox">
-                                <article class="p_tArticle">
-                                    <div class="p_container">
-                                        <p class="p_tUserName"><a href="#">최태건</a></p>
-                                        <div class="p_tText">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                        </div>
-                                        <p class="p_tPermalink public"><a class="timestamp" href="#">15시간 전</a></p>
-                                    </div>
-                                </article>
-                                <aside class="p_tAside">
-                                    <header class="p_responses">
-                                        <div class="p_container">
-                                            <p class="p_emotion"><a href="#"><strong>감정</strong>/ 13</a></p>
-                                            <p class="p_comment"><a href="#"><strong>댓글</strong>/ 23</a></p>
-                                        </div>
-                                    </header>
-                                    <section class="p_emotion">
-                                        <div class="p_container">
-                                            Hello
-                                        </div>
-                                    </section>
-                                    <section class="p_comment">
-                                        <ul class="p_commentList">
-                                            <li>
-                                                <strong class="commentAuthor"><a href="#"><span class="commentProfile"></span>최태건</a></strong>
-                                                Hello, world!<br />
-                                                Hello??<br />
-                                                Helllllllllo<br />
-                                                코멘트 예제 <a href="#" class="timestamp">/ 2시간 전</a>
-                                            </li>
-                                        </ul>
-                                        <form>
-                                            <div class="p_commentForm">
-                                                <span class="commentProfile"></span><input type="text" class="commentFormText" placeholder="댓글을 입력하세요">
-                                            </div>
-                                        </form>
-                                    </section>
-                                </aside>
-                            </div>
-                        </div>
-                        <div class="p_tItem p_container private">
-                            <a href="#" class="p_tUser p_tIcon"></a>
-                            <div class="p_tBox">
-                                <article class="p_tArticle">
-                                    <div class="p_container">
-                                        <p class="p_tUserName"><a href="#">최태건</a></p>
-                                        <div class="p_tText">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                        </div>
-                                        <p class="p_tPermalink private"><a class="timestamp" href="#">15시간 전</a></p>
-                                    </div>
-                                </article>
-                                <aside class="p_tAside">
-                                    <header class="p_responses">
-                                        <div class="p_container">
-                                            <p class="p_emotion"><a href="#"><strong>감정</strong>/ 13</a></p>
-                                            <p class="p_comment"><a href="#"><strong>댓글</strong>/ 23</a></p>
-                                        </div>
-                                    </header>
-                                    <section class="p_emotion">
-                                        <div class="p_container">
-                                            Hello
-                                        </div>
-                                    </section>
-                                    <section class="p_comment">
-                                        <ul class="p_commentList">
-                                            <li>
-                                                <strong class="commentAuthor"><a href="#"><span class="commentProfile"></span>최태건</a></strong>
-                                                Hello, world!<br />
-                                                Hello??<br />
-                                                Helllllllllo<br />
-                                                코멘트 예제 <a href="#" class="timestamp">/ 2시간 전</a>
-                                            </li>
-                                        </ul>
-                                        <form>
-                                            <div class="p_commentForm">
-                                                <span class="commentProfile"></span><input type="text" class="commentFormText" placeholder="댓글을 입력하세요">
-                                            </div>
-                                        </form>
-                                    </section>
-                                </aside>
-                            </div>
-                        </div>
-                        <div class="p_tItem p_container project">
-                            <a href="#" class="p_tUser p_tIcon"></a>
-                            <div class="p_tBox">
-                                <article class="p_tArticle">
-                                    <div class="p_container">
-                                        <p class="p_tUserName"><a href="#">최태건</a></p>
-                                        <div class="p_tText">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                        </div>
-                                        <p class="p_tPermalink project"><a class="timestamp" href="#">15시간 전</a></p>
-                                    </div>
-                                </article>
-                                <aside class="p_tAside">
-                                    <header class="p_responses">
-                                        <div class="p_container">
-                                            <p class="p_emotion"><a href="#"><strong>감정</strong>/ 13</a></p>
-                                            <p class="p_comment"><a href="#"><strong>댓글</strong>/ 23</a></p>
-                                        </div>
-                                    </header>
-                                    <section class="p_emotion">
-                                        <div class="p_container">
-                                            Hello
-                                        </div>
-                                    </section>
-                                    <section class="p_comment">
-                                        <ul class="p_commentList">
-                                            <li>
-                                                <strong class="commentAuthor"><a href="#"><span class="commentProfile"></span>최태건</a></strong>
-                                                Hello, world!<br />
-                                                Hello??<br />
-                                                Helllllllllo<br />
-                                                코멘트 예제 <a href="#" class="timestamp">/ 2시간 전</a>
-                                            </li>
-                                        </ul>
-                                        <form>
-                                            <div class="p_commentForm">
-                                                <span class="commentProfile"></span><input type="text" class="commentFormText" placeholder="댓글을 입력하세요">
-                                            </div>
-                                        </form>
-                                    </section>
-                                </aside>
-                            </div>
+
+                        <div id="richTextInput">
+                            <form id="form_post_rich" method="post" action="">{% csrf_token %}
+                                <textarea class="postFormText" id="post_rich" name="post_rich"
+                                          placeholder="네 인생을 낭비해!!!"></textarea>
+
+                                <div class="postTools cboth">
+                                    <p class="postOptions">
+                                        <label class="text">그룹</label>
+                                        <select name="group" value="그룹">
+                                            <option></option>
+                                            {% if groups %}
+                                                {% for group in groups %}
+                                                    <option value="{{ group.id }}">{{ group.group_name }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                        <label class="text">공개범위</label>
+                                        <select name="open_scope" value="공개범위">
+                                            <option value="public">공개</option>
+                                            <option value="private">비공개</option>
+                                        </select>
+                                    </p>
+                                    <input type="submit" class="postFormSubmit" value="작성">
+                                </div>
+                            </form>
                         </div>
                     </section>
-                    <nav class="p_timelineNav">
-                        <h3 class="weekly">Browse by Week</h3>
-                        <ul>
-                            <li class="selected"><a href="#"><span>August 4th - 12th</span></a></li>
-                            <li><a href="#"><span>July 28th - August 3rd</span></a></li>
-                            <li><a href="#"><span>July 21th - 27th</span></a></li>
-                            <li><a href="#"><span>July 14th - 20th</span></a></li>
-                            <li><a href="#"><span>July 7th - 13th</span></a></li>
-                            <li><a href="#"><span>June 30th - July 6th</span></a></li>
-                            <li><a href="#"><span>June 23th - 29th</span></a></li>
-                            <li><a href="#"><span>June 16th - 22th</span></a></li>
-                            <li class="more"><a href="#"><span>More</span></a></li>
-                        </ul>
-                        <h3 class="moment">Browse by Moments</h3>
-                        <ul>
-                            <li class="selected"><a href="#"><span>방학</span></a></li>
-                            <li><a href="#"><span>4기 청계산 산행</span></a></li>
-                            <li><a href="#"><span>4기 발대식</span></a></li>
-                            <li><a href="#"><span>2013 여름 집체교육</span></a></li>
-                            <li><a href="#"><span>4기 오리엔테이션</span></a></li>
-                            <li><a href="#"><span>Lorem</span></a></li>
-                            <li><a href="#"><span>Ipsum</span></a></li>
-                            <li><a href="#"><span>Dolor</span></a></li>
-                            <li class="more"><a href="#"><span>More</span></a></li>
-                        </ul>
-                        <div id="siteInfo">
-                            <p class="copy">&copy; Podium 2013</p>
-                            <p><a href="#" class="about"><span>About</span></a> <sup>|</sup> <a href="#" class="developer"><span>Developer</span></a> <sup>|</sup> <a href="#" class="privacy"><span>개인정보보호</span></a> <sup>|</sup> <a href="#" class="eula"><span>이용약관</span></a></p>
-                        </div>
-                    </nav>
                 </div>
-            </section>
+            </div>
+            <div class="p_tItem p_container">
+                <a href="#" class="p_tWidget p_tIcon"></a>
+
+                <div class="p_tBox">
+                    <section class="p_tWidget cboth">
+                        <div id="weatherBox" class="cboth">
+                            <h2></h2>
+
+                            <p class="weather"></p>
+                        </div>
+                        <div class="disabled widgetBox widget_wide cboth">
+                            <h3>Schedule<a class="edit" href="#">Edit</a></h3>
+                            <table class="scheduleTable widgetTable">
+                                <tbody>
+                                <tr class="cat_class">
+                                    <td class="time">13:00 - 15:00</td>
+                                    <th><strong>집체교육</strong> 네트워크 보안을 위한 방화벽 설계</th>
+                                    <td class="location">해찬 7-1~7-3</td>
+                                </tr>
+                                <tr class="cat_class">
+                                    <td class="time">16:00 - 18:00</td>
+                                    <th><strong>집체교육</strong> Security 아키텍쳐의 이해와 적용</th>
+                                    <td class="location">해찬 7-1~7-3</td>
+                                </tr>
+                                <tr class="cat_project">
+                                    <td class="time">19:00 - 22:00</td>
+                                    <th><strong>프로젝트</strong> 멘토링</th>
+                                    <td class="location">아람 7-7</td>
+                                </tr>
+                                <tr class="cat_etc">
+                                    <td class="time">22:00 - 24:00</td>
+                                    <th><strong>기타</strong> 브론즈 탈출</th>
+                                    <td class="location">소환사의 협곡</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="widgetBox widget_narrow_left">
+                            <h3>Notice</h3>
+                            <table class="widgetTable">
+                                <tbody>
+                                <tr>
+                                    <td><a href="#">장학금 서류 내세요</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">프로젝트 활동비 이렇게 쓰세요</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">월요일에 전기 끊겨요</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">방학 땐 문 닫아요</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="disabled widgetBox widget_narrow_right">
+                            <h3>Hot Links<a class="edit" href="#">Edit</a></h3>
+                            <table class="widgetTable">
+                                <tbody>
+                                <tr>
+                                    <td><a href="#">강의실 예약</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">프로젝트 관련 서류 모음</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">우리 팀 Repository</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">문명 소모임</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+        <section id="timeline_posts">
+        </section>
+    </div>
+    <nav class="p_timelineNav disabled">
+        <h3 class="weekly">Browse by Week</h3>
+        <ul>
+            <li class="selected"><a href="#"><span>August 4th - 12th</span></a></li>
+            <li><a href="#"><span>July 28th - August 3rd</span></a></li>
+            <li><a href="#"><span>July 21th - 27th</span></a></li>
+            <li><a href="#"><span>July 14th - 20th</span></a></li>
+            <li><a href="#"><span>July 7th - 13th</span></a></li>
+            <li><a href="#"><span>June 30th - July 6th</span></a></li>
+            <li><a href="#"><span>June 23th - 29th</span></a></li>
+            <li><a href="#"><span>June 16th - 22th</span></a></li>
+            <li class="more"><a href="#"><span>More</span></a></li>
+        </ul>
+        <h3 class="moment">Browse by Moments</h3>
+        <ul>
+            <li class="selected"><a href="#"><span>방학</span></a></li>
+            <li><a href="#"><span>4기 청계산 산행</span></a></li>
+            <li><a href="#"><span>4기 발대식</span></a></li>
+            <li><a href="#"><span>2013 여름 집체교육</span></a></li>
+            <li><a href="#"><span>4기 오리엔테이션</span></a></li>
+            <li><a href="#"><span>Lorem</span></a></li>
+            <li><a href="#"><span>Ipsum</span></a></li>
+            <li><a href="#"><span>Dolor</span></a></li>
+            <li class="more"><a href="#"><span>More</span></a></li>
+        </ul>
+        <div id="siteInfo">
+            <p class="copy">&copy; Podium 2013</p>
+
+            <p><a href="#" class="about"><span>About</span></a> <sup>|</sup> <a href="#" class="developer"><span>Developer</span></a>
+                <sup>|</sup> <a href="#" class="privacy"><span>개인정보보호</span></a> <sup>|</sup> <a href="#"
+                                                                                                 class="eula"><span>이용약관</span></a>
+            </p>
+        </div>
+    </nav>
+</div>
+
+<!--
+<div id="invisible">
+    <form action="https://somapodium.s3.amazonaws.com" method="post" enctype="multipart/form-data" id="upload_form">
+        <input type="hidden" name="key"></input>
+        <input type="hidden" name="AWSAccessKeyId" value="AKIAJKZRCQKYZ7EHIXYA"></input>
+        <input type="hidden" name="acl" value="public-read"></input>
+        <input type="hidden" name="policy"></input>
+        <input type="hidden" name="signature"></input>
+        <input type="hidden" name="success_action_status" value="201"></input>
+        <input type="file" id="file_info" name="file"></input>
+    </form>
+</div>
+<div id="wrapper">
+    <input type="button" id="upload_button" value="upload"/>
+
+    <div id="progress_container">
+        <div id="progress_bar"></div>
+    </div>
+</div>
+<div id="status_container">Status: <span id="status">idle</span></div>
+-->

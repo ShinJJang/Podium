@@ -1,0 +1,37 @@
+.pui h1 { font-size:36px; }
+.pui h2 { font-size:24px; }
+.pui h3 { font-size:18px; }
+.pui h4 { font-size:14px; }
+.pui h5 { font-size:12px; }
+.pui h6 { font-size:10px; }
+
+.pui .head { margin-bottom:20px; }
+
+.pui .box { border:1px #eaeaea solid; box-shadow:0px 2px 2px rgba(0,0,0,0.2); background:#fff; border-radius:5px; }
+
+.pui code { padding:3px; border-radius:3px; border:1px #eaeaea solid; background:#f0f0f0; font-family:Menlo,Monaco,'Bitstream Vera Sans Mono','Lucida Console',Consolas,monospace; }
+.pui pre { padding:9px; border-radius:3px; border:1px #eaeaea solid; background:#f0f0f0; }
+.pui pre code { padding:0; border-radius:0; border:none; }
+
+.pui .text-left { text-align: left; }
+.pui .text-center { text-align: center; }
+.pui .text-right { text-align: right; }
+
+.pui .box > .text { padding:15px; }
+.pui .text p { margin-bottom:10px; }
+.pui .text h1, .pui .text h2, .pui .text h3, .pui .text h4, .pui .text h5, .pui .text h6 { margin:10px 0; border-bottom:1px #dadada solid; }
+
+.pui .desc { color:#888; }
+
+.pui .tooltip-parent { position:relative; }
+.pui .tooltip-parent .tooltip { position:absolute; display:inline-block; }
+.pui .tooltip-parent .tooltip-top { top:-30px; left:50%; }
+.pui .tooltip-parent .tooltip-bottom { bottom:-30px; left:50%;  }
+.pui .tooltip-parent .tooltip-left, .pui .tooltip-parent .tooltip-right { top:50%; }
+
+.pui .tooltip-hover .tooltip { display:none; border-radius:3px; background:rgba(0,0,0,0.7); border:1px #333 solid; width:auto; padding:0 10px; text-shadow:none; color:#fff; white-space: nowrap; text-shadow:0 1px 0 #000; line-height:23px; }
+.pui .tooltip-hover:hover .tooltip { display:inline-block; }
+
+.pui .btn { padding:5px 10px; background:#76bab2; border:1px #38978c solid; border-radius:3px; color:#fff; cursor:pointer; }
+.pui .btn:hover { background:#38978c }
+.pui .btn:active { box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); }

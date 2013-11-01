@@ -7,12 +7,20 @@ a:hover, a:active, a:focus {
 	color:#76bab2;
 }
 
-body { background:#424b4a; }
+body { background:#f4f4f4; }
 
 #p_header { background: #76bab2; border-color:#38978c; }
 #p_header #p_topSearch input[type="text"] { background-image:url(../images/color-mint/top_search.png); }
 #p_body #p_nav #nav_userProfile a .nav_no { color:#ff7f7f }
+#p_body #p_nav #nav_userProfile { background:#ccc; }
 
+#p_body #p_nav a { background:#fff; }
+
+#p_body #p_nav .selected a { background:#e0e0e0; }
+
+#p_body #p_timeline { background: #eaecec; box-shadow:0 0 5px rgba(0,0,0,0.1); }
+
+#p_body #p_timeline  .p_timelineContents .p_tBox .writeSelect li.selected a { background-color:#76bab2; }
 #p_body #p_timeline .p_timelineContents .p_tIcon { background-color:#76bab2; }
 
 #p_body #p_timeline .p_timelineNav ul li a { background-image:url(../images/color-mint/moment_item.png); }
@@ -27,6 +35,15 @@ body { background:#424b4a; }
 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .public { background-image: url(../images/color-mint/timeline_public.png); }
 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .private { background-image: url(../images/color-mint/timeline_private.png); }
 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .project { background-image: url(../images/color-mint/timeline_project.png); }
+
+#p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget .weather { background-image:url(../images/color-mint/weather_icons.png); }
+#p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget .weather strong { color:#38978c; }
+
+#p_chatBoxContainer .chatBox { border-color:#76bab2; }
+#p_chatBoxContainer .chatBox h2 { background:#76bab2; }
+
+#p_body #p_timeline #p_peopleCover #p_peopleName #friendStatus a { background-image:url(../images/color-mint/add_friend.png); }
+#p_body #p_timeline #p_peopleCover #p_peopleName #friendStatus span { border-color:#38978c; background-color:#76bab2; }
 
 /* Retina Display Support */
 
@@ -46,6 +63,9 @@ body { background:#424b4a; }
 	#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .public { background-image: url(../images/color-mint/timeline_public@2x.png); }
 	#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .private { background-image: url(../images/color-mint/timeline_private@2x.png); }
 	#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .project { background-image: url(../images/color-mint/timeline_project@2x.png); }
+    #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget .weather { background-image:url(../images/color-mint/weather_icons@2x.png); }
+
+    #p_body #p_timeline #p_peopleCover #p_peopleName #friendStatus a { background-image:url(../images/color-mint/add_friend@2x.png); }
 }
 
 @media

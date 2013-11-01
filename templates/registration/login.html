@@ -1,54 +1,41 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Podium for SW_Maestro</title>
-        <link rel="stylesheet" href="{{STATIC_URL}}css/base.css" type="text/css" media="screen">
-        <link rel="stylesheet" href="{{STATIC_URL}}css/login.css" type="text/css" media="screen">
-
-        <link rel="apple-touch-icon" href="{{STATIC_URL}}apple-icon-touch.png">
-        <link rel="shortcut icon" href="/favicon.ico">
-
-        <meta charset="utf-8">
-        <meta name="viewport" content="initial-scale=1,user-scalable=no" />
-    </head>
-    <body>
-        <div id="loginForm">
-            <h1>Podium for SW_Maestro</h1>
-            <div class="content_wrap">
-                <form method="post" action=".">{% csrf_token %}
-                    <div id="loginBox">
-                        <p class="id">
-                            {{ form.username }}
-                        </p>
-                        <p class="pass">
-                            {{ form.password }}
-                        </p>
-                        <input type="hidden" name="next" value="/" />
-                        <p class="button">
-                            <input type="submit" value="Log In" />
-                        </p>
-                    </div>
-                </form>
-            </div>
+{% extends "registration/_account.html" %}
+{% block formContents %}
+    <div id="loginForm">
+        <h1>Podium for SW_Maestro</h1>
+        <div class="content_wrap">
+            <form method="post" action=".">{% csrf_token %}
+                <div id="loginBox">
+                    <p class="id">
+                        {{ form.username }}
+                    </p>
+                    <p class="pass">
+                        {{ form.password }}
+                    </p>
+                    <input type="hidden" name="next" value="/" />
+                    <p class="button">
+                        <input type="submit" value="Log In" />
+                    </p>
+                </div>
+            </form>
         </div>
-        <script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.10.2.min.js"></script>
-        <script type="text/javascript" src="{{STATIC_URL}}js/login.js"></script>
-        {% if form.errors %}
-            <script type="text/javascript">
-                $(function(){
-                    $("#loginForm").addClass("error");
-                    $("#loginForm input").click(function(){
-                        $("#loginForm").removeClass("error");
-                    })
-
-                    $("#loginForm").append("<p class='errorMessage'>이메일이나 비밀번호가 잘못되었습니다.</p>");
-                    messageFadeOut();
+    </div>
+{% endblock %}
+{% block add_scripts %}
+    {% if form.errors %}
+        <script type="text/javascript">
+            $(function(){
+                $("#loginForm").addClass("error");
+                $("#loginForm input").click(function(){
+                    $("#loginForm").removeClass("error");
                 });
 
-                function messageFadeOut() {
-                    setTimeout(function(){$(".errorMessage").fadeOut(1000)},1000);
-                }
-            </script>
-        {% endif %}
-    </body>
-</html>
+                $("#loginForm").append("<p class='errorMessage'>이메일이나 비밀번호가 잘못되었습니다.</p>");
+                messageFadeOut();
+            });
+
+            function messageFadeOut() {
+                setTimeout(function(){$(".errorMessage").fadeOut(1000)},1000);
+            }
+        </script>
+    {% endif %}
+{% endblock %}

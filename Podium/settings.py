@@ -2,7 +2,6 @@
 import os.path
 
 BASE_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -53,7 +52,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = BASE_PATH + '/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -131,7 +130,33 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django_jenkins',
     'Maple',
+    'tastypie',
+    'registration',
+    'jsonfield',
+    'haystack',
+    'boto',
+    'south',
+    'raven.contrib.django.raven_compat'
 )
+
+# Set your DSN value
+RAVEN_CONFIG = {
+		'dsn': 'http://b0f7a533a3d64de0aa102865b14f6afc:ec50bbe985ce43c28460439bed940b45@127.0.0.1:9001/2',
+}
+
+#about amazon s3
+AWS_S3_BUCKET_URL = "https://somapodium.s3.amazonaws.com"
+AWS_UPLOAD_BUCKET_NAME = "somapodium"
+AWS_S3_BUCKET_NAME = "somapodium"
+AWS_UPLOAD_CLIENT_KEY = "AKIAJKZRCQKYZ7EHIXYA"
+AWS_UPLOAD_CLIENT_SECRET_KEY = "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"
+# registration required option
+ACCOUNT_ACTIVATION_DAYS = 7
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'makao.rule@gmail.com'
+EMAIL_HOST_PASSWORD = 'goomellowgle17'
+EMAIL_PORT = 587
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -177,5 +202,56 @@ JENKINS_TASKS = (
     #'django_jenkins.tasks.lettuce_tests',
 )
 
-#
 AUTH_PROFILE_MODULE = 'Maple.UserProfile'
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
+    },
+}
+
+#HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['sentry'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    },
+}

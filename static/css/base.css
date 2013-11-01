@@ -1,4 +1,5 @@
 @charset "utf-8";
+@import url(http://fonts.googleapis.com/css?family=Roboto:200,400,700,400italic);
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -8,7 +9,7 @@ small, strike, strong, sub, sup, tt, var,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
-	border: 0;,
+	border: 0;
 	font-family: inherit;
 	font-size: 100%;
 	margin: 0;
@@ -65,11 +66,10 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 
-body, input, textarea {
+body, input, textarea, button {
 	color: #373737;
-	font: 14px "Helvetica Neue","Apple SD Gothic Neo",Helvetica, Arial,"맑은 고딕",sans-serif;
-	font-weight: 300;
-	
+	font: 14px "Roboto","Helvetica Neue", "Apple SD Gothic Neo",Helvetica, Arial,"맑은 고딕",sans-serif;
+	font-weight: 400;
 	line-height: 1.625;
 }
 
@@ -110,7 +110,7 @@ input[type=password],
 textarea {
 	border: 1px solid #ddd;
 	color: #444;
-	font-weight:300;
+	font-weight:400;
 }
 input[type=text]:focus,
 textarea:focus {
@@ -118,7 +118,7 @@ textarea:focus {
 }
 .placeholder { 
 	color: #000;
-	font-weight:300;
+	font-weight:400;
 }
 
 textarea {

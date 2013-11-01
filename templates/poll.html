@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+
+{% block title %}
+    {{ page_title  }}
+{% endblock %}
+
+{% block content %}
+    {% include "timeline.html" %}
+{% endblock %}
+
+{% block add_scripts %}
+    {% include 'post_public.html' %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/timeline.js"></script>
+{% endblock %}

@@ -1,0 +1,10 @@
+diff a/Maple/api.py b/Maple/api.py	(rejected hunks)
+@@ -108,7 +108,7 @@
+         bundle.obj = Friendships(user_key = user, friend_user_key = friend_user)
+         bundle.obj.save()
+         return bundle
+-    
++
+ 
+ 
+ """

@@ -1,0 +1,14 @@
+<div class="chatBox" id="chatBox_{{ chat_info.chat_room_name }}">
+    <h2>{{ chatting_user.username }} 과의 채팅방</h2>
+    <ul>
+         {% if chat_comments %}
+            {% for comment in chat_comments %}
+                <li>{{ comment.chat_comment }}</li>
+            {% endfor %}
+         {% endif %}
+
+    </ul>
+    <input type="text" class="comment_entry" />
+    <input type="hidden" class="user_id" value="{{ user.id }}" />
+    <input type="hidden" class="user_name" value="{{ user.username }}" />
+</div>
