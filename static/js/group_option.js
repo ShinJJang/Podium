@@ -115,7 +115,10 @@ var get_member_list = function() {
                 console.log(data);
                 $(".member_list").html("");
                 for(var index in data.objects){
-                    $(".member_list").append("<li class='li_member_for_delete' name='"+data.objects[index].id+"' tag='"+data.objects[index].permission+"'><a href='#'>"+data.objects[index].user_key.username+"</a></li>");
+                    var strclass = "li_member_for_delete";
+                    if(data.objects[index].user_key.id == user_id)
+                        strclass += " self_member"
+                    $(".member_list").append("<li class='"+strclass+"' name='"+data.objects[index].id+"' tag='"+data.objects[index].permission+"'><a href='#'>"+data.objects[index].user_key.username+"</a></li>");
                 }
             }
         }
@@ -147,6 +150,7 @@ $(document).on({
     }
 }, ".member_list > li");
 
+// 멤버 권한 수정
 var update_member_for_permission = function(eventdom){
     var membership_id = eventdom.attr("name");
     var set_permission = eventdom.attr("tag");
@@ -160,7 +164,17 @@ var update_member_for_permission = function(eventdom){
             break;
         case "-1":
             method = "DELETE";
-            if(!confirm("Are you sure exclude this member at this group?")) {
+            var alert_statement = "정말 이 멤버를 그룹에서 제외할꺼에요?";
+            if($(".li_member_for_delete").length == 1) {
+                alert_statement = "이외의 멤버가 없어 탈퇴하시면 그룹이 삭제됩니다.\n계속하시겠습니까?";
+            }
+            else if(eventdom.parents(".self_member").length > 0) {
+                alert_statement = "그룹에서 나갈꺼에요?";
+                if(permission == 2) {
+                    alert_statement = "탈퇴하시면 그룹의 소유자가 변경됩니다.\n계속하시겠습니까?";
+                }
+            }
+            if(!confirm(alert_statement)) {
                 return false;
             }
             break;
@@ -179,6 +193,7 @@ var update_member_for_permission = function(eventdom){
         dataType: "json",
         statusCode: {
             202: function(data) {
+                console.log(data);
                 console.log("permission update done!");
             },
             204: function(data) {

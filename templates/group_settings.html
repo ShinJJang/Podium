@@ -43,6 +43,7 @@
 {% block add_scripts %}
     <script type="text/javascript">
         var group_id = {{ group.id }};
+        var permission = {{ permission }};
     </script>
     <script id="select_member" type="text/x-jquery-tmpl">
         <div class="dropbottom">
@@ -50,7 +51,7 @@
                 <ul>
                 {% templatetag openblock %}if permission == 1{% templatetag closeblock %}
                     <li class="permission_click" href="#" name="${id}" tag="0"><a>관리자에서 제외</a></li>
-                {% templatetag openblock %}else{% templatetag closeblock %}
+                {% templatetag openblock %}elif permission == 0{% templatetag closeblock %}
                     <li class="permission_click" href="#" name="${id}" tag="1"><a>관리자로 설정</a></li>
                 {% templatetag openblock %}/if{% templatetag closeblock %}
                     <li class="permission_click" href="#" name="${id}" tag="-1"><a>그룹에서 제외</a></li>
