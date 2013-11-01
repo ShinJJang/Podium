@@ -313,7 +313,7 @@ class GroupResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         group_name = bundle.data['group_name']
         description = bundle.data['description']
-        is_project = bundle.data['is_project']
+        is_project = bundle.data['isProject']
         open_scope = bundle.data['open_scope']
         member_request_list = bundle.data['members']
         if Groups.objects.filter(group_name=group_name).count() != 0:

@@ -22,7 +22,7 @@ var submit_group_form = function(event, feedback_api, method){
     var data = JSON.stringify({
         "group_name": $("input[name=group_name]").val(),
         "description": $("textarea[name=description]").val(),
-        "is_project": $("input[name=is_project]").is(":checked"),
+        "isProject": $("input[name=is_project]").is(":checked"),
         "open_scope": open_scope,
         "members": members
     });
