@@ -101,27 +101,27 @@
 
                 #p_body #p_timeline .p_timelineContents .p_tBox #richTextInput { display:none; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect { padding:20px 25px 0; }
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li { float:left; margin-right:5px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect { background:#f2f4f5; border-top-left-radius: 5px; border-top-right-radius:5px; border-bottom:1px #ddd solid; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li { float:left; border-right:1px #ddd solid; }
 
-                #p_body #p_timeline  .p_timelineContents .p_tBox .writeSelect li a { display:block; color:#999999; padding:0 10px 0 35px; height:30px; line-height:30px; text-transform: uppercase; font-weight:bold; background-size:20px 50px; background-image:url(../images/article_type.png); background-repeat:no-repeat; border-top-left-radius:5px; border-top-right-radius:5px; }
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li a:hover { background-color:#f0f0f0; }
+                #p_body #p_timeline  .p_timelineContents .p_tBox .writeSelect li a { display:block; color:#999999; padding:5px 15px 5px 40px; height:30px; line-height:30px; text-transform: uppercase; font-weight:bold; background-size:20px 50px; background-image:url(../images/article_type.png); background-repeat:no-repeat; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li a:hover { background-color:#fff; }
 
                 #p_body #p_timeline  .p_timelineContents .p_tBox .writeSelect li.selected a { color:#fff; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li#toPlain a { background-position:5px 5px; }
-                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li#toRich a { background-position:5px -25px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li#toPlain a { background-position:10px 10px; border-top-left-radius: 5px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li#toRich a { background-position:10px -20px; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm { padding:0 20px 20px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm { }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .postTools { margin-top:10px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .postTools { background:#f0f0f0; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .postOptions { float:left; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm textarea.postFormText { vertical-align: top; height:56px; border:1px #eaeaea solid; border-radius: 5px; padding:5px 4px; width:570px; display:block; box-shadow:inset 0 2px 4px #ddd; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm textarea.postFormText { vertical-align: top; height:56px; border:none; border-bottom:1px #ddd solid; padding:10px; width:598px; display:block; resize:vertical; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm input.postFormSubmit { vertical-align: top; height:30px; border:1px #eaeaea solid; border-radius: 5px; padding:5px 4px; float:right; width:50px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm select { border:1px #eaeaea solid; margin:0px 10px; width: 50px; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect { margin:10px 0; float:right; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect { margin:10px; float:right; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li { margin-left:10px; float:left; line-height:20px; font-size:0.86em; font-weight:bold; color:#999; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li a { width:20px; height:0; padding:20px 0 0 0; display:block; background-image:url(../images/icon_attach.png); background-size:20px 170px; background-repeat:no-repeat; }
 

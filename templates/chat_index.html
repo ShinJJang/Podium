@@ -19,11 +19,12 @@
 {#            </li>#}
 {#        {% endif %}#}
 {#    {% endfor %}#}
-    <form id="chat_request_form" method="post" action="">{% csrf_token %}
-        <input type="text" id="chat_search_friend">
-        <input type="button" value="완료">
-    </form>
 </ul>
+
+<form id="chat_request_form" method="post" action="">{% csrf_token %}
+    <input type="text" id="chat_search_friend">
+    <input type="button" value="완료">
+</form>
 
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
 <script type="text/javascript">
@@ -195,33 +196,7 @@
 
     $(function(){
         getChattingList();
-
-        $("#p_messages").hover(function(){
-            // #p_message에 mouseover시 창 열기
-            $("#p_messages").addClass("opened");
-            $("#p_messages").width("210px");
-            $("#p_messages>.p_container, #p_messages .jspContainer, #p_messages .jspPane").width("223px");
-            $("#p_timeline").css("margin-right","210px");
-            messageOpen=true;
-        }, function(){
-            closeChatBar();
-        });
     });
-
-    function closeChatBar(){
-        // 마우스가 떠났을 때
-        if(!isChatSearchOn) messageOpen=false;
-
-        // 0.5초 안에 messageOpen이 true가 되지 않으면 창을 닫는다
-        setTimeout(function(){
-            if(!messageOpen) {
-                $("#p_messages").removeClass("opened");
-                $("#p_messages").width("75px");
-                $("#p_messages>.p_container, #p_messages .jspContainer, #p_messages .jspPane").width("88px");
-                $("#p_timeline").css("margin-right","75px");
-            }
-        }, 500);
-    }
 
     function formatResult(node) {
         return '<div>'+node.username+'</div>';

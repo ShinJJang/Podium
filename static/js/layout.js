@@ -32,6 +32,34 @@ $(function(){
 
     var weatherCode = 28805879;
     w_getWeather(weatherCode);
+
+    $("#p_messages").hover(function(){
+        // #p_message에 mouseover시 창 열기
+        $("#p_messages").addClass("opened");
+        $("#p_messages").width("210px");
+        $("#p_messages>.p_container, #p_messages .jspContainer, #p_messages .jspPane").width("223px");
+        $("#p_timeline").css("margin-right","210px");
+        $("#p_chatBoxContainer").css("right","220px");
+        messageOpen=true;
+    }, function(){
+        closeChatBar();
+    });
+
+    function closeChatBar(){
+        // 마우스가 떠났을 때
+        if(!isChatSearchOn) messageOpen=false;
+
+        // 0.5초 안에 messageOpen이 true가 되지 않으면 창을 닫는다
+        setTimeout(function(){
+            if(!messageOpen) {
+                $("#p_messages").removeClass("opened");
+                $("#p_messages").width("75px");
+                $("#p_messages>.p_container, #p_messages .jspContainer, #p_messages .jspPane").width("88px");
+                $("#p_timeline").css("margin-right","75px");
+                $("#p_chatBoxContainer").css("right","85px");
+            }
+        }, 500);
+    }
 });
 
 var w_getWeather = function (code) {

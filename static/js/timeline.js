@@ -14,8 +14,8 @@ tinymce.init({
         "insertdatetime media nonbreaking save table contextmenu directionality",
         "emoticons template paste textcolor"
     ],
-    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link",
-    toolbar2: "forecolor backcolor emoticons",
+    menubar:false,
+    toolbar1: "styleselect | bold italic | forecolor backcolor emoticons | alignleft aligncenter alignright | bullist numlist | link code",
     image_advtab: true,
     templates: [
         {title: 'Test template 1', content: 'Test 1'},
