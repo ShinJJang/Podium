@@ -457,9 +457,7 @@ class ChatRoomResource(ModelResource):
     def obj_get_list(self, bundle, **kwargs):
         print "test get"
         user_key = bundle.request.user.id
-
         print bundle
-
         chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user_key).distinct()
         return chat_rooms
 
@@ -503,7 +501,7 @@ class ChatNotificationResource(ModelResource):
 
 class ChatParticipantsResource(ModelResource):
     chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=False)
-    user = fields.ForeignKey(UserResource, 'user_key', full=False)
+    user = fields.ForeignKey(UserResource, 'user_key', full=True)
 
     class Meta:
         queryset = ChatParticipants.objects.all()
@@ -517,7 +515,7 @@ class ChatParticipantsResource(ModelResource):
 
 class UserChattingMessageResource(ModelResource):
     chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=False)
-    user = fields.ForeignKey(UserResource, 'user_key', full=False)
+    user = fields.ForeignKey(UserResource, 'user_key', full=True)
 
     class Meta:
         queryset = UserChattingMessage.objects.all()
@@ -542,9 +540,6 @@ class UserChattingMessageResource(ModelResource):
         print bundle.obj
         bundle.obj.save()
         return bundle
-
-
-
 
 """
 // tastypie 상속 가능한 method
