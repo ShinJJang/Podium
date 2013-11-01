@@ -97,19 +97,6 @@
         formatSelection: formatSelection
     });
 
-    // message 창을 열지 말지 결정
-    var messageOpen = false;
-    var isChatSearchOn = false;
-
-    $("#chat_search_friend").on("select2-open", function(){
-        isChatSearchOn = true;
-    });
-
-    $("#chat_search_friend").on("select2-blur", function(){
-        isChatSearchOn = false;
-        closeChatBar();
-    });
-
     function getChattingList(){
         $.ajax({
             type: 'GET',
@@ -119,11 +106,10 @@
             statusCode: {
                 200: function (data) {
                     result = JSON.parse(data.responseText);
+                    var appendText = '';
                     for (var i in result) {
-                        console.log("chat list success:")
-                        console.log(result[i]);
                         var j=0;
-                        var appendText = '<li><a class="openChat cboth" title="';
+                        appendText = appendText + '<li><a class="openChat cboth" title="';
                         if(result[i].participant_3==null) {
                             if(result[i].participant_2!=null) {
                                 if(result[i].participant_1.participant_id!={{ user.id }}){
@@ -184,8 +170,8 @@
                             }
                         }
                         appendText = appendText + '</a></li>';
-                        $("#chat_list").append(appendText);
                     }
+                    $("#chat_list").append(appendText);
                 },
                 error: function(data) { //why error....
                     result = JSON.parse(data.responseText);
@@ -245,15 +231,15 @@
             url: '/api/v1/user_chat_message/?chat_room_key='+chatroomId,
             success: function(data){
                 for(var i in data.objects) {
-                    console.log(data.objects[i]);
                     if(data.objects[i].user.id == {{ user.id }}) {
                         chatMessage = chatMessage + '<li class="outbound">';
                     } else {
                         chatMessage = chatMessage + '<li class="inbound">';
                     }
-                    chatMessage = chatMessage + '<span class="sender">'+data.objects[i].user.username+'</span><span class="message"><span class="arrow">' + data.objects[i].chatting_message + '</span></li>';
+                    chatMessage = chatMessage + '<span class="sender">'+data.objects[i].user.username+'</span><span class="message"><span class="arrow"></span>' + data.objects[i].chatting_message + '</span></li>';
                 }
                 $("#chatBox_" + chatroomId + " ul").append(chatMessage);
+                $("#chatBox_" + chatroomId + " ul").scrollTop(1000000000);
             }
         });
         socket_chat_connection("chatBox_"+chatroomId);
@@ -349,7 +335,11 @@
             var receive_data = JSON.parse(message);
 
             //var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            $('#' + roomid + ' ul').append('<li class="outbound">' + receive_data.message + receive_data.user_name + '</li>');
+            if(receive_data.user_name == "{{ user.username }}") {
+                $('#' + roomid + ' ul').append('<li class="outbound"><span class="sender">' + receive_data.user_name + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
+            } else {
+                $('#' + roomid + ' ul').append('<li class="inbound"><span class="sender">' + receive_data.user_name + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
+            }
             $('#' + roomid + ' ul').scrollTop(1000000000);
             entry_el.focus();
         });
@@ -363,7 +353,7 @@
 
         socket.on('user_out', function (message) {
             var out_user_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            $('#' + roomid + ' ul').append('<li>' + out_user_data + '</li>');
+            $('#' + roomid + ' ul').append('<li class="serviceMessage">' + out_user_data + '</li>');
             $('#' + roomid + ' ul').scrollTop(1000000000);
             entry_el.focus();
         });

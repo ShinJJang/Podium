@@ -33,6 +33,19 @@ $(function(){
     var weatherCode = 28805879;
     w_getWeather(weatherCode);
 
+    // message 창을 열지 말지 결정
+    var messageOpen = false;
+    var isChatSearchOn = false;
+
+    $("#chat_search_friend").on("select2-open", function(){
+        isChatSearchOn = true;
+    });
+
+    $("#chat_search_friend").on("select2-blur", function(){
+        isChatSearchOn = false;
+        closeChatBar();
+    });
+
     $("#p_messages").hover(function(){
         // #p_message에 mouseover시 창 열기
         $("#p_messages").addClass("opened");

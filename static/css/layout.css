@@ -77,10 +77,15 @@
         #p_chatBoxContainer .chatBox h2 { height:25px; font-weight:bold; padding:0 5px; color:#fff; line-height:25px; }
         #p_chatBoxContainer .chatBox { width:200px; height:250px; background:#fff; border:1px solid; border-bottom:none; bottom:0; margin-left:10px; float:right; font-size:0.86em; box-shadow:0px 1px 2px #999; }
         #p_chatBoxContainer .chatBox ul { height:190px; overflow-y:scroll; padding:5px; background:#f4f4f4; }
-        #p_chatBoxContainer .chatBox ul li { clear:both; }
+        #p_chatBoxContainer .chatBox ul li { clear:both; padding-top:5px; }
+        #p_chatBoxContainer .chatBox ul li.serviceMessage { color:#999; font-size:0.86em; text-align: center; font-style: italic; }
         #p_chatBoxContainer .chatBox ul li .sender { display:block; font-size:0.86em; color:#8e8e8e; }
+        #p_chatBoxContainer .chatBox ul li .message { display:block; line-height:1.3; padding:1px 4px; position:relative; border:1px solid; border-radius:3px; }
         #p_chatBoxContainer .chatBox ul .outbound .sender { text-align:right; }
-        #p_chatBoxContainer .chatBox ul .outbound .message { float:right; position:relative; }
+        #p_chatBoxContainer .chatBox ul .inbound .message { margin-left:3px; float:left; background:#76bab2; border-color:#38978e; color:#fff; }
+        #p_chatBoxContainer .chatBox ul .inbound .message .arrow { position:absolute; top:50%; margin-top:-4px; left:-4px; background:url(../images/color-mint/chat_inbound.png); width:4px; height:8px; }
+        #p_chatBoxContainer .chatBox ul .outbound .message { margin-right:3px; float:right; background:#e5ebea; border-color:#ccc; color:#777; }
+        #p_chatBoxContainer .chatBox ul .outbound .message .arrow { position:absolute; top:50%; margin-top:-4px; right:-4px; background:url(../images/color-mint/chat_outbound.png); width:4px; height:8px; }
         #p_chatBoxContainer .chatBox input { height:24px; border:none; border-top:1px #dadada solid; padding:0 5px; font-size:12px; margin:0; width:190px; }
 
 #p_body #p_document > .p_container { padding:20px; }

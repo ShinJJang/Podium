@@ -315,7 +315,6 @@ function PostTopPolling() {
         type: "GET",
         dataType: "json",
         success: function (data) {
-            console.log("TOP POLL POST  url:" + post_top_url);
             if (data.objects.length != 0) {
                 for (var dataObj in data.objects) {
                     try {
@@ -333,13 +332,10 @@ function PostTopPolling() {
 
                 timeRefresh();
                 post_top_url = data.meta.previous;
-                console.log("1 previous url:  " + post_top_url);
                 if (!data.meta.previous)
                     post_top_url = "http://" + window.location.host + "/api/v1/friendposts/?limit=1&id__gt=" + data.objects[0].id + "&" + timeline_js_parameter_top_post_polling;
-                console.log("2 previous url:  " + post_top_url);
                 if (isBottominit == 0) {
                     post_bottom_url = (!data.meta.next) ? null : data.meta.next + "&id__lte=" + data.objects[0].id;
-                    console.log("1 next url:  " + post_bottom_url);
                     isBottominit = 1;
                 }
 
@@ -354,8 +350,6 @@ function PostTopPolling() {
                             var videoId;
                             var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
                             var match = data.objects[0].video.match(regExp);
-                            console.log("Video:");
-                            console.log(match);
                             if (match&&match[7].length==11){
                                 videoId = match[7];
                                 $(targetDiv).html('<iframe width="560" height="315" src="//www.youtube.com/embed/'+videoId+'" frameborder="0" allowfullscreen></iframe>');
@@ -398,8 +392,6 @@ function PostTopPolling() {
                         dataType: "json",
                         success: function (data) {
                             for (obj in data.objects) {
-                                console.log(data.objects[obj]);
-                                console.log(data.objects[obj].poll);
                                 data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
                             }
                             $(targetDiv).append('<li class="pollTitle">' + data.objects[0].poll.title + '</li>');
@@ -451,7 +443,6 @@ $(document).ready(function () {
 
     setTimeout(function () {
         timeRefresh();
-        console.log("timeago called");
     }, 2000);
 });
 
@@ -626,7 +617,6 @@ $(function () {
                 $("#add_poll").parent().before(newElement);
             });
         }
-        console.log(post_attach);
     });
 
     // Simply add code tag on the textarea.
