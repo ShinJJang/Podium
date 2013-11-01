@@ -115,7 +115,12 @@ var get_member_list = function() {
                 console.log(data);
                 $(".member_list").html("");
                 for(var index in data.objects){
-                    $(".member_list").append("<li class='li_member_for_delete' name='"+data.objects[index].id+"' tag='"+data.objects[index].permission+"'><a href='#'>"+data.objects[index].user_key.username+"</a></li>");
+                    var strclass = "li_member_for_delete";
+                    if(data.objects[index].user_key.id == user_id)
+                        strclass += " self_member";
+                    else if(data.objects[index].permission == 1)
+                        strclass += " permitted_member";
+                    $(".member_list").append("<li class='"+strclass+"' name='"+data.objects[index].id+"' tag='"+data.objects[index].permission+"'><a href='#'>"+data.objects[index].user_key.username+"</a></li>");
                 }
             }
         }
@@ -147,10 +152,12 @@ $(document).on({
     }
 }, ".member_list > li");
 
+// 멤버 권한 수정
 var update_member_for_permission = function(eventdom){
     var membership_id = eventdom.attr("name");
     var set_permission = eventdom.attr("tag");
     var method;
+    var option_code;
     switch (set_permission) {
         case "0":
             method = "PATCH";
@@ -160,36 +167,36 @@ var update_member_for_permission = function(eventdom){
             break;
         case "-1":
             method = "DELETE";
-            if(!confirm("Are you sure exclude this member at this group?")) {
+            var alert_statement = "정말 이 멤버를 그룹에서 제외할꺼에요?";
+            if($(".li_member_for_delete").length == 1) {    // TODO Group delete - 멤버있는지 그룹에서 예외처리
+                alert_statement = "이외의 멤버가 없어 탈퇴하시면 그룹이 삭제됩니다.\n계속하시겠습니까?";
+                window.location.assign("/");
+                option_code = "group_delete";
+            }
+            else if(eventdom.parents(".self_member").length > 0) {
+                alert_statement = "그룹에서 나갈꺼에요?";
+                if(permission == 2) {
+                    alert_statement = "탈퇴하시면 그룹의 소유자가 변경됩니다.\n계속하시겠습니까?";
+                    option_code = "owner_inheritance";
+                }
+                if(open_scope == 2)
+                    window.location.assign("/");
+                else
+                    window.location.assign("/group/"+group_id+"/");
+            }
+            if(confirm(alert_statement) != true) {
                 return false;
             }
+            else if(option_code == "owner_inheritance")
+                owner_inheritance();
             break;
         default:
             break;
     };
-    var feedback_url = "/api/v1/memberships/"+membership_id+"/"
-    var data = JSON.stringify({
-        "permission": set_permission
-    });
-    $.ajax({
-        type: method,
-        url: feedback_url,
-        contentType: "application/json",
-        data: data,
-        dataType: "json",
-        statusCode: {
-            202: function(data) {
-                console.log("permission update done!");
-            },
-            204: function(data) {
-                eventdom.parents(".li_member_for_delete").remove();
-                console.log("selected member exclude at this group!");
-            },
-            404: function(data) {
-                console.log("Not founded!")
-            }
-        }
-    });
+    update_member_permission(method, membership_id, set_permission, eventdom);
+
+    if(option_code == "group_delete")
+        group_delete();
 };
 
 $(document).on("click", ".permission_click", function(){
@@ -218,7 +225,7 @@ $("#request_member").click(function(){
         data: data,
         dataType: "json",
         statusCode: {
-            202: function(data) {
+            202: function() {
                 get_member_list();
                 $("#group_response").append("<span class='tooltip tooltip-bottom'>멤버로 추가되었습니다.</span>"); // TODO - toast alert으로 변경
             },
@@ -229,3 +236,67 @@ $("#request_member").click(function(){
         }
     });
 });
+
+var update_member_permission = function(method, member_id, set_permission, eventdom) {
+    var feedback_url = "/api/v1/memberships/"+member_id+"/"
+    var data = JSON.stringify({
+        "permission": set_permission
+    });
+    $.ajax({
+        type: method,
+        url: feedback_url,
+        contentType: "application/json",
+        data: data,
+        dataType: "json",
+        statusCode: {
+            202: function() {
+                console.log("permission update done!");
+                if(eventdom.attr("tag") == 0) {
+                    eventdom.attr("tag", 1);
+                    eventdom.html("관리자로 설정");
+                }
+                else{
+                    eventdom.attr("tag", 0);
+                    eventdom.html("관리자에서 제외");
+                }
+            },
+            204: function() {
+                eventdom.parents(".li_member_for_delete").remove();
+                console.log("selected member exclude at this group!");
+            },
+            404: function() {
+                console.log("Not founded!")
+            }
+        }
+    });
+};
+
+// 소유자 탈퇴시 그룹 소유 권한 상속
+var owner_inheritance = function() {
+    var admins = $(".permitted_member");
+    var inheritance_member_id;
+    if(admins.length > 0)
+        inheritance_member_id = admins.attr("name");
+    else
+        inheritance_member_id = $(".li_member_for_delete").not(".self_member").attr("name");
+
+    update_member_permission("PATCH", inheritance_member_id, 2);
+};
+
+var group_delete = function() {
+    var feedback_url = "/api/v1/groups/"+group_id+"/"
+    $.ajax({
+        type: "DELETE",
+        url: feedback_url,
+        contentType: "application/json",
+        dataType: "json",
+        statusCode: {
+            204: function() {
+                console.log("selected member exclude at this group!");
+            },
+            404: function() {
+                console.log("Not founded!")
+            }
+        }
+    });
+};
