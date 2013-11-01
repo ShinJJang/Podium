@@ -331,8 +331,8 @@ class GroupResource(ModelResource):
         return bundle
 
     def hydrate(self, bundle):  # 업데이트시, 체크
-        if Groups.objects.filter(group_name=bundle.data['group_name']).count() != 0:
-            raise BadRequest('이미 존재하는 그룹명입니다 하힛')
+        if bundle.obj.group_name != bundle.data['group_name'] and Groups.objects.filter(group_name=bundle.data['group_name']).count() != 0:
+            raise BadRequest('이미 존재하는 그룹명입니다')
 
         return bundle
 
@@ -353,6 +353,10 @@ class MembershipsResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         group = Groups.objects.get(pk=bundle.data['group_key'])
         user = User.objects.get(pk=bundle.data['user_key'])
+
+        if Memberships.objects.filter(group_key=group, user_key=user).exists():
+            raise BadRequest("이미 존재하는 멤버입니다.")
+
         bundle.obj = Memberships(group_key=group, user_key=user)
         bundle.obj.save()
         return bundle
@@ -374,11 +378,15 @@ class MembershipNotisResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         group = Groups.objects.get(pk=bundle.data['noti_group_key'])
         user = User.objects.get(pk=bundle.data['noti_user_key'])
+
+        if Memberships.objects.filter(group_key=group, user_key=user).exists():
+            raise BadRequest("이미 존재하는 멤버입니다.")  # TODO - 400 이용하면 그룹 요청시 요긴할 것 - JS 수정
+
         bundle.obj = MembershipNotis(noti_group_key=group, noti_user_key=user)
         bundle.obj.save()
         return bundle
 
-    # TODO - API GET 그룹 가입 요청, 권한 처리리
+    # TODO - API GET 그룹 가입 요청, 권한 처리
    #def obj_get_list(self, bundle, **kwargs):
     #    user = bundle.request.user
     #    group = Groups.objects.get(id=bundle.data['noti_group_key'])
@@ -521,12 +529,17 @@ class UserChattingMessageResource(ModelResource):
         }
 
     def obj_create(self, bundle, **kwargs):
+        print bundle.data
         message = bundle.data['comment']
+        print message
         user_id = bundle.data['user_id']
         room_id = bundle.data['room_id']
         chat_room_key = ChatRoom.objects.get(id=room_id)
+        print chat_room_key
         user_key = User.objects.get(id=user_id)
-        bundle.obj = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key,chatting_message=message)
+        print user_key
+        bundle.obj = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key, chatting_message=message)
+        print bundle.obj
         bundle.obj.save()
         return bundle
 

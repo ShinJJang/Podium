@@ -31,6 +31,8 @@
                 </div>
             </div>
             <div class="box">
+                <label class="text">멤버추가</label><input type="text" id="group_search_friend" style="width: 300px">
+                <input type="button" id="request_member" value="추가">
                 <div class="text member_list">
                 </div>
             </div>
@@ -41,97 +43,20 @@
 {% block add_scripts %}
     <script type="text/javascript">
         var group_id = {{ group.id }};
-
-        var get_member_list = function() {
-            var feedback_url = "/api/v1/memberships/?group_key="+group_id;
-            $.ajax({
-                type: "GET",
-                url: feedback_url,
-                contentType: "application/json",
-                dataType: "json",
-                statusCode: {
-                    200: function (data) {
-                        console.log("group user list get!");
-                        console.log(data);
-                        for(var index in data.objects){
-                            $(".member_list").append("<li><a href='#' name='"+data.objects[index].id+"' tag='"+data.objects[index].permission+"'>"+data.objects[index].user_key.username+"</a></li>");
-                        }
-                    }
-                }
-            });
-        }
-        get_member_list();
-
-        var click_dropdown_make_for_permission = function(eventdom){
-            var member_id = $(eventdom).attr("name");
-            var member_permission = $(eventdom).attr("tag");
-            var data = {
-                "id": member_id,
-                "permission": member_permission
-            };
-            $("#select_member").tmpl(data).appendTo(eventdom);
-        };
-
-        $(document).on("mouseover", ".member_list > li > a", function(){
-            if($(this).find(".permission_click").size() == 0) {
-                click_dropdown_make_for_permission($(this));
-            }
-        });
-
-        var click_member_for_permission = function(eventdom){
-            var membership_id = eventdom.attr("name");
-            var set_permission = eventdom.attr("tag");
-            var method;
-            switch (set_permission) {
-                case "0":
-                    method = "PATCH";
-                    break;
-                case "1":
-                    method = "PATCH";
-                    break;
-                case "-1":
-                    method = "DELETE";
-                    break;
-                default:
-                    break;
-            };
-            var feedback_url = "/api/v1/memberships/"+membership_id+"/"
-            var data = JSON.stringify({
-                "permission": set_permission
-            });
-            console.log(data);
-            console.log(method);
-            $.ajax({
-                type: method,
-                url: feedback_url,
-                contentType: "application/json",
-                data: data,
-                dataType: "json",
-                satusCode: {
-                    200: function(data) {
-                        console.log("permission update done!");
-                    }
-                }
-            });
-        };
-
-        $(document).on("click", ".permission_click", function(){
-            click_member_for_permission($(this));
-        });
     </script>
     <script id="select_member" type="text/x-jquery-tmpl">
         <div class="dropbottom">
             <div class="dropmid">
                 <ul>
                 {% templatetag openblock %}if permission == 1{% templatetag closeblock %}
-                    <li><a class="permission_click" href="#" name="${id}" tag="0">관리자에서 제외</a></li>
+                    <li class="permission_click" href="#" name="${id}" tag="0"><a>관리자에서 제외</a></li>
                 {% templatetag openblock %}else{% templatetag closeblock %}
-                    <li><a class="permission_click" href="#" name="${id}" tag="1">관리자로 설정</a></li>
+                    <li class="permission_click" href="#" name="${id}" tag="1"><a>관리자로 설정</a></li>
                 {% templatetag openblock %}/if{% templatetag closeblock %}
-                    <li><a class="permission_click" href="#" name="${id}" tag="-1">그룹에서 제외</a></li>
+                    <li class="permission_click" href="#" name="${id}" tag="-1"><a>그룹에서 제외</a></li>
                 </ul>
             </div>
         </div>
     </script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/group.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/group_option.js"></script>
 {% endblock %}
