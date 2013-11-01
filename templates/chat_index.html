@@ -3,22 +3,6 @@
 </ul>
 <h2>FRIENDS</h2>
 <ul id="login_user_list" class="userList">
-{#    {% for user_in_list in users %}#}
-{#        {% if user_in_list.id != user.id %}#}
-{#            <li>#}
-{#                <a class="openChat" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">#}
-{#                    {% with user_in_list.userpictures_set.all|first as userpicture %}#}
-{#                        {% if userpicture %}#}
-{#                            <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="chatPicture" />#}
-{#                        {% else %}#}
-{#                            <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" />#}
-{#                        {% endif %}#}
-{#                    {% endwith %}#}
-{#                    <span class="username">{{ user_in_list.username }}</span>#}
-{#                </a>#}
-{#            </li>#}
-{#        {% endif %}#}
-{#    {% endfor %}#}
 </ul>
 
 <form id="chat_request_form" method="post" action="">{% csrf_token %}
@@ -55,7 +39,7 @@
                     console.log(data.chat_room_name);
                     console.log(data.participants[0]);
 
-                    displayChatRoom(data.id, data.chat_room_name);
+                    displayChatRoom(data.id, data.chat_room_name, data.participants.length);
                 }
                 else {
                     console.log(data.id);
@@ -104,65 +88,70 @@
                     var appendText = '';
                     for (var i in result) {
                         var j=0;
-                        appendText = appendText + '<li><a class="openChat cboth" title="';
-                        if(result[i].participant_3==null) {
-                            if(result[i].participant_2!=null) {
-                                if(result[i].participant_1.participant_id!={{ user.id }}){
+                        appendText = appendText + '<li><a class="openChat cboth" data-count="' + result[i].participant_count + '" title="';
+                        if(result[i].participant_count==2) {
+                            if(result[i].participant_1.participant_id!={{ user.id }}){
+                                appendText = appendText
+                                        + result[i].participant_1.participant_name
+                                        + '" id="open_chat'
+                                        + result[i].room_id
+                                        + '" href="#">';
+                                if(result[i].participant_1.participant_picture != '') {
                                     appendText = appendText
-                                            + result[i].participant_1.participant_name
-                                            + '" id="open_chat'
-                                            + result[i].room_id
-                                            + '" title="'
-                                            + result[i].room_name
-                                            + '" href="#">';
-                                    if(result[i].participant_1.participant_picture != '') {
-                                        appendText = appendText
-                                                + '<span class="userProfile"><img src="'
-                                                + result[i].participant_1.participant_picture
-                                                + '" alt="'
-                                                + + result[i].participant_1.participant_name
-                                                + '" class="chatPicture" /></span>';
-                                    } else {
-                                        appendText = appendText
-                                                + '<span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span></span>';
-                                    }
-                                    appendText = appendText
-                                            + '<span class="userName">' + result[i].participant_1.participant_name + '</span>';
+                                            + '<span class="userProfile"><img src="'
+                                            + result[i].participant_1.participant_picture
+                                            + '" alt="'
+                                            + + result[i].participant_1.participant_name
+                                            + '" class="chatPicture" /></span>';
                                 } else {
                                     appendText = appendText
-                                            + result[i].participant_2.participant_name
-                                            + '" id="open_chat'
-                                            + result[i].room_id
-                                            + '" title="'
-                                            + result[i].room_name
-                                            + '" href="#">';
-                                    if(result[i].participant_2.participant_picture != '') {
-                                        appendText = appendText
-                                                + '<span class="userProfile"><img src="'
-                                                + result[i].participant_2.participant_picture
-                                                + '" alt="'
-                                                + + result[i].participant_2.participant_name
-                                                + '" class="chatPicture" /></span>';
-                                    } else {
-                                        appendText = appendText
-                                                + '<span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span></span>';
-                                    }
-                                    appendText = appendText
-                                            + '<span class="userName">' + result[i].participant_2.participant_name + '</span>';
+                                            + '<span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>';
                                 }
-
-                                if(result[i].last_message!='' && result[i].last_message_speaker == {{ user.id }}) {
+                                appendText = appendText
+                                        + '<span class="userName">' + result[i].participant_1.participant_name + '</span>';
+                            } else {
+                                appendText = appendText
+                                        + result[i].participant_2.participant_name
+                                        + '" id="open_chat'
+                                        + result[i].room_id
+                                        + '" title="'
+                                        + result[i].room_name
+                                        + '" href="#">';
+                                if(result[i].participant_2.participant_picture != '') {
                                     appendText = appendText
-                                            + '<span class="recentMessage outbound"><span class="arrow"></span>'
-                                            + result[i].last_message
-                                            + '</span>';
-                                } else if(result[i].last_message!='') {
+                                            + '<span class="userProfile"><img src="'
+                                            + result[i].participant_2.participant_picture
+                                            + '" alt="'
+                                            + + result[i].participant_2.participant_name
+                                            + '" class="chatPicture" /></span>';
+                                } else {
                                     appendText = appendText
-                                            + '<span class="recentMessage inbound"><span class="arrow"></span>'
-                                            + result[i].last_message
-                                            + '</span>';
+                                            + '<span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>';
                                 }
+                                appendText = appendText
+                                        + '<span class="userName">' + result[i].participant_2.participant_name + '</span>';
                             }
+                        } else {
+                            appendText = appendText
+                                    + result[i].participant_1.participant_name
+                                    + ' 외 ' + (parseInt(result[i].participant_count)-1)
+                                    + '인" id="open_chat'
+                                    + result[i].room_id
+                                    + '" href="#">'
+                                    + '<span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>'
+                                    + '<span class="userName">' + result[i].participant_1.participant_name
+                                    + ' 외 ' + (parseInt(result[i].participant_count)-1) + '인/</span>';
+                        }
+                        if(result[i].last_message!='' && result[i].last_message_speaker == {{ user.id }}) {
+                            appendText = appendText
+                                    + '<span class="recentMessage outbound"><span class="arrow"></span>'
+                                    + result[i].last_message
+                                    + '</span>';
+                        } else if(result[i].last_message!='') {
+                            appendText = appendText
+                                    + '<span class="recentMessage inbound"><span class="arrow"></span>'
+                                    + result[i].last_message
+                                    + '</span>';
                         }
                         appendText = appendText + '</a></li>';
                     }
@@ -198,13 +187,13 @@
     });
 
     $(document).on("click",".openChat",function () {
-        displayChatRoom($(this).attr("id").substring(9), $(this).attr("title"));
+        displayChatRoom($(this).attr("id").substring(9), $(this).attr("title"), $(this).attr("data-count"));
     });
 
-    function displayChatRoom(chatroomId,chatroomName) {
+    function displayChatRoom(chatroomId,chatroomName,participantCount) {
         var chatMessage = "";
         var chatroomHTML = '<div class="chatBox" id="chatBox_'+ chatroomId + '">'
-                + '<h2>' + chatroomName + '</h2><ul>';
+                + '<h2>' + chatroomName + ' (' + participantCount + '인)</h2><ul>';
 
         chatroomHTML = chatroomHTML + '</ul><input type="text" class="comment_entry" />'
                 + '<input type="hidden" class="user_id" value="{{ user.id }}" />'
