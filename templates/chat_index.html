@@ -55,12 +55,7 @@
                     console.log(data.chat_room_name);
                     console.log(data.participants[0]);
 
-                    //$('#p_chatBoxContainer').append($(data.id));
-                    //socket_chat_connection(data.id);
-                    //$('#p_chatBoxContainer #' + $(data.id).attr("id") + " ul").scrollTop(100000000);
-
-                    //$('#' + $(data.id).attr("id")).show();
-                    //console.log($(data.id).attr("id"));
+                    displayChatRoom(data.id, data.chat_room_name);
                 }
                 else {
                     console.log(data.id);
@@ -203,20 +198,13 @@
     });
 
     $(document).on("click",".openChat",function () {
-        console.log($(this).attr("id"));
-        var chatroomId = $(this).attr("id").substring(9);
-        console.log("chatroomid = " +chatroomId);
+        displayChatRoom($(this).attr("id").substring(9), $(this).attr("title"));
+    });
+
+    function displayChatRoom(chatroomId,chatroomName) {
         var chatMessage = "";
         var chatroomHTML = '<div class="chatBox" id="chatBox_'+ chatroomId + '">'
-                + '<h2>' + $(this).attr("title") + '</h2><ul>';
-{#    <ul>#}
-{#         {% if chat_comments %}#}
-{#            {% for comment in chat_comments %}#}
-{#                <li>{{ comment.chat_comment }}</li>#}
-{#            {% endfor %}#}
-{#         {% endif %}#}
-{##}
-{#    </ul>#}
+                + '<h2>' + chatroomName + '</h2><ul>';
 
         chatroomHTML = chatroomHTML + '</ul><input type="text" class="comment_entry" />'
                 + '<input type="hidden" class="user_id" value="{{ user.id }}" />'
@@ -243,35 +231,7 @@
             }
         });
         socket_chat_connection("chatBox_"+chatroomId);
-
-{#        if (data != "0") {#}
-{#            if ($('#' + $(data).attr("id")).is(':visible')) {#}
-{#                console.log('hide');#}
-{#                $('#' + $(data).attr("id")).hide();#}
-{#            }#}
-{#            else {#}
-{#                console.log($(data).attr("id"));#}
-{#                console.log(document.getElementById($(data).attr("id")));#}
-{#                if (document.getElementById($(data).attr("id")) == null) {#}
-{#                    $('#p_chatBoxContainer').append($(data));#}
-{#                    socket_chat_connection($(data).attr("id"));#}
-{#                    $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);#}
-{#                }#}
-{#                $('#' + $(data).attr("id")).show();#}
-{#                console.log($(data).attr("id"));#}
-{#            }#}
-{#        }#}
-{#        else {#}
-{#            console.log('testets');#}
-{#            if ($('#' + $(data).attr("id")).is(':visible')) {#}
-{#                console.log('hide');#}
-{#                $('#' + $(data).attr("id")).hide();#}
-{#            }#}
-{#            else {#}
-{#                $('#' + $(data).attr("id")).show();#}
-{#            }#}
-{#        }#}
-    });
+    }
 {##}
 {#    var invited_chat = setInterval(function () {#}
 {#        $.ajax({#}
