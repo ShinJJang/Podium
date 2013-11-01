@@ -517,7 +517,7 @@ class ChatParticipantsResource(ModelResource):
 
 class UserChattingMessageResource(ModelResource):
     chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=False)
-    user = fields.ForeignKey(UserResource, 'user_key', full=False)
+    user = fields.ForeignKey(UserResource, 'user_key', full=True)
 
     class Meta:
         queryset = UserChattingMessage.objects.all()

@@ -599,6 +599,8 @@ function timeRefresh() {
 // attach something
 $(function () {
     $(".attachSelect .wPoll").click(function () {
+        $("#postAttach").show();
+        $(".attachSelect").hide();
         if (!post_attach) {
             post_attach = true;
             attach_type = "poll";
@@ -639,6 +641,8 @@ $(function () {
 
     // Attach video's address on YouTube
     $(".attachSelect .wVideo").click(function () {
+        $("#postAttach").show();
+        $(".attachSelect").hide();
         if (!post_attach) {
             post_attach = true;
             attach_type = "video";
@@ -653,6 +657,8 @@ $(function () {
     });
 
     $(".attachSelect .wFile").click(function () {
+        $("#postAttach").show();
+        $(".attachSelect").hide();
         if (!post_attach) {
             post_attach = true;
             attach_type = "file";

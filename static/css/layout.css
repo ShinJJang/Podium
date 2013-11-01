@@ -77,6 +77,10 @@
         #p_chatBoxContainer .chatBox h2 { height:25px; font-weight:bold; padding:0 5px; color:#fff; line-height:25px; }
         #p_chatBoxContainer .chatBox { width:200px; height:250px; background:#fff; border:1px solid; border-bottom:none; bottom:0; margin-left:10px; float:right; font-size:0.86em; box-shadow:0px 1px 2px #999; }
         #p_chatBoxContainer .chatBox ul { height:190px; overflow-y:scroll; padding:5px; background:#f4f4f4; }
+        #p_chatBoxContainer .chatBox ul li { clear:both; }
+        #p_chatBoxContainer .chatBox ul li .sender { display:block; font-size:0.86em; color:#8e8e8e; }
+        #p_chatBoxContainer .chatBox ul .outbound .sender { text-align:right; }
+        #p_chatBoxContainer .chatBox ul .outbound .message { float:right; position:relative; }
         #p_chatBoxContainer .chatBox input { height:24px; border:none; border-top:1px #dadada solid; padding:0 5px; font-size:12px; margin:0; width:190px; }
 
 #p_body #p_document > .p_container { padding:20px; }
@@ -114,15 +118,15 @@
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm { }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .postTools { background:#f0f0f0; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .postTools { border-top:1px #ddd solid; background:#f0f0f0; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .postOptions { float:left; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm textarea.postFormText { vertical-align: top; height:56px; border:none; border-bottom:1px #ddd solid; padding:10px; width:598px; display:block; resize:vertical; }
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm input.postFormSubmit { vertical-align: top; height:30px; border:1px #eaeaea solid; border-radius: 5px; padding:5px 4px; float:right; width:50px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm textarea.postFormText { vertical-align: top; height:56px; border:none; padding:10px; width:598px; display:block; resize:vertical; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm input.postFormSubmit { vertical-align: top; margin:5px; height:30px; border:1px #eaeaea solid; border-radius: 5px; padding:0 20px; float:right; cursor:pointer; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm select { border:1px #eaeaea solid; margin:0px 10px; width: 50px; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect { margin:10px; float:right; }
-                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li { margin-left:10px; float:left; line-height:20px; font-size:0.86em; font-weight:bold; color:#999; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect { margin:0 10px; padding:10px 3px; border-top:1px #ddd solid; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li { margin-right:10px; float:left; line-height:20px; font-size:0.86em; font-weight:bold; color:#999; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li a { width:20px; height:0; padding:20px 0 0 0; display:block; background-image:url(../images/icon_attach.png); background-size:20px 170px; background-repeat:no-repeat; }
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li.wVideo a { background-position:0 -30px; }
@@ -131,7 +135,7 @@
                 #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li.wCode a { background-position:0 -120px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .attachSelect li.wEvent a { background-position:0 -150px; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox #postAttach { clear:both; }
+                #p_body #p_timeline .p_timelineContents .p_tBox #postAttach { clear:both; margin:0 10px; padding:10px 0; border-top:1px #ddd solid; display:none; }
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle { padding:19px; border-bottom:1px #eaeaea solid; }
 
