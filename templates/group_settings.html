@@ -50,11 +50,11 @@
             <div class="dropmid">
                 <ul>
                 {% templatetag openblock %}if permission == 1{% templatetag closeblock %}
-                    <li class="permission_click" href="#" name="${id}" tag="0"><a>관리자에서 제외</a></li>
+                    <li class="permission_click" href="#" name="${id}" tag="0">관리자에서 제외</li>
                 {% templatetag openblock %}elif permission == 0{% templatetag closeblock %}
-                    <li class="permission_click" href="#" name="${id}" tag="1"><a>관리자로 설정</a></li>
+                    <li class="permission_click" href="#" name="${id}" tag="1">관리자로 설정</li>
                 {% templatetag openblock %}/if{% templatetag closeblock %}
-                    <li class="permission_click" href="#" name="${id}" tag="-1"><a>그룹에서 제외</a></li>
+                    <li class="permission_click" href="#" name="${id}" tag="-1">그룹에서 제외</li>
                 </ul>
             </div>
         </div>

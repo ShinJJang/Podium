@@ -192,15 +192,22 @@ var update_member_for_permission = function(eventdom){
         data: data,
         dataType: "json",
         statusCode: {
-            202: function(data) {
-                console.log(data);
+            202: function() {
                 console.log("permission update done!");
+                if(set_permission == 0) {
+                    eventdom.attr("tag", 1);
+                    eventdom.html("관리자로 설정");
+                }
+                else if(set_permission == 1) {
+                    eventdom.attr("tag", 0);
+                    eventdom.html("관리자에서 제외");
+                }
             },
-            204: function(data) {
+            204: function() {
                 eventdom.parents(".li_member_for_delete").remove();
                 console.log("selected member exclude at this group!");
             },
-            404: function(data) {
+            404: function() {
                 console.log("Not founded!")
             }
         }
@@ -233,7 +240,7 @@ $("#request_member").click(function(){
         data: data,
         dataType: "json",
         statusCode: {
-            202: function(data) {
+            202: function() {
                 get_member_list();
                 $("#group_response").append("<span class='tooltip tooltip-bottom'>멤버로 추가되었습니다.</span>"); // TODO - toast alert으로 변경
             },
