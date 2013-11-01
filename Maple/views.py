@@ -276,7 +276,7 @@ def chat_comment(request):
 
         return HttpResponse("Everything worked :)")
 
-    if request.POST.get('type') == "POST":  # todo(baek) 타입을 추가하여 채팅알림을 만들어야 할 때 소켓커넥트 체크하는 함수 추가(알림도 만듬)
+    elif request.POST.get('type') == "NO_CHECK_NOTI":  # todo(baek) 타입을 추가하여 채팅알림을 만들어야 할 때 소켓커넥트 체크하는 함수 추가(알림도 만듬)
         print request.POST.get('comment')
         chat_noti_check()
         try:
@@ -290,6 +290,26 @@ def chat_comment(request):
         except Exception, e:
             return HttpResponseServerError(str(e))
 
+    elif request.POST.get('type') == "CHECK_NOTI":
+        print "check noti"
+        return HttpResponse("Check noti")
+
 def chat_noti_check():
     print "test"
     return 0
+
+@login_required()
+@csrf_exempt
+def set_participant_socket_connection(request):
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    if request.method == 'POST':
+        print request.POST.get('room_id')
+        participant = ChatParticipants.objects.get(chat_room_key=request.POST.get('room_id'), user_key=user);
+        participant.connected_chat = True
+        participant.save()
+        print participant
+        return HttpResponse("put reqeust")
+    else:
+        return HttpResponse("잘못된 접근입니다.")

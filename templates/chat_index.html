@@ -219,10 +219,32 @@
                 $("#chatBox_" + chatroomId + " ul").scrollTop(1000000000);
             }
         });
-        socket_chat_connection("chatBox_"+chatroomId);
+        socket_chat_connection("chatBox_"+chatroomId, participantCount);
     }
+
+
+    function setSocketConnection(room_id) {
+        var request_data ={
+            "room_id": room_id
+        };
+        $.ajax({
+            type: 'POST',
+            content_type: 'application/json',
+            dataType: 'json',
+            data: request_data,
+            url: '/set_participant_socket/',
+            success: function(data) {
+                console.log("modify socket chat connection :" + data);
+            },
+            error: function(error_data) {
+                console.log("ERROR: modify socket chat connection : " + error_data);
+            }
+        });
+    }
+
+
 {##}
-{#    var invited_chat = setInterval(function () {#}
+{#    var invited_chat = setInterval(function () {#} //  TODO(백지훈) notification 부분으로 고칠 예정
 {#        $.ajax({#}
 {#            type: 'GET',#}
 {#            url: '/invited_chat',#}
@@ -260,25 +282,26 @@
 {#        });#}
 {#    }, 100000);#}
 
-    var socket_chat_connection = (function (roomid) {
-        console.log(roomid);
+    var socket_chat_connection = (function (roomid, participant_count_in_room) {
+        console.log(participant_count_in_room);
         var socket = io.connect('localhost', {port: 4000, 'force new connection': true});
+        var entry_el = $("#" + roomid + ' input.comment_entry');
+        var userId = $("#" + roomid + ' input.user_id');
+        var userName = $("#" + roomid + ' input.user_name');
+        var room = roomid.substring(8);
+        var join_info = {room_name: room, user_id: userId.val(), username: userName.val(), participant_count: participant_count_in_room};
 
         socket.on('connect', function () {
-            console.log("socket connect");
+
         });
 
         socket.on('disconnected', function () {
             socket.emit('disconnected_check', 'user out');
         });
 
-        var entry_el = $("#" + roomid + ' input.comment_entry');
-        var userId = $("#" + roomid + ' input.user_id');
-        var userName = $("#" + roomid + ' input.user_name');
-        var room = roomid.substring(8);
-        var join_info = {room_name: room, user_id: userId.val(), username: userName.val()};
 
-        socket.emit('join', join_info);
+        socket.emit('join', join_info); //  roomid기반의 채팅방에 접속
+        setSocketConnection(room);
 
         socket.on('message', function (message) {
             var receive_data = JSON.parse(message);

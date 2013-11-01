@@ -512,6 +512,9 @@ class ChatParticipantsResource(ModelResource):
             "user": ALL
         }
 
+    def obj_update(self, bundle, skip_errors=False, **kwargs):
+        print "PUT data modify"
+        return "0"
 
 class UserChattingMessageResource(ModelResource):
     chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=False)
