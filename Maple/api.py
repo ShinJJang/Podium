@@ -521,7 +521,7 @@ class UserChattingMessageResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user_key', full=True)
 
     class Meta:
-        queryset = UserChattingMessage.objects.all().order_by("created")
+        queryset = UserChattingMessage.objects.all().order_by("-created")
         resource_name = 'user_chat_message'
         authorization = Authorization()
         filtering = {

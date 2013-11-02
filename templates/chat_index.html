@@ -207,13 +207,15 @@
             dataType: 'json',
             url: '/api/v1/user_chat_message/?chat_room_key='+chatroomId,
             success: function(data){
+                console.log(data);
                 for(var i in data.objects) {
-                    if(data.objects[i].user.id == {{ user.id }}) {
+                    var len = data.objects.length - 1;
+                    if(data.objects[len-i].user.id == {{ user.id }}) {
                         chatMessage = chatMessage + '<li class="outbound">';
                     } else {
                         chatMessage = chatMessage + '<li class="inbound">';
                     }
-                    chatMessage = chatMessage + '<span class="sender">'+data.objects[i].user.username+'</span><span class="message"><span class="arrow"></span>' + data.objects[i].chatting_message + '</span></li>';
+                    chatMessage = chatMessage + '<span class="sender">'+data.objects[len-i].user.username+'</span><span class="message"><span class="arrow"></span>' + data.objects[len-i].chatting_message + '</span></li>';
                 }
                 $("#chatBox_" + chatroomId + " ul").append(chatMessage);
                 $("#chatBox_" + chatroomId + " ul").scrollTop(1000000000);
@@ -237,7 +239,8 @@
                 console.log("modify socket chat connection :" + data);
             },
             error: function(error_data) {
-                console.log("ERROR: modify socket chat connection : " + error_data);
+                console.log("ERROR: modify socket chat connection : ");
+                console.log(error_data);
             }
         });
     }

@@ -280,7 +280,7 @@ def chat_comment(request):
 
     if request.POST.get('type') == 'USER_OUT':  # todo(baek) 유저가 나갔을 경우 소켓 커넥트를 폴스로.변경
         out_participant = ChatParticipants.objects.get(chat_room_key=chat_room_key, user_key=user_key)
-        out_participant.connected_chat = True
+        out_participant.connected_chat = False
         out_participant.save()
         return HttpResponse("user out in socket")
 
