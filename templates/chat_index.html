@@ -25,7 +25,7 @@
         var request_data = JSON.stringify({
             "participants": friend_ids,
             "participants_count": friend_count
-        });
+        });l
         $.ajax({
             type: 'POST',
             url: '/api/v1/chat_room/',
@@ -87,7 +87,8 @@
                     result = JSON.parse(data.responseText);
                     var appendText = '';
                     for (var i in result) {
-                        var j=0;
+                        if(result[i].last_message == '') { continue; } // 빈 채팅방은 열지 않는다.
+
                         appendText = appendText + '<li><a class="openChat cboth" data-count="' + result[i].participant_count + '" title="';
                         if(result[i].participant_count==2) {
                             if(result[i].participant_1.participant_id!={{ user.id }}){
@@ -142,12 +143,12 @@
                                     + '<span class="userName">' + result[i].participant_1.participant_name
                                     + ' 외 ' + (parseInt(result[i].participant_count)-1) + '인/</span>';
                         }
-                        if(result[i].last_message!='' && result[i].last_message_speaker == {{ user.id }}) {
+                        if(result[i].last_message_speaker == {{ user.id }}) {
                             appendText = appendText
                                     + '<span class="recentMessage outbound"><span class="arrow"></span>'
                                     + result[i].last_message
                                     + '</span>';
-                        } else if(result[i].last_message!='') {
+                        } else {
                             appendText = appendText
                                     + '<span class="recentMessage inbound"><span class="arrow"></span>'
                                     + result[i].last_message
@@ -191,6 +192,11 @@
     });
 
     function displayChatRoom(chatroomId,chatroomName,participantCount) {
+        if($("#chatBox_"+chatroomId).length > 0) {
+            // 이미 창이 열려있을 때
+            return false;
+        }
+
         var chatMessage = "";
         var chatroomHTML = '<div class="chatBox" id="chatBox_'+ chatroomId + '">'
                 + '<h2>' + chatroomName + ' (' + participantCount + '인)</h2><ul>';
@@ -334,7 +340,7 @@
         });
 
         entry_el.keypress(function (event) {
-            if (event.keyCode != 13) return;
+            if (event.keyCode != 13 || entry_el.val()=='') return; // 빈 메시지는 전송하지 않는다.
             var value = entry_el.val();
             room = $(this).parent().attr("id").substring(8);
             var msg = JSON.stringify({
