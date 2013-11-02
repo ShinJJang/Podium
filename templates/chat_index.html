@@ -6,8 +6,11 @@
 </ul>
 
 <form id="chat_request_form" method="post" action="">{% csrf_token %}
-    <input type="text" id="chat_search_friend">
-    <input type="button" value="완료">
+    <span class="search_icon">Search</span>
+    <div class="search_form">
+        <input type="text" id="chat_search_friend">
+        <input type="button" value="완료">
+    </div>
 </form>
 
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
@@ -169,8 +172,13 @@
         });
     }
 
+    function getFriendList() {
+
+    }
+
     $(function(){
         getChattingList();
+        getFriendList();
     });
 
     function formatResult(node) {
@@ -178,7 +186,7 @@
     };
 
     function formatSelection(node) {
-        return '<div><input type="hidden" class="chat_search_results" value=' + node.id + '></input></div>';
+        return '<div><input type="hidden" class="chat_search_results" value=' + node.id + '>' + node.username + '</div>';
     };
 
     $(".invite_people").click(function () {
