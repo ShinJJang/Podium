@@ -41,30 +41,32 @@ class Posts(models.Model):
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now=True)
     group = models.ForeignKey(Groups, null=True)
-    open_scope = models.IntegerField(default=0) # 0 = public, 1 = private, 2 = target user, 3 = group
+    open_scope = models.IntegerField(default=0)    # 0 = public, 1 = private, 2 = target user, 3 = group
     target_user = models.ForeignKey(User, null=True, related_name='target_user')
-    attachment_type = models.IntegerField(default=0) # 0 = not attached, 1 = photo, 2 = video, 3 = file, 4 = poll, 5 = rich text
+    # 0 = not attached, 1 = photo, 2 = video, 3 = file, 4 = poll, 5 = rich text
+    attachment_type = models.IntegerField(default=0)
+
 
 def create_friend_post(sender, instance, created, **kwargs):
     if created:
         write_user = instance.user_key
 
-        # 자신에게 글 저장
-        FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
-
         # 친구들에게 글 저장
-        if(instance.open_scope == 0 | instance.open_scope == 2):
-            friendships = Friendships.objects.filter(user_key=write_user) # TODO - friendship
+        if instance.open_scope == 0 or instance.open_scope == 2:
+            # 자신에게 글 저장 - 그룹에서는 멤버도 자신을 포함하므로 따로 넣어주지 않음
+            FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
+            friendships = Friendships.objects.filter(user_key=write_user)   # TODO - friendship
             for friendship in friendships:
-                 FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
+                FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
 
-        elif(instance.open_scope == 3):
-            memberships = Memberships.objects.filter(group_key=instance.group.pk); # TODO - membership
+        elif instance.open_scope == 3:
+            memberships = Memberships.objects.filter(group_key=instance.group.pk)   # TODO - membership
             for membership in memberships:
                 FriendPosts.objects.get_or_create(user_key=membership.user_key, friend_post_key=instance)
             GroupPosts.objects.get_or_create(group_key=instance.group, post_key=instance)
 
 post_save.connect(create_friend_post, sender=Posts)
+
 
 class Comments(models.Model):
     user_key = models.ForeignKey(User)
