@@ -272,19 +272,20 @@ def invited_chat(request):
 
 @csrf_exempt
 def chat_comment(request):
-    if request.POST.get('type') == 'USER_OUT':  # todo(baek) 유저가 나갔을 경우 소켓 커넥트를 폴스로.변경
+    message = request.POST.get('comment')
+    user_id = request.POST.get('user_id')
+    room_id = request.POST.get('room_id')
+    chat_room_key = ChatRoom.objects.get(id=room_id)
+    user_key = User.objects.get(id=user_id)
 
-        return HttpResponse("Everything worked :)")
+    if request.POST.get('type') == 'USER_OUT':  # todo(baek) 유저가 나갔을 경우 소켓 커넥트를 폴스로.변경
+        out_participant = ChatParticipants.objects.get(chat_room_key=chat_room_key, user_key=user_key)
+        out_participant.connected_chat = True
+        out_participant.save()
+        return HttpResponse("user out in socket")
 
     elif request.POST.get('type') == "NO_CHECK_NOTI":  # todo(baek) 타입을 추가하여 채팅알림을 만들어야 할 때 소켓커넥트 체크하는 함수 추가(알림도 만듬)
-        print request.POST.get('comment')
-        chat_noti_check()
         try:
-            message = request.POST.get('comment')
-            user_id = request.POST.get('user_id')
-            room_id = request.POST.get('room_id')
-            chat_room_key = ChatRoom.objects.get(id=room_id)
-            user_key = User.objects.get(id=user_id)
             chat_message = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key, chatting_message=message)
             return HttpResponse("create chat_message")
         except Exception, e:
@@ -292,11 +293,23 @@ def chat_comment(request):
 
     elif request.POST.get('type') == "CHECK_NOTI":
         print "check noti"
-        return HttpResponse("Check noti")
+        chat_noti_check(request.POST.get('room_id'), user_key)
+        try:
+            chat_message = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key, chatting_message=message)
+            return HttpResponse("create chat_message")
+        except Exception, e:
+            return HttpResponseServerError(str(e))
 
-def chat_noti_check():
-    print "test"
+def chat_noti_check(room_id, user_key): #  todo(baek) chatroom을 기반으로 참여하고 있는 참가자들의 소켓 커넥션 여부를 확인하여 알림 메시지를 만든다.
+
+    chat_room_participants = ChatParticipants.objects.filter(chat_room_key=room_id)
+    for chat_room_participant in chat_room_participants:
+        if chat_room_participant.connected_chat == False:
+            ChatNotification.objects.create(chat_room_key=chat_room_participant.chat_room_key, from_user_key=user_key, to_user_key=chat_room_participant.user_key)
+
+    print chat_room_participants
     return 0
+
 
 @login_required()
 @csrf_exempt
