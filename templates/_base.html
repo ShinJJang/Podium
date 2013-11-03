@@ -28,8 +28,11 @@
 
         <div id="p_topSearch">
             <input id="p_topSearchForm" type="text" name="p_topSearchForm" value=""
-                   placeholder="Search Everything in the Podium">
-            <div id="p_topSearch_results"></div>
+                   placeholder="Search Everything in the Podium" autocomplete="off">
+            <div>
+                <li id="p_topSearch_results">
+                </li>
+            </div>
         </div>
         <ul id="p_headerLinks">
             <li>
@@ -132,7 +135,6 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.ui.menu.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.ui.autocomplete.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.tmpl.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/search.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/rainbow-custom.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/waypoints.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.timeago.js"></script>
@@ -146,6 +148,7 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/select2_locale_ko.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/sidebar.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/search.js"></script>
 {% endblock %}
 {% block add_scripts %}
 {% endblock %}
