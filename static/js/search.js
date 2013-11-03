@@ -10,7 +10,6 @@ $('#p_topSearchForm').keyup(function() {
         dataType: "json",
         success: function(data) {
             for(var index in data.objects){
-                console.log(data);
                 $('#p_topSearch_results').append('<li><a href=/people/'+data.objects[index].id+'>'+data.objects[index].username+'</a></li>');
             }
         }
@@ -21,7 +20,6 @@ $('#p_topSearchForm').keyup(function() {
         dataType: "json",
         success: function(data) {
             for(var index in data.objects){
-                console.log(data);
                 $('#p_topSearch_results').append('<li><a href=/group/'+data.objects[index].id+'>'+data.objects[index].group_name+'</a></li>');
             }
         }

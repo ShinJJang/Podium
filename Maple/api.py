@@ -49,9 +49,7 @@ class UserResource(ModelResource):
         self.throttle_check(request)
 
         # Do the query.
-        #sqs = SearchQuerySet().models(User).load_all().auto_query(request.GET.get('q', ''))
-        sqs = SearchQuerySet().models(User).load_all().autocomplete(username=request.GET.get('q', ''))
-        #sqs = SearchQuerySet().models(User).filter(username__contain=request.GET.get('q', ''))
+        sqs = SearchQuerySet().models(User).load_all().filter(Q(username=request.GET.get('q', '')))
         paginator = Paginator(sqs, 20)
 
         try:
@@ -348,9 +346,7 @@ class GroupResource(ModelResource):
         self.throttle_check(request)
 
         # Do the query.
-        #sqs = SearchQuerySet().models(Groups).load_all().auto_query(request.GET.get('q', ''))
-        sqs = SearchQuerySet().models(Groups).load_all().autocomplete(group_name=request.GET.get('q', ''))
-        #sqs = SearchQuerySet().models(Groups).filter(username__contain=request.GET.get('q', ''))
+        sqs = SearchQuerySet().models(Groups).load_all().filter(Q(group_name=request.GET.get('q', '')) | Q(description=request.GET.get('q', '')))
         paginator = Paginator(sqs, 20)
 
         try:
