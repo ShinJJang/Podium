@@ -272,16 +272,19 @@ def invited_chat(request):
 
 @csrf_exempt
 def chat_comment(request):
+    print "chat_comment"
     message = request.POST.get('comment')
     user_id = request.POST.get('user_id')
     room_id = request.POST.get('room_id')
     chat_room_key = ChatRoom.objects.get(id=room_id)
     user_key = User.objects.get(id=user_id)
-
+    print "testt" + room_id
     if request.POST.get('type') == 'USER_OUT':  # todo(baek) 유저가 나갔을 경우 소켓 커넥트를 폴스로.변경
+        print 'user_out'
         out_participant = ChatParticipants.objects.get(chat_room_key=chat_room_key, user_key=user_key)
         out_participant.connected_chat = False
         out_participant.save()
+        print 'user_out_complete'
         return HttpResponse("user out in socket")
 
     elif request.POST.get('type') == "NO_CHECK_NOTI":  # todo(baek) 타입을 추가하여 채팅알림을 만들어야 할 때 소켓커넥트 체크하는 함수 추가(알림도 만듬)
@@ -305,7 +308,7 @@ def chat_noti_check(room_id, user_key): #  todo(baek) chatroom을 기반으로 �
     chat_room_participants = ChatParticipants.objects.filter(chat_room_key=room_id)
     for chat_room_participant in chat_room_participants:
         if chat_room_participant.connected_chat == False:
-            ChatNotification.objects.create(chat_room_key=chat_room_participant.chat_room_key, from_user_key=user_key, to_user_key=chat_room_participant.user_key)
+            ChatNotification.objects.get_or_create(chat_room_key=chat_room_participant.chat_room_key, from_user_key=user_key, to_user_key=chat_room_participant.user_key)
 
     print chat_room_participants
     return 0
@@ -323,6 +326,6 @@ def set_participant_socket_connection(request):
         participant.connected_chat = True
         participant.save()
         print participant
-        return HttpResponse("put reqeust")
+        return HttpResponse("put request")
     else:
         return HttpResponse("잘못된 접근입니다.")

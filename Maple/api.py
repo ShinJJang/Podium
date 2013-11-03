@@ -487,15 +487,20 @@ class ChatRoomResource(ModelResource):
                 ChatParticipants.objects.create(chat_room_key=room, user_key=append_user)
             return bundle
 
+
 class ChatNotificationResource(ModelResource):
-    chat_room = fields.ForeignKey(ChatRoomResource, 'chat_room', full=False)
+    chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=True)
+    from_user_key = fields.ForeignKey(UserResource, 'from_user_key', full=False)
+    to_user_key = fields.ForeignKey(UserResource, 'to_user_key', full=True)
 
     class Meta:
-        queryset = UserFiles.objects.all()
+        queryset = ChatNotification.objects.all()
         resource_name = 'chat_notis'
         authorization = Authorization()
         filtering = {
-            "chat_room": ALL
+            "chat_room_key": ALL_WITH_RELATIONS,
+            "from_user_key": ALL_WITH_RELATIONS,
+            "to_user_key": ALL_WITH_RELATIONS
         }
 
 
@@ -512,9 +517,6 @@ class ChatParticipantsResource(ModelResource):
             "user": ALL
         }
 
-    def obj_update(self, bundle, skip_errors=False, **kwargs):
-        print "PUT data modify"
-        return "0"
 
 class UserChattingMessageResource(ModelResource):
     chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=False)
