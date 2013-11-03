@@ -60,15 +60,16 @@ def create_friend_post(sender, instance, created, **kwargs):
         if instance.open_scope == 0 or instance.open_scope == 2:
             # 자신에게 글 저장 - 그룹에서는 멤버도 자신을 포함하므로 따로 넣어주지 않음
             FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
-            friendships = Friendships.objects.filter(user_key=write_user)   # TODO - friendship
+            friendships = Friendships.objects.filter(user_key=write_user)
             for friendship in friendships:
                 FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
 
         elif instance.open_scope == 3:
-            memberships = Memberships.objects.filter(group_key=instance.group.pk)   # TODO - membership
+            memberships = Memberships.objects.filter(group_key=instance.group.pk)
             for membership in memberships:
                 FriendPosts.objects.get_or_create(user_key=membership.user_key, friend_post_key=instance)
             GroupPosts.objects.get_or_create(group_key=instance.group, post_key=instance)
+            # TODO - Post template가 post model 기반이라 쓰려면 grouppost는 따로 전처리가 필요함
 
 post_save.connect(create_friend_post, sender=Posts)
 
