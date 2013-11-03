@@ -1,4 +1,5 @@
 # Django settings for Podium project.
+# -*- coding: utf-8 -*-
 import os.path
 
 BASE_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -103,6 +104,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Debug Tool bar 안보려면 주석 처리
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 AUTHENTICATION_BACKENDS  = (
@@ -136,7 +139,8 @@ INSTALLED_APPS = (
     'haystack',
     'boto',
     'south',
-    'raven.contrib.django.raven_compat'
+    'raven.contrib.django.raven_compat',
+    'debug_toolbar',
 )
 
 # Set your DSN value
@@ -255,3 +259,5 @@ LOGGING = {
         },
     },
 }
+
+INTERNAL_IPS = ('127.0.0.1',)
