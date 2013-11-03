@@ -300,8 +300,7 @@ $(document).on("submit", "#form_comment", function (event) {
                 console.log(data);
                 pollComment(data.post_key);
                 $("input[name=comment]").val("");
-                var comment_count = $("#commentList" + post_key + " li").size();
-                $(this).parent().siblings("header").find(".p_comment").html("<a herf='#'><strong>댓글</strong>/ " + comment_count + "</a>");
+                counting_comment(post_key);
             }
         }
     });
@@ -427,7 +426,7 @@ $(document).ready(function () {
     $.timeago.settings.strings = {
         suffixAgo: "전",
         suffixFromNow: "후",
-        seconds: "1분 이내",
+        seconds: "방금",
         minute: "1분",
         minutes: "%d분",
         hour: "1시간",
@@ -537,6 +536,7 @@ function pollComment(post_id) {
                 timeRefresh();
                 comment_offsets[post_id] = data.objects[data.objects.length - 1].id;
                 console.log("댓글 폴링한 마지막 오프셋 :" + comment_offsets[post_id]);
+                counting_comment(post_id);
             }
         }
     });
@@ -840,3 +840,7 @@ function s3_upload_delete() {
     }
 }
 
+var counting_comment = function(post_key) {
+    var comment_count = $("#commentList" + post_key + " li").size();
+    $("#commentList" + post_key).parent().siblings("header").find(".p_comment").html("<a herf='#'><strong>댓글</strong>/ " + comment_count + "</a>");
+};
