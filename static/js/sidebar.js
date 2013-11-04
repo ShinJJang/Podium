@@ -9,6 +9,9 @@ var get_friendship_notis = function(){
             200: function (data) {
                 console.log("sidebar friendship notis get!");
                 $("#friend_noti_count").html(data.meta.total_count);
+                for(var index in data.objects) {
+                    $("#ul_nav_request").append("<li>"+data.objects[index].noti_user_key.username+"</li>");
+                }
             }
         }
     });
