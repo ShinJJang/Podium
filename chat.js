@@ -72,8 +72,20 @@ io.sockets.on('connection', function (socket) {
 
     socket.on("disconnect", function () { //  todo(baek) disconnect시 소켓연결을 해제시켜준다.
         logger.info(socket.username + 'out');
-        logger.info(socket.room_name);
-        io.sockets.in(socket.room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
+        var duplication = 0;
+        var clients = io.sockets.clients(socket.room_name);
+        for (var i = 0; i < clients.length; i++) {
+            if (socket.username == clients[i].username) {
+                duplication++;
+            }
+            logger.info("access client = " + clients[i].username);
+        }
+        if(duplication > 1) {
+
+        }
+        else {
+            io.sockets.in(socket.room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
+        }
         var values = querystring.stringify({
             user_id: socket.user_id,
             room_id: socket.room_id,
@@ -124,13 +136,20 @@ io.sockets.on('connection', function (socket) {
         io.sockets.in(parse_message.room_name).emit('message', chat_message_to_client);
 
         var clients = io.sockets.clients(parse_message.room_name);
-
+        var duplication = 0;
+        for (var i = 0; i < clients.length; i++) {
+            if (socket.username == clients[i].username) {
+                duplication++;
+            }
+            logger.info("access client = " + clients[i].username);
+        }
+        duplication = duplication - 1;
         logger.info("participants:" + clients[0].id); // todo(baek) 카운트를 기반으로 방의 참가자수가 소켓에 연결되어 있지 않으면 노티피케이션 검사해서 노티하게
         logger.info("user id:" + socket.user_id);
         logger.info("room info participant count:" + socket.participant_count);
         var noti_type = "";
 
-        if(clients.length == socket.participant_count) {
+        if((clients.length - duplication) == socket.participant_count) {
             noti_type = "NO_CHECK_NOTI"
         }
         else {
