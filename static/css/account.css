@@ -14,6 +14,10 @@ body { background:#424b4a; }
 
     #loginForm .errorMessage { position:absolute; top:244px; height:40px; width:340px; text-align:center; color:#fff; line-height:40px; border-radius:5px; background:#e15858 }
 
+    #loginForm input[type="button"] { border:1px #e0e0e0 solid; background:#12c1bf; color:#fff; display:block; height:40px; width:340px; border-radius:5px; cursor:pointer; font-size:16px; font-weight:bold; }
+    #loginForm input[type="button"]:hover { background:#38978c; }
+    #loginForm input[type="button"]:active { box-shadow:inset 0 2px 5px rgba(0,0,0,0.3); }
+
 
 #signupForm { width:640px; background:#fff; border-radius:10px; box-shadow:0px 1px 1px rgba(0,0,0,0.33); margin:30px auto; }
 
