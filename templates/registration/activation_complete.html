@@ -1,9 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-activation done!
-</body>
-</html>
+{% extends "registration/_account.html" %}
+{% block formContents %}
+    <div id="loginForm">
+        <h1>Podium for SW_Maestro</h1>
+        <div class="content_wrap pui">
+            <div class="box">
+                <div class="text">
+                    <h4>계정이 활성화 되었습니다!</h4>
+                    <a href="/accounts/login">로그인 페이지로</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block add_scripts %}
+{% endblock %}

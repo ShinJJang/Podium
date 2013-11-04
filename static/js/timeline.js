@@ -747,7 +747,6 @@ function s3_upload_put() {
         iSize = ($("#post_file")[0].files[0].size / 1024);
     }
 
-
     if ($("#post_is_file").val() == "1") {
         console.log("s3 upload = " + $("#post_is_file").val);
         alert("안대 지우고 올려");
