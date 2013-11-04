@@ -74,8 +74,6 @@ io.sockets.on('connection', function (socket) {
         logger.info(socket.username + 'out');
         logger.info(socket.room_name);
         io.sockets.in(socket.room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
-        logger.info(users[socket.user_id].room_name);
-        logger.info("disconnect user id = " + users[socket.user_id].user_id);
         var values = querystring.stringify({
             user_id: socket.user_id,
             room_id: socket.room_id,
