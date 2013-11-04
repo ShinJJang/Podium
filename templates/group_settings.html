@@ -30,13 +30,35 @@
                     </form>
                 </div>
             </div>
+            <div class="box">
+                <label class="text">멤버추가</label><input type="text" id="group_search_friend" style="width: 300px">
+                <input type="button" id="request_member" value="추가">
+                <div class="text member_list">
+                </div>
+            </div>
         </div>
     </section>
 {% endblock %}
 
 {% block add_scripts %}
     <script type="text/javascript">
-        var group_id = {{ group.id }}
+        var group_id = {{ group.id }};
+        var permission = {{ permission }};
+        var open_scope = {{ group.open_scope }};
     </script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/group.js"></script>
+    <script id="select_member" type="text/x-jquery-tmpl">
+        <div class="dropbottom">
+            <div class="dropmid">
+                <ul>
+                {% templatetag openblock %}if permission == 1{% templatetag closeblock %}
+                    <li class="permission_click" href="#" name="${id}" tag="0">관리자에서 제외</li>
+                {% templatetag openblock %}elif permission == 0{% templatetag closeblock %}
+                    <li class="permission_click" href="#" name="${id}" tag="1">관리자로 설정</li>
+                {% templatetag openblock %}/if{% templatetag closeblock %}
+                    <li class="permission_click" href="#" name="${id}" tag="-1">그룹에서 제외</li>
+                </ul>
+            </div>
+        </div>
+    </script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/group_option.js"></script>
 {% endblock %}

@@ -26,6 +26,7 @@ from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
 from tastypie.exceptions import BadRequest
 
+
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
@@ -39,7 +40,7 @@ class UserResource(ModelResource):
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_get_search"),
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
         ]
 
     def get_search(self, request, **kwargs):
@@ -48,9 +49,7 @@ class UserResource(ModelResource):
         self.throttle_check(request)
 
         # Do the query.
-        #sqs = SearchQuerySet().models(User).load_all().auto_query(request.GET.get('q', ''))
-        sqs = SearchQuerySet().models(User).load_all().autocomplete(username=request.GET.get('q', ''))
-        #sqs = SearchQuerySet().models(User).filter(username__contain=request.GET.get('q', ''))
+        sqs = SearchQuerySet().models(User).load_all().filter(Q(username=request.GET.get('q', '')))
         paginator = Paginator(sqs, 20)
 
         try:
@@ -73,6 +72,7 @@ class UserResource(ModelResource):
 
         self.log_throttled_access(request)
         return self.create_response(request, object_list)
+
 
 class UserProfileResource(ModelResource):
     user = fields.OneToOneField(UserResource, 'user', full=True)
@@ -120,11 +120,11 @@ class PostResource(ModelResource):
         aType = bundle.data['aType']
         if (open_scope == 0) or (open_scope == 1): # public to self or private
             bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType)
-        elif (open_scope == 2): # public to friend
+        elif open_scope == 2: # public to friend
             target_user = User.objects.get(pk=bundle.data['target'])
             bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType,
                                target_user=target_user)
-        elif (open_scope == 3): # group
+        elif open_scope == 3: # group
             group = Groups.objects.get(pk=bundle.data['target'])
             bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType, group=group)
 
@@ -134,10 +134,10 @@ class PostResource(ModelResource):
     def dehydrate(self, bundle):
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
         bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count()
-        if (bundle.obj.group):
+        if bundle.obj.group:
             bundle.data['group_name'] = bundle.obj.group.group_name
             bundle.data['group_id'] = bundle.obj.group.id
-        elif (bundle.obj.target_user):
+        elif bundle.obj.target_user:
             bundle.data['target_user_name'] = bundle.obj.target_user.username
             bundle.data['target_user_id'] = bundle.obj.target_user.id
         return bundle
@@ -202,7 +202,7 @@ class FriendshipsResource(ModelResource): #polling get or create
         include_resource_uri = False
         authorization = Authorization()
         filtering = {
-            "user_key": ALL_WITH_RELATIONS,
+            "user": ALL_WITH_RELATIONS,
             "friend_user": ALL_WITH_RELATIONS
         }
 
@@ -257,7 +257,7 @@ class PostEmotionsResource(ModelResource):
 
         # 이미 감정표현을 한 경우.
         if PostEmotions.objects.filter(user_key=user, post_key=post).exists():
-            return bundle;
+            return bundle
 
         bundle.obj = PostEmotions(user_key=user, post_key=post, emotion=emotion)
         bundle.obj.save()
@@ -299,7 +299,6 @@ class PollResource(ModelResource):
         return bundle
 
 
-
 class GroupResource(ModelResource):
     class Meta:
         queryset = Groups.objects.all()
@@ -313,7 +312,7 @@ class GroupResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         group_name = bundle.data['group_name']
         description = bundle.data['description']
-        is_project = bundle.data['is_project']
+        is_project = bundle.data['isProject']
         open_scope = bundle.data['open_scope']
         member_request_list = bundle.data['members']
         if Groups.objects.filter(group_name=group_name).count() != 0:
@@ -331,14 +330,48 @@ class GroupResource(ModelResource):
         return bundle
 
     def hydrate(self, bundle):  # 업데이트시, 체크
-        if Groups.objects.filter(group_name=bundle.data['group_name']).count() != 0:
-            raise BadRequest('이미 존재하는 그룹명입니다 하힛')
+        if bundle.obj.group_name != bundle.data['group_name'] and Groups.objects.filter(group_name=bundle.data['group_name']).count() != 0:
+            raise BadRequest('이미 존재하는 그룹명입니다')
 
         return bundle
 
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_group_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(Groups).load_all().filter(Q(group_name=request.GET.get('q', '')) | Q(description=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
 class MembershipsResource(ModelResource):
     group_key = fields.ForeignKey(GroupResource, 'group_key', full=True)
-    user_key = fields.ForeignKey(UserResource, 'user_key', full=False)
+    user_key = fields.ForeignKey(UserResource, 'user_key', full=True)
 
     class Meta:
         queryset = Memberships.objects.all()
@@ -353,6 +386,10 @@ class MembershipsResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         group = Groups.objects.get(pk=bundle.data['group_key'])
         user = User.objects.get(pk=bundle.data['user_key'])
+
+        if Memberships.objects.filter(group_key=group, user_key=user).exists():
+            raise BadRequest("이미 존재하는 멤버입니다.")
+
         bundle.obj = Memberships(group_key=group, user_key=user)
         bundle.obj.save()
         return bundle
@@ -374,11 +411,15 @@ class MembershipNotisResource(ModelResource):
     def obj_create(self, bundle, **kwargs):
         group = Groups.objects.get(pk=bundle.data['noti_group_key'])
         user = User.objects.get(pk=bundle.data['noti_user_key'])
+
+        if Memberships.objects.filter(group_key=group, user_key=user).exists():
+            raise BadRequest("이미 존재하는 멤버입니다.")  # TODO - 400 이용하면 그룹 요청시 요긴할 것 - JS 수정
+
         bundle.obj = MembershipNotis(noti_group_key=group, noti_user_key=user)
         bundle.obj.save()
         return bundle
 
-    # TODO - API GET 그룹 가입 요청, 권한 처리리
+    # TODO - API GET 그룹 가입 요청, 권한 처리
    #def obj_get_list(self, bundle, **kwargs):
     #    user = bundle.request.user
     #    group = Groups.objects.get(id=bundle.data['noti_group_key'])
@@ -449,9 +490,7 @@ class ChatRoomResource(ModelResource):
     def obj_get_list(self, bundle, **kwargs):
         print "test get"
         user_key = bundle.request.user.id
-
         print bundle
-
         chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user_key).distinct()
         return chat_rooms
 
@@ -481,21 +520,26 @@ class ChatRoomResource(ModelResource):
                 ChatParticipants.objects.create(chat_room_key=room, user_key=append_user)
             return bundle
 
+
 class ChatNotificationResource(ModelResource):
-    chat_room = fields.ForeignKey(ChatRoomResource, 'chat_room', full=False)
+    chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=True)
+    from_user_key = fields.ForeignKey(UserResource, 'from_user_key', full=False)
+    to_user_key = fields.ForeignKey(UserResource, 'to_user_key', full=True)
 
     class Meta:
-        queryset = UserFiles.objects.all()
+        queryset = ChatNotification.objects.all()
         resource_name = 'chat_notis'
         authorization = Authorization()
         filtering = {
-            "chat_room": ALL
+            "chat_room_key": ALL_WITH_RELATIONS,
+            "from_user_key": ALL_WITH_RELATIONS,
+            "to_user_key": ALL_WITH_RELATIONS
         }
 
 
 class ChatParticipantsResource(ModelResource):
     chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=False)
-    user = fields.ForeignKey(UserResource, 'user_key', full=False)
+    user = fields.ForeignKey(UserResource, 'user_key', full=True)
 
     class Meta:
         queryset = ChatParticipants.objects.all()
@@ -509,10 +553,10 @@ class ChatParticipantsResource(ModelResource):
 
 class UserChattingMessageResource(ModelResource):
     chat_room_key = fields.ForeignKey(ChatRoomResource, 'chat_room_key', full=False)
-    user = fields.ForeignKey(UserResource, 'user_key', full=False)
+    user = fields.ForeignKey(UserResource, 'user_key', full=True)
 
     class Meta:
-        queryset = UserChattingMessage.objects.all()
+        queryset = UserChattingMessage.objects.all().order_by("-created")
         resource_name = 'user_chat_message'
         authorization = Authorization()
         filtering = {
@@ -521,17 +565,19 @@ class UserChattingMessageResource(ModelResource):
         }
 
     def obj_create(self, bundle, **kwargs):
+        print bundle.data
         message = bundle.data['comment']
+        print message
         user_id = bundle.data['user_id']
         room_id = bundle.data['room_id']
         chat_room_key = ChatRoom.objects.get(id=room_id)
+        print chat_room_key
         user_key = User.objects.get(id=user_id)
-        bundle.obj = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key,chatting_message=message)
+        print user_key
+        bundle.obj = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key, chatting_message=message)
+        print bundle.obj
         bundle.obj.save()
         return bundle
-
-
-
 
 """
 // tastypie 상속 가능한 method

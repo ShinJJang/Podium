@@ -14,8 +14,8 @@ tinymce.init({
         "insertdatetime media nonbreaking save table contextmenu directionality",
         "emoticons template paste textcolor"
     ],
-    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link",
-    toolbar2: "forecolor backcolor emoticons",
+    menubar:false,
+    toolbar1: "styleselect | bold italic | forecolor backcolor emoticons | alignleft aligncenter alignright | bullist numlist | link code",
     image_advtab: true,
     templates: [
         {title: 'Test template 1', content: 'Test 1'},
@@ -260,7 +260,6 @@ $(document).on("submit", "#form_post_rich", function (event) {
             201: function (data) {
                 /*post로 생성 후 생성한 json response*/
                 console.log("post submit response");
-                console.log(data);
                 PostTopPolling();
                 $("input[name=post]").val("");
 
@@ -301,8 +300,7 @@ $(document).on("submit", "#form_comment", function (event) {
                 console.log(data);
                 pollComment(data.post_key);
                 $("input[name=comment]").val("");
-                var comment_count = $("#commentList" + post_key + " li").size();
-                $(this).parent().siblings("header").find(".p_comment").html("<a herf='#'><strong>댓글</strong>/ " + comment_count + "</a>");
+                counting_comment(post_key);
             }
         }
     });
@@ -316,8 +314,6 @@ function PostTopPolling() {
         type: "GET",
         dataType: "json",
         success: function (data) {
-            console.log("TOP POLL POST  url:" + post_top_url);
-            console.log(data);
             if (data.objects.length != 0) {
                 for (var dataObj in data.objects) {
                     try {
@@ -335,13 +331,10 @@ function PostTopPolling() {
 
                 timeRefresh();
                 post_top_url = data.meta.previous;
-                console.log("1 previous url:  " + post_top_url);
                 if (!data.meta.previous)
                     post_top_url = "http://" + window.location.host + "/api/v1/friendposts/?limit=1&id__gt=" + data.objects[0].id + "&" + timeline_js_parameter_top_post_polling;
-                console.log("2 previous url:  " + post_top_url);
                 if (isBottominit == 0) {
                     post_bottom_url = (!data.meta.next) ? null : data.meta.next + "&id__lte=" + data.objects[0].id;
-                    console.log("1 next url:  " + post_bottom_url);
                     isBottominit = 1;
                 }
 
@@ -356,8 +349,6 @@ function PostTopPolling() {
                             var videoId;
                             var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
                             var match = data.objects[0].video.match(regExp);
-                            console.log("Video:");
-                            console.log(match);
                             if (match&&match[7].length==11){
                                 videoId = match[7];
                                 $(targetDiv).html('<iframe width="560" height="315" src="//www.youtube.com/embed/'+videoId+'" frameborder="0" allowfullscreen></iframe>');
@@ -400,8 +391,6 @@ function PostTopPolling() {
                         dataType: "json",
                         success: function (data) {
                             for (obj in data.objects) {
-                                console.log(data.objects[obj]);
-                                console.log(data.objects[obj].poll);
                                 data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
                             }
                             $(targetDiv).append('<li class="pollTitle">' + data.objects[0].poll.title + '</li>');
@@ -437,7 +426,7 @@ $(document).ready(function () {
     $.timeago.settings.strings = {
         suffixAgo: "전",
         suffixFromNow: "후",
-        seconds: "1분 이내",
+        seconds: "방금",
         minute: "1분",
         minutes: "%d분",
         hour: "1시간",
@@ -453,7 +442,6 @@ $(document).ready(function () {
 
     setTimeout(function () {
         timeRefresh();
-        console.log("timeago called");
     }, 2000);
 });
 
@@ -466,7 +454,6 @@ function postBottom() {
         dataType: "json",
         success: function (data) {
             console.log("BOTTOM POLL POST   url:" + post_bottom_url);
-            console.log(data);
             if (data.objects.length != 0) {
                 for (var dataObj in data.objects) {
                     try {
@@ -549,6 +536,7 @@ function pollComment(post_id) {
                 timeRefresh();
                 comment_offsets[post_id] = data.objects[data.objects.length - 1].id;
                 console.log("댓글 폴링한 마지막 오프셋 :" + comment_offsets[post_id]);
+                counting_comment(post_id);
             }
         }
     });
@@ -602,6 +590,8 @@ function timeRefresh() {
 // attach something
 $(function () {
     $(".attachSelect .wPoll").click(function () {
+        $("#postAttach").show();
+        $(".attachSelect").hide();
         if (!post_attach) {
             post_attach = true;
             attach_type = "poll";
@@ -627,16 +617,22 @@ $(function () {
                 $("#add_poll").parent().before(newElement);
             });
         }
-        console.log(post_attach);
     });
 
     // Simply add code tag on the textarea.
     $(".attachSelect .wCode").click(function () {
+        var modalWindow = '<div id="codeModal" class="modalWrapper"><div class="modalMargin"></div><div id="codeModalBox" class="modalBox"><a href="#" id="closeModal"></a><h2>Attach Code</h2></div></div>';
+        $("body").append(modalWindow);
+        $("#codeModal").height($(document).height());
+        $("#codeModal .modalMargin").height($(window).height()/2);
+        $("#codeModal .modalBox").width("480px").height("360px").css("marginTop","-180px");
         $("#post").val($("#post").val() + "[code language=\"language\"]\n\n[/code]");
     });
 
     // Attach video's address on YouTube
     $(".attachSelect .wVideo").click(function () {
+        $("#postAttach").show();
+        $(".attachSelect").hide();
         if (!post_attach) {
             post_attach = true;
             attach_type = "video";
@@ -651,6 +647,8 @@ $(function () {
     });
 
     $(".attachSelect .wFile").click(function () {
+        $("#postAttach").show();
+        $(".attachSelect").hide();
         if (!post_attach) {
             post_attach = true;
             attach_type = "file";
@@ -735,7 +733,7 @@ function s3_upload_put() {
     var check_file_name = $('#post_file').val();
     console.log("check_file_name is = %s %s", check_file_name, $('#post_file')[0].files[0].size);
     var extension = check_file_name.replace(/^.*\./, '');
-    var valid_extensions = ['hwp', 'jpg', 'ppt', 'pptx', 'doc', 'zip'];
+    var valid_extensions = ['hwp', 'jpg', 'ppt', 'pptx', 'doc', 'zip', 'png','txt'];
     //console.log("s3 upload = " + $("#post_is_file").val());
     var file_size = 0;
     if ($.support.msie) {
@@ -842,3 +840,7 @@ function s3_upload_delete() {
     }
 }
 
+var counting_comment = function(post_key) {
+    var comment_count = $("#commentList" + post_key + " li").size();
+    $("#commentList" + post_key).parent().siblings("header").find(".p_comment").html("<a herf='#'><strong>댓글</strong>/ " + comment_count + "</a>");
+};

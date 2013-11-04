@@ -28,8 +28,11 @@
 
         <div id="p_topSearch">
             <input id="p_topSearchForm" type="text" name="p_topSearchForm" value=""
-                   placeholder="Search Everything in the Podium">
-            <div id="p_topSearch_results"></div>
+                   placeholder="Search Everything in the Podium" autocomplete="off">
+            <div>
+                <li id="p_topSearch_results">
+                </li>
+            </div>
         </div>
         <ul id="p_headerLinks">
             <li>
@@ -55,7 +58,7 @@
                 <li id="nav_profile">
                     <a title="My Profile" href="/people/{{ user.id }}">
                                 <span class="nav_profile">
-                                    {% with user.userpictures_set.all|first as userpicture %}
+                                    {% with user.userpictures_set.all|dictsortreversed:'created'|first as userpicture %}
                                         {% if userpicture %}
                                             <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}"
                                                  class="userPicture"/>
@@ -132,29 +135,20 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.ui.menu.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.ui.autocomplete.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.tmpl.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/search.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/rainbow.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/rainbow-custom.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/waypoints.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.timeago.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/tinymce/tinymce.min.js"></script>
     <script src="{{ STATIC_URL }}js/jquery.fileupload.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/lodash.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/s3upload.js"></script>
-
-    <script type="text/javascript" src="{{ STATIC_URL }}js/language/c.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/language/csharp.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/language/html.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/language/java.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/language/javascript.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/language/lua.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/language/php.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/language/python.js"></script>
     <script type="text/javascript">
         var user_id = {{ user.id }};
     </script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/select2_locale_ko.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/sidebar.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/search.js"></script>
 {% endblock %}
 {% block add_scripts %}
 {% endblock %}

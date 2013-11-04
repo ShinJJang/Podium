@@ -5,8 +5,6 @@ var cookie_reader = require('cookie');
 var querystring = require('querystring');
 var winston = require('winston');
 
-//winston.setLevels(winston.config.syslog.levels);
-
 var logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)({
@@ -47,7 +45,7 @@ io.configure(function () {
 
 var users = {};
 
-io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 방 이름을 합쳐 유니크하게 만듬
+io.sockets.on('connection', function (socket) {
     logger.info('client id = ' + socket.id);
     console.log(socket);
     socket.on('join', function (data) {
@@ -55,6 +53,8 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
         if (data.user_id != null) {
             socket.username = data.username;
             socket.user_id = data.user_id;
+            socket.room_id = data.room_name;
+            socket.participant_count = data.participant_count;
             logger.info('socket.username = ' + socket.username);
             //socket.room_name = data.room_name;
             users[socket.user_id] = {
@@ -64,20 +64,22 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
             };
             logger.info('username = ' + data.username + ' user_id = ' + data.user_id + ' room_name = ' + data.room_name);
             socket.join(data.room_name);
-            socket.set(socket.user_id, data.room_name);
+            logger.info("socket join to :" + data.room_name);
+            //socket.set(socket.user_id, data.room_name);
             logger.info('user in sockets :' + users);
         }
     });//this function is for socket room*/
 
-    socket.on("disconnect", function () { //disconnect시 소켓연결을 해제시켜준다.
+    socket.on("disconnect", function () { //  todo(baek) disconnect시 소켓연결을 해제시켜준다.
         logger.info(socket.username + 'out');
-        io.sockets.in(users[socket.user_id].room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
-
+        logger.info(socket.room_name);
+        io.sockets.in(socket.room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
+        logger.info(users[socket.user_id].room_name);
         logger.info("disconnect user id = " + users[socket.user_id].user_id);
-        values = querystring.stringify({
-            user_id: users[socket.user_id].user_id,
-            room_name: users[socket.user_id].room_name,
-            type: 'DELETE'
+        var values = querystring.stringify({
+            user_id: socket.user_id,
+            room_id: socket.room_id,
+            type: 'USER_OUT'
         });
 
         var options = {
@@ -95,9 +97,7 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
             res.setEncoding('utf8');
             logger.info(res.statusCode);
             res.on('data', function (message) {
-                if (message != 'Everything worked :)') {
-                    logger.log('Message: ' + message);
-                }
+                //logger.info('Message: ' + message);
             });
         });
         req.write(values);
@@ -106,46 +106,78 @@ io.sockets.on('connection', function (socket) { //socket.user_id는 유저id와 
         delete users[socket.user_id];
     });
 
-    socket.on("disconnected_check", function (data) { //추후 구현
+    socket.on("disconnected_check", function (data) {
         logger.info(data);
     });
 
     socket.on('send_message', function (message) {
-        var data = (message.user_name + ": " + message.message);
-        //socket.get(socket.user_id, function (error, room) {
-        logger.info(message.user_name + ': [' + message.message + '] from client message');
-        //socket.broadcast.to(message.room_name).emit('message', data); //자기를 제외한 방의 사람들에게 데이터 전송
-        io.sockets.in(message.room_name).emit('message', data);
+        parse_message = JSON.parse(message);
 
-        //send message to django fo chat_comment db
-        values = querystring.stringify({
-            comment: message.message,
-            user_id: message.user_id,
-            room_id: message.room_name,
-            type: 'POST'
+        logger.info("message in message = " + parse_message.message);
+
+        var chat_message = (parse_message.user_name + ": " + parse_message.message);
+
+        logger.info(parse_message.user_name + ': [' + parse_message.message + '] from client message');
+
+        var chat_message_to_client = JSON.stringify({
+            "user_name": parse_message.user_name,
+            "message": parse_message.message
         });
+        io.sockets.in(parse_message.room_name).emit('message', chat_message_to_client);
+
+        var clients = io.sockets.clients(parse_message.room_name);
+
+        logger.info("participants:" + clients[0].id); // todo(baek) 카운트를 기반으로 방의 참가자수가 소켓에 연결되어 있지 않으면 노티피케이션 검사해서 노티하게
+        logger.info("user id:" + socket.user_id);
+        logger.info("room info participant count:" + socket.participant_count);
+        var noti_type = "";
+
+        if(clients.length == socket.participant_count) {
+            noti_type = "NO_CHECK_NOTI"
+        }
+        else {
+            noti_type = "CHECK_NOTI"
+        }
+        //send message to django fo chat_comment db
+        var chat_data_to_server = querystring.stringify({
+            comment: parse_message.message,
+            user_id: parse_message.user_id,
+            room_id: parse_message.room_name,
+            type: noti_type
+        });
+
+        //var dataString = JSON.stringify(data);
 
         var options = {
             host: 'localhost',
             port: 8000,
-            path: '/api/v1/user_chat_message/',
+            path: '/chat_comment',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': values.length
+                'Content-Length': chat_data_to_server.length
             }
         };
 
-        var req = http.get(options, function (res) {
-            res.setEncoding('utf8');
-            res.on('data', function (message) {
-                if (message != 'Everything worked :)') {
-                    logger.log('Message: ' + message);
-                }
+        var req = http.get(options, function(res) {
+            res.setEncoding('utf-8');
+            var responseString = '';
+
+            res.on('data', function(data) {
+                responseString += data;
+            });
+
+            res.on('end', function() {
+                logger.info(responseString);
             });
         });
-        req.write(values);
-        logger.info('send to django data : ' + values);
+
+        req.on('error', function(e) {
+            logger.info(e);
+        });
+
+        req.write(chat_data_to_server);
+        logger.info('send to django data : ' + chat_data_to_server);
         req.end();
     });
 });

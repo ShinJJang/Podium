@@ -1,43 +1,17 @@
 <h2>CHATS</h2>
 <ul id="chat_list" class="userList">
-    <li>
-        <a class="openChat cboth" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">
-            <span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>
-            <span class="userName">백지훈</span>
-            <span class="recentMessage inbound read">빨리 하자</span>
-        </a>
-    </li>
-    <li>
-        <a class="openChat cboth" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">
-            <span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>
-            <span class="userName">신영민</span>
-            <span class="recentMessage outbound unread">등 좀 주물러.</span>
-        </a>
-    </li>
 </ul>
 <h2>FRIENDS</h2>
 <ul id="login_user_list" class="userList">
-{#    {% for user_in_list in users %}#}
-{#        {% if user_in_list.id != user.id %}#}
-{#            <li>#}
-{#                <a class="openChat" title="{{ user_in_list.username }}" id="open_chat{{ user_in_list.id }}" href="#">#}
-{#                    {% with user_in_list.userpictures_set.all|first as userpicture %}#}
-{#                        {% if userpicture %}#}
-{#                            <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="chatPicture" />#}
-{#                        {% else %}#}
-{#                            <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" />#}
-{#                        {% endif %}#}
-{#                    {% endwith %}#}
-{#                    <span class="username">{{ user_in_list.username }}</span>#}
-{#                </a>#}
-{#            </li>#}
-{#        {% endif %}#}
-{#    {% endfor %}#}
-    <form id="chat_request_form" method="post" action="">{% csrf_token %}
+</ul>
+
+<form id="chat_request_form" method="post" action="">{% csrf_token %}
+    <span class="search_icon">Search</span>
+    <div class="search_form">
         <input type="text" id="chat_search_friend">
         <input type="button" value="완료">
-    </form>
-</ul>
+    </div>
+</form>
 
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
 <script type="text/javascript">
@@ -50,7 +24,8 @@
             friend_count++;
         });
         friend_count++;
-        console.log(friend_ids);
+        console.log("friend_ids" + friend_ids);
+        console.log("friend_count" + friend_count);
         var request_data = JSON.stringify({
             "participants": friend_ids,
             "participants_count": friend_count
@@ -63,17 +38,13 @@
             data: request_data ,
             success: function (data) {
                 if (data != "0") {
+                    console.log(data);
                     console.log("room" + data.id);
-                    console.log("user" + data);
+                    console.log("user" + data.username);
                     console.log(data.chat_room_name);
-                    console.log(data.participants[0]);
+                    console.log(data.participants);
 
-                    //$('#p_chatBoxContainer').append($(data.id));
-                    //socket_chat_connection(data.id);
-                    //$('#p_chatBoxContainer #' + $(data.id).attr("id") + " ul").scrollTop(100000000);
-
-                    //$('#' + $(data.id).attr("id")).show();
-                    //console.log($(data.id).attr("id"));
+                    displayChatRoom(data.id, data.chat_room_name, data.participants_count);
                 }
                 else {
                     console.log(data.id);
@@ -110,19 +81,6 @@
         formatSelection: formatSelection
     });
 
-    // message 창을 열지 말지 결정
-    var messageOpen = false;
-    var isChatSearchOn = false;
-
-    $("#chat_search_friend").on("select2-open", function(){
-        isChatSearchOn = true;
-    });
-
-    $("#chat_search_friend").on("select2-blur", function(){
-        isChatSearchOn = false;
-        closeChatBar();
-    });
-
     function getChattingList(){
         $.ajax({
             type: 'GET',
@@ -132,9 +90,78 @@
             statusCode: {
                 200: function (data) {
                     result = JSON.parse(data.responseText);
+                    var appendText = '';
                     for (var i in result) {
-                        console.log("success " + result[i].participant_name);
+                        if(result[i].last_message == '') { continue; } // 빈 채팅방은 열지 않는다.
+
+                        appendText = appendText + '<li><a class="openChat cboth" data-count="' + result[i].participant_count + '" title="';
+                        if(result[i].participant_count==2) {
+                            if(result[i].participant_1.participant_id!={{ user.id }}){
+                                appendText = appendText
+                                        + result[i].participant_1.participant_name
+                                        + '" id="open_chat'
+                                        + result[i].room_id
+                                        + '" href="#">';
+                                if(result[i].participant_1.participant_picture != '') {
+                                    appendText = appendText
+                                            + '<span class="userProfile"><img src="'
+                                            + result[i].participant_1.participant_picture
+                                            + '" alt="'
+                                            + + result[i].participant_1.participant_name
+                                            + '" class="chatPicture" /></span>';
+                                } else {
+                                    appendText = appendText
+                                            + '<span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>';
+                                }
+                                appendText = appendText
+                                        + '<span class="userName">' + result[i].participant_1.participant_name + '</span>';
+                            } else {
+                                appendText = appendText
+                                        + result[i].participant_2.participant_name
+                                        + '" id="open_chat'
+                                        + result[i].room_id
+                                        + '" title="'
+                                        + result[i].room_name
+                                        + '" href="#">';
+                                if(result[i].participant_2.participant_picture != '') {
+                                    appendText = appendText
+                                            + '<span class="userProfile"><img src="'
+                                            + result[i].participant_2.participant_picture
+                                            + '" alt="'
+                                            + + result[i].participant_2.participant_name
+                                            + '" class="chatPicture" /></span>';
+                                } else {
+                                    appendText = appendText
+                                            + '<span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>';
+                                }
+                                appendText = appendText
+                                        + '<span class="userName">' + result[i].participant_2.participant_name + '</span>';
+                            }
+                        } else {
+                            appendText = appendText
+                                    + result[i].participant_1.participant_name
+                                    + ' 외 ' + (parseInt(result[i].participant_count)-1)
+                                    + '인" id="open_chat'
+                                    + result[i].room_id
+                                    + '" href="#">'
+                                    + '<span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>'
+                                    + '<span class="userName">' + result[i].participant_1.participant_name
+                                    + ' 외 ' + (parseInt(result[i].participant_count)-1) + '인/</span>';
+                        }
+                        if(result[i].last_message_speaker == {{ user.id }}) {
+                            appendText = appendText
+                                    + '<span class="recentMessage outbound"><span class="arrow"></span>'
+                                    + result[i].last_message
+                                    + '</span>';
+                        } else {
+                            appendText = appendText
+                                    + '<span class="recentMessage inbound"><span class="arrow"></span>'
+                                    + result[i].last_message
+                                    + '</span>';
+                        }
+                        appendText = appendText + '</a></li>';
                     }
+                    $("#chat_list").append(appendText);
                 },
                 error: function(data) { //why error....
                     result = JSON.parse(data.responseText);
@@ -147,85 +174,21 @@
         });
     }
 
-    function getChatList(){
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: '/api/v1/chat_room',
-            success: function (data) {
-                for (var i in data.objects) {
-                    $.ajax({
-                        type: 'GET',
-                        dataType: 'json',
-                        url: '/api/v1/chat_participants?chat_room_key='+data.objects[i].id,
-                        success: function(data){
-                            var myId={{ user.id }};
-                            if(data.objects.length == 2) {
-                                // 1:1
-                                for(var j in data.objects) {
-                                    if(data.objects[j].user!="/api/v1/user/"+myId+"/"){
-                                        // 1:1 채팅 참여자
-                                        var user = data.objects[j].user.substring(13).slice(0,-1);
-                                        $.ajax({
-                                            type:'GET',
-                                            dataType:'json',
-                                            url:'api/v1/user?id=' + user,
-                                            success: function(data) {
-                                                console.log(data);
-                                            }
-                                        })
-                                    }
-                                }
-                            } else {
-                                // 1:다
-                            }
-                        }
-                    });
-                }
-            },
-            error: function(data) {
-                console.log(data);
-            }
-        });
+    function getFriendList() {
+
     }
 
     $(function(){
         getChattingList();
-        getChatList();
-
-        $("#p_messages").hover(function(){
-            // #p_message에 mouseover시 창 열기
-            $("#p_messages").addClass("opened");
-            $("#p_messages").width("210px");
-            $("#p_messages>.p_container, #p_messages .jspContainer, #p_messages .jspPane").width("223px");
-            $("#p_timeline").css("margin-right","210px");
-            messageOpen=true;
-        }, function(){
-            closeChatBar();
-        });
+        getFriendList();
     });
-
-    function closeChatBar(){
-        // 마우스가 떠났을 때
-        if(!isChatSearchOn) messageOpen=false;
-
-        // 0.5초 안에 messageOpen이 true가 되지 않으면 창을 닫는다
-        setTimeout(function(){
-            if(!messageOpen) {
-                $("#p_messages").removeClass("opened");
-                $("#p_messages").width("75px");
-                $("#p_messages>.p_container, #p_messages .jspContainer, #p_messages .jspPane").width("88px");
-                $("#p_timeline").css("margin-right","75px");
-            }
-        }, 500);
-    }
 
     function formatResult(node) {
         return '<div>'+node.username+'</div>';
     };
 
     function formatSelection(node) {
-        return '<div><input type="hidden" class="chat_search_results" value=' + node.id + '></input></div>';
+        return '<div><input type="hidden" class="chat_search_results" value=' + node.id + '>' + node.username + '</div>';
     };
 
     $(".invite_people").click(function () {
@@ -233,131 +196,176 @@
         $.ajax({//여기서 유저 정보와 내정보를 보내 방이 있는지 없는지를 판별하여 만든다. 
         });
     });
-    $(".openChat").click(function () {
-        var dataString = $(this).attr("id").substring(9);
-        $.ajax({
-            type: 'GET',
-            url: '/invite_chat',
-            data: 'chatting_user=' + dataString,
-            success: function (data) {
-                if (data != "0") {
-                    if ($('#' + $(data).attr("id")).is(':visible')) {
-                        console.log('hide');
-                        $('#' + $(data).attr("id")).hide();
-                    }
-                    else {
-                        console.log($(data).attr("id"));
-                        console.log(document.getElementById($(data).attr("id")));
-                        if (document.getElementById($(data).attr("id")) == null) {
-                            $('#p_chatBoxContainer').append($(data));
-                            socket_chat_connection($(data).attr("id"));
-                            $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
-                        }
-                        $('#' + $(data).attr("id")).show();
-                        console.log($(data).attr("id"));
-                    }
-                }
-                else {
-                    console.log('testets');
-                    if ($('#' + $(data).attr("id")).is(':visible')) {
-                        console.log('hide');
-                        $('#' + $(data).attr("id")).hide();
-                    }
-                    else {
-                        $('#' + $(data).attr("id")).show();
-                    }
-                }
-            },
-            error: function () {
-                console.error(arguments);
-            }
-        });
+
+    $(document).on("click",".openChat",function () {
+        displayChatRoom($(this).attr("id").substring(9), $(this).attr("title"), $(this).attr("data-count"));
     });
 
-    var invited_chat = setInterval(function () {
+    function displayChatRoom(chatroomId,chatroomName,participantCount) {
+        if($("#chatBox_"+chatroomId).length > 0) {
+            // 이미 창이 열려있을 때
+            return false;
+        }
+
+        var chatMessage = "";
+        var chatroomHTML = '<div class="chatBox" id="chatBox_'+ chatroomId + '">'
+                + '<h2>' + chatroomName + ' (' + participantCount + '인)</h2><ul>';
+
+        chatroomHTML = chatroomHTML + '</ul><input type="text" class="comment_entry" />'
+                + '<input type="hidden" class="user_id" value="{{ user.id }}" />'
+                + '<input type="hidden" class="user_name" value="{{ user.username }}" /></div>';
+
+        $("#p_chatBoxContainer").append(chatroomHTML);
+
         $.ajax({
             type: 'GET',
-            url: '/invited_chat',
+            content_type: 'application/json',
+            dataType: 'json',
+            url: '/api/v1/user_chat_message/?chat_room_key='+chatroomId,
+            success: function(data){
+                console.log(data);
+                for(var i in data.objects) {
+                    var len = data.objects.length - 1;
+                    if(data.objects[len-i].user.id == {{ user.id }}) {
+                        chatMessage = chatMessage + '<li class="outbound">';
+                    } else {
+                        chatMessage = chatMessage + '<li class="inbound">';
+                    }
+                    chatMessage = chatMessage + '<span class="sender">'+data.objects[len-i].user.username+'</span><span class="message"><span class="arrow"></span>' + data.objects[len-i].chatting_message + '</span></li>';
+                }
+                $("#chatBox_" + chatroomId + " ul").append(chatMessage);
+                $("#chatBox_" + chatroomId + " ul").scrollTop(1000000000);
+            }
+        });
+        socket_chat_connection("chatBox_"+chatroomId, participantCount);
+    }
+
+
+    function setSocketConnection(room_id) {
+        var request_data = {
+            "room_id": room_id
+        };
+        $.ajax({
+            type: 'POST',
+            content_type: 'application/json',
+            dataType: 'json',
+            data: request_data,
+            url: '/set_participant_socket/',
+            success: function(data) {
+                console.log("modify socket chat connection :" + data);
+            },
+            error: function(error_data) {
+                console.log("ERROR: modify socket chat connection : ");
+                console.log(error_data);
+            }
+        });
+    }
+
+    var invited_chat = setInterval(function () { //  TODO(백지훈) notification 부분으로 고칠 예정
+        $.ajax({
+            type: 'GET',
+            content_type: 'application/json',
+            dataType: 'json',
+            url: '/api/v1/chat_notis/?to_user_key=' + {{ user.id }},
             success: function (data) {
-                if (data != "0") {
-                    if ($('#' + $(data).attr("id")).is(':visible')) {
-                        console.log('hide');
-                        $('#' + $(data).attr("id")).hide();
-                    }
-                    else {
-                        console.log($(data).attr("id"));
-                        console.log(document.getElementById($(data).attr("id")));
-                        if (document.getElementById($(data).attr("id")) == null) {
-                            $('#p_chatBoxContainer').append($(data));
-                            socket_chat_connection($(data).attr("id"));
-                            $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);
-                        }
-                        $('#' + $(data).attr("id")).show();
-                        console.log($(data).attr("id"));
+                console.log(data);
+                if(data.objects.length > 0) {
+
+                    console.log(data.objects.length);
+                    for(var i in data.objects) {
+                        displayChatRoom(data.objects[i].chat_room_key.id, data.objects[i].chat_room_key.chat_room_name, data.objects[i].chat_room_key.participant_count);
+                        var request_data = JSON.stringify({
+                            "chat_room_key": data.objects[i].chat_room_key,
+                            "to_user_key": data.objects[i].chat_room_key
+                        });
+                        $.ajax({
+                            type: 'DELETE',
+                            content_type: 'application/json',
+                            dataType: 'json',
+                            data: "",
+                            url: '/api/v1/chat_notis/',
+                            success: function(data) {
+                                console.log("chat notifications delete success");
+                                console.log(data);
+                            },
+                            error: function(error_data) {
+                                console.log("chat notifications delete success");
+                                console.log(data);
+                            }
+                        });
                     }
                 }
-                else {
-                    if ($('#' + $(data).attr("id")).is(':visible')) {
-                        console.log('hide');
-                        $('#' + $(data).attr("id")).hide();
-                    }
-                    else {
-                        $('#' + $(data).attr("id")).show();
-                    }
-                }
+                //displayChatRoom(data.id, data.chat_room_name, data.participants_count);
             },
             error: function (data) {
+                console.log(data);
                 console.log("invited_chat error [response] = [" + data + "]");
             }
         });
-    }, 100000);
+    }, 5000);
 
-    var socket_chat_connection = (function (roomid) {
+    var socket_chat_connection = (function (roomid, participant_count_in_room) {
+        console.log(participant_count_in_room);
         var socket = io.connect('localhost', {port: 4000, 'force new connection': true});
+        var entry_el = $("#" + roomid + ' input.comment_entry');
+        var userId = $("#" + roomid + ' input.user_id');
+        var userName = $("#" + roomid + ' input.user_name');
+        var room = roomid.substring(8);
+        var join_info = {room_name: room, user_id: userId.val(), username: userName.val(), participant_count: participant_count_in_room};
 
         socket.on('connect', function () {
-            console.log("socket connect");
+
         });
 
         socket.on('disconnected', function () {
             socket.emit('disconnected_check', 'user out');
         });
 
-        var entry_el = $("#" + roomid + ' input.comment_entry');
-        var userId = $("#" + roomid + ' input.user_id');
-        var userName = $("#" + roomid + ' input.user_name');
-        var room = roomid.substring(8);
-        var join_info = {room_name: room, user_id: userId.val(), username: userName.val()};
 
-        socket.emit('join', join_info);
+        socket.emit('join', join_info); //  roomid기반의 채팅방에 접속
+        setSocketConnection(room);
 
         socket.on('message', function (message) {
-            var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            console.log('roomid : ' + roomid);
-            $('#' + roomid + ' ul').append('<li>' + receive_data + '</li>');
+            var receive_data = JSON.parse(message);
+
+            //var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            if(receive_data.user_name == "{{ user.username }}") {
+                $('#' + roomid + ' ul').append('<li class="outbound"><span class="sender">' + receive_data.user_name + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
+            } else {
+                $('#' + roomid + ' ul').append('<li class="inbound"><span class="sender">' + receive_data.user_name + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
+            }
             $('#' + roomid + ' ul').scrollTop(1000000000);
             entry_el.focus();
         });
 
         socket.on('my_message', function (message) {
             var my_data_check = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            $('#' + roomid + ' ul').append('<li>' + my_data_check + '</li>');
+            $('#' + roomid + ' ul').append('<li class="inbound">' + my_data_check + '</li>');
             $('#' + roomid + ' ul').scrollTop(1000000000);
             entry_el.focus();
         });
 
         socket.on('user_out', function (message) {
             var out_user_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            $('#' + roomid + ' ul').append('<li>' + out_user_data + '</li>');
+            $('#' + roomid + ' ul').append('<li class="serviceMessage">' + out_user_data + '</li>');
             $('#' + roomid + ' ul').scrollTop(1000000000);
             entry_el.focus();
         });
 
         entry_el.keypress(function (event) {
-            if (event.keyCode != 13) return;
+            if (event.keyCode != 13 || entry_el.val()=='') return; // 빈 메시지는 전송하지 않는다.
             var value = entry_el.val();
             room = $(this).parent().attr("id").substring(8);
-            var msg = {room_name: room, user_id: userId.val(), type: 'chat', message: entry_el.val(), user_name: userName.val()} //user 사진 작게
+            var msg = JSON.stringify({
+                "room_name": room,
+                "user_id": userId.val(),
+                "message": entry_el.val(),
+                "user_name": userName.val()
+            });
+            //var msg = "{'room_name': room, 'user_id': userId.val(), type: 'chat', message: entry_el.val() + "\n", user_name: userName.val()}" //user 사진 작게
+            //var msgObj = eval('(' + msg + ')');
+            console.log(entry_el.val());
+            console.log('send message' + msg.message);
             if (msg) {
                 socket.emit('send_message', msg, function (data) {
                     console.log('send message to server [message] = [' + data + ']');
