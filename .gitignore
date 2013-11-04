@@ -43,3 +43,5 @@ node_modules/
 
 # chat log
 tmp/
+tmp/node_chat_file.log
+tmp/node_chat_exceptions.log
