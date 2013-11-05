@@ -187,7 +187,7 @@
                 return false;
             }
 
-            var request_friend_url = "/api/v1/friendship/?friend_user_key={{ user_pageowner.id }}&user_key={{ user.id }}";
+            var request_friend_url = "/api/v1/friendship/?friend_user={{ user_pageowner.id }}&user={{ user.id }}";
             $.ajax({
                 type: "GET",
                 url: request_friend_url,
