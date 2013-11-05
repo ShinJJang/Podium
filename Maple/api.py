@@ -520,7 +520,8 @@ class ChatRoomResource(ModelResource):
                 print append_user.id
                 room_name = room_name + append_user.username + ","
                 ChatParticipants.objects.create(chat_room_key=room, user_key=append_user)
-            bundle.obj.chat_room_name = room_name + request_user
+            room_name = room_name + request_user.username
+            bundle.obj.chat_room_name = room_name
             bundle.obj.save()
             return bundle
 
