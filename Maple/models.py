@@ -56,6 +56,10 @@ def create_friend_post(sender, instance, created, **kwargs):
     if created:
         write_user = instance.user_key
 
+        if instance.open_scope == 1:
+            # 자신에게 글 저장 - private은 그냥 post로 처리해도 되지만 template를 따로 만들어야되는 비용이 있음
+            FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
+
         # 친구들에게 글 저장
         if instance.open_scope == 0 or instance.open_scope == 2:
             # 자신에게 글 저장 - 그룹에서는 멤버도 자신을 포함하므로 따로 넣어주지 않음
@@ -192,52 +196,6 @@ class MembershipNotis(models.Model):
     noti_group_key = models.ForeignKey(Groups)
     noti_user_key = models.ForeignKey(User)
     created = models.DateTimeField(auto_now=True)
-
-
-class ChatInformation(models.Model):
-    room_name = models.CharField(max_length=255)
-    count_participant = models.SmallIntegerField(default=1)
-
-
-class ChatNotifications(models.Model):
-    chatInfo_key = models.ForeignKey(ChatInformation)
-    from_user_key = models.ForeignKey(User, related_name='from_user')
-    to_user_key = models.ForeignKey(User, related_name='to_user')
-    # poll = jsonfield.JSONfield
-
-
-class ChatMessages(models.Model):
-    chatInfo_key = models.ForeignKey(ChatInformation)
-    user_key = models.ForeignKey(User)
-    comment = models.CharField(max_length=2048)
-
-
-class UserChats(models.Model):
-    chat_from_user_key = models.ForeignKey(User, related_name='UserChats_from_user')  # chat_user
-    chat_to_user_key = models.ForeignKey(User, related_name='UserChats_to_user')  # chat_with_user
-    chat_room_name = models.CharField(max_length=255)
-
-
-class ChatNotis(models.Model):
-    noti_from_user_key = models.ForeignKey(User, related_name='ChatNoti_from_user')  # from_user
-    noti_to_user_key = models.ForeignKey(User, related_name='ChatNoti_to_user')  # to_user
-
-
-class ChatComments(models.Model):
-    userChat_key = models.ForeignKey(UserChats)
-    chat_comment = models.CharField(max_length=255)
-
-
-class Participants(models.Model):
-    chatInfo_key = models.ForeignKey(ChatInformation)
-    user_key = models.ForeignKey(User)
-    socket_connect = models.BooleanField(default=False)
-
-
-class ChatTables(models.Model):
-    from_chatting_user = models.ForeignKey(User, related_name='from_ChatTable_user')
-    to_chatting_user = models.ForeignKey(User, related_name='to_ChatTable_user')
-
 
 #revolution chat!
 class ChatRoom(models.Model):
