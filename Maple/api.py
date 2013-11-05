@@ -512,12 +512,16 @@ class ChatRoomResource(ModelResource):
         else:
             bundle.obj = ChatRoom.objects.create(chat_room_name="default", participant_count=participants_count)
             bundle.obj.save()
+            room_name = ""
             room = bundle.obj
             ChatParticipants.objects.create(chat_room_key=room, user_key=request_user) #트루일때 소켓연결햇다는 것
             for participant in participants:
                 append_user = User.objects.get(id=participant)
                 print append_user.id
+                room_name = room_name + append_user.username + ","
                 ChatParticipants.objects.create(chat_room_key=room, user_key=append_user)
+            bundle.obj.chat_room_name = room_name + request_user
+            bundle.obj.save()
             return bundle
 
 
