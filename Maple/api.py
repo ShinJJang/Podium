@@ -233,7 +233,7 @@ class FriendPostResource(ModelResource):
         allowed_methods = ['get']
 
     def dehydrate(self, bundle):
-        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.user_key.userpictures_set.order_by('-created')[:1]]
+        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.friend_post_key.user_key.userpictures_set.order_by('-created')[:1]]
         return bundle
 
 
@@ -512,12 +512,16 @@ class ChatRoomResource(ModelResource):
         else:
             bundle.obj = ChatRoom.objects.create(chat_room_name="default", participant_count=participants_count)
             bundle.obj.save()
+            room_name = ""
             room = bundle.obj
             ChatParticipants.objects.create(chat_room_key=room, user_key=request_user) #트루일때 소켓연결햇다는 것
             for participant in participants:
                 append_user = User.objects.get(id=participant)
                 print append_user.id
+                room_name = room_name + append_user.username + ","
                 ChatParticipants.objects.create(chat_room_key=room, user_key=append_user)
+            bundle.obj.chat_room_name = room_name + request_user
+            bundle.obj.save()
             return bundle
 
 
@@ -577,6 +581,28 @@ class UserChattingMessageResource(ModelResource):
         bundle.obj = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key, chatting_message=message)
         print bundle.obj
         bundle.obj.save()
+        return bundle
+
+
+class GroupPostResource(ModelResource):
+    group = fields.ForeignKey(UserResource, 'group_key', full=False)
+    post = fields.ForeignKey(PostResource, 'post_key', full=True)
+
+    class Meta:
+        queryset = GroupPosts.objects.all().order_by('-pk')
+        resource_name = 'groupposts'
+        include_resource_uri = False
+        authorization = Authorization()
+        filtering = {
+            "id": ['exact', 'gt', 'lte'],
+            "group": ALL_WITH_RELATIONS,
+            "post": ALL_WITH_RELATIONS,
+        }
+        # paginator_class = EstimatedCountPaginator
+        allowed_methods = ['get']
+
+    def dehydrate(self, bundle):
+        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.post_key.user_key.userpictures_set.order_by('-created')[:1]]
         return bundle
 
 """
