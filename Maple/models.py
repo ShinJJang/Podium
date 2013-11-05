@@ -56,6 +56,10 @@ def create_friend_post(sender, instance, created, **kwargs):
     if created:
         write_user = instance.user_key
 
+        if instance.open_scope == 1:
+            # 자신에게 글 저장 - private은 그냥 post로 처리해도 되지만 template를 따로 만들어야되는 비용이 있음
+            FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
+
         # 친구들에게 글 저장
         if instance.open_scope == 0 or instance.open_scope == 2:
             # 자신에게 글 저장 - 그룹에서는 멤버도 자신을 포함하므로 따로 넣어주지 않음

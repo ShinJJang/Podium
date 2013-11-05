@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import redirect, render, render_to_response
+from django.shortcuts import redirect, render, render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseServerError
 from django.template import Context
@@ -89,7 +89,7 @@ def group(request, group_id):
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-    group = Groups.objects.get(id=group_id)
+    group = get_object_or_404(Groups, pk=group_id)
 
     membership_id = None
     permission = -1

@@ -233,7 +233,7 @@ class FriendPostResource(ModelResource):
         allowed_methods = ['get']
 
     def dehydrate(self, bundle):
-        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.user_key.userpictures_set.order_by('-created')[:1]]
+        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.friend_post_key.user_key.userpictures_set.order_by('-created')[:1]]
         return bundle
 
 
@@ -581,6 +581,28 @@ class UserChattingMessageResource(ModelResource):
         bundle.obj = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key, chatting_message=message)
         print bundle.obj
         bundle.obj.save()
+        return bundle
+
+
+class GroupPostResource(ModelResource):
+    group = fields.ForeignKey(UserResource, 'group_key', full=False)
+    post = fields.ForeignKey(PostResource, 'post_key', full=True)
+
+    class Meta:
+        queryset = GroupPosts.objects.all().order_by('-pk')
+        resource_name = 'groupposts'
+        include_resource_uri = False
+        authorization = Authorization()
+        filtering = {
+            "id": ['exact', 'gt', 'lte'],
+            "group": ALL_WITH_RELATIONS,
+            "post": ALL_WITH_RELATIONS,
+        }
+        # paginator_class = EstimatedCountPaginator
+        allowed_methods = ['get']
+
+    def dehydrate(self, bundle):
+        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.post_key.user_key.userpictures_set.order_by('-created')[:1]]
         return bundle
 
 """

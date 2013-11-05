@@ -28,6 +28,7 @@ v1_api.register(ChatRoomResource())
 v1_api.register(ChatNotificationResource())
 v1_api.register(ChatParticipantsResource())
 v1_api.register(UserChattingMessageResource())
+v1_api.register(GroupPostResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home),
