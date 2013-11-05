@@ -10,6 +10,9 @@
 
 {% block add_scripts %}
     <script type="text/javascript">
+        var api_path = "/api/v1/";
+        var post_type = "friendposts";
+
         // timeline.js의 arg : top polling url의 parameter
         var timeline_js_parameter_top_post_polling = "user__id={{ user.id }}";
         console.log("timeline_js_parameter_top_post_polling = " + timeline_js_parameter_top_post_polling);
