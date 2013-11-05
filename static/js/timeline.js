@@ -595,26 +595,21 @@ $(function () {
         if (!post_attach) {
             post_attach = true;
             attach_type = "poll";
-            $("#postAttach").html('<div id="attach_poll"></div>');
-            var attachForm = $("#attach_poll");
-            var attachTitle = document.createElement("input");
-            attachTitle.className = "attachTitle";
-            attachTitle.id = "pollTitle";
-            attachTitle.setAttribute("type", "text");
-            attachTitle.setAttribute("placeholder", "설문조사 제목");
-            document.getElementById("attach_poll").appendChild(attachTitle);
-            var attachElements = document.createElement("ul");
-            attachElements.id = "pollElement";
-            document.getElementById("attach_poll").appendChild(attachElements);
-            $("#pollElement").html('<li><input type="text" class="attachElement" placeholder="항목 1"></li><li><input type="text" class="attachElement" placeholder="항목 2"></li><li><a href="#" id="add_poll">새 항목 추가</a></li>');
+            var pollHtml = '<div id="attach_poll">';
+            pollHtml = pollHtml + '<input class="attachTitle" id="pollTitle" type="text" placeholder="설문조사 제목" />'
+                    + '<ul id="pollElement"><li><input type="text" class="attachElement" placeholder="항목 1"></li><li><input type="text" class="attachElement" placeholder="항목 2"></li><li><a href="#" id="add_poll">새 항목 추가</a></li></ul>'
+                    + '</div>';
+
+            $("#postAttach").html(pollHtml);
 
             $("#add_poll").click(function () {
-                var newElement = document.createElement("li");
-                newElement.appendChild(document.createElement("input"));
-                newElement.firstChild.setAttribute("type", "text");
-                newElement.firstChild.setAttribute("class", "attachElement");
-                newElement.firstChild.setAttribute("placeholder", "항목 " + (parseInt($(".attachElement:last").attr("placeholder").substring(3)) + 1));
+                var newElement = '<li><input type="text" class="attachElement" placeholder="항목 ' + (parseInt($(".attachElement:last").attr("placeholder").substring(3)) + 1) + '">'
+                        + '<a class="removeElement">항목 삭제</a>';
                 $("#add_poll").parent().before(newElement);
+            });
+
+            $("#postAttach").on("click",".removeElement",function(){
+                $(this).parent().remove();
             });
         }
     });
