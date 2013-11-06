@@ -6,16 +6,12 @@ from django.template import Context
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
-from django.db.models import Q
+from django.core import serializers
 from .models import *
-from django.conf import settings
+from django.forms.models import model_to_dict
 
 from base64 import b64encode
-from datetime import datetime, timedelta
 from json import dumps
-from mimetypes import guess_type
-from os import path
-from uuid import uuid4
 import time
 import hmac
 import hashlib
@@ -35,19 +31,6 @@ def home(request):
         'page_title': 'Podium'
     })
     return render(request, 'index.html', ctx)
-
-
-@login_required
-def poll(request):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)
-    ctx = Context({
-        'user': user,
-        'page_title': 'Podium Poll'
-    })
-    return render(request, 'poll.html', ctx)
-
 
 @login_required
 def pui(request):
@@ -269,6 +252,57 @@ def invited_chat(request):
     except:
         return HttpResponse("0")
 
+@login_required
+@csrf_exempt
+def vote(request):
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+
+    if request.method == 'POST':
+        poll_object = {}
+        try:
+            # poll_object = Polls(id=request.REQUEST["id"])
+            json_data = json.loads(request.body)
+            poll_object = Polls.objects.get(id=json_data['id'])
+            poll = json.loads(poll_object.poll)
+            user_checked = False
+            user_checked_index = -1
+            user_option_index = -1
+
+            # 이미 체크했는지 확인
+            for oindex, option in enumerate(poll['options']):
+                for cindex, user_in_poll in enumerate(option['users']):
+                    if user_in_poll['id'] == user.id:
+                        user_checked = True
+                        user_checked_index = cindex
+                        user_option_index = oindex
+
+            if user_checked:
+                del poll['options'][user_option_index]['users'][user_checked_index]
+                if json_data['item'] != user_option_index:
+                    poll['options'][json_data['item']]['users'].append({'id': user.id, 'username': user.username})
+                    user_option_index = json_data['item']
+                else:
+                    user_option_index = -1
+            else:
+                poll['options'][json_data['item']]['users'].append({'id': user.id, 'username': user.username})
+                user_option_index = json_data['item']
+
+            poll_object.poll = json.dumps(poll)
+            poll_object.save()
+
+            return_obj = model_to_dict(poll_object)
+            return_obj['user_checked'] = user_option_index
+
+            poll_object = json.dumps(return_obj)
+
+        except KeyError:
+            HttpResponseServerError("Key Error")
+
+        return HttpResponse(poll_object, content_type='application/json')
+    else:
+        return HttpResponse("잘못된 접근입니다.")
 
 @csrf_exempt
 def chat_comment(request):

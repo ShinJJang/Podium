@@ -317,6 +317,7 @@ function PostTopPolling() {
         dataType: "json",
         success: function (data) {
             if (data.objects.length != 0) {
+                // code parsing
                 for (var dataObj in data.objects) {
                     try {
                         var codeReg = /\[code(.*?)]\n{0,1}/i;
@@ -392,11 +393,31 @@ function PostTopPolling() {
                         type: "GET",
                         dataType: "json",
                         success: function (data) {
-                            for (obj in data.objects) {
-                                data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
-                            }
-                            $(targetDiv).append('<li class="pollTitle">' + data.objects[0].poll.title + '</li>');
+                            var totalCount = 0;
+
+                            data.objects[0].poll = JSON.parse(data.objects[0].poll);
+
+                            $(targetDiv).append('<li class="pollTitle" id="poll_id-' + data.objects[0].id + '">' + data.objects[0].poll.title + '</li>');
                             $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
+
+                            for (var index in data.objects[0].poll.options) {
+                                totalCount = totalCount + data.objects[0].poll.options[index].users.length;
+                            }
+
+                            $(targetDiv).attr("data-totalCount",totalCount);
+
+                            $(targetDiv).children("li").each(function(){
+                                var targetLi = $(this);
+                                if(targetLi.attr("data-length")>=0) {
+                                    console.log(targetLi.parent().attr("data-totalcount"));
+                                    targetLi.children(".pollItem").css("background-position",(540 * parseInt(targetLi.attr("data-length")) / totalCount - 1000) + "px 50%");
+                                }
+                            });
+
+                            if(data.objects[0].user_checked != -1) {
+                                $(targetDiv).children("li").eq(parseInt(data.objects[0].user_checked)+1).addClass("checked");
+                            }
+
                             $(targetDiv).removeClass("p_poll_unloaded");
 
                             $(targetDiv).addClass("p_poll");
@@ -500,11 +521,31 @@ function postBottom() {
                     type: "GET",
                     dataType: "json",
                     success: function (data) {
-                        for (obj in data.objects) {
-                            data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
-                        }
-                        $(targetDiv).append('<li class="pollTitle">' + data.objects[0].poll.title + '</li>');
+                        data.objects[0].poll = JSON.parse(data.objects[0].poll);
+                        var totalCount = 0;
+
+                        $(targetDiv).append('<li class="pollTitle" id="poll_id-' + data.objects[0].id + '">' + data.objects[0].poll.title + '</li>');
                         $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
+
+                        for (var index in data.objects[0].poll.options) {
+                            console.log(index);
+                            totalCount = totalCount + data.objects[0].poll.options[index].users.length;
+                        }
+
+                        $(targetDiv).attr("data-totalCount",totalCount);
+
+                        $(targetDiv).children("li").each(function(){
+                                var targetLi = $(this);
+                                if(targetLi.attr("data-length")>=0) {
+                                    console.log(targetLi.parent().attr("data-totalcount"));
+                                    targetLi.children(".pollItem").css("background-position",(540 * parseInt(targetLi.attr("data-length")) / totalCount - 1000) + "px 50%");
+                                }
+                            });
+
+                        if(data.objects[0].user_checked != -1) {
+                            $(targetDiv).children("li").eq(parseInt(data.objects[0].user_checked)+1).addClass("checked");
+                        }
+
                         $(targetDiv).removeClass("p_poll_unloaded");
                         $(targetDiv).addClass("p_poll");
                         bindPoll($(targetDiv).attr("id"));
@@ -597,26 +638,21 @@ $(function () {
         if (!post_attach) {
             post_attach = true;
             attach_type = "poll";
-            $("#postAttach").html('<div id="attach_poll"></div>');
-            var attachForm = $("#attach_poll");
-            var attachTitle = document.createElement("input");
-            attachTitle.className = "attachTitle";
-            attachTitle.id = "pollTitle";
-            attachTitle.setAttribute("type", "text");
-            attachTitle.setAttribute("placeholder", "설문조사 제목");
-            document.getElementById("attach_poll").appendChild(attachTitle);
-            var attachElements = document.createElement("ul");
-            attachElements.id = "pollElement";
-            document.getElementById("attach_poll").appendChild(attachElements);
-            $("#pollElement").html('<li><input type="text" class="attachElement" placeholder="항목 1"></li><li><input type="text" class="attachElement" placeholder="항목 2"></li><li><a href="#" id="add_poll">새 항목 추가</a></li>');
+            var pollHtml = '<div id="attach_poll">';
+            pollHtml = pollHtml + '<input class="attachTitle" id="pollTitle" type="text" placeholder="설문조사 제목" />'
+                    + '<ul id="pollElement"><li><input type="text" class="attachElement" placeholder="항목 1"></li><li><input type="text" class="attachElement" placeholder="항목 2"></li><li><a href="#" id="add_poll">새 항목 추가</a></li></ul>'
+                    + '</div>';
+
+            $("#postAttach").html(pollHtml);
 
             $("#add_poll").click(function () {
-                var newElement = document.createElement("li");
-                newElement.appendChild(document.createElement("input"));
-                newElement.firstChild.setAttribute("type", "text");
-                newElement.firstChild.setAttribute("class", "attachElement");
-                newElement.firstChild.setAttribute("placeholder", "항목 " + (parseInt($(".attachElement:last").attr("placeholder").substring(3)) + 1));
+                var newElement = '<li><input type="text" class="attachElement" placeholder="항목 ' + (parseInt($(".attachElement:last").attr("placeholder").substring(3)) + 1) + '">'
+                        + '<a class="removeElement">항목 삭제</a>';
                 $("#add_poll").parent().before(newElement);
+            });
+
+            $("#postAttach").on("click",".removeElement",function(){
+                $(this).parent().remove();
             });
         }
     });
@@ -707,28 +743,49 @@ $(function () {
     });
 })
 
-
 function bindPoll(targetDiv) {
-    $("#" + targetDiv + " li").click(function () {
+    $("#" + targetDiv).on("click","li",function () {
+        if($(this).index()==0) return false;
+
         var data = JSON.stringify({
-            "objects" : [{
-                "post_key": parseInt(targetDiv.substring(5)),
-                "item": ($(this).index() - 1)
-            }]
+            "id":  parseInt($(this).parent().children(".pollTitle").attr("id").substring(8)),
+            "item": ($(this).index() - 1)
         });
-        console.log(data);
 
         $.ajax({
-            url: api_path + "polls/",
-            type: "PATCH",
+            url: "/vote/",
+            type: "POST",
             contentType: "application/json",
             data: data,
             dataType: "json",
             success: function (data) {
-                console.log(data);
+                data.poll = JSON.parse(data.poll);
+                var totalCount = 0;
+
+                for (index in data.poll.options)
+                    totalCount = totalCount + data.poll.options[index].users.length;
+
+                $("#"+targetDiv).html("");
+                $("#"+targetDiv).attr("data-totalCount",totalCount);
+
+                $("#"+targetDiv).append('<li class="pollTitle" id="poll-id-'+data.id+'">' + data.poll.title + '</li>');
+                $("#poll_template").tmpl(data.poll.options).appendTo("#"+targetDiv);
+                if(data.user_checked != -1) {
+                    $("#"+targetDiv).children("li").eq(parseInt(data.user_checked)+1).addClass("checked");
+                }
+
+                $("#"+targetDiv).children("li").each(function(){
+                    var targetLi = $(this);
+                    if(targetLi.attr("data-length")>=0) {
+                        console.log(targetLi.parent().attr("data-totalcount"));
+                        targetLi.children(".pollItem").css("background-position",(540 * parseInt(targetLi.attr("data-length")) / totalCount - 1000) + "px 50%");
+                    }
+                });
+
+                $("#"+targetDiv).addClass("p_poll");
             }
         });
-    })
+    });
 }
 
 function s3_upload_put() {

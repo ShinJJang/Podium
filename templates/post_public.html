@@ -95,8 +95,9 @@
     </li>
 </script>
 <script id="poll_template" type="text/x-jquery-tmpl">
-    <li>
-        <div class="pollItem"><strong>${ label }</strong><span class="tooltip-parent tooltip-hover">${ users.length }</span></div>
+    <li data-length="${ users.length }">
+        <span class="graphBG"></span>
+        <div class="pollItem cboth"><span class="option-label">${ label }</span><span class="user-count tooltip-parent tooltip-hover">${ users.length }명</span></div>
     </li>
 </script>
 <script id="file_template" type="text/x-jquery-tmpl">

@@ -37,6 +37,8 @@ a:hover, a:active, a:focus {
 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .private { background-image: url(../images/color-mint/timeline_private.png); }
 #p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .project { background-image: url(../images/color-mint/timeline_project.png); }
 
+#p_body #p_timeline .p_timelineContents .p_tBox .p_poll li.checked { background-image:url(../images/color-mint/poll_checked.png); }
+
 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget .weather { background-image:url(../images/color-mint/weather_icons.png); }
 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget .weather strong { color:#38978c; }
 
@@ -65,6 +67,8 @@ a:hover, a:active, a:focus {
 	#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .private { background-image: url(../images/color-mint/timeline_private@2x.png); }
 	#p_body #p_timeline .p_timelineContents .p_tBox .p_tArticle .project { background-image: url(../images/color-mint/timeline_project@2x.png); }
     #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget .weather { background-image:url(../images/color-mint/weather_icons@2x.png); }
+
+    #p_body #p_timeline .p_timelineContents .p_tBox .p_poll li.checked { background-image:url(../images/color-mint/poll_checked@2x.png); }
 
     #p_body #p_timeline #p_peopleCover #p_peopleName #friendStatus a { background-image:url(../images/color-mint/add_friend@2x.png); }
 }

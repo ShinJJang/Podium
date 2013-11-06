@@ -19,7 +19,6 @@
         var friend_ids = [];
         var friend_count = 0;
         $('.chat_search_results').each(function(){
-            console.log($(this).val());
             friend_ids.push($(this).val());
             friend_count++;
         });
@@ -229,7 +228,6 @@
             dataType: 'json',
             url: '/api/v1/user_chat_message/?chat_room_key='+chatroomId,
             success: function(data){
-                console.log(data);
                 for(var i in data.objects) {
                     var len = data.objects.length - 1;
                     if(data.objects[len-i].user.id == {{ user.id }}) {
@@ -274,7 +272,6 @@
             dataType: 'json',
             url: '/api/v1/chat_notis/?to_user_key=' + {{ user.id }},
             success: function (data) {
-                console.log(data);
                 if(data.objects.length > 0) {
 
                     console.log(data.objects.length);
