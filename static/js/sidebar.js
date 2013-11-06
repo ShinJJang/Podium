@@ -51,7 +51,6 @@ $(document).ready(function () {
     }, 5000);
 });
 
-var toggle_friend_request = $("#nav_request").click(function() {
+$("#nav_request").click(function() {
     $("#ul_nav_request").toggle();
 });
-toggle_friend_request();
