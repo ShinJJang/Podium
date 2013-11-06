@@ -9,8 +9,9 @@ var get_friendship_notis = function(){
             200: function (data) {
                 console.log("sidebar friendship notis get!");
                 $("#friend_noti_count").html(data.meta.total_count);
+                $("#ul_nav_request").html("");
                 for(var index in data.objects) {
-                    $("#ul_nav_request").append("<li>"+data.objects[index].noti_from_user.username+"</li>");
+                    $("#ul_nav_request").append("<li><a href=/people/"+data.objects[index].noti_from_user.id+">"+data.objects[index].noti_from_user.username+"</a></li>");
                 }
             }
         }
@@ -49,3 +50,8 @@ $(document).ready(function () {
         }, { offset: '0' });
     }, 5000);
 });
+
+var toggle_friend_request = $("#nav_request").click(function() {
+    $("#ul_nav_request").toggle();
+});
+toggle_friend_request();
