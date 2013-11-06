@@ -11,12 +11,12 @@
                 </header>
                 <h3 class="formTitle">약관</h3>
                 <h4 class="formTitle">이용약관</h4>
-                <div class="agreementForm">
+                <textarea class="agreementForm border_line" readonly="readonly" rows="" cols="" style="width:100%;height:200px;color:#888">
                     {% include "registration/eula.html" %}
-                </div>
+                </textarea>
                 <p class="agreementCheckbox"><input type="checkbox" name="agree_eula" id="agree_eula"><label for="agree_eula">이용약관에 동의합니다.</label></p>
                 <h4 class="formTitle">개인정보 보호정책</h4>
-                <div class="agreementForm">
+                <div class="agreementForm border_line" readonly="readonly" rows="" cols="" style="width:100%;height:200px;color:#888">
                     {% include "registration/privacy.html" %}
                 </div>
                 <p class="agreementCheckbox"><input type="checkbox" name="agree_privacy" id="agree_privacy"><label for="agree_privacy">개인정보 보호정책에 동의합니다.</label></p>
