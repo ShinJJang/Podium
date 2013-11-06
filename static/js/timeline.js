@@ -393,7 +393,7 @@ function PostTopPolling() {
                             for (obj in data.objects) {
                                 data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
                             }
-                            $(targetDiv).append('<li class="pollTitle">' + data.objects[0].poll.title + '</li>');
+                            $(targetDiv).append('<li id="poll-id-'+data.objects[0].id+'" class="pollTitle">' + data.objects[0].poll.title + '</li>');
                             $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
                             $(targetDiv).removeClass("p_poll_unloaded");
 
@@ -498,10 +498,11 @@ function postBottom() {
                     type: "GET",
                     dataType: "json",
                     success: function (data) {
+                        console.log(data);
                         for (obj in data.objects) {
                             data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
                         }
-                        $(targetDiv).append('<li class="pollTitle">' + data.objects[0].poll.title + '</li>');
+                        $(targetDiv).append('<li id="poll-id-'+data.objects[0].id+'" class="pollTitle">' + data.objects[0].poll.title + '</li>');
                         $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
                         $(targetDiv).removeClass("p_poll_unloaded");
                         $(targetDiv).addClass("p_poll");
@@ -709,16 +710,13 @@ $(function () {
 function bindPoll(targetDiv) {
     $("#" + targetDiv + " li").click(function () {
         var data = JSON.stringify({
-            "objects" : [{
-                "post_key": parseInt(targetDiv.substring(5)),
-                "item": ($(this).index() - 1)
-            }]
+            "item": ($(this).index() - 1)
         });
-        console.log(data);
+        var pollId=$(this).parent().children(".pollTitle").attr("id").substring(8);
 
         $.ajax({
-            url: "/api/v1/polls/",
-            type: "PATCH",
+            url: "/api/v1/polls/" + pollId + "/vote/",
+            type: "POST",
             contentType: "application/json",
             data: data,
             dataType: "json",
