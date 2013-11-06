@@ -190,7 +190,8 @@ body { background:#f4f4f4; }
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .p_comment .p_commentList li { padding:15px 0 10px 35px; border-bottom:1px #eaeaea solid; position: relative; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .commentProfile { display:inline-block; width:26px; padding-top:26px; margin-right:8px; border:1px #ccc solid; box-shadow: inset 0px 2px 5px rgba(0,0,0,0.33); border-radius:30px; background-size:28px 28px; overflow:hidden; background-image:url(../images/user_profile.jpg); }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .commentProfile { display:inline-block; width:26px; height:26px; margin-right:8px; border:1px #ccc solid; box-shadow: inset 0px 2px 5px rgba(0,0,0,0.33); border-radius:30px; background-size:28px 28px; overflow:hidden; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .commentProfile .userPicture { width:26px; height:26px; z-index:-1; }
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .p_comment .p_commentList li .commentProfile { position:absolute; top:10px; left:0px; }
 

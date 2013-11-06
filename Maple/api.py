@@ -169,6 +169,10 @@ class CommentResource(ModelResource):
         bundle.obj.save()
         return bundle
 
+    def dehydrate(self, bundle):
+        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.user_key.userpictures_set.order_by('-created')[:1]]
+        return bundle
+
 
 class FriendshipNotisResource(ModelResource): #create
     noti_from_user = fields.ForeignKey(UserResource, 'friend_noti_from_user_key', full=True)

@@ -94,7 +94,7 @@
                         if(result[i].last_message == '') { continue; } // 빈 채팅방은 열지 않는다.
 
                         appendText = appendText + '<li><a class="openChat cboth" data-count="' + result[i].participant_count + '" title="';
-                        if(result[i].participant_count==2) {
+                        if(result[i].participant_count==2 || result[i].participant_count==1) {
                             if(result[i].participant_1.participant_id!={{ user.id }}){
                                 appendText = appendText
                                         + result[i].participant_1.participant_name

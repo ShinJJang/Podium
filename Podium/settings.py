@@ -157,9 +157,9 @@ AWS_UPLOAD_CLIENT_SECRET_KEY = "flwBllFUCpi0YG5juUFM8w3tIN73/jdoTx93qmac"
 # registration required option
 ACCOUNT_ACTIVATION_DAYS = 7
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.live.com'
-EMAIL_HOST_USER = 'no-reply@podiumconcept.me'
-EMAIL_HOST_PASSWORD = 'xjaqmffj#2'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'makao.rule@gmail.com'
+EMAIL_HOST_PASSWORD = 'goomellowgle17'
 EMAIL_PORT = 587
 
 # A sample logging configuration. The only tangible logging

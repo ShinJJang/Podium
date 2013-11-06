@@ -6,7 +6,7 @@ from django.contrib import admin
 admin.autodiscover()
 from tastypie.api import Api
 from Maple.api import *
-from Maple.forms import RegistrationViewUniqueEmail
+from Maple.forms import RegistrationUniqueView
 
 v1_api = Api(api_name='v1')
 v1_api.register(UserResource())
@@ -41,7 +41,7 @@ urlpatterns = patterns('',
 
     url(r'^chat/$', 'Maple.views.chat', name='chat'),
     (r'^api/', include(v1_api.urls)),
-    url(r'accounts/register/$', RegistrationViewUniqueEmail.as_view(), name='registration_register'),
+    url(r'accounts/register/$', RegistrationUniqueView.as_view(), name='registration_register'),
     (r'^accounts/',include('registration.backends.default.urls')),
     url(r'^vote/', 'Maple.views.vote', name='vote'),
     # temporary page
