@@ -6,8 +6,11 @@
 </ul>
 
 <form id="chat_request_form" method="post" action="">{% csrf_token %}
-    <input type="text" id="chat_search_friend">
-    <input type="button" value="완료">
+    <span class="search_icon">Search</span>
+    <div class="search_form">
+        <input type="text" id="chat_search_friend">
+        <input type="button" value="완료">
+    </div>
 </form>
 
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
@@ -21,7 +24,8 @@
             friend_count++;
         });
         friend_count++;
-        console.log(friend_ids);
+        console.log("friend_ids" + friend_ids);
+        console.log("friend_count" + friend_count);
         var request_data = JSON.stringify({
             "participants": friend_ids,
             "participants_count": friend_count
@@ -34,12 +38,13 @@
             data: request_data ,
             success: function (data) {
                 if (data != "0") {
+                    console.log(data);
                     console.log("room" + data.id);
-                    console.log("user" + data);
+                    console.log("user" + data.username);
                     console.log(data.chat_room_name);
-                    console.log(data.participants[0]);
+                    console.log(data.participants);
 
-                    displayChatRoom(data.id, data.chat_room_name, data.participants.length);
+                    displayChatRoom(data.id, data.chat_room_name, data.participants_count);
                 }
                 else {
                     console.log(data.id);
@@ -87,7 +92,8 @@
                     result = JSON.parse(data.responseText);
                     var appendText = '';
                     for (var i in result) {
-                        var j=0;
+                        if(result[i].last_message == '') { continue; } // 빈 채팅방은 열지 않는다.
+
                         appendText = appendText + '<li><a class="openChat cboth" data-count="' + result[i].participant_count + '" title="';
                         if(result[i].participant_count==2) {
                             if(result[i].participant_1.participant_id!={{ user.id }}){
@@ -142,12 +148,12 @@
                                     + '<span class="userName">' + result[i].participant_1.participant_name
                                     + ' 외 ' + (parseInt(result[i].participant_count)-1) + '인/</span>';
                         }
-                        if(result[i].last_message!='' && result[i].last_message_speaker == {{ user.id }}) {
+                        if(result[i].last_message_speaker == {{ user.id }}) {
                             appendText = appendText
                                     + '<span class="recentMessage outbound"><span class="arrow"></span>'
                                     + result[i].last_message
                                     + '</span>';
-                        } else if(result[i].last_message!='') {
+                        } else {
                             appendText = appendText
                                     + '<span class="recentMessage inbound"><span class="arrow"></span>'
                                     + result[i].last_message
@@ -168,8 +174,13 @@
         });
     }
 
+    function getFriendList() {
+
+    }
+
     $(function(){
         getChattingList();
+        getFriendList();
     });
 
     function formatResult(node) {
@@ -177,7 +188,7 @@
     };
 
     function formatSelection(node) {
-        return '<div><input type="hidden" class="chat_search_results" value=' + node.id + '></input></div>';
+        return '<div><input type="hidden" class="chat_search_results" value=' + node.id + '>' + node.username + '</div>';
     };
 
     $(".invite_people").click(function () {
@@ -191,6 +202,11 @@
     });
 
     function displayChatRoom(chatroomId,chatroomName,participantCount) {
+        if($("#chatBox_"+chatroomId).length > 0) {
+            // 이미 창이 열려있을 때
+            return false;
+        }
+
         var chatMessage = "";
         var chatroomHTML = '<div class="chatBox" id="chatBox_'+ chatroomId + '">'
                 + '<h2>' + chatroomName + ' (' + participantCount + '인)</h2><ul>';
@@ -207,78 +223,107 @@
             dataType: 'json',
             url: '/api/v1/user_chat_message/?chat_room_key='+chatroomId,
             success: function(data){
+                console.log(data);
                 for(var i in data.objects) {
-                    if(data.objects[i].user.id == {{ user.id }}) {
+                    var len = data.objects.length - 1;
+                    if(data.objects[len-i].user.id == {{ user.id }}) {
                         chatMessage = chatMessage + '<li class="outbound">';
                     } else {
                         chatMessage = chatMessage + '<li class="inbound">';
                     }
-                    chatMessage = chatMessage + '<span class="sender">'+data.objects[i].user.username+'</span><span class="message"><span class="arrow"></span>' + data.objects[i].chatting_message + '</span></li>';
+                    chatMessage = chatMessage + '<span class="sender">'+data.objects[len-i].user.username+'</span><span class="message"><span class="arrow"></span>' + data.objects[len-i].chatting_message + '</span></li>';
                 }
                 $("#chatBox_" + chatroomId + " ul").append(chatMessage);
                 $("#chatBox_" + chatroomId + " ul").scrollTop(1000000000);
             }
         });
-        socket_chat_connection("chatBox_"+chatroomId);
+        socket_chat_connection("chatBox_"+chatroomId, participantCount);
     }
-{##}
-{#    var invited_chat = setInterval(function () {#}
-{#        $.ajax({#}
-{#            type: 'GET',#}
-{#            url: '/invited_chat',#}
-{#            success: function (data) {#}
-{#                if (data != "0") {#}
-{#                    if ($('#' + $(data).attr("id")).is(':visible')) {#}
-{#                        console.log('hide');#}
-{#                        $('#' + $(data).attr("id")).hide();#}
-{#                    }#}
-{#                    else {#}
-{#                        console.log($(data).attr("id"));#}
-{#                        console.log(document.getElementById($(data).attr("id")));#}
-{#                        if (document.getElementById($(data).attr("id")) == null) {#}
-{#                            $('#p_chatBoxContainer').append($(data));#}
-{#                            socket_chat_connection($(data).attr("id"));#}
-{#                            $('#p_chatBoxContainer #' + $(data).attr("id") + " ul").scrollTop(100000000);#}
-{#                        }#}
-{#                        $('#' + $(data).attr("id")).show();#}
-{#                        console.log($(data).attr("id"));#}
-{#                    }#}
-{#                }#}
-{#                else {#}
-{#                    if ($('#' + $(data).attr("id")).is(':visible')) {#}
-{#                        console.log('hide');#}
-{#                        $('#' + $(data).attr("id")).hide();#}
-{#                    }#}
-{#                    else {#}
-{#                        $('#' + $(data).attr("id")).show();#}
-{#                    }#}
-{#                }#}
-{#            },#}
-{#            error: function (data) {#}
-{#                console.log("invited_chat error [response] = [" + data + "]");#}
-{#            }#}
-{#        });#}
-{#    }, 100000);#}
 
-    var socket_chat_connection = (function (roomid) {
-        console.log(roomid);
+
+    function setSocketConnection(room_id) {
+        var request_data = {
+            "room_id": room_id
+        };
+        $.ajax({
+            type: 'POST',
+            content_type: 'application/json',
+            dataType: 'json',
+            data: request_data,
+            url: '/set_participant_socket/',
+            success: function(data) {
+                console.log("modify socket chat connection :" + data);
+            },
+            error: function(error_data) {
+                console.log("ERROR: modify socket chat connection : ");
+                console.log(error_data);
+            }
+        });
+    }
+
+    var invited_chat = setInterval(function () { //  TODO(백지훈) notification 부분으로 고칠 예정
+        $.ajax({
+            type: 'GET',
+            content_type: 'application/json',
+            dataType: 'json',
+            url: '/api/v1/chat_notis/?to_user_key=' + {{ user.id }},
+            success: function (data) {
+                console.log(data);
+                if(data.objects.length > 0) {
+
+                    console.log(data.objects.length);
+                    for(var i in data.objects) {
+                        displayChatRoom(data.objects[i].chat_room_key.id, data.objects[i].chat_room_key.chat_room_name, data.objects[i].chat_room_key.participant_count);
+                        var request_data = JSON.stringify({
+                            "chat_room_key": data.objects[i].chat_room_key,
+                            "to_user_key": data.objects[i].chat_room_key
+                        });
+                        $.ajax({
+                            type: 'DELETE',
+                            content_type: 'application/json',
+                            dataType: 'json',
+                            data: "",
+                            url: '/api/v1/chat_notis/',
+                            success: function(data) {
+                                console.log("chat notifications delete success");
+                                console.log(data);
+                            },
+                            error: function(error_data) {
+                                console.log("chat notifications delete success");
+                                console.log(data);
+                            }
+                        });
+                    }
+                }
+                //displayChatRoom(data.id, data.chat_room_name, data.participants_count);
+            },
+            error: function (data) {
+                console.log(data);
+                console.log("invited_chat error [response] = [" + data + "]");
+            }
+        });
+    }, 5000);
+
+    var socket_chat_connection = (function (roomid, participant_count_in_room) {
+        console.log(participant_count_in_room);
         var socket = io.connect('localhost', {port: 4000, 'force new connection': true});
+        var entry_el = $("#" + roomid + ' input.comment_entry');
+        var userId = $("#" + roomid + ' input.user_id');
+        var userName = $("#" + roomid + ' input.user_name');
+        var room = roomid.substring(8);
+        var join_info = {room_name: room, user_id: userId.val(), username: userName.val(), participant_count: participant_count_in_room};
 
         socket.on('connect', function () {
-            console.log("socket connect");
+
         });
 
         socket.on('disconnected', function () {
             socket.emit('disconnected_check', 'user out');
         });
 
-        var entry_el = $("#" + roomid + ' input.comment_entry');
-        var userId = $("#" + roomid + ' input.user_id');
-        var userName = $("#" + roomid + ' input.user_name');
-        var room = roomid.substring(8);
-        var join_info = {room_name: room, user_id: userId.val(), username: userName.val()};
 
-        socket.emit('join', join_info);
+        socket.emit('join', join_info); //  roomid기반의 채팅방에 접속
+        setSocketConnection(room);
 
         socket.on('message', function (message) {
             var receive_data = JSON.parse(message);
@@ -308,7 +353,7 @@
         });
 
         entry_el.keypress(function (event) {
-            if (event.keyCode != 13) return;
+            if (event.keyCode != 13 || entry_el.val()=='') return; // 빈 메시지는 전송하지 않는다.
             var value = entry_el.val();
             room = $(this).parent().attr("id").substring(8);
             var msg = JSON.stringify({

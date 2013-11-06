@@ -21,39 +21,35 @@ $(function(){
 
     $("#p_messages #p_chat").load('/chat');
 
+    // message 창을 열지 말지 결정
+    var messageOpen = false;
+    var isChatSearchOn = false;
+
     $("#s2id_autogen1").focus(function(){
         messageOpen=true;
     });
 
-    $("#select2-drop").on("mouseover",function(){
+    $("body").on("mouseover","#select2-drop",function(){
         messageOpen=true;
-        alert("!!!");
+    }).on("select2-open","#chat_search_friend", function(){
+        isChatSearchOn = true;
+    }).on("select2-blur","#chat_search_friend", function(){
+        isChatSearchOn = false;
+    }).on("mouseover", "#p_messages", function(){
+        $("#p_messages").addClass("opened").width("210px").css("z-index","25").css("background","#f4f4f4").css("border-left","1px #ccc solid").css("box-shadow","inset 0 0 5px rgba(0,0,0,0.1)");
+        $("#p_messages>.p_container, #p_messages .jspContainer, #p_messages .jspPane").width("223px");
+        $("#p_chatBoxContainer").css("right","220px");
+        messageOpen=true;
+    }).on("mouseout", "#p_messages", function(){
+        closeChatBar();
     });
 
     var weatherCode = 28805879;
     w_getWeather(weatherCode);
 
-    // message 창을 열지 말지 결정
-    var messageOpen = false;
-    var isChatSearchOn = false;
-
-    $("#chat_search_friend").on("select2-open", function(){
-        isChatSearchOn = true;
-    });
-
-    $("#chat_search_friend").on("select2-blur", function(){
-        isChatSearchOn = false;
-        closeChatBar();
-    });
-
     $("#p_messages").hover(function(){
         // #p_message에 mouseover시 창 열기
-        $("#p_messages").addClass("opened");
-        $("#p_messages").width("210px");
-        $("#p_messages>.p_container, #p_messages .jspContainer, #p_messages .jspPane").width("223px");
-        $("#p_timeline").css("margin-right","210px");
-        $("#p_chatBoxContainer").css("right","220px");
-        messageOpen=true;
+
     }, function(){
         closeChatBar();
     });
@@ -65,8 +61,7 @@ $(function(){
         // 0.5초 안에 messageOpen이 true가 되지 않으면 창을 닫는다
         setTimeout(function(){
             if(!messageOpen) {
-                $("#p_messages").removeClass("opened");
-                $("#p_messages").width("75px");
+                $("#p_messages").removeClass("opened").removeAttr("style");
                 $("#p_messages>.p_container, #p_messages .jspContainer, #p_messages .jspPane").width("88px");
                 $("#p_timeline").css("margin-right","75px");
                 $("#p_chatBoxContainer").css("right","85px");

@@ -53,6 +53,8 @@ io.sockets.on('connection', function (socket) {
         if (data.user_id != null) {
             socket.username = data.username;
             socket.user_id = data.user_id;
+            socket.room_id = data.room_name;
+            socket.participant_count = data.participant_count;
             logger.info('socket.username = ' + socket.username);
             //socket.room_name = data.room_name;
             users[socket.user_id] = {
@@ -70,12 +72,13 @@ io.sockets.on('connection', function (socket) {
 
     socket.on("disconnect", function () { //  todo(baek) disconnect시 소켓연결을 해제시켜준다.
         logger.info(socket.username + 'out');
-        io.sockets.in(users[socket.user_id].room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
-
+        logger.info(socket.room_name);
+        io.sockets.in(socket.room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
+        logger.info(users[socket.user_id].room_name);
         logger.info("disconnect user id = " + users[socket.user_id].user_id);
-        values = querystring.stringify({
-            user_id: users[socket.user_id].user_id,
-            room_name: users[socket.user_id].room_name,
+        var values = querystring.stringify({
+            user_id: socket.user_id,
+            room_id: socket.room_id,
             type: 'USER_OUT'
         });
 
@@ -94,9 +97,7 @@ io.sockets.on('connection', function (socket) {
             res.setEncoding('utf8');
             logger.info(res.statusCode);
             res.on('data', function (message) {
-                if (message != 'Everything worked :)') {
-                    logger.info('Message: ' + message);
-                }
+                //logger.info('Message: ' + message);
             });
         });
         req.write(values);
@@ -128,9 +129,16 @@ io.sockets.on('connection', function (socket) {
 
         logger.info("participants:" + clients[0].id); // todo(baek) 카운트를 기반으로 방의 참가자수가 소켓에 연결되어 있지 않으면 노티피케이션 검사해서 노티하게
         logger.info("user id:" + socket.user_id);
+        logger.info("room info participant count:" + socket.participant_count);
+        var noti_type = "";
 
+        if(clients.length == socket.participant_count) {
+            noti_type = "NO_CHECK_NOTI"
+        }
+        else {
+            noti_type = "CHECK_NOTI"
+        }
         //send message to django fo chat_comment db
-        var noti_type = "POST";
         var chat_data_to_server = querystring.stringify({
             comment: parse_message.message,
             user_id: parse_message.user_id,
