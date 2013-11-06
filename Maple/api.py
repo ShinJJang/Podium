@@ -170,7 +170,7 @@ class CommentResource(ModelResource):
 
 
 class FriendshipNotisResource(ModelResource): #create
-    noti_from_user = fields.ForeignKey(UserResource, 'friend_noti_from_user_key', full=False)
+    noti_from_user = fields.ForeignKey(UserResource, 'friend_noti_from_user_key', full=True)
     noti_to_user = fields.ForeignKey(UserResource, 'friend_noti_to_user_key', full=False)
 
     class Meta:
