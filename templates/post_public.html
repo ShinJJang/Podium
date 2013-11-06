@@ -62,7 +62,13 @@
                     <form id="form_comment" method="post" action=".">{% csrf_token %}
                         <div class="p_commentForm">
                             <input name="post_key" type="hidden" value="${ post.id }">
-                            <span class="commentProfile"></span><input name="comment" type="text" class="commentFormText" placeholder="댓글을 입력하세요">
+                            <span class="commentProfile">
+                                {% templatetag openblock %}if user_photo.length > 0{% templatetag closeblock %}
+                                    <img src="${ user_photo[0].picture }" alt="${ user_photo[0].name }" class="userPicture"/>
+                                {% templatetag openblock %}else{% templatetag closeblock %}
+                                    <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="userPicture"/>
+                                {% templatetag openblock %}/if{% templatetag closeblock %}
+                            </span><input name="comment" type="text" class="commentFormText" placeholder="댓글을 입력하세요">
                         </div>
                     </form>
                 </section>
@@ -72,7 +78,18 @@
 </script>
 <script id="comment_template" type="text/x-jquery-tmpl">
     <li>
-        <strong class="commentAuthor"><a href="/people/${ user.id }"><span class="commentProfile"></span>${ user.username }</a></strong>
+        <strong class="commentAuthor">
+            <a href="/people/${ user.id }">
+                <span class="commentProfile">
+                    {% templatetag openblock %}if user_photo.length > 0{% templatetag closeblock %}
+                        <img src="${ user_photo[0].picture }" alt="${ user_photo[0].name }" class="userPicture"/>
+                    {% templatetag openblock %}else{% templatetag closeblock %}
+                        <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="userPicture"/>
+                    {% templatetag openblock %}/if{% templatetag closeblock %}
+                </span>
+                ${ user.username }
+            </a>
+        </strong>
         ${ comment }
         <a href="#" class="timestamp">/ <abbr class="timeago" title=${ created }></abbr></a>
     </li>
