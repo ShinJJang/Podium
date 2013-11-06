@@ -169,6 +169,13 @@ body { background:#f4f4f4; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_attachment { background:#f4f4f4; border:1px #dadada solid; padding:9px; margin-top:10px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_attachment img { max-width:560px; }
 
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_poll .pollTitle { border-bottom:1px #ccc solid; font-weight:bold; cursor:default; padding:0; background:none !important; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_poll li { cursor:pointer; padding-left:20px; height:1.6em; margin:5px 0; position:relative; background:left 50% no-repeat; background-size:20px 20px; background-image:url(../images/poll_unchecked.png); }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_poll li:hover { background-color:#fff; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_poll li .pollItem { padding:0 5px; background:url(../images/graphBG.png) -1000px 50% no-repeat; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_poll li .pollItem .option-label { float:left; font-weight:bold; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_poll li .pollItem .user-count { float:right; font-size:0.86em; color:#666; margin-top:2px; }
+
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside { padding:0 19px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .p_responses { cursor:pointer; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .p_responses .p_container { padding:5px 0; line-height:30px; background-image:url(../images/timeline_more.png); background-position:100% 50%; background-repeat:no-repeat; background-size:10px 5px; }
@@ -258,7 +265,7 @@ body { background:#f4f4f4; }
 @media 
 (-webkit-min-device-pixel-ratio: 2), 
 (min-resolution: 192dpi) {
-    #p_header h1 { background-image: url(../images/top_bi@2x.png); }
+    #p_header h1 a { background: url(../images/top_bi@2x.png) no-repeat; }
     #p_header #p_headerLinks li a#toSetting { background-image:url(../images/top_setting@2x.png); }
 
     /* Nav Bar Icons */
@@ -288,6 +295,8 @@ body { background:#f4f4f4; }
     #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget h3 a { background-image:url(../images/timeline_edit@2x.png); }
 
     #p_body #p_timeline  .p_timelineContents .p_tBox .writeSelect li a { background-image:url(../images/article_type@2x.png); }
+
+    #p_body #p_timeline .p_timelineContents .p_tBox .p_poll li { background-image:url(../images/poll_unchecked.png); }
 
     #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .p_responses .p_container { background-image:url(../images/timeline_more@2x.png); }
     #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .opened .p_container { background-image:url(../images/timeline_less@2x.png); }

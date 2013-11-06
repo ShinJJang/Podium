@@ -24,6 +24,7 @@ from tastypie.utils import trailing_slash
 from haystack.query import SearchQuerySet
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
+from json import loads
 from tastypie.exceptions import BadRequest
 
 
@@ -285,17 +286,16 @@ class PollResource(ModelResource):
         bundle.obj.save()
         return bundle
 
-    def prepend_urls(self):
-        return [
-            url(r"^(?P<resource_name>%s)/(?P<pk>\w[\w/-]*)/vote%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('vote'), name="api_vote"),
-        ]
+    def dehydrate(self, bundle):
+        user = bundle.request.user
+        poll_set = json.loads(bundle.obj.poll)
+        user_checked_index = -1
+        for index, options in enumerate(poll_set['options']):
+            for users in options['users']:
+                if users['id'] == user.id:
+                    user_checked_index = index
 
-    def vote(self, request, bundle, **kwargs):
-        obj = self.cached_obj_get(request=request, **self.remove_api_resource_names(kwargs))
-        item = bundle.data['item']
-        print
-        # bundle.obj = Polls(pk=pk)
-        # bundle.obj.save()
+        bundle.data['user_checked'] = user_checked_index
         return bundle
 
 
