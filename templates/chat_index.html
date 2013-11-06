@@ -101,6 +101,8 @@
                                         + result[i].participant_1.participant_name
                                         + '" id="open_chat'
                                         + result[i].room_id
+                                        + '" data-room_name="'
+                                        + result[i].room_name
                                         + '" href="#">';
                                 if(result[i].participant_1.participant_picture != '') {
                                     appendText = appendText
@@ -121,6 +123,8 @@
                                         + '" id="open_chat'
                                         + result[i].room_id
                                         + '" title="'
+                                        + result[i].room_name
+                                        + '" data-room_name="'
                                         + result[i].room_name
                                         + '" href="#">';
                                 if(result[i].participant_2.participant_picture != '') {
@@ -143,6 +147,8 @@
                                     + ' 외 ' + (parseInt(result[i].participant_count)-1)
                                     + '인" id="open_chat'
                                     + result[i].room_id
+                                    + '" data-room_name="'
+                                    + result[i].room_name
                                     + '" href="#">'
                                     + '<span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>'
                                     + '<span class="userName">' + result[i].participant_1.participant_name
@@ -198,7 +204,7 @@
     });
 
     $(document).on("click",".openChat",function () {
-        displayChatRoom($(this).attr("id").substring(9), $(this).attr("title"), $(this).attr("data-count"));
+        displayChatRoom($(this).attr("id").substring(9), $(this).attr("data-room_name"), $(this).attr("data-count"));
     });
 
     function displayChatRoom(chatroomId,chatroomName,participantCount) {
@@ -306,7 +312,7 @@
 
     var socket_chat_connection = (function (roomid, participant_count_in_room) {
         console.log(participant_count_in_room);
-        var socket = io.connect('localhost', {port: 4000, 'force new connection': true});
+        var socket = io.connect(window.location.hostname, {port: 4000, 'force new connection': true});
         var entry_el = $("#" + roomid + ' input.comment_entry');
         var userId = $("#" + roomid + ' input.user_id');
         var userName = $("#" + roomid + ' input.user_name');

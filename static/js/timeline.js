@@ -1,4 +1,6 @@
-var post_top_url = "http://" + window.location.host + "/api/v1/friendposts/?" + timeline_js_parameter_top_post_polling;
+var post_api = api_path + post_type +"/";
+var comment_api = api_path +"comment/";
+var post_top_url = "http://" + window.location.host + post_api +"?" + timeline_js_parameter_top_post_polling;
 var post_bottom_url = null;
 var comment_offsets = new Object();
 var isBottominit = 0;
@@ -26,7 +28,7 @@ tinymce.init({
 
 // post create
 $(document).on("submit", "#form_post", function (event) {
-    var feedback_api = "/api/v1/post/";
+    var feedback_api = api_path + "post/";
 
     var aType = 0;
     if ($("#attach_poll").length > 0) aType = 4;
@@ -212,7 +214,7 @@ $(document).on("submit", "#form_post", function (event) {
 // post create
 $(document).on("submit", "#form_post_rich", function (event) {
     alert("@");
-    var feedback_api = "/api/v1/post/";
+    var feedback_api = api_path + "post/";
     var aType = 0;
 
     var open_scope = $("select[name=open_scope]").val();
@@ -280,7 +282,7 @@ $(document).on("submit", "#form_post_rich", function (event) {
 
 // comment create
 $(document).on("submit", "#form_comment", function (event) {
-    var feedback_api = "/api/v1/comment/";
+    var feedback_api = comment_api;
     var post_key = $(this).find("input[name=post_key]").val();
     var data = JSON.stringify({
         "comment": $(this).find("input[name=comment]").val(),
@@ -332,7 +334,7 @@ function PostTopPolling() {
                 timeRefresh();
                 post_top_url = data.meta.previous;
                 if (!data.meta.previous)
-                    post_top_url = "http://" + window.location.host + "/api/v1/friendposts/?limit=1&id__gt=" + data.objects[0].id + "&" + timeline_js_parameter_top_post_polling;
+                    post_top_url = "http://" + window.location.host + post_api + "?limit=1&id__gt=" + data.objects[0].id + "&" + timeline_js_parameter_top_post_polling;
                 if (isBottominit == 0) {
                     post_bottom_url = (!data.meta.next) ? null : data.meta.next + "&id__lte=" + data.objects[0].id;
                     isBottominit = 1;
@@ -342,7 +344,7 @@ function PostTopPolling() {
                     var targetDiv = $(this);
 
                     $.ajax({
-                        url: "/api/v1/videos/?post=" + $(this).attr("id").substring(6),
+                        url: api_path + "videos/?post=" + $(this).attr("id").substring(6),
                         type: "GET",
                         dataType: "json",
                         success: function (data) {
@@ -360,7 +362,7 @@ function PostTopPolling() {
                 $(".p_file_unloaded").each(function () {
                     var targetDiv = $(this);
                     $.ajax({
-                        url: "/api/v1/user_files/?post=" + $(this).attr("id").substring(5),
+                        url: api_path + "user_files/?post=" + $(this).attr("id").substring(5),
                         type: "GET",
                         dataType: "json",
                         success: function (data) {
@@ -386,14 +388,14 @@ function PostTopPolling() {
                     var targetDiv = $(this);
 
                     $.ajax({
-                        url: "/api/v1/polls/?post=" + $(this).attr("id").substring(5),
+                        url: api_path + "polls/?post=" + $(this).attr("id").substring(5),
                         type: "GET",
                         dataType: "json",
                         success: function (data) {
                             for (obj in data.objects) {
                                 data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
                             }
-                            $(targetDiv).append('<li id="poll-id-'+data.objects[0].id+'" class="pollTitle">' + data.objects[0].poll.title + '</li>');
+                            $(targetDiv).append('<li class="pollTitle">' + data.objects[0].poll.title + '</li>');
                             $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
                             $(targetDiv).removeClass("p_poll_unloaded");
 
@@ -475,7 +477,7 @@ function postBottom() {
             $(".p_file_unloaded").each(function () {
                 var targetDiv = $(this);
                 $.ajax({
-                    url: "/api/v1/user_files/?post=" + $(this).attr("id").substring(5),
+                    url: api_path + "user_files/?post=" + $(this).attr("id").substring(5),
                     type: "GET",
                     dataType: "json",
                     success: function (data) {
@@ -494,15 +496,14 @@ function postBottom() {
             $(".p_poll_unloaded").each(function () {
                 var targetDiv = $(this);
                 $.ajax({
-                    url: "/api/v1/polls/?post=" + $(this).attr("id").substring(5),
+                    url: api_path + "polls/?post=" + $(this).attr("id").substring(5),
                     type: "GET",
                     dataType: "json",
                     success: function (data) {
-                        console.log(data);
                         for (obj in data.objects) {
                             data.objects[obj].poll = JSON.parse(data.objects[obj].poll);
                         }
-                        $(targetDiv).append('<li id="poll-id-'+data.objects[0].id+'" class="pollTitle">' + data.objects[0].poll.title + '</li>');
+                        $(targetDiv).append('<li class="pollTitle">' + data.objects[0].poll.title + '</li>');
                         $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
                         $(targetDiv).removeClass("p_poll_unloaded");
                         $(targetDiv).addClass("p_poll");
@@ -518,10 +519,10 @@ function pollComment(post_id) {
     if (!post_id)
         return;
 
-    var feedback_api = "/api/v1/comment/?post=" + post_id; // api inner parameter ?limit=20&offset=0"
+    var feedback_api = comment_api + "?post=" + post_id; // api inner parameter ?limit=20&offset=0"
 
     if (comment_offsets[post_id]) {
-        feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=30&id__gt=" + comment_offsets[post_id];
+        feedback_api = comment_api + "?post=" + post_id + "&limit=30&id__gt=" + comment_offsets[post_id];
         // feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=30&offset=" + comment_offsets[post_id];
     }
 
@@ -562,7 +563,7 @@ $(document).on("click", ".p_responses", function () {
 
 // emotion click
 $(document).on("click", ".form_emotion :submit", function (event) {
-    var feedback_api = "/api/v1/postemotions/";
+    var feedback_api = api_path + "postemotions/";
     var data = JSON.stringify({
         "emotion": $(this).attr('tag'),
         "post_key": $(this).siblings("input[name=post_key]").val()
@@ -710,13 +711,16 @@ $(function () {
 function bindPoll(targetDiv) {
     $("#" + targetDiv + " li").click(function () {
         var data = JSON.stringify({
-            "item": ($(this).index() - 1)
+            "objects" : [{
+                "post_key": parseInt(targetDiv.substring(5)),
+                "item": ($(this).index() - 1)
+            }]
         });
-        var pollId=$(this).parent().children(".pollTitle").attr("id").substring(8);
+        console.log(data);
 
         $.ajax({
-            url: "/api/v1/polls/" + pollId + "/vote/",
-            type: "POST",
+            url: api_path + "polls/",
+            type: "PATCH",
             contentType: "application/json",
             data: data,
             dataType: "json",

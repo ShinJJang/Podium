@@ -30,10 +30,7 @@
         <div id="p_topSearch">
             <input id="p_topSearchForm" type="text" name="p_topSearchForm" value=""
                    placeholder="Search Everything in the Podium" autocomplete="off">
-            <div>
-                <li id="p_topSearch_results">
-                </li>
-            </div>
+            <ul id="p_topSearch_results"></ul>
         </div>
         <ul id="p_headerLinks">
             <li>
@@ -74,12 +71,7 @@
                 </li>
                 <li id="nav_request"><a href="#"><span class="nav_icon"></span><span
                         class="nav_label">Request</span><span id="friend_noti_count" class="nav_no"></span></a>
-                    <div class="dropbottom">
-                        <div class="dropmid">
-                            <ul id="ul_nav_request">
-                            </ul>
-                        </div>
-                    </div>
+                <ul id="ul_nav_request" style="display: none"></ul>
                 </li>
                 <li id="nav_notification" class="disabled"><a href="#"><span class="nav_icon"></span><span
                         class="nav_label">Notification</span><span class="nav_no">56</span></a></li>
@@ -87,7 +79,7 @@
             <div id="nav_items">
                 <h2>Timeline</h2>
                 <ul id="nav_timeline">
-                    <li id="nav_everything" class="selected"><a href="#"><span class="nav_icon"></span><span
+                    <li id="nav_everything" class="selected"><a href="/"><span class="nav_icon"></span><span
                             class="nav_label">Everything</span></a></li>
                     <li id="nav_private"><a href="/private"><span class="nav_icon"></span><span class="nav_label">Private</span></a>
                     </li>
@@ -147,7 +139,6 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/waypoints.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.timeago.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/tinymce/tinymce.min.js"></script>
-    <script src="{{ STATIC_URL }}js/jquery.fileupload.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/lodash.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/s3upload.js"></script>
     <script type="text/javascript">

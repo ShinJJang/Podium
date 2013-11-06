@@ -11,15 +11,17 @@ var delete_membership_noti = function(noti_id){
             }
         }
     });
-}
+};
 
+// accept시 user는 자신이 아닌 수락 받는 user
 var accept_membership = function(){
     $("#member_request > li > a").click(function() {
         var noti_id = $(this).attr("name");
+        var user_key = $(this).attr("tag");
         var request_friend_url = "/api/v1/memberships/";
         var data = JSON.stringify({
             "group_key": group_id,
-            "user_key": user_id
+            "user_key": user_key
         });
         $.ajax({
             type: "POST",
@@ -36,7 +38,7 @@ var accept_membership = function(){
             }
         });
     });
-}
+};
 
 var get_member_request= function(){
     var feedback_url = "/api/v1/membershipnotis/?noti_group_key="+group_id+"&limit=8"; // TODO - 그룹 가입 요청 일정 갯수 이상시, 관리페이지로 안내
@@ -50,7 +52,7 @@ var get_member_request= function(){
                 console.log("get member request");
                 console.log(data);
                 for(var index in data.objects) {
-                    $("#member_request").append("<li><a href='#' name="+data.objects[index].id+"><span>"+data.objects[index].noti_user_key.username+"</span></a></li>");
+                    $("#member_request").append("<li><a href='#' name="+data.objects[index].id+" tag="+data.objects[index].noti_user_key.id+"><span>"+data.objects[index].noti_user_key.username+"</span></a></li>");
                 }
                 accept_membership();
                 return false;
