@@ -291,15 +291,15 @@ class PollResource(ModelResource):
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/(?P<post_key>\w[\w/-]*)/vote%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('vote'), name="api_vote"),
+            url(r"^(?P<resource_name>%s)/(?P<pk>\w[\w/-]*)/vote%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('vote'), name="api_vote"),
         ]
 
-    def vote(self, bundle, **kwargs):
-        post_key = bundle.data['post_key']
-        post = Posts.objects.get(pk=post_key)
-        poll = bundle.data['poll']
-        bundle.obj = Polls(post_key=post, poll=poll)
-        bundle.obj.save()
+    def vote(self, request, bundle, **kwargs):
+        obj = self.cached_obj_get(request=request, **self.remove_api_resource_names(kwargs))
+        item = bundle.data['item']
+        print
+        # bundle.obj = Polls(pk=pk)
+        # bundle.obj.save()
         return bundle
 
 
