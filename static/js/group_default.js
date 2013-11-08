@@ -134,7 +134,7 @@ $(function(){
     });
 });
 
-$("select[name=group]").hide();
+$("select[name=open_scope]").hide();
 
 $(".member_leave").click(function() {
     var feedback_api = "/api/v1/memberships/"+membership_id+"/"

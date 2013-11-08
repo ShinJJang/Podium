@@ -36,7 +36,7 @@ $(document).on("submit", "#form_post", function (event) {
     else if ($("#attach_video").length > 0) aType = 2;
 
     var open_scope = $("select[name=open_scope]").val();
-    var group = $("select[name=group]").val();
+    var group = null;
     var target_user = $("input[name=target_user]").val();
     switch (open_scope) {
         case "public":
@@ -46,7 +46,8 @@ $(document).on("submit", "#form_post", function (event) {
             open_scope = 1;
             break;
         default:
-            open_scope = 0;
+            group = open_scope;
+            open_scope = 3;
             break;
     }
     if (group && open_scope == 1) {
