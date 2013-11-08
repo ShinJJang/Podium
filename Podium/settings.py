@@ -145,7 +145,7 @@ INSTALLED_APPS = (
 
 # Set your DSN value
 RAVEN_CONFIG = {
-		'dsn': 'http://b0f7a533a3d64de0aa102865b14f6afc:ec50bbe985ce43c28460439bed940b45@127.0.0.1:9001/2',
+		'dsn': 'http://e908b8daf892401e966ec9d840fc8e6d:60837b8936de42de88ffc42d95708879@podiumconcept.me:9000/2',
 }
 
 #about amazon s3
@@ -261,3 +261,7 @@ LOGGING = {
 }
 
 INTERNAL_IPS = ('127.0.0.1',)
+
+MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + (
+  'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
+)

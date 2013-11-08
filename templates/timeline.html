@@ -33,14 +33,14 @@
                                 <div class="cboth" id="postAttach"></div>
                                 <div class="postTools cboth">
                                     <p class="postOptions">
-                                        <label class="text">그룹</label>
-                                        <select id="post_group_list" name="group" value="그룹">
-                                            <option></option>
-                                        </select>
                                         <label class="text">공개범위</label>
                                         <select name="open_scope" value="공개범위">
+                                            <optgroup label="친구에게">
                                             <option value="public">공개</option>
                                             <option value="private">비공개</option>
+                                            </optgroup>
+                                            <optgroup class="post_group_list" label="그룹">
+                                            </optgroup>
                                         </select>
                                     </p>
                                     <input type="submit" class="postFormSubmit" value="작성">
@@ -55,19 +55,14 @@
 
                                 <div class="postTools cboth">
                                     <p class="postOptions">
-                                        <label class="text">그룹</label>
-                                        <select name="group" value="그룹">
-                                            <option></option>
-                                            {% if groups %}
-                                                {% for group in groups %}
-                                                    <option value="{{ group.id }}">{{ group.group_name }}</option>
-                                                {% endfor %}
-                                            {% endif %}
-                                        </select>
                                         <label class="text">공개범위</label>
                                         <select name="open_scope" value="공개범위">
-                                            <option value="public">공개</option>
-                                            <option value="private">비공개</option>
+                                            <optgroup label="친구에게">
+                                                <option value="public">공개</option>
+                                                <option value="private">비공개</option>
+                                            </optgroup>
+                                            <optgroup class="post_group_list" label="그룹">
+                                            </optgroup>
                                         </select>
                                     </p>
                                     <input type="submit" class="postFormSubmit" value="작성">
