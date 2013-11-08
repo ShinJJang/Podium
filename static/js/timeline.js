@@ -35,9 +35,9 @@ $(document).on("submit", "#form_post", function (event) {
     else if ($("#attach_file").length > 0) aType = 3;
     else if ($("#attach_video").length > 0) aType = 2;
 
-    var open_scope = $("select[name=open_scope]").val();
+    var open_scope = $("#form_post select[name=open_scope]").val();
     var group = null;
-    var target_user = $("input[name=target_user]").val();
+    var target_user = $("#form_post input[name=target_user]").val();
     switch (open_scope) {
         case "public":
             open_scope = 0;
@@ -218,9 +218,9 @@ $(document).on("submit", "#form_post_rich", function (event) {
     var feedback_api = api_path + "post/";
     var aType = 5;
 
-    var open_scope = $("select[name=open_scope]").val();
-    var group = $("select[name=group]").val();
-    var target_user = $("input[name=target_user]").val();
+    var open_scope = $("#form_post_rich select[name=open_scope]").val();
+    var group = null;
+    var target_user = $("#form_post_rich input[name=target_user]").val();
     switch (open_scope) {
         case "public":
             open_scope = 0;
@@ -229,6 +229,7 @@ $(document).on("submit", "#form_post_rich", function (event) {
             open_scope = 1;
             break;
         default:
+            group = open_scope;
             open_scope = 0;
             break;
     }
