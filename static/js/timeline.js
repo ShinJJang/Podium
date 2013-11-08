@@ -205,7 +205,8 @@ $(document).on("submit", "#form_post", function (event) {
                 post_attach = false;
                 attach_type = null;
 
-                $("#postAttach").html("");
+                $(".attachSelect").show();
+                $("#postAttach").html("").hide();
             }
         }
     });
@@ -214,9 +215,8 @@ $(document).on("submit", "#form_post", function (event) {
 
 // post create
 $(document).on("submit", "#form_post_rich", function (event) {
-    alert("@");
     var feedback_api = api_path + "post/";
-    var aType = 0;
+    var aType = 5;
 
     var open_scope = $("select[name=open_scope]").val();
     var group = $("select[name=group]").val();
@@ -252,7 +252,6 @@ $(document).on("submit", "#form_post_rich", function (event) {
         "open_scope": open_scope,
         "aType": aType
     });
-    console.log(data);
     $.ajax({
         url: feedback_api,
         type: "POST",
@@ -310,6 +309,35 @@ $(document).on("submit", "#form_comment", function (event) {
     return false;
 });
 
+function codeReplace(str) {
+    var codeReg = /\[code(.*?)]\n{0,1}/i;
+    var startIndex = str.search(codeReg);
+
+    if (startIndex != -1) {
+        var endIndex = str.search(/\[\/code\]/);
+        if (endIndex != -1) {
+            var preCodeStr = str.substring(0, startIndex);
+            var codeStr = str.substring(startIndex, endIndex+7);
+            var postCodeStr = str.substring(endIndex+7);
+
+            codeStr = codeStr.replace(codeReg, "<pre><code data-$1>");
+            codeStr = codeStr.replace("data- language", "data-language");
+            codeStr = codeStr.replace("[/code]", "</code></pre>");
+
+            postCodeStr = codeReplace(postCodeStr);
+
+            str = preCodeStr + codeStr + postCodeStr;
+        }
+    }
+
+    return str;
+}
+
+function codeLineBreakReplace(str) {
+    str = codeReplace(str);
+    return str;
+}
+
 // polling post
 function PostTopPolling() {
     $.ajax({
@@ -317,14 +345,16 @@ function PostTopPolling() {
         type: "GET",
         dataType: "json",
         success: function (data) {
+            console.log(data);
             if (data.objects.length != 0) {
                 // code parsing
                 for (var dataObj in data.objects) {
                     try {
-                        var codeReg = /\[code(.*?)]\n{0,1}/i;
-                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace(codeReg, "<pre><code data-$1>");
-                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("data- language", "data-language");
-                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("[/code]", "</code></pre>");
+                        if(data.objects[dataObj].post.attachment_type != 5) {
+                            data.objects[dataObj].post.post = codeLineBreakReplace(data.objects[dataObj].post.post);
+                        } else {
+                            data.objects[dataObj].post.post = codeReplace(data.objects[dataObj].post.post);
+                        }
                     } catch (e) {
                         console.log("code parsing exception: " + e);
                     }
@@ -485,6 +515,7 @@ function postBottom() {
                         data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace(codeReg, "<pre><code data-$1>");
                         data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("data- language", "data-language");
                         data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("[/code]", "</code></pre>");
+                        data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("/\n/g", "<br />");
                     } catch (e) {
                         console.log("code parsing exception: " + e);
                     }
