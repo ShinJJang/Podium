@@ -225,6 +225,11 @@
         displayChatRoom($(this).attr("id").substring(9), $(this).attr("data-room_name"), $(this).attr("data-count"));
     });
 
+    $("#p_chatBoxContainer").on("click",".closeChat",function () {
+        // TODO(백지훈) 소켓 연결 끊기
+        $("#chatBox_"+$(this).attr("id").substring(10)).remove();
+    });
+
     function displayChatRoom(chatroomId,chatroomName,participantCount) {
         if($("#chatBox_"+chatroomId).length > 0) {
             // 이미 창이 열려있을 때
@@ -233,7 +238,8 @@
 
         var chatMessage = "";
         var chatroomHTML = '<div class="chatBox" id="chatBox_'+ chatroomId + '">'
-                + '<h2>' + chatroomName + ' (' + participantCount + '인)</h2><ul>';
+                + '<a href="#" class="closeChat" id="chatClose_' + chatroomId + '">창 닫기</a>'
+                + '<h2><span class="roomPicture"></span>' + chatroomName + ' (' + participantCount + '인)</h2><ul>';
 
         chatroomHTML = chatroomHTML + '</ul><input type="text" class="comment_entry" />'
                 + '<input type="hidden" class="user_id" value="{{ user.id }}" />'
@@ -338,7 +344,7 @@
         var userId = $("#" + roomid + ' input.user_id');
         var userName = $("#" + roomid + ' input.user_name');
         var room = roomid.substring(8);
-        var join_info = {room_name: room, user_id: userId.val(), username: userName.val(), participant_count: participant_count_in_room};
+        var join_info = {room_name: room, user_id: userId.val(), user_name: userName.val(), participant_count: participant_count_in_room};
 
         socket.on('connect', function () {
 
@@ -353,6 +359,7 @@
         setSocketConnection(room);
 
         socket.on('message', function (message) {
+            console.log("socket receive message = " + message);
             var receive_data = JSON.parse(message);
 
             //var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -400,5 +407,19 @@
                 entry_el.val("");
             }
         });
+    });
+
+    $(document).ready(function() {
+        var socket = io.connect(window.location.hostname, {port: 4000, 'force new connection': true});
+        socket.on('connect', function () {
+
+        });
+
+        socket.on('log_message', function (message) {
+            console.log(message);
+        });
+        var join_info = {room_name: 'log_notify', user_id: {{ user.id }}, user_name: '', participant_count: ''};
+        socket.emit('join', join_info); //  roomid기반의 채팅방에 접속
+
     });
 </script>
