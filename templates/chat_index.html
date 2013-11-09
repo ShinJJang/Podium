@@ -94,7 +94,7 @@
                         if(result[i].last_message == '') { continue; } // 빈 채팅방은 열지 않는다.
 
                         appendText = appendText + '<li><a class="openChat cboth" data-count="' + result[i].participant_count + '" title="';
-                        if(result[i].participant_count==2 || result[i].participant_count==1) {
+                        if(result[i].participant_count==2) {
                             if(result[i].participant_1.participant_id!={{ user.id }}){
                                 appendText = appendText
                                         + result[i].participant_1.participant_name
@@ -140,7 +140,25 @@
                                 appendText = appendText
                                         + '<span class="userName">' + result[i].participant_2.participant_name + '</span>';
                             }
-                        } else {
+                        }
+
+                        else if (result[i].participant_count==1){
+                            console.log("참가자수 else if" + result[i].participant_count);
+                            appendText = appendText
+                                    + result[i].participant_1.participant_name
+                                    + '의 메모장!" id="open_chat'
+                                    + result[i].room_id
+                                    + '" data-room_name="'
+                                    + result[i].room_name
+                                    + '의 메모장" href="#">'
+                                    + '<span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>'
+                                    + '<span class="userName">' + result[i].participant_1.participant_name
+                                    + '의 메모장 ' + '</span>';
+
+                        }
+
+                        else {
+                            console.log("참가자수 else" + result[i].participant_count);
                             appendText = appendText
                                     + result[i].participant_1.participant_name
                                     + ' 외 ' + (parseInt(result[i].participant_count)-1)
@@ -153,6 +171,7 @@
                                     + '<span class="userName">' + result[i].participant_1.participant_name
                                     + ' 외 ' + (parseInt(result[i].participant_count)-1) + '인/</span>';
                         }
+
                         if(result[i].last_message_speaker == {{ user.id }}) {
                             appendText = appendText
                                     + '<span class="recentMessage outbound"><span class="arrow"></span>'
