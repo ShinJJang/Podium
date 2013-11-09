@@ -79,11 +79,11 @@ app.post('/', function (req, res) {
         }
         else if(log_message.type == 'comment') {
             logger.info("comment_message = " + log_message.where);
-            io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where + " 에 댓글을 썼습니다.");
+            io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + " 에 댓글을 썼습니다.");
         }
         else if(log_message.type == 'emotion') {
             logger.info("comment_message = " + log_message.where);
-            io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where + " 를" + log_message.emotion);
+            io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + " 을" + log_message.emotion);
         }
         else {
             logger.info("not accept type = ");
