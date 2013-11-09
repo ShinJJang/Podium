@@ -353,6 +353,7 @@
         setSocketConnection(room);
 
         socket.on('message', function (message) {
+            console.log("socket receive message = " + message);
             var receive_data = JSON.parse(message);
 
             //var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
