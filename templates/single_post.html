@@ -16,7 +16,6 @@
 
 {% block add_scripts %}
     {% include 'single_post_template.html' %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/post_attachment.js"></script>
     <script type="text/javascript">
     var post_id = {{ post.pk }};
     var api_path = "/api/v1/";
@@ -43,6 +42,7 @@
 
                     Rainbow.color();
 
+                    timeRefresh();
                     $(".p_video_unloaded").each(function () {
                         var targetDiv = $(this);
 
@@ -134,4 +134,5 @@
     };
     get_single_post();
     </script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/post_attachment.js"></script>
 {% endblock %}

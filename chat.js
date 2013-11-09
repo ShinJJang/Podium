@@ -1,9 +1,9 @@
 var http = require('http');
-var server = http.createServer().listen(4000);
-var io = require('socket.io').listen(server);
 var cookie_reader = require('cookie');
 var querystring = require('querystring');
 var winston = require('winston');
+var max_data = 2 * 1024 * 1024;
+
 
 var logger = new (winston.Logger)({
     transports: [
@@ -28,6 +28,53 @@ var logger = new (winston.Logger)({
 
 winston.setLevels(winston.config.syslog.levels);
 logger.setLevels(winston.config.syslog.levels);
+//
+//var server = http.createServer(function (request, response) {
+//    if (request.method == "POST") {
+//        var post_data = '';
+//        request.on('data', function(chunk) {
+//            post_data = post_data + chunk;
+//            if(post_data.length > max_data) {
+//                post_data = '';
+//                this.pause();
+//                response.writeHead(413);
+//                response.end('we are not accept big data');
+//            }
+//        }).on('end', function () {
+//                if(!post_data) {
+//                    response.end;
+//                    return;
+//                }
+//                var post_data_object = querystring.parse(post_data);
+//                console.log('receive message', post_data);
+//                response.end('success' + util.inspect(post_data_object));
+//            });
+//    }
+////}).listen(4000);
+//var server = http.createServer().listen(4000);
+//var io = require('socket.io').listen(server);
+//var express = require('express');
+var express = require('express')
+    , app = express();
+
+var server = http.createServer(app).listen(4000);
+
+var io = require('socket.io').listen(server);
+
+app.use(express.bodyParser());
+
+app.get('/', function (req, res) {
+    console.log(req.body);
+    io.sockets.in('39').emit("message", "asdasdasdasdasd");
+});
+
+app.post('/', function (req, res) {
+    console.log(req.body);
+    io.sockets.in('39').emit("message", "asdasdasdasdasd");
+});
+
+
+
 
 io.configure(function () {
     io.set('authorization', function (data, accept) {
