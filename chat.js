@@ -73,7 +73,7 @@ io.sockets.on('connection', function (socket) {
     socket.on("disconnect", function () { //  todo(baek) disconnect시 소켓연결을 해제시켜준다.
         logger.info(socket.username + 'out');
         var duplication = 0;
-        var clients = io.sockets.clients(socket.room_name);
+        var clients = io.sockets.clients(socket.room_id);
         for (var i = 0; i < clients.length; i++) {
             if (socket.username == clients[i].username) {
                 duplication++;
@@ -84,7 +84,7 @@ io.sockets.on('connection', function (socket) {
 
         }
         else {
-            io.sockets.in(socket.room_name).emit('user_out', socket.username + " 이 나갔습니다.!");
+            io.sockets.in(socket.room_id).emit('user_out', socket.username + " 이 나갔습니다.!");
         }
         var values = querystring.stringify({
             user_id: socket.user_id,
