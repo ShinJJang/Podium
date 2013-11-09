@@ -38,6 +38,9 @@ body { background:#f4f4f4; }
 
         #p_body #p_nav #nav_items { padding-top:200px; }
 
+        #p_body #p_nav ul#nav_network { margin-bottom:0; border-bottom:none; }
+        #p_body #p_nav ul.nav_group_list { border-top:none; }
+
         /* Nav Bar Icons */
         #p_body #p_nav #nav_request a .nav_icon { background-image:url(../images/icon_request.png); }
         #p_body #p_nav #nav_notification a .nav_icon { background-image:url(../images/icon_notification.png); }
@@ -85,10 +88,11 @@ body { background:#f4f4f4; }
         #p_body #p_messages #chat_request_form .search_form input[type="button"] { margin-left:5px; cursor:pointer; color:transparent; border-radius:20px; border:1px #ccc solid; width:30px; height:30px; overflow:hidden; background-position:50% 50%; background-size:30px 30px; background-repeat:no-repeat; background-image:url(../images/icon_newChat.png); }
 
         #p_chatBoxContainer { z-index:50;position:fixed; bottom:0; right:85px; }
-        #p_chatBoxContainer .chatBox h2 { height:25px; font-weight:bold; padding:0 5px; color:#fff; line-height:25px; }
-        #p_chatBoxContainer .chatBox { width:200px; height:250px; background:#fff; border:1px solid; border-bottom:none; bottom:0; margin-left:10px; float:right; font-size:0.86em; box-shadow:0px 1px 2px #999; }
+        #p_chatBoxContainer .chatBox h2 { height:24px; font-weight:bold; padding:0 5px; color:#fff; line-height:24px; }
+        #p_chatBoxContainer .chatBox .closeChat { position:absolute; top:0px; right:0px; display:block; width:24px; height:24px; text-indent:-10000px; background:url(../images/chat_close.png) 50% 50% no-repeat; background-size:18px 18px; }
+        #p_chatBoxContainer .chatBox { position:relative; width:200px; height:250px; background:#fff; border:1px solid; border-bottom:none; bottom:0; margin-left:10px; float:right; font-size:0.86em; box-shadow:0px 1px 2px #999; }
         #p_chatBoxContainer .chatBox ul { height:190px; overflow-y:scroll; padding:5px; background:#f4f4f4; }
-        #p_chatBoxContainer .chatBox ul li { clear:both; padding-top:5px; }
+        #p_chatBoxContainer .chatBox ul li { clear:both; padding-top:5px; word-break:break-all; }
         #p_chatBoxContainer .chatBox ul li.serviceMessage { color:#999; font-size:0.86em; text-align: center; font-style: italic; }
         #p_chatBoxContainer .chatBox ul li .sender { display:block; font-size:0.86em; color:#8e8e8e; }
         #p_chatBoxContainer .chatBox ul li .message { display:block; line-height:1.3; padding:1px 4px; position:relative; border:1px solid; border-radius:3px; }
@@ -266,7 +270,7 @@ body { background:#f4f4f4; }
 @media 
 (-webkit-min-device-pixel-ratio: 2), 
 (min-resolution: 192dpi) {
-    #p_header h1 a { background: url(../images/top_bi@2x.png) no-repeat; }
+    #p_header h1 a { background-image: url(../images/top_bi@2x.png); }
     #p_header #p_headerLinks li a#toSetting { background-image:url(../images/top_setting@2x.png); }
 
     /* Nav Bar Icons */
@@ -281,6 +285,8 @@ body { background:#f4f4f4; }
     #p_body #p_nav #nav_codeshare a .nav_icon { background-image:url(../images/icon_codeshare@2x.png); }
     #p_body #p_nav #nav_schedule a .nav_icon { background-image:url(../images/icon_schedule@2x.png); }
     #p_body #p_nav #nav_wiki a .nav_icon { background-image:url(../images/icon_wiki@2x.png); }
+
+    #p_chatBoxContainer .chatBox .closeChat { background-image:url(../images/chat_close@2x.png); }
 
     #p_body #p_timeline .p_timelineNav h3.weekly { background-image:url(../images/timeline_weekly@2x.png); }
     #p_body #p_timeline .p_timelineNav h3.moment { background-image:url(../images/timeline_moment@2x.png); }
@@ -297,7 +303,7 @@ body { background:#f4f4f4; }
 
     #p_body #p_timeline  .p_timelineContents .p_tBox .writeSelect li a { background-image:url(../images/article_type@2x.png); }
 
-    #p_body #p_timeline .p_timelineContents .p_tBox .p_poll li { background-image:url(../images/poll_unchecked.png); }
+    #p_body #p_timeline .p_timelineContents .p_tBox .p_poll li { background-image:url(../images/poll_unchecked@2x.png); }
 
     #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .p_responses .p_container { background-image:url(../images/timeline_more@2x.png); }
     #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .opened .p_container { background-image:url(../images/timeline_less@2x.png); }

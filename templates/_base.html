@@ -83,27 +83,15 @@
                             class="nav_label">Everything</span></a></li>
                     <li id="nav_private"><a href="/private"><span class="nav_icon"></span><span class="nav_label">Private</span></a>
                     </li>
-                    <li id="nav_project"><a href="/group_create"><span class="nav_icon"></span><span
-                            class="nav_label">+Project Create</span></a></li>
-                    <div class="nav_group_list"></div>
                     <li id="nav_favorite"><a href="#"><span class="nav_icon"></span><span
                             class="nav_label">Favorite</span></a></li>
                 </ul>
                 <h2>NETWORK</h2>
                 <ul id="nav_network">
-                    <li id="nav_people"><a href="#"><span class="nav_icon"></span><span class="nav_label">People</span></a>
-                    </li>
-                    <li id="nav_event"><a href="#"><span class="nav_icon"></span><span
-                            class="nav_label">Event</span></a></li>
+                    <li id="nav_people"><a href="#"><span class="nav_icon"></span><span class="nav_label">People</span></a></li>
+                    <li id="nav_project"><a href="/group_create"><span class="nav_icon"></span><span class="nav_label">+Project Create</span></a></li>
                 </ul>
-                <h2>TOOLS</h2>
-                <ul id="nav_tools">
-                    <li id="nav_codeshare"><a href="#"><span class="nav_icon"></span><span
-                            class="nav_label">Code Share</span></a></li>
-                    <li id="nav_schedule"><a href="#"><span class="nav_icon"></span><span
-                            class="nav_label">Schedule</span></a></li>
-                    <li id="nav_wiki"><a href="#"><span class="nav_icon"></span><span
-                            class="nav_label">SW_Wiki</span></a></li>
+                <ul class="nav_group_list">
                 </ul>
             </div>
         </div>
@@ -141,6 +129,7 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/tinymce/tinymce.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/lodash.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/s3upload.js"></script>
+    <script src="http://localhost:4000/socket.io/socket.io.js"></script>
     <script type="text/javascript">
         var user_id = {{ user.id }};
     </script>

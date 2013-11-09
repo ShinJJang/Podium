@@ -2,7 +2,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-import jsonfield
+from django.shortcuts import get_object_or_404
+import requests
 
 
 class UserProfile(models.Model):
@@ -78,6 +79,40 @@ def create_friend_post(sender, instance, created, **kwargs):
 post_save.connect(create_friend_post, sender=Posts)
 
 
+def create_log(sender, instance, created, **kwargs):
+    emotion = None
+    content = None
+    where_owner = None
+    where = None
+
+    if sender == Posts:
+        model_name = 'post'
+        content = instance.post
+        user_name = instance.user_key.username
+
+    elif sender == Comments:
+        model_name = 'comment'
+        content = instance.comment
+        where = instance.post_key.post
+        where_owner = instance.post_key.user_key.username
+        user_name = instance.user_key.username
+
+    elif sender == PostEmotions:
+        model_name = 'emotion'
+        where = instance.post_key.post
+        id_emotion = instance.emotions_ptr_id
+        emotion_instance = get_object_or_404(PostEmotions, pk=id_emotion)
+        emotion = emotion_instance.emotion
+        where_owner = instance.post_key.user_key.username
+        user_name = emotion_instance.user_key.username
+
+    log = {'type': model_name, 'user_name': user_name, 'content': content, 'where': where, 'where_owner': where_owner, 'emotion': emotion}
+    r = requests.post('http://localhost:4000/', data=log)
+    print r.status_code
+
+post_save.connect(create_log, sender=Posts)
+
+
 class Comments(models.Model):
     user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)
@@ -85,6 +120,7 @@ class Comments(models.Model):
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now=True)
 
+post_save.connect(create_log, sender=Comments)
 
 class Emotions(models.Model):
     LIKE = 'E1'
@@ -101,6 +137,8 @@ class Emotions(models.Model):
 
 class PostEmotions(Emotions):
     post_key = models.ForeignKey(Posts)
+
+post_save.connect(create_log, sender=PostEmotions)
 
 
 class CommentEmotions(Emotions):
