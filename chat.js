@@ -84,7 +84,12 @@ app.post('/', function (req, res) {
         }
         else if(log_message.type == 'emotion') {
             logger.info("comment_message = " + log_message.content);
-            io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + " 을" + log_message.emotion);
+            if(log_message == 'E1') {
+                io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + "(글)을 멋져해");
+            }
+            else {
+                io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + "(글)을 좋아해");
+            }
         }
         else {
             logger.info("not accept type = ");
