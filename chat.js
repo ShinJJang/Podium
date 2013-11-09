@@ -69,20 +69,21 @@ app.use(express.bodyParser());
 //});
 
 app.post('/', function (req, res) {
-    var log_message = JSON.parse(req);
+    console.log(req.body);
+    var log_message = req.body;
 
     logger.info("log_message = " + log_message);
     if(log_message) {
         if(log_message.type == 'post') {
-            logger.info("post_message = " + log_message.where);
-            io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where + " 에 글을 썼습니다.");
+            logger.info("post_message = " + log_message.content);
+            io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.content + "(글)을 썼습니다.");
         }
         else if(log_message.type == 'comment') {
-            logger.info("comment_message = " + log_message.where);
-            io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + " 에 댓글을 썼습니다.");
+            logger.info("comment_message = " + log_message.content);
+            io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + " 에" + log_message.content + "(댓글)을 썼습니다.");
         }
         else if(log_message.type == 'emotion') {
-            logger.info("comment_message = " + log_message.where);
+            logger.info("comment_message = " + log_message.content);
             io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + " 을" + log_message.emotion);
         }
         else {
