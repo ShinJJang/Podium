@@ -7,7 +7,6 @@ var get_friendship_notis = function(){
         dataType: "json",
         statusCode: {
             200: function (data) {
-                console.log("sidebar friendship notis get!");
                 $("#friend_noti_count").html(data.meta.total_count);
                 $("#ul_nav_request").html("");
                 for(var index in data.objects) {
@@ -28,8 +27,6 @@ var group_list_poll = function(){
         dataType: "json",
         statusCode: {
             200: function (data) {
-                console.log("sidebar.js - group list polling");
-                console.log(data);
                 $(".nav_group_list").html("");
                 $(".post_group_list").html("");
                 for(var index in data.objects){

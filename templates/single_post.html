@@ -1,0 +1,138 @@
+{% extends "_base.html" %}
+
+{% block title %}
+    {{ page_title  }}
+{% endblock %}
+
+{% block content %}
+    <section id="p_timeline">
+        <div class="p_container">
+            <div class="p_timelineContents">
+                <section id="single_post"></section>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block add_scripts %}
+    {% include 'single_post_template.html' %}
+    <script type="text/javascript">
+    var post_id = {{ post.pk }};
+    var api_path = "/api/v1/";
+
+    function get_single_post() {
+        $.ajax({
+            url: "/api/v1/post/"+post_id,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data != null) {
+                    // code parsing
+                    try {
+                        if(data.attachment_type != 5) {
+                            data.post = codeLineBreakReplace(data.post);
+                        } else {
+                            data.post = codeReplace(data.post);
+                        }
+                    } catch (e) {
+                        console.log("code parsing exception: " + e);
+                    }
+                    $("#post_public_template").tmpl(data).prependTo("#single_post");
+
+                    Rainbow.color();
+
+                    timeRefresh();
+                    $(".p_video_unloaded").each(function () {
+                        var targetDiv = $(this);
+
+                        $.ajax({
+                            url: api_path + "videos/?post=" + $(this).attr("id").substring(6),
+                            type: "GET",
+                            dataType: "json",
+                            success: function (data) {
+                                var videoId;
+                                var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+                                var match = data.objects[0].video.match(regExp);
+                                if (match&&match[7].length==11){
+                                    videoId = match[7];
+                                    $(targetDiv).html('<iframe width="560" height="315" src="//www.youtube.com/embed/'+videoId+'" frameborder="0" allowfullscreen></iframe>');
+                                }
+                            }
+                        });
+                    });
+
+                    $(".p_file_unloaded").each(function () {
+                        var targetDiv = $(this);
+                        $.ajax({
+                            url: api_path + "user_files/?post=" + $(this).attr("id").substring(5),
+                            type: "GET",
+                            dataType: "json",
+                            success: function (data) {
+                                for (obj in data.objects) {
+                                    data.objects[obj] = data.objects[obj];
+                                }
+
+                                //var file_name = data.objects[0].file_link.split("/");
+                                var imageExp = /.[jpg|png|jpeg|gif]$/;
+                                if(imageExp.test(data.objects[0].file_name)) {
+                                    $(targetDiv).append('<a href="' + data.objects[0].file_link + '">' + '<img src="' + data.objects[0].file_link + '" alt="' + data.objects[0].file_name + '" />' + '</li>');
+                                }
+                                else {
+                                    $(targetDiv).append('<a href="' + data.objects[0].file_link + '">' + data.objects[0].file_name + '</li>');
+                                }
+                                $(targetDiv).removeClass("p_file_unloaded");
+                                $(targetDiv).addClass("p_file");
+                            }
+                        });
+                    });
+
+                    $(".p_poll_unloaded").each(function () {
+                        var targetDiv = $(this);
+
+                        $.ajax({
+                            url: api_path + "polls/?post=" + $(this).attr("id").substring(5),
+                            type: "GET",
+                            dataType: "json",
+                            success: function (data) {
+                                var totalCount = 0;
+
+                                data.objects[0].poll = JSON.parse(data.objects[0].poll);
+
+                                $(targetDiv).append('<li class="pollTitle" id="poll_id-' + data.objects[0].id + '">' + data.objects[0].poll.title + '</li>');
+                                $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
+
+                                for (var index in data.objects[0].poll.options) {
+                                    totalCount = totalCount + data.objects[0].poll.options[index].users.length;
+                                }
+
+                                $(targetDiv).attr("data-totalCount",totalCount);
+
+                                $(targetDiv).children("li").each(function(){
+                                    var targetLi = $(this);
+                                    if(targetLi.attr("data-length")>=0) {
+                                        console.log(targetLi.parent().attr("data-totalcount"));
+                                        targetLi.children(".pollItem").css("background-position",(540 * parseInt(targetLi.attr("data-length")) / totalCount - 1000) + "px 50%");
+                                    }
+                                });
+
+                                if(data.objects[0].user_checked != -1) {
+                                    $(targetDiv).children("li").eq(parseInt(data.objects[0].user_checked)+1).addClass("checked");
+                                }
+
+                                $(targetDiv).removeClass("p_poll_unloaded");
+
+                                $(targetDiv).addClass("p_poll");
+                                bindPoll($(targetDiv).attr("id"));
+                            }
+                        });
+                    });
+
+                }
+            }
+        });
+    };
+    get_single_post();
+    </script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/post_attachment.js"></script>
+{% endblock %}

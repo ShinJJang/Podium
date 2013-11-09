@@ -58,6 +58,19 @@ def people(request, people_id):
 
 
 @login_required
+def post(request, post_id):
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    post = get_object_or_404(Posts, pk=post_id)
+    ctx = Context({
+        'user': user,
+        'post': post
+    })
+    return render(request, 'single_post.html', ctx)
+
+
+@login_required
 def private(request):
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')

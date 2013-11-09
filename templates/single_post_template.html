@@ -1,9 +1,9 @@
 <script id="post_public_template" type="text/x-jquery-tmpl">
     <div class="p_tItem p_container public pui">
-        <a href="/people/${ post.user.id }" class="p_tUser">
+        <a href="/people/${ user.id }" class="p_tUser">
             <span class="nav_profile">
-                {% templatetag openblock %}if post.user_photo.length > 0{% templatetag closeblock %}
-                    <img src="${ post.user_photo[0].picture }" alt="${ post.user_photo[0].name }" class="userPicture"/>
+                {% templatetag openblock %}if user_photo.length > 0{% templatetag closeblock %}
+                    <img src="${ user_photo[0].picture }" alt="${ user_photo[0].name }" class="userPicture"/>
                 {% templatetag openblock %}else{% templatetag closeblock %}
                     <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="userPicture"/>
                 {% templatetag openblock %}/if{% templatetag closeblock %}
@@ -13,38 +13,38 @@
             <article class="p_tArticle">
                 <div class="p_container">
                     <p class="p_tUserName">
-                        <a href="/people/${ post.user.id }">${ post.user.username }</a>
-                        {% templatetag openblock %}if post.open_scope == 2{% templatetag closeblock %}
-                            > <a href="/people/${ post.target_user_id }">${ post.target_user_name }</a>
-                        {% templatetag openblock %}else post.open_scope == 3{% templatetag closeblock %}
-                            > <a href="/group/${ post.group_id }">${ post.group_name }</a>
+                        <a href="/people/${ user.id }">${ user.username }</a>
+                        {% templatetag openblock %}if open_scope == 2{% templatetag closeblock %}
+                            > <a href="/people/${ target_user_id }">${ target_user_name }</a>
+                        {% templatetag openblock %}else open_scope == 3{% templatetag closeblock %}
+                            > <a href="/group/${ group_id }">${ group_name }</a>
                         {% templatetag openblock %}/if{% templatetag closeblock %}
                     </p>
                     <div class="p_tText">
-                        {% templatetag openblock %}html post.post{% templatetag closeblock %}
+                        {% templatetag openblock %}html post{% templatetag closeblock %}
                     </div>
-                    {% templatetag openblock %}if post.attachment_type == 2{% templatetag closeblock %}
-                        <div id="video-${ post.id }" class="p_attachment p_video_unloaded">
+                    {% templatetag openblock %}if attachment_type == 2{% templatetag closeblock %}
+                        <div id="video-${ id }" class="p_attachment p_video_unloaded">
                         </div>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
 
-                    {% templatetag openblock %}if post.attachment_type == 3{% templatetag closeblock %}
-                        <div id="file-${ post.id }" class="p_attachment p_file_unloaded">
+                    {% templatetag openblock %}if attachment_type == 3{% templatetag closeblock %}
+                        <div id="file-${ id }" class="p_attachment p_file_unloaded">
                         </div>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
 
-                    {% templatetag openblock %}if post.attachment_type == 4{% templatetag closeblock %}
-                        <ul id="poll-${ post.id }" class="p_attachment p_poll_unloaded">
+                    {% templatetag openblock %}if attachment_type == 4{% templatetag closeblock %}
+                        <ul id="poll-${ id }" class="p_attachment p_poll_unloaded">
                         </ul>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
-                    <p class="p_tPermalink public"><a class="timestamp" href="#"><abbr class="timeago" title=${ post.created }></abbr></a></p>
+                    <p class="p_tPermalink public"><a class="timestamp" href="#"><abbr class="timeago" title=${ created }></abbr></a></p>
                 </div>
             </article>
             <aside class="p_tAside">
                 <header class="p_responses">
                     <div class="p_container">
-                        <p class="p_emotion"><a href="#"><strong>감정</strong>/ ${ post.emotion_count }</a></p>
-                        <p class="p_comment"><a href="#"><strong>댓글</strong>/ ${ post.comment_count }</a></p>
+                        <p class="p_emotion"><a href="#"><strong>감정</strong>/ ${ emotion_count }</a></p>
+                        <p class="p_comment"><a href="#"><strong>댓글</strong>/ ${ comment_count }</a></p>
                     </div>
                 </header>
                 <section class="p_emotion">
@@ -52,19 +52,19 @@
                         <form class="form_emotion" method="post" action=".">{% csrf_token %}
                             <input name="emotion" type="submit" value="좋아요" tag="E1">
                             <input name="emotion" type="submit" value="멋져요" tag="E2">
-                            <input name="post_key" type="hidden" value="${ post.id }">
+                            <input name="post_key" type="hidden" value="${ id }">
                         </form>
                     </div>
                 </section>
                 <section class="p_comment">
-                    <ul class="p_commentList" id="commentList${ post.id }">
+                    <ul class="p_commentList" id="commentList${ id }">
                     </ul>
                     <form id="form_comment" method="post" action=".">{% csrf_token %}
                         <div class="p_commentForm">
-                            <input name="post_key" type="hidden" value="${ post.id }">
+                            <input name="post_key" type="hidden" value="${ id }">
                             <span class="commentProfile">
-                                {% templatetag openblock %}if post.user_photo.length > 0{% templatetag closeblock %}
-                                    <img src="${ post.user_photo[0].picture }" alt="${ post.user_photo[0].name }" class="userPicture"/>
+                                {% templatetag openblock %}if user_photo.length > 0{% templatetag closeblock %}
+                                    <img src="${ user_photo[0].picture }" alt="${ user_photo[0].name }" class="userPicture"/>
                                 {% templatetag openblock %}else{% templatetag closeblock %}
                                     <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="userPicture"/>
                                 {% templatetag openblock %}/if{% templatetag closeblock %}

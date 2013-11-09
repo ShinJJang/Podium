@@ -133,6 +133,7 @@ class PostResource(ModelResource):
         return bundle
 
     def dehydrate(self, bundle):
+        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.user_key.userpictures_set.order_by('-created')[:1]]
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
         bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count()
         if bundle.obj.group:
@@ -236,10 +237,6 @@ class FriendPostResource(ModelResource):
         }
         # paginator_class = EstimatedCountPaginator
         allowed_methods = ['get']
-
-    def dehydrate(self, bundle):
-        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.friend_post_key.user_key.userpictures_set.order_by('-created')[:1]]
-        return bundle
 
 
 class PostEmotionsResource(ModelResource):
