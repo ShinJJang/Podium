@@ -77,6 +77,7 @@ app.post('/', function (req, res) {
         if(log_message.type == 'post') {
             logger.info("post_message = " + log_message.content);
             io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.content + "(글)을 썼습니다.");
+
         }
         else if(log_message.type == 'comment') {
             logger.info("comment_message = " + log_message.content);
@@ -94,6 +95,8 @@ app.post('/', function (req, res) {
         else {
             logger.info("not accept type = ");
         }
+        res.writeHead( 200, 'post success', {'content-type' : 'text/plain'});
+        res.end( 'success');
     }
 
 });
@@ -108,18 +111,18 @@ io.configure(function () {
             logger.info("sessionId =" + data.cookie.sessionid + " connect");
             return accept(null, true);
         }
-        console.log(data);
         logger.error('socket connect error');
         return accept('error', false);
     });
-    io.set('log level', 8);
+    io.set('log level', 1);
 });
 
 var users = {};
+var podium_clients = {};
 
 io.sockets.on('connection', function (socket) {
     logger.info('client id = ' + socket.id);
-    console.log(socket);
+    podium_clients[socket.id] = socket;
     socket.on('join', function (data) {
         logger.info(data);
         if (data.user_id && data.user_name) {
@@ -130,7 +133,7 @@ io.sockets.on('connection', function (socket) {
             logger.info('socket.username = ' + socket.user_name);
             //socket.room_name = data.room_name;
             users[socket.user_id] = {
-                user_name: data.username,
+                user_name: data.user_name,
                 user_id: data.user_id,
                 room_name : data.room_name
             };
@@ -147,6 +150,7 @@ io.sockets.on('connection', function (socket) {
     });//this function is for socket room*/
 
     socket.on("disconnect", function () { //  todo(baek) disconnect시 소켓연결을 해제시켜준다.
+        logger.info("disconnect event");
         logger.info(socket.user_name + 'out');
         var duplication = 0;
         var clients = io.sockets.clients(socket.room_id);
@@ -190,10 +194,6 @@ io.sockets.on('connection', function (socket) {
         logger.info('send to django data : ' + values);
         req.end();
         delete users[socket.user_id];
-    });
-
-    socket.on("disconnected_check", function (data) {
-        logger.info(data);
     });
 
     socket.on('send_message', function (message) {
