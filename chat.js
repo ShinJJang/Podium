@@ -3,7 +3,8 @@ var cookie_reader = require('cookie');
 var querystring = require('querystring');
 var winston = require('winston');
 var max_data = 2 * 1024 * 1024;
-
+var address = 'localhost';
+var port = '8000';
 
 var logger = new (winston.Logger)({
     transports: [
@@ -173,8 +174,8 @@ io.sockets.on('connection', function (socket) {
         });
 
         var options = {
-            host: 'localhost',
-            port: 8000,
+            host: address,
+            port: port,
             path: '/chat_comment',
             method: 'POST',
             headers: {
@@ -242,8 +243,8 @@ io.sockets.on('connection', function (socket) {
         //var dataString = JSON.stringify(data);
 
         var options = {
-            host: 'localhost',
-            port: 8000,
+            host: address,
+            port: port,
             path: '/chat_comment',
             method: 'POST',
             headers: {
