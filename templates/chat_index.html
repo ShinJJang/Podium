@@ -223,11 +223,6 @@
         displayChatRoom($(this).attr("id").substring(9), $(this).attr("data-room_name"), $(this).attr("data-count"));
     });
 
-    $("#p_chatBoxContainer").on("click",".closeChat",function () {
-        // TODO(백지훈) 소켓 연결 끊기
-        $("#chatBox_"+$(this).attr("id").substring(10)).remove();
-    });
-
     function displayChatRoom(chatroomId,chatroomName,participantCount) {
         if($("#chatBox_"+chatroomId).length > 0) {
             // 이미 창이 열려있을 때
@@ -293,7 +288,7 @@
 
     }
 
-    var invited_chat = setInterval(function () { //  TODO(백지훈) notification 부분으로 고칠 예정
+    var invited_chat = setInterval(function () {
         $.ajax({
             type: 'GET',
             content_type: 'application/json',
@@ -337,7 +332,9 @@
 
     var socket_chat_connection = (function (roomid, participant_count_in_room) {
         console.log(participant_count_in_room);
-        var socket = io.connect(window.location.hostname, {port: 4000, 'force new connection': true});
+        var socket = io.connect(window.location.hostname, { port: 4000,
+                                                            'force new connection': true
+                                                          });
         var entry_el = $("#" + roomid + ' input.comment_entry');
         var userId = $("#" + roomid + ' input.user_id');
         var userName = $("#" + roomid + ' input.user_name');
@@ -404,6 +401,13 @@
                 });
                 entry_el.val("");
             }
+        });
+        $("#p_chatBoxContainer").on("click",".closeChat",function () {
+            // TODO(백지훈) 소켓 연결 끊기
+            socket.disconnect();
+            socket.emit('disconnect');
+            console.log("test socket disconnect");
+            $("#chatBox_"+$(this).attr("id").substring(10)).remove();
         });
     });
 
