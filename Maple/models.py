@@ -109,7 +109,7 @@ def create_log(sender, instance, created, **kwargs):
         user = emotion_instance.user_key
         link += str(instance.post_key.id)+"/"
 
-    log = {'type': model_name, 'user': user.__dict__, 'content': content, 'where': where, 'where_owner': where_owner, 'emotion': emotion, 'link': link}
+    log = {'type': model_name, 'user_name': user.username, 'user_id': user.id, 'content': content, 'where': where, 'where_owner': where_owner, 'emotion': emotion, 'link': link}
     r = requests.post('http://localhost:4000/', data=log)
     print r.status_code
 
