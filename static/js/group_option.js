@@ -85,11 +85,17 @@ $('#group_search_friend').select2({
 });
 
 function formatResult(node) {
-    return '<div>' + node.username + '</div>';
+    var photo_url = "/static/images/user_defaultProfile.jpg";
+    var photo_alt = "기본 프로필 사진";
+    if(node.user_photo.length > 0) {
+        photo_url = node.user_photo[0].picture;
+        photo_alt = node.user_photo[0].name;
+    }
+    return "<div class='member_search_selection'><img src='"+photo_url+"' alt='"+photo_alt+"' class='userPicture'/>"+node.username+"</div>";
 }
 
 function formatSelection(node) {
-    return '<div class="group_request_member_selected" value='+node.id+'>' + node.username + '</div>';
+    return "<div class='group_request_member_selected' value="+node.id+">"+node.username+"</div>";
 }
 
 $('#group_search_friend_not_permission').select2({

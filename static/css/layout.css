@@ -440,3 +440,4 @@ border-top:1px solid #dedede;
 
 /* 그룹 멤버 페이지 사진 */
 .member_list .userPicture { width:26px; height:26px; z-index:-1; }
+.member_search_selection .userPicture { width:26px; height:26px; z-index:-1; }
