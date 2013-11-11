@@ -128,6 +128,7 @@ var get_member_list = function() {
         dataType: "json",
         statusCode: {
             200: function (data) {
+                console.log(data);
                 $(".member_list").html("");
                 for(var index in data.objects){
                     var strclass = "li_member_for_delete";
@@ -135,8 +136,14 @@ var get_member_list = function() {
                         strclass += " self_member";
                     else if(data.objects[index].permission == 1)
                         strclass += " permitted_member";
+                    var photo_url = "/static/images/user_defaultProfile.jpg";
+                    var photo_alt = "기본 프로필 사진";
+                    if(data.objects[index].user_key.user_photo.length > 0) {
+                        photo_url = data.objects[index].user_key.user_photo[0].picture;
+                        photo_alt = data.objects[index].user_key.user_photo[0].name;
+                    }
                     $(".member_list").append("<li class='"+strclass+"' name='"+data.objects[index].id+"' tag='"+
-                        data.objects[index].permission+"'><a href='/people/"+data.objects[index].user_key.id +"/'>"+data.objects[index].user_key.username+"</a></li>");
+                        data.objects[index].permission+"'><img src='"+photo_url+"' alt='"+photo_alt+"' class='userPicture'/><a href='/people/"+data.objects[index].user_key.id +"/'>"+data.objects[index].user_key.username+"</a></li>");
                 }
             }
         }
