@@ -402,7 +402,7 @@ class MembershipNotisResource(ModelResource):
     class Meta:
         queryset = MembershipNotis.objects.all()
         resource_name = 'membershipnotis'
-        authorization = DjangoAuthorization()
+        authorization = Authorization()
         filtering = {
             "noti_group_key": ALL_WITH_RELATIONS,
             "noti_user_key": ALL_WITH_RELATIONS
