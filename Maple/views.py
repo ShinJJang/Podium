@@ -108,6 +108,7 @@ def group(request, group_id):
     })
     return render(request, 'group.html', ctx)
 
+
 @login_required
 def group_create(request):
     session = Session.objects.get(session_key=request.session._session_key)
@@ -117,6 +118,7 @@ def group_create(request):
         'user': user,
     })
     return render(request, 'group_create.html', ctx)
+
 
 @login_required
 def group_settings(request, group_id):
@@ -141,6 +143,29 @@ def group_settings(request, group_id):
         'permission': permission
     })
     return render(request, 'group_settings.html', ctx)
+
+
+@login_required
+def group_members(request, group_id):
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    group = Groups.objects.get(id=group_id)
+
+    permission = -1
+    try:
+        membership = Memberships.objects.filter(user_key=user, group_key=group)[0]
+        permission = membership.permission
+    except:
+        pass
+
+    ctx = Context({
+        'user': user,
+        'group': group,
+        'permission': permission
+    })
+    return render(request, 'group_members.html', ctx)
+
 
 @login_required
 def get_chat_list(request):
