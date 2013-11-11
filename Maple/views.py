@@ -159,6 +159,9 @@ def group_members(request, group_id):
     except:
         pass
 
+    if permission == -1 and group.open_scope == 2:
+        return home(request)    # TODO #1 - 비공개 그룹 페이지 안내 화면 추가 -> 주소 바꾸는 방법도
+
     ctx = Context({
         'user': user,
         'group': group,
