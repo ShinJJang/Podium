@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.shortcuts import get_object_or_404
 import requests
+import json
 
 
 class UserProfile(models.Model):
@@ -88,7 +89,7 @@ def create_log(sender, instance, created, **kwargs):
     if sender == Posts:
         model_name = 'post'
         content = instance.post
-        user = instance.user_key
+        user = get_object_or_404(User, pk=instance.user_key.id)
         link += str(instance.id)+"/"
 
     elif sender == Comments:
@@ -96,7 +97,7 @@ def create_log(sender, instance, created, **kwargs):
         content = instance.comment
         where = instance.post_key.post
         where_owner = instance.post_key.user_key.username
-        user = instance.user_key
+        user = get_object_or_404(User, pk=instance.user_key.id)
         link += str(instance.post_key.id)+"/"
 
     elif sender == PostEmotions:
@@ -109,7 +110,7 @@ def create_log(sender, instance, created, **kwargs):
         user = emotion_instance.user_key
         link += str(instance.post_key.id)+"/"
 
-    log = {'type': model_name, 'user': user, 'content': content, 'where': where, 'where_owner': where_owner, 'emotion': emotion, 'link': link}
+    log = {'type': model_name, 'user': user.__dict__, 'content': content, 'where': where, 'where_owner': where_owner, 'emotion': emotion, 'link': link}
     r = requests.post('http://localhost:4000/', data=log)
     print r.status_code
 
