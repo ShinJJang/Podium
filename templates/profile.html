@@ -236,12 +236,17 @@
                             $("#friendStatus").html('<span class="friend">친구</span>');
                         }
                         else {
+                            disable_form();
                             check_friendship_noti();
                         }
                     }
                 }
             });
         });
+
+        var disable_form = function() {
+            $("#timeline_widget").remove();
+        };
 
         var api_path = "/api/v1/";
         var post_type = "friendposts";
