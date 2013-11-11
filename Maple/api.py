@@ -174,6 +174,7 @@ class CommentResource(ModelResource):
         return bundle
 
     def dehydrate(self, bundle):
+        bundle.data['post_id'] = bundle.obj.post_key.id
         return bundle
 
 
