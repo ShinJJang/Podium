@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.shortcuts import get_object_or_404
 import requests
+import json
 
 
 class UserProfile(models.Model):
@@ -57,14 +58,14 @@ def create_friend_post(sender, instance, created, **kwargs):
     if created:
         write_user = instance.user_key
 
-        if instance.open_scope == 1:
-            # 자신에게 글 저장 - private은 그냥 post로 처리해도 되지만 template를 따로 만들어야되는 비용이 있음
+        if instance.open_scope != 3:
+            # 자신에게 글 저장
+            # - private은 그냥 post로 처리해도 되지만 template를 따로 만들어야되는 비용이 있음
+            # - 그룹에서는 멤버도 자신을 포함하므로 따로 넣어주지 않음
             FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
 
         # 친구들에게 글 저장
         if instance.open_scope == 0 or instance.open_scope == 2:
-            # 자신에게 글 저장 - 그룹에서는 멤버도 자신을 포함하므로 따로 넣어주지 않음
-            FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
             friendships = Friendships.objects.filter(user_key=write_user)
             for friendship in friendships:
                 FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
@@ -74,7 +75,6 @@ def create_friend_post(sender, instance, created, **kwargs):
             for membership in memberships:
                 FriendPosts.objects.get_or_create(user_key=membership.user_key, friend_post_key=instance)
             GroupPosts.objects.get_or_create(group_key=instance.group, post_key=instance)
-            # TODO - Post template가 post model 기반이라 쓰려면 grouppost는 따로 전처리가 필요함
 
 post_save.connect(create_friend_post, sender=Posts)
 
@@ -84,18 +84,20 @@ def create_log(sender, instance, created, **kwargs):
     content = None
     where_owner = None
     where = None
-
+    link = "/post/"
     if sender == Posts:
         model_name = 'post'
         content = instance.post
-        user_name = instance.user_key.username
+        user = get_object_or_404(User, pk=instance.user_key.id)
+        link += str(instance.id)+"/"
 
     elif sender == Comments:
         model_name = 'comment'
         content = instance.comment
         where = instance.post_key.post
         where_owner = instance.post_key.user_key.username
-        user_name = instance.user_key.username
+        user = get_object_or_404(User, pk=instance.user_key.id)
+        link += str(instance.post_key.id)+"/"
 
     elif sender == PostEmotions:
         model_name = 'emotion'
@@ -104,9 +106,10 @@ def create_log(sender, instance, created, **kwargs):
         emotion_instance = get_object_or_404(PostEmotions, pk=id_emotion)
         emotion = emotion_instance.emotion
         where_owner = instance.post_key.user_key.username
-        user_name = emotion_instance.user_key.username
+        user = emotion_instance.user_key
+        link += str(instance.post_key.id)+"/"
 
-    log = {'type': model_name, 'user_name': user_name, 'content': content, 'where': where, 'where_owner': where_owner, 'emotion': emotion}
+    log = {'type': model_name, 'user_name': user.username, 'user_id': user.id, 'content': content, 'where': where, 'where_owner': where_owner, 'emotion': emotion, 'link': link}
     r = requests.post('http://localhost:4000/', data=log)
     print r.status_code
 

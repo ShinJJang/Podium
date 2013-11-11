@@ -2,8 +2,8 @@
     <div class="p_tItem p_container public pui">
         <a href="/people/${ post.user.id }" class="p_tUser">
             <span class="nav_profile">
-                {% templatetag openblock %}if post.user_photo.length > 0{% templatetag closeblock %}
-                    <img src="${ post.user_photo[0].picture }" alt="${ post.user_photo[0].name }" class="userPicture"/>
+                {% templatetag openblock %}if post.user.user_photo.length > 0{% templatetag closeblock %}
+                    <img src="${ post.user.user_photo[0].picture }" alt="${ post.user.user_photo[0].name }" class="userPicture"/>
                 {% templatetag openblock %}else{% templatetag closeblock %}
                     <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="userPicture"/>
                 {% templatetag openblock %}/if{% templatetag closeblock %}
@@ -37,7 +37,7 @@
                         <ul id="poll-${ post.id }" class="p_attachment p_poll_unloaded">
                         </ul>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
-                    <p class="p_tPermalink public"><a class="timestamp" href="#"><abbr class="timeago" title=${ post.created }></abbr></a></p>
+                    <p class="p_tPermalink public"><a class="timestamp" href="/post/${ post.id }/"><abbr class="timeago" title=${ post.created }></abbr></a></p>
                 </div>
             </article>
             <aside class="p_tAside">
@@ -63,8 +63,8 @@
                         <div class="p_commentForm">
                             <input name="post_key" type="hidden" value="${ post.id }">
                             <span class="commentProfile">
-                                {% templatetag openblock %}if post.user_photo.length > 0{% templatetag closeblock %}
-                                    <img src="${ post.user_photo[0].picture }" alt="${ post.user_photo[0].name }" class="userPicture"/>
+                                {% templatetag openblock %}if post.user.user_photo.length > 0{% templatetag closeblock %}
+                                    <img src="${ post.user.user_photo[0].picture }" alt="${ post.user.user_photo[0].name }" class="userPicture"/>
                                 {% templatetag openblock %}else{% templatetag closeblock %}
                                     <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="userPicture"/>
                                 {% templatetag openblock %}/if{% templatetag closeblock %}
@@ -81,8 +81,8 @@
         <strong class="commentAuthor">
             <a href="/people/${ user.id }">
                 <span class="commentProfile">
-                    {% templatetag openblock %}if user_photo.length > 0{% templatetag closeblock %}
-                        <img src="${ user_photo[0].picture }" alt="${ user_photo[0].name }" class="userPicture"/>
+                    {% templatetag openblock %}if user.user_photo.length > 0{% templatetag closeblock %}
+                        <img src="${ user.user_photo[0].picture }" alt="${ user.user_photo[0].name }" class="userPicture"/>
                     {% templatetag openblock %}else{% templatetag closeblock %}
                         <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="userPicture"/>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
@@ -91,7 +91,7 @@
             </a>
         </strong>
         ${ comment }
-        <a href="#" class="timestamp">/ <abbr class="timeago" title=${ created }></abbr></a>
+        <a href="/post/${ post_id }/" class="timestamp">/ <abbr class="timeago" title=${ created }></abbr></a>
     </li>
 </script>
 <script id="poll_template" type="text/x-jquery-tmpl">

@@ -70,6 +70,14 @@ $(function(){
     }
 });
 
+function showToast(msg){
+    $("body").append('<div class="toast-message-wrapper"><div class="toast-message">'+msg+'</div></div>');
+    $(".toast-message-wrapper").fadeIn("slow",function(){
+        var messageBox = this;
+        setTimeout(function(){$(messageBox).fadeOut("slow", function(){ $(this).remove() })}, 1000);
+    });
+}
+
 var w_getWeather = function (code) {
     var qUrl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%3D' + code + '%20and%20u%3D%22c%22&format=json&diagnostics=true&callback=cbfunc';
     $.ajax({

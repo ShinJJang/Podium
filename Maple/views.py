@@ -63,6 +63,10 @@ def post(request, post_id):
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     post = get_object_or_404(Posts, pk=post_id)
+
+    if post.open_scope == 1 and user != post.user_key:
+        return home(request)
+
     ctx = Context({
         'user': user,
         'post': post
@@ -108,6 +112,7 @@ def group(request, group_id):
     })
     return render(request, 'group.html', ctx)
 
+
 @login_required
 def group_create(request):
     session = Session.objects.get(session_key=request.session._session_key)
@@ -117,6 +122,7 @@ def group_create(request):
         'user': user,
     })
     return render(request, 'group_create.html', ctx)
+
 
 @login_required
 def group_settings(request, group_id):
@@ -141,6 +147,32 @@ def group_settings(request, group_id):
         'permission': permission
     })
     return render(request, 'group_settings.html', ctx)
+
+
+@login_required
+def group_members(request, group_id):
+    session = Session.objects.get(session_key=request.session._session_key)
+    user_id = session.get_decoded().get('_auth_user_id')
+    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    group = Groups.objects.get(id=group_id)
+
+    permission = -1
+    try:
+        membership = Memberships.objects.filter(user_key=user, group_key=group)[0]
+        permission = membership.permission
+    except:
+        pass
+
+    if permission == -1 and group.open_scope == 2:
+        return home(request)    # TODO #1 - 비공개 그룹 페이지 안내 화면 추가 -> 주소 바꾸는 방법도
+
+    ctx = Context({
+        'user': user,
+        'group': group,
+        'permission': permission
+    })
+    return render(request, 'group_members.html', ctx)
+
 
 @login_required
 def get_chat_list(request):

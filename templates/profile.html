@@ -236,6 +236,7 @@
                             $("#friendStatus").html('<span class="friend">친구</span>');
                         }
                         else {
+                            disable_form();
                             check_friendship_noti();
                         }
                     }
@@ -243,11 +244,15 @@
             });
         });
 
+        var disable_form = function() {
+            $("#timeline_widget").remove();
+        };
+
         var api_path = "/api/v1/";
         var post_type = "friendposts";
 
         // timeline.js의 arg : top polling url의 parameter
-        var timeline_js_parameter_top_post_polling = "user__id={{ user_pageowner.id }}&!post__open_scope=1"; // TODO(ym) - not equal parameter filtering
+        var timeline_js_parameter_top_post_polling = "user__id={{ user_pageowner.id }}&post__open_scope__in=2&post__open_scope__in=0";
         console.log("timeline_js_parameter_top_post_polling = " + timeline_js_parameter_top_post_polling);
     </script>
     {% include 'post_public.html' %}

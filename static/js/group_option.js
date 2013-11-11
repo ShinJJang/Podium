@@ -18,7 +18,6 @@ var submit_group_form = function(event, feedback_api, method){
     $('.group_request_member_selected').each(function() {
         members.push($(this).attr('value'));
     });
-    console.log(members);
     var data = JSON.stringify({
         "group_name": $("input[name=group_name]").val(),
         "description": $("textarea[name=description]").val(),
@@ -26,7 +25,6 @@ var submit_group_form = function(event, feedback_api, method){
         "open_scope": open_scope,
         "members": members
     });
-    console.log(data);
     $.ajax({
         url: feedback_api,
         type: method,
@@ -35,18 +33,15 @@ var submit_group_form = function(event, feedback_api, method){
         dataType: "json",
         statusCode: {
             200: function(data) {
-                console.log("그룹 수정");
                 group_list_poll();
-                $("#group_response").append("<span class='tooltip tooltip-bottom'>"+data.group_name+"이 수정되었습니다.</span>");
+                showToast(data.group_name+"이 수정되었습니다.");
             },
             201: function(data) {
-                console.log("그룹 생성");
                 group_list_poll();
-                $("#group_response").append("<span class='tooltip tooltip-bottom'>"+data.group_name+"이 생성되었습니다.</span>");
+                showToast(data.group_name+"이 생성되었습니다.");
             },
             400: function(data) {
-                console.log(data.responseText);
-                $("#group_response").append("<span class='tooltip tooltip-bottom'>"+$.parseJSON(data.responseText).error+"</span>");
+                showToast($.parseJSON(data.responseText).error);
             }
         }});
 };
@@ -61,7 +56,6 @@ $(document).on("submit", "#group_create_form", function(event) {
 // group update
 $(document).on("submit", "#group_update_form", function(event) {
     var feedback_api = "/api/v1/groups/"+group_id+"/";
-    console.log(feedback_api);
     submit_group_form(event, feedback_api, "PUT");
     return false;
 });
@@ -91,12 +85,41 @@ $('#group_search_friend').select2({
 });
 
 function formatResult(node) {
-    return '<div>' + node.username + '</div>';
-};
+    var photo_url = "/static/images/user_defaultProfile.jpg";
+    var photo_alt = "기본 프로필 사진";
+    if(node.user_photo.length > 0) {
+        photo_url = node.user_photo[0].picture;
+        photo_alt = node.user_photo[0].name;
+    }
+    return "<div class='member_search_selection'><img src='"+photo_url+"' alt='"+photo_alt+"' class='userPicture'/>"+node.username+"</div>";
+}
 
 function formatSelection(node) {
-    return '<div class="group_request_member_selected" value='+node.id+'>' + node.username + '</div>';
-};
+    return "<div class='group_request_member_selected' value="+node.id+">"+node.username+"</div>";
+}
+
+$('#group_search_friend_not_permission').select2({
+    placeholder: "아는 멤버가 있는지 찾아보세요!",
+    minimumInputLength: 2,
+    multiple: false,
+    ajax: {
+        url: '/api/v1/user/search/',
+        dataType: 'json',
+        data: function(term, page) {
+            return {
+                q: term,
+                page_limit: 10
+            };
+        },
+        results: function(data, page) {
+            return {
+                results: data.objects
+            };
+        }
+    },
+    formatResult: formatResult,
+    formatSelection: formatSelection
+});
 
 // Group settings - member list with permission option
 var get_member_list = function() {
@@ -111,7 +134,6 @@ var get_member_list = function() {
         dataType: "json",
         statusCode: {
             200: function (data) {
-                console.log("group user list get!");
                 console.log(data);
                 $(".member_list").html("");
                 for(var index in data.objects){
@@ -120,7 +142,14 @@ var get_member_list = function() {
                         strclass += " self_member";
                     else if(data.objects[index].permission == 1)
                         strclass += " permitted_member";
-                    $(".member_list").append("<li class='"+strclass+"' name='"+data.objects[index].id+"' tag='"+data.objects[index].permission+"'><a href='#'>"+data.objects[index].user_key.username+"</a></li>");
+                    var photo_url = "/static/images/user_defaultProfile.jpg";
+                    var photo_alt = "기본 프로필 사진";
+                    if(data.objects[index].user_key.user_photo.length > 0) {
+                        photo_url = data.objects[index].user_key.user_photo[0].picture;
+                        photo_alt = data.objects[index].user_key.user_photo[0].name;
+                    }
+                    $(".member_list").append("<li class='"+strclass+"' name='"+data.objects[index].id+"' tag='"+
+                        data.objects[index].permission+"'><img src='"+photo_url+"' alt='"+photo_alt+"' class='userPicture'/><a href='/people/"+data.objects[index].user_key.id +"/'>"+data.objects[index].user_key.username+"</a></li>");
                 }
             }
         }
@@ -138,19 +167,22 @@ var dropdown_dom_generate = function(eventdom){
     $("#select_member").tmpl(data).appendTo(eventdom);
 };
 
-$(document).on({
-    mouseenter: function() {
-        if($(this).find(".permission_click").size() == 0) {
-            dropdown_dom_generate($(this));
-        }
-        else {
+if(permission > 1) {
+    $(document).on({
+        mouseenter: function() {
+            if($(this).find(".permission_click").size() == 0) {
+                dropdown_dom_generate($(this));
+            }
+            else {
+                $(this).find(".dropmid").toggle();
+            }
+        },
+        mouseleave: function() {
             $(this).find(".dropmid").toggle();
         }
-    },
-    mouseleave: function() {
-        $(this).find(".dropmid").toggle();
-    }
-}, ".member_list > li");
+    }, ".member_list > li");
+}
+
 
 // 멤버 권한 수정
 var update_member_for_permission = function(eventdom){
@@ -158,6 +190,7 @@ var update_member_for_permission = function(eventdom){
     var set_permission = eventdom.attr("tag");
     var method;
     var option_code;
+    var location = null;
     switch (set_permission) {
         case "0":
             method = "PATCH";
@@ -170,7 +203,7 @@ var update_member_for_permission = function(eventdom){
             var alert_statement = "정말 이 멤버를 그룹에서 제외할꺼에요?";
             if($(".li_member_for_delete").length == 1) {    // TODO Group delete - 멤버있는지 그룹에서 예외처리
                 alert_statement = "이외의 멤버가 없어 탈퇴하시면 그룹이 삭제됩니다.\n계속하시겠습니까?";
-                window.location.assign("/");
+                location = "/";
                 option_code = "group_delete";
             }
             else if(eventdom.parents(".self_member").length > 0) {
@@ -180,9 +213,9 @@ var update_member_for_permission = function(eventdom){
                     option_code = "owner_inheritance";
                 }
                 if(open_scope == 2)
-                    window.location.assign("/");
+                    location = "/";
                 else
-                    window.location.assign("/group/"+group_id+"/");
+                    location = "/group/"+group_id+"/";
             }
             if(confirm(alert_statement) != true) {
                 return false;
@@ -193,6 +226,9 @@ var update_member_for_permission = function(eventdom){
         default:
             break;
     };
+    if(location)
+        window.location.assign(location);
+
     update_member_permission(method, membership_id, set_permission, eventdom);
 
     if(option_code == "group_delete")
@@ -205,7 +241,7 @@ $(document).on("click", ".permission_click", function(){
 
 // 멤버 추가
 $("#request_member").click(function(){
-    var feedback_api = "/api/v1/memberships/"
+    var feedback_api = "/api/v1/memberships/";
     var members = [];
     $('.group_request_member_selected').each(function() {
         members.push({
@@ -217,7 +253,6 @@ $("#request_member").click(function(){
         "objects": members,
         "deleted_objects": []
     });
-    console.log(data);
     $.ajax({
         url: feedback_api,
         type: "PATCH",
@@ -227,11 +262,10 @@ $("#request_member").click(function(){
         statusCode: {
             202: function() {
                 get_member_list();
-                $("#group_response").append("<span class='tooltip tooltip-bottom'>멤버로 추가되었습니다.</span>"); // TODO - toast alert으로 변경
+                showToast("멤버로 추가되었습니다.");
             },
             400: function(data) {
-                console.log(data.responseText);
-                $("#group_response").append("<span class='tooltip tooltip-bottom'>"+$.parseJSON(data.responseText).error+"</span>");
+                showToast($.parseJSON(data.responseText).error);
             }
         }
     });
@@ -250,7 +284,7 @@ var update_member_permission = function(method, member_id, set_permission, event
         dataType: "json",
         statusCode: {
             202: function() {
-                console.log("permission update done!");
+                showToast("해당 멤버의 권한이 수정되었습니다.");
                 if(eventdom.attr("tag") == 0) {
                     eventdom.attr("tag", 1);
                     eventdom.html("관리자로 설정");
@@ -262,10 +296,10 @@ var update_member_permission = function(method, member_id, set_permission, event
             },
             204: function() {
                 eventdom.parents(".li_member_for_delete").remove();
-                console.log("selected member exclude at this group!");
+                showToast("선택된 멤버가 탈퇴 되었습니다.");
             },
             404: function() {
-                console.log("Not founded!")
+                showToast("해당 멤버는 이미 존재하지 않습니다.");
             }
         }
     });
@@ -293,6 +327,7 @@ var group_delete = function() {
         statusCode: {
             204: function() {
                 console.log("selected member exclude at this group!");
+                window.location.assign("/");
             },
             404: function() {
                 console.log("Not founded!")

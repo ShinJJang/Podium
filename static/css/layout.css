@@ -369,6 +369,9 @@ screen and (max-width:58.75em) {
 
 .disabled { opacity:0.2; }
 
+.toast-message-wrapper { display:none; top:75%; width:100%; position:absolute; z-index:1000; text-align: center; }
+.toast-message { background:rgba(0,0,0,0.75); border:1px #000 solid; color:#fff; display:inline-block; padding:3px 10px; border-radius:3px; }
+
 /*dropdown*/
 div.dropdown {
 color: #555;
@@ -434,3 +437,7 @@ font-size: 11px;
 padding: 11px 0 0 0px;
 border-top:1px solid #dedede;
 }
+
+/* 그룹 멤버 페이지 사진 */
+.member_list .userPicture { width:26px; height:26px; z-index:-1; }
+.member_search_selection .userPicture { width:26px; height:26px; z-index:-1; }

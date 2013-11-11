@@ -74,6 +74,10 @@ class UserResource(ModelResource):
         self.log_throttled_access(request)
         return self.create_response(request, object_list)
 
+    def dehydrate(self, bundle):
+        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.userpictures_set.order_by('-created')[:1]]
+        return bundle
+
 
 class UserProfileResource(ModelResource):
     user = fields.OneToOneField(UserResource, 'user', full=True)
@@ -133,7 +137,6 @@ class PostResource(ModelResource):
         return bundle
 
     def dehydrate(self, bundle):
-        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.user_key.userpictures_set.order_by('-created')[:1]]
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
         bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count()
         if bundle.obj.group:
@@ -171,7 +174,7 @@ class CommentResource(ModelResource):
         return bundle
 
     def dehydrate(self, bundle):
-        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.user_key.userpictures_set.order_by('-created')[:1]]
+        bundle.data['post_id'] = bundle.obj.post_key.id
         return bundle
 
 
@@ -330,6 +333,10 @@ class GroupResource(ModelResource):
 
         return bundle
 
+    def dehydrate(self, bundle):
+        bundle.data['member_count'] = Memberships.objects.filter(group_key=bundle.obj.pk).count()
+        return bundle
+
     def hydrate(self, bundle):  # 업데이트시, 체크
         if bundle.obj.group_name != bundle.data['group_name'] and Groups.objects.filter(group_name=bundle.data['group_name']).count() != 0:
             raise BadRequest('이미 존재하는 그룹명입니다')
@@ -402,7 +409,7 @@ class MembershipNotisResource(ModelResource):
     class Meta:
         queryset = MembershipNotis.objects.all()
         resource_name = 'membershipnotis'
-        authorization = DjangoAuthorization()
+        authorization = Authorization()
         filtering = {
             "noti_group_key": ALL_WITH_RELATIONS,
             "noti_user_key": ALL_WITH_RELATIONS
