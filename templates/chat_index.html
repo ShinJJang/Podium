@@ -403,7 +403,7 @@
             }
         });
         $("#p_chatBoxContainer").on("click",".closeChat",function () {
-            // TODO(백지훈) 소켓 연결 끊기
+            // TODO(백지훈) 소켓 연결 끊기 -완료
             socket.disconnect();
             socket.emit('disconnect');
             console.log("test socket disconnect");
@@ -411,7 +411,7 @@
         });
     });
 
-    $(document).ready(function() {
+    $(document).ready(function() { // TODO(최태건) 이부분을 하단부에 띄워줘야 함니다 지금은 console.log로 출력합니다.
         var socket = io.connect(window.location.hostname, {port: 4000, 'force new connection': true});
         socket.on('connect', function () {
 
