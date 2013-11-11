@@ -80,7 +80,6 @@ $(document).on("submit", "#form_post", function (event) {
         "open_scope": open_scope,
         "aType": aType
     });
-    console.log(data);
     $.ajax({
         url: feedback_api,
         type: "POST",
@@ -89,9 +88,6 @@ $(document).on("submit", "#form_post", function (event) {
         dataType: "json",
         statusCode: {
             201: function (data) {
-                /*post로 생성 후 생성한 json response*/
-                console.log("post submit response");
-                console.log(data);
                 PostTopPolling();
                 $("input[name=post]").val("");
 
@@ -103,7 +99,6 @@ $(document).on("submit", "#form_post", function (event) {
                         var a_feedback_api = "/api/v1/polls/";
 
                         var poll_elements = new Array();
-                        console.log("attachElement is")
                         $(".attachElement").each(function (index) {
                             var element_obj = {
                                 label: $(this).val(),
@@ -130,20 +125,17 @@ $(document).on("submit", "#form_post", function (event) {
                             dataType: "json",
                             statusCode: {
                                 201: function (data) {
-                                    console.log("poll submit response");
-                                    console.log(data);
+
                                 }
                             }
                         });
                     }
 
                     if ($("#attach_file").length > 0) {
-                        console.log("file test");
                         var file_upload_url = "/api/v1/user_files/";
                         file_link = $('#post_file_url_info').val();
                         file_type = $('#post_file_type').val();
                         file_name = $('#post_file_name').val();
-                        console.log("file_name is =" + file_name);
                         var user_file_data = JSON.stringify({
                             "post_key": postId,
                             "file_link": file_link,
@@ -158,11 +150,10 @@ $(document).on("submit", "#form_post", function (event) {
                             dataType: "json",
                             statusCode: {
                                 201: function (data) {
-                                    console.log("file submit response");
-                                    console.log(data);
+                                    // TODO file_upload result
                                 },
                                 500: function (data) {
-                                    console.log(data);
+                                    // TODO file_upload fail result
                                 }
                             }
                         });
@@ -188,8 +179,6 @@ $(document).on("submit", "#form_post", function (event) {
                                 dataType: "json",
                                 statusCode: {
                                     201: function (data) {
-                                        console.log("poll submit response");
-                                        console.log(data);
                                     }
                                 }
                             });
@@ -261,8 +250,6 @@ $(document).on("submit", "#form_post_rich", function (event) {
         dataType: "json",
         statusCode: {
             201: function (data) {
-                /*post로 생성 후 생성한 json response*/
-                console.log("post submit response");
                 PostTopPolling();
                 $("input[name=post]").val("");
 
@@ -289,7 +276,6 @@ $(document).on("submit", "#form_comment", function (event) {
         "comment": $(this).find("input[name=comment]").val(),
         "post_key": post_key
     });
-    console.log(data);
     $.ajax({
         url: feedback_api,
         type: "POST",
@@ -299,8 +285,6 @@ $(document).on("submit", "#form_comment", function (event) {
         context: this,
         statusCode: {
             201: function (data) {
-                console.log("post submit response");
-                console.log(data);
                 pollComment(data.post_key);
                 $("input[name=comment]").val("");
                 counting_comment(post_key);
@@ -310,6 +294,7 @@ $(document).on("submit", "#form_comment", function (event) {
     return false;
 });
 
+// Rich Text
 function codeReplace(str) {
     var codeReg = /\[code(.*?)]\n{0,1}/i;
     var startIndex = str.search(codeReg);
@@ -334,8 +319,34 @@ function codeReplace(str) {
     return str;
 }
 
+// Plain Text
 function codeLineBreakReplace(str) {
-    str = codeReplace(str);
+    var codeReg = /\[code(.*?)]\n{0,1}/i;
+    var startIndex = str.search(codeReg);
+
+    if (startIndex != -1) {
+        var endIndex = str.search(/\[\/code\]/);
+        if (endIndex != -1) {
+            var preCodeStr = str.substring(0, startIndex);
+            var codeStr = str.substring(startIndex, endIndex+7);
+            var postCodeStr = str.substring(endIndex+7);
+
+            preCodeStr = preCodeStr.replace(/\n/ig, "<br />");
+            preCodeStr = preCodeStr.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$1">$1</a>');
+
+            codeStr = codeStr.replace(codeReg, "<pre><code data-$1>");
+            codeStr = codeStr.replace("data- language", "data-language");
+            codeStr = codeStr.replace("[/code]", "</code></pre>");
+
+            postCodeStr = codeLineBreakReplace(postCodeStr);
+
+            str = preCodeStr + codeStr + postCodeStr;
+        }
+    } else {
+        str = str.replace(/\n/ig, "<br />");
+        str = str.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$1">$1</a>');
+    }
+
     return str;
 }
 
@@ -346,18 +357,16 @@ function PostTopPolling() {
         type: "GET",
         dataType: "json",
         success: function (data) {
-            console.log(data);
             if (data.objects.length != 0) {
                 // code parsing
                 for (var dataObj in data.objects) {
                     try {
-                        if(data.objects[dataObj].post.attachment_type != 5) {
-                            data.objects[dataObj].post.post = codeLineBreakReplace(data.objects[dataObj].post.post);
-                        } else {
+                        if(data.objects[dataObj].post.attachment_type == 5) {
                             data.objects[dataObj].post.post = codeReplace(data.objects[dataObj].post.post);
+                        } else {
+                            data.objects[dataObj].post.post = codeLineBreakReplace(data.objects[dataObj].post.post);
                         }
                     } catch (e) {
-                        console.log("code parsing exception: " + e);
                     }
                 }
                 $("#post_public_template").tmpl(data.objects).prependTo("#timeline_posts");
@@ -441,7 +450,6 @@ function PostTopPolling() {
                             $(targetDiv).children("li").each(function(){
                                 var targetLi = $(this);
                                 if(targetLi.attr("data-length")>=0) {
-                                    console.log(targetLi.parent().attr("data-totalcount"));
                                     targetLi.children(".pollItem").css("background-position",(540 * parseInt(targetLi.attr("data-length")) / totalCount - 1000) + "px 50%");
                                 }
                             });
@@ -508,7 +516,6 @@ function postBottom() {
         type: "GET",
         dataType: "json",
         success: function (data) {
-            console.log("BOTTOM POLL POST   url:" + post_bottom_url);
             if (data.objects.length != 0) {
                 for (var dataObj in data.objects) {
                     try {
@@ -518,13 +525,11 @@ function postBottom() {
                         data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("[/code]", "</code></pre>");
                         data.objects[dataObj].post.post = data.objects[dataObj].post.post.replace("/\n/g", "<br />");
                     } catch (e) {
-                        console.log("code parsing exception: " + e);
                     }
                 }
                 $("#post_public_template").tmpl(data.objects).appendTo("#timeline_posts");
                 Rainbow.color();
                 post_bottom_url = data.meta.next;
-                console.log("2 next url:  " + post_bottom_url);
                 timeRefresh();
             }
 
@@ -561,7 +566,6 @@ function postBottom() {
                         $("#poll_template").tmpl(data.objects[0].poll.options).appendTo(targetDiv);
 
                         for (var index in data.objects[0].poll.options) {
-                            console.log(index);
                             totalCount = totalCount + data.objects[0].poll.options[index].users.length;
                         }
 
@@ -570,7 +574,6 @@ function postBottom() {
                         $(targetDiv).children("li").each(function(){
                                 var targetLi = $(this);
                                 if(targetLi.attr("data-length")>=0) {
-                                    console.log(targetLi.parent().attr("data-totalcount"));
                                     targetLi.children(".pollItem").css("background-position",(540 * parseInt(targetLi.attr("data-length")) / totalCount - 1000) + "px 50%");
                                 }
                             });
@@ -600,18 +603,15 @@ function pollComment(post_id) {
         // feedback_api = "/api/v1/comment/?post=" + post_id + "&limit=30&offset=" + comment_offsets[post_id];
     }
 
-    console.log("Polling comment url :  " + feedback_api);
     $.ajax({
         url: feedback_api,
         type: "GET",
         dataType: "json",
         success: function (data) {
             if (data.objects.length != 0) {
-                console.log(data);
                 $("#comment_template").tmpl(data.objects).appendTo("#commentList" + post_id);
                 timeRefresh();
                 comment_offsets[post_id] = data.objects[data.objects.length - 1].id;
-                console.log("댓글 폴링한 마지막 오프셋 :" + comment_offsets[post_id]);
                 counting_comment(post_id);
             }
         }
@@ -642,7 +642,6 @@ $(document).on("click", ".form_emotion :submit", function (event) {
         "emotion": $(this).attr('tag'),
         "post_key": $(this).siblings("input[name=post_key]").val()
     });
-    console.log(data);
     $.ajax({
         url: feedback_api,
         type: "POST",
@@ -651,8 +650,6 @@ $(document).on("click", ".form_emotion :submit", function (event) {
         dataType: "json",
         statusCode: {
             201: function (data) {
-                console.log("post emotion submit response");
-                console.log(data);
             }
         }
     });
@@ -760,7 +757,6 @@ $(function () {
             document.getElementById("attach_file").appendChild(attachFileCancelButton);
 
         }
-        console.log(post_attach);
     });
     $("#toPlain").click(function () {
         $("#plainTextInput").show();
@@ -810,7 +806,6 @@ function bindPoll(targetDiv) {
                 $("#"+targetDiv).children("li").each(function(){
                     var targetLi = $(this);
                     if(targetLi.attr("data-length")>=0) {
-                        console.log(targetLi.parent().attr("data-totalcount"));
                         targetLi.children(".pollItem").css("background-position",(540 * parseInt(targetLi.attr("data-length")) / totalCount - 1000) + "px 50%");
                     }
                 });
@@ -823,10 +818,8 @@ function bindPoll(targetDiv) {
 
 function s3_upload_put() {
     var check_file_name = $('#post_file').val();
-    console.log("check_file_name is = %s %s", check_file_name, $('#post_file')[0].files[0].size);
     var extension = check_file_name.replace(/^.*\./, '');
     var valid_extensions = ['hwp', 'jpg', 'ppt', 'pptx', 'doc', 'zip', 'png','txt', 'pdf'];
-    //console.log("s3 upload = " + $("#post_is_file").val());
     var file_size = 0;
     if ($.support.msie) {
         var objFSO = new ActiveXObject("Scripting.FileSystemObject");
@@ -840,7 +833,6 @@ function s3_upload_put() {
     }
 
     if ($("#post_is_file").val() == "1") {
-        console.log("s3 upload = " + $("#post_is_file").val);
         alert("안대 지우고 올려");
     }
     else if ($.inArray(extension, valid_extensions) == -1) {
@@ -877,7 +869,6 @@ function s3_upload_put() {
                             var parse_url = url.split("/");
                             $('#post_file_url_info').val(url);
                             $('#post_file_type').val(file.type);
-                            console.log("finishS3Put file name =" + file.name);
                             $('#post_file_name').val(file.name);
                             $("#post_is_file").val("1");
                             $('#status').html('<a href=' + url + ' > Upload completed ' + parse_url[5] + '</a');
@@ -905,7 +896,6 @@ function s3_upload_delete() {
             $("#post_file").val("");
         }
 
-        console.log("file info =" + $('#post_file_url_info').val());
         var count_and_name = $('#post_file_url_info').val().split("/");
         var s3upload = new S3Upload({
             opt_user_file_count: count_and_name[4],
@@ -918,9 +908,7 @@ function s3_upload_delete() {
                 $('#status').html('Delete progress: ' + percent + '%' + message);
             },
             onFinishS3Put: function (url, type) {
-                console.log("onFinishS3Put url = " + url);
                 var parse_url = url.split("/");
-                //console.log(parse_url[0] +"," + parse_url[1] + "," + parse_url[2]);
                 $("#status").html("Please select a file");
                 $("#post_is_file").val("0");
             },
