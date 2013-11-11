@@ -78,11 +78,11 @@ app.post('/', function (req, res) {
 
         if(log_message.type == 'post') {
             logger.info("post_message = " + log_message.user);
-            message = log_message.user.user_name + "이 " + log_message.content + "(글)을 썼습니다.";
-            user = log_message.user;
+            message = log_message.user_name + "이 " + log_message.content + "(글)을 썼습니다.";
+            user_id = log_message.user_id;
             link = log_message.link;
             log_message_to_client = JSON.stringify({
-                "user" : user,
+                "user_id" : user_id,
                 "message" : message,
                 "link" : link
             });
@@ -90,11 +90,11 @@ app.post('/', function (req, res) {
 
         }
         else if(log_message.type == 'comment') {
-            message = log_message.user.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + " 에" + log_message.content + "(댓글)을 썼습니다.";
-            user = log_message.user;
+            message = log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + " 에" + log_message.content + "(댓글)을 썼습니다.";
+            user = log_message.user_id;
             link = log_message.link;
             log_message_to_client = JSON.stringify({
-                "user" : user,
+                "user_id" : user_id,
                 "message" : message,
                 "link" : link
             });
@@ -105,15 +105,15 @@ app.post('/', function (req, res) {
             logger.info("comment_message = " + log_message.content);
 
             if(log_message == 'E1') {
-                message = log_message.user.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + "(글)을 멋져해";
+                message = log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + "(글)을 멋져해";
             }
             else {
-                message = log_message.user.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + "(글)을 좋아해";
+                message = log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + "(글)을 좋아해";
             }
-            user = log_message.user;
+            user_id = log_message.user_id;
             link = log_message.link;
             log_message_to_client = JSON.stringify({
-                "user" : user,
+                "user_id" : user_id,
                 "message" : message,
                 "link" : link
             });
