@@ -92,11 +92,11 @@ $('#group_search_friend').select2({
 
 function formatResult(node) {
     return '<div>' + node.username + '</div>';
-};
+}
 
 function formatSelection(node) {
     return '<div class="group_request_member_selected" value='+node.id+'>' + node.username + '</div>';
-};
+}
 
 // Group settings - member list with permission option
 var get_member_list = function() {
@@ -205,7 +205,7 @@ $(document).on("click", ".permission_click", function(){
 
 // 멤버 추가
 $("#request_member").click(function(){
-    var feedback_api = "/api/v1/memberships/"
+    var feedback_api = "/api/v1/memberships/";
     var members = [];
     $('.group_request_member_selected').each(function() {
         members.push({
@@ -293,6 +293,7 @@ var group_delete = function() {
         statusCode: {
             204: function() {
                 console.log("selected member exclude at this group!");
+                window.location.assign("/");
             },
             404: function() {
                 console.log("Not founded!")
