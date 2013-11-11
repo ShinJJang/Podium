@@ -72,26 +72,52 @@ app.use(express.bodyParser());
 app.post('/', function (req, res) {
     console.log(req.body);
     var log_message = req.body;
-
+    var log_message_to_client, message, user, link;
     logger.info("log_message = " + log_message);
     if(log_message) {
+
         if(log_message.type == 'post') {
-            logger.info("post_message = " + log_message.content);
-            io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.content + "(글)을 썼습니다.");
+            logger.info("post_message = " + log_message.user);
+            message = log_message.user.user_name + "이 " + log_message.content + "(글)을 썼습니다.";
+            user = log_message.user;
+            link = log_message.link;
+            log_message_to_client = JSON.stringify({
+                "user" : user,
+                "message" : message,
+                "link" : link
+            });
+            io.sockets.in('log_notify').emit("log_message", log_message_to_client);
 
         }
         else if(log_message.type == 'comment') {
+            message = log_message.user.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + " 에" + log_message.content + "(댓글)을 썼습니다.";
+            user = log_message.user;
+            link = log_message.link;
+            log_message_to_client = JSON.stringify({
+                "user" : user,
+                "message" : message,
+                "link" : link
+            });
             logger.info("comment_message = " + log_message.content);
-            io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + " 에" + log_message.content + "(댓글)을 썼습니다.");
+            io.sockets.in('log_notify').emit("log_message", log_message_to_client);
         }
         else if(log_message.type == 'emotion') {
             logger.info("comment_message = " + log_message.content);
+
             if(log_message == 'E1') {
-                io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + "(글)을 멋져해");
+                message = log_message.user.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + "(글)을 멋져해";
             }
             else {
-                io.sockets.in('log_notify').emit("log_message", log_message.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + "(글)을 좋아해");
+                message = log_message.user.user_name + "이 " + log_message.where_owner + "의 " + log_message.where + "(글)을 좋아해";
             }
+            user = log_message.user;
+            link = log_message.link;
+            log_message_to_client = JSON.stringify({
+                "user" : user,
+                "message" : message,
+                "link" : link
+            });
+            io.sockets.in('log_notify').emit("log_message", log_message_to_client);
         }
         else {
             logger.info("not accept type = ");
