@@ -94,15 +94,21 @@
                 </section>
             </div>
             <nav class="p_timelineNav">
+                <div class="pui">
+                    <div class="box">
+                        <div class="text">
+                            <span>그룹 멤버수: <a id="member_count" href="members/"></a></span>
+                        </div>
+                    </div>
+                </div>
                 <div class="dropdown">
                     <a class="dropdown_display" id="toSetting" href="#">Settings</a>
                     <div class="dropdown_submenu" style="display: none; ">
                         <ul class="display_submenu_root">
                         {% if permission > 0 %}
-                            <li><a class="group_menu_admin" href="members/">멤버 관리</a></li>
                             <li><a class="group_menu_admin" href="settings/">그룹 설정</a></li>
                         {% endif %}
-                            <li><a href="#">멤버 보기</a></li>
+                            <li><a href="members/">멤버 보기</a></li>
                         {% if permission > -1 %}
                             <li><a class="group_menu_admin member_leave" href="#">그룹 탈퇴</a></li>
                         {% endif %}
@@ -137,7 +143,7 @@
         var permission = {{ permission }};
 
         var api_path = "/api/v1/";
-        var post_type = "groupposts"
+        var post_type = "groupposts";
 
         // timeline.js의 arg : top polling url의 parameter
         var timeline_js_parameter_top_post_polling = "post__group__id={{ group.id }}";

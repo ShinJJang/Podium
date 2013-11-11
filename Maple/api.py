@@ -330,6 +330,10 @@ class GroupResource(ModelResource):
 
         return bundle
 
+    def dehydrate(self, bundle):
+        bundle.data['member_count'] = Memberships.objects.filter(group_key=bundle.obj.pk).count()
+        return bundle
+
     def hydrate(self, bundle):  # 업데이트시, 체크
         if bundle.obj.group_name != bundle.data['group_name'] and Groups.objects.filter(group_name=bundle.data['group_name']).count() != 0:
             raise BadRequest('이미 존재하는 그룹명입니다')

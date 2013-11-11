@@ -1,3 +1,20 @@
+var get_group = function() {
+    var feedback_url = "/api/v1/groups/"+group_id+"/"
+    $.ajax({
+        type: "GET",
+        url: feedback_url,
+        contentType: "application/json",
+        dataType: "json",
+        statusCode: {
+            200: function(data) {
+                console.log(data);
+                $("#member_count").html(data.member_count);
+            }
+        }
+    });
+};
+get_group();
+
 var group_delete = function() {
     var feedback_url = "/api/v1/groups/"+group_id+"/"
     $.ajax({
