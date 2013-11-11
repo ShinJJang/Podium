@@ -37,7 +37,7 @@
                         <ul id="poll-${ post.id }" class="p_attachment p_poll_unloaded">
                         </ul>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
-                    <p class="p_tPermalink public"><a class="timestamp" href="#"><abbr class="timeago" title=${ post.created }></abbr></a></p>
+                    <p class="p_tPermalink public"><a class="timestamp" href="/post/${ post.id }/"><abbr class="timeago" title=${ post.created }></abbr></a></p>
                 </div>
             </article>
             <aside class="p_tAside">
@@ -91,7 +91,7 @@
             </a>
         </strong>
         ${ comment }
-        <a href="#" class="timestamp">/ <abbr class="timeago" title=${ created }></abbr></a>
+        <a href="/post/${ post.id }/" class="timestamp">/ <abbr class="timeago" title=${ created }></abbr></a>
     </li>
 </script>
 <script id="poll_template" type="text/x-jquery-tmpl">
