@@ -11,6 +11,10 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
     login_status = models.IntegerField(default=0)
     updated = models.DateTimeField(auto_now=True)
+    sex = models.IntegerField(null=True)  # 1 = Male, 2 = Female
+    birthday = models.DateField(null=True)
+    address = models.TextField(max_length=100, null=True)
+    phone = models.TextField(max_length=20, null=True)
 
     def __str__(self):
         return "%s's profile" % self.user

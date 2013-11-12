@@ -86,6 +86,7 @@ class UserProfileResource(ModelResource):
         queryset = UserProfile.objects.all()
         resource_name = 'userprofile'
         include_resource_uri = False
+        always_return_data = True
         authorization = Authorization()
 
 
