@@ -261,41 +261,6 @@ def chat(request):
     })
     return render(request, 'chat_index.html', ctx)
 
-@login_required
-def invited_chat(request):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)
-    print "invited_chat event  " + user.username + " invite!"
-
-    try:
-        chat_noti = ChatNotis.objects.get(noti_to_user_key=user)#noti가 있으면 채팅 유저를 찾고
-        chatting_user = User.objects.get(id=chat_noti.noti_from_user_key.id)
-
-        try:
-            ChatTables.objects.get(to_chatting_user=user, from_chatting_user=chatting_user)
-        except:
-            try:
-                ChatTables.objects.get(to_chatting_user=chatting_user, from_chatting_user=user)
-            except:
-                ChatTables.objects.create(to_chatting_user=user, from_chatting_user=chatting_user)
-                chat_noti.delete()
-
-        try:
-            chat_info = UserChats.objects.get(chat_to_user_key=user, chat_from_user_key=chatting_user)
-        except:
-            chat_info = UserChats.objects.get(chat_to_user_key=chatting_user, chat_from_user_key=user)
-
-        chat_comments = ChatComments.objects.filter(userChat_key=chat_info)
-        ctx = Context({
-            'user': user,
-            'chat_info': chat_info,
-            'chatting_user': chatting_user,
-            'chat_comments': chat_comments
-        })
-        return render_to_response('chat.html', ctx)
-    except:
-        return HttpResponse("0")
 
 @login_required
 @csrf_exempt
