@@ -272,4 +272,8 @@ $(document).ready(function(){
         $(".dropdown").hide();
         $(".open_dropdown").removeClass("opened");
     });
+
+    $("#live_list").on("click","li", function(){
+        window.location = $(this).attr("data-targeturl");
+    })
 });

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+import django.contrib.auth.models as auth_models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_syncdb
 from django.shortcuts import get_object_or_404
 import requests
 import json
@@ -11,13 +12,25 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
     login_status = models.IntegerField(default=0)
     updated = models.DateTimeField(auto_now=True)
+    sex = models.IntegerField(null=True)  # 1 = Male, 2 = Female
+    birthday = models.DateField(null=True)
+    address = models.TextField(max_length=100, null=True)
+    phone = models.TextField(max_length=20, null=True)
 
     def __str__(self):
         return "%s's profile" % self.user
 
 
+def create_superuser_profile(sender, created_models, **kwargs):
+    superuser = get_object_or_404(User, pk=1)
+    if superuser.is_superuser:
+        UserProfile.objects.get_or_create(user=superuser)
+
+post_syncdb.connect(create_superuser_profile, sender=auth_models)
+
+
 def create_user_profile(sender, instance, created, **kwargs):
-    if created:
+    if created and not instance.is_superuser:
         UserProfile.objects.get_or_create(user=instance)
 
 post_save.connect(create_user_profile, sender=User)

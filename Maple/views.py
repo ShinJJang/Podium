@@ -129,21 +129,21 @@ def group_settings(request, group_id):
     session = Session.objects.get(session_key=request.session._session_key)
     user_id = session.get_decoded().get('_auth_user_id')
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-    group = Groups.objects.get(id=group_id)
+    group_ = Groups.objects.get(id=group_id)
 
     permission = -1
     try:
-        membership = Memberships.objects.filter(user_key=user, group_key=group)[0]
+        membership = Memberships.objects.filter(user_key=user, group_key=group_)[0]
         permission = membership.permission
     except:
         pass
 
     if permission < 1:
-        return home(request)    # TODO #1 - 비공개 그룹 페이지 안내 화면 추가 -> 주소 바꾸는 방법도
+        return group(request, group_id)    # TODO #1 - 비공개 그룹 페이지 안내 화면 추가 -> 주소 바꾸는 방법도
 
     ctx = Context({
         'user': user,
-        'group': group,
+        'group': group_,
         'permission': permission
     })
     return render(request, 'group_settings.html', ctx)
@@ -261,41 +261,6 @@ def chat(request):
     })
     return render(request, 'chat_index.html', ctx)
 
-@login_required
-def invited_chat(request):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)
-    print "invited_chat event  " + user.username + " invite!"
-
-    try:
-        chat_noti = ChatNotis.objects.get(noti_to_user_key=user)#noti가 있으면 채팅 유저를 찾고
-        chatting_user = User.objects.get(id=chat_noti.noti_from_user_key.id)
-
-        try:
-            ChatTables.objects.get(to_chatting_user=user, from_chatting_user=chatting_user)
-        except:
-            try:
-                ChatTables.objects.get(to_chatting_user=chatting_user, from_chatting_user=user)
-            except:
-                ChatTables.objects.create(to_chatting_user=user, from_chatting_user=chatting_user)
-                chat_noti.delete()
-
-        try:
-            chat_info = UserChats.objects.get(chat_to_user_key=user, chat_from_user_key=chatting_user)
-        except:
-            chat_info = UserChats.objects.get(chat_to_user_key=chatting_user, chat_from_user_key=user)
-
-        chat_comments = ChatComments.objects.filter(userChat_key=chat_info)
-        ctx = Context({
-            'user': user,
-            'chat_info': chat_info,
-            'chatting_user': chatting_user,
-            'chat_comments': chat_comments
-        })
-        return render_to_response('chat.html', ctx)
-    except:
-        return HttpResponse("0")
 
 @login_required
 @csrf_exempt
