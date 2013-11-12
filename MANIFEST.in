@@ -1,0 +1,4 @@
+include virtualenv.py setuptools-*.tar.gz pip-*.tar.gz boot.sh boot.bat chat.js serverstart.sh
+recursive-include templates *.html templates *.txt
+recursive-include static *.*
+

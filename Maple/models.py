@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_syncdb
 from django.shortcuts import get_object_or_404
 import requests
 import json
@@ -20,8 +20,19 @@ class UserProfile(models.Model):
         return "%s's profile" % self.user
 
 
+def create_superuser_profile(sender, created_models, **kwargs):
+    users = User.objects.all()
+    if users.count() > 0:
+        superuser = users[0]
+
+        if superuser.is_superuser:
+            UserProfile.objects.get_or_create(user=superuser)
+
+post_syncdb.connect(create_superuser_profile)
+
+
 def create_user_profile(sender, instance, created, **kwargs):
-    if created:
+    if created and not instance.is_superuser:
         UserProfile.objects.get_or_create(user=instance)
 
 post_save.connect(create_user_profile, sender=User)
