@@ -134,7 +134,6 @@ var get_member_list = function() {
         dataType: "json",
         statusCode: {
             200: function (data) {
-                console.log(data);
                 $(".member_list").html("");
                 for(var index in data.objects){
                     var strclass = "li_member_for_delete";
@@ -200,7 +199,6 @@ var update_member_for_permission = function(eventdom){
             if(eventdom.parents(".self_member").length > 0) {
                 location = "/group/"+group_id+"/";
             }
-            console.log(location);
             break;
         case "1":
             method = "PATCH";
@@ -288,6 +286,7 @@ var update_member_permission = function(method, member_id, set_permission, event
         url: feedback_url,
         contentType: "application/json",
         data: data,
+        async: false,
         dataType: "json",
         statusCode: {
             202: function() {
@@ -334,13 +333,14 @@ var group_delete = function() {
         url: feedback_url,
         contentType: "application/json",
         dataType: "json",
+        async: false,
         statusCode: {
             204: function() {
-                console.log("selected member exclude at this group!");
                 window.location.assign("/");
+                showToast("그룹이 삭제되었습니다.");
             },
             404: function() {
-                console.log("Not founded!")
+                showToast("해당 그룹을 찾을 수 없습니다.");
             }
         }
     });

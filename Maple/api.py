@@ -333,6 +333,13 @@ class GroupResource(ModelResource):
 
         return bundle
 
+    def obj_delete(self, bundle, **kwargs):
+        obj = self.obj_get(bundle=bundle, **kwargs)
+        if obj.memberships_set.all().count() != 0:
+            raise BadRequest("멤버가 아직 존재합니다. 해당 그룹을 삭제할 수 없습니다.")
+
+        return super(GroupResource, self).obj_delete(bundle)
+
     def dehydrate(self, bundle):
         bundle.data['member_count'] = Memberships.objects.filter(group_key=bundle.obj.pk).count()
         return bundle
