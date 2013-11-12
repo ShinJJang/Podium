@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-import django.contrib.auth.models as auth_models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_syncdb
 from django.shortcuts import get_object_or_404
@@ -22,11 +21,14 @@ class UserProfile(models.Model):
 
 
 def create_superuser_profile(sender, created_models, **kwargs):
-    superuser = get_object_or_404(User, pk=1)
-    if superuser.is_superuser:
-        UserProfile.objects.get_or_create(user=superuser)
+    users = User.objects.all()
+    if users.count() > 0:
+        superuser = users[0]
 
-post_syncdb.connect(create_superuser_profile, sender=auth_models)
+        if superuser.is_superuser:
+            UserProfile.objects.get_or_create(user=superuser)
+
+post_syncdb.connect(create_superuser_profile)
 
 
 def create_user_profile(sender, instance, created, **kwargs):
