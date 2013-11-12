@@ -418,8 +418,22 @@
         });
 
         socket.on('log_message', function (message) {
-            var newLog = '<li><a href="#">'+message+'</a></li>';
-            $("#live_list").prepend(newLog);
+            var userPicture="/static/images/user_defaultProfile.jpg";
+            message = JSON.parse(message);
+            $.ajax({
+                type: 'GET',
+                content_type: 'application/json',
+                dataType: 'json',
+                url: '/api/v1/user/' + message.user_id,
+                success: function (data) {
+                    console.log(data);
+                    if(data.user_photo.length>0) {
+                        userPicture = data.user_photo[0].picture;
+                    }
+                    var newLog = '<li data-targeturl="'+message.link+'"><p class="photo"><img src="'+userPicture+'" alt="profile image"></p><p class="author">'+data.username+'</p><p>'+message.message+'</p></li>';
+                    $("#live_list").prepend(newLog);
+                }
+            });
         });
 
         var join_info = {room_name: 'log_notify', user_id: {{ user.id }}, user_name: '', participant_count: ''};
