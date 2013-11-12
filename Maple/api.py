@@ -402,6 +402,14 @@ class MembershipsResource(ModelResource):
         bundle.obj.save()
         return bundle
 
+    def hydrate(self, bundle):  # 멤버 권한 업데이트시, 체크
+        request_user_membership = get_object_or_404(Memberships, user_key=bundle.request.user, group_key=bundle.obj.group_key)
+        if request_user_membership.permission < 1:
+            raise BadRequest('권한이 없어요~')
+
+        return bundle
+
+
 class MembershipNotisResource(ModelResource):
     noti_group_key = fields.ForeignKey(GroupResource, 'noti_group_key', full=False)
     noti_user_key = fields.ForeignKey(UserResource, 'noti_user_key', full=True)

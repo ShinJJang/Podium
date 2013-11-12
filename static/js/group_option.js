@@ -301,6 +301,9 @@ var update_member_permission = function(method, member_id, set_permission, event
                 eventdom.parents(".li_member_for_delete").remove();
                 showToast("선택된 멤버가 탈퇴 되었습니다.");
             },
+            400: function(data) {
+                showToast($.parseJSON(data.responseText).error);
+            },
             404: function() {
                 showToast("해당 멤버는 이미 존재하지 않습니다.");
             }
