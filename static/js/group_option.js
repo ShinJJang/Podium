@@ -138,8 +138,11 @@ var get_member_list = function() {
                 $(".member_list").html("");
                 for(var index in data.objects){
                     var strclass = "li_member_for_delete";
-                    if(data.objects[index].user_key.id == user_id)
+                    if(data.objects[index].user_key.id == user_id) {
                         strclass += " self_member";
+                    }
+                    else if(data.objects[index].permission == 2)
+                        strclass = "";
                     else if(data.objects[index].permission == 1)
                         strclass += " permitted_member";
                     var photo_url = "/static/images/user_defaultProfile.jpg";
@@ -167,7 +170,7 @@ var dropdown_dom_generate = function(eventdom){
     $("#select_member").tmpl(data).appendTo(eventdom);
 };
 
-if(permission > 1) {
+if(permission > 0) {
     $(document).on({
         mouseenter: function() {
             if($(this).find(".permission_click").size() == 0) {
@@ -180,7 +183,7 @@ if(permission > 1) {
         mouseleave: function() {
             $(this).find(".dropmid").toggle();
         }
-    }, ".member_list > li");
+    }, ".member_list > li.li_member_for_delete");
 }
 
 
