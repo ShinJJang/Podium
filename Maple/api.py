@@ -74,6 +74,10 @@ class UserResource(ModelResource):
         self.log_throttled_access(request)
         return self.create_response(request, object_list)
 
+    def dehydrate(self, bundle):
+        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.userpictures_set.order_by('-created')[:1]]
+        return bundle
+
 
 class UserProfileResource(ModelResource):
     user = fields.OneToOneField(UserResource, 'user', full=True)
@@ -133,7 +137,6 @@ class PostResource(ModelResource):
         return bundle
 
     def dehydrate(self, bundle):
-        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.user_key.userpictures_set.order_by('-created')[:1]]
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
         bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count()
         if bundle.obj.group:
@@ -171,7 +174,7 @@ class CommentResource(ModelResource):
         return bundle
 
     def dehydrate(self, bundle):
-        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.user_key.userpictures_set.order_by('-created')[:1]]
+        bundle.data['post_id'] = bundle.obj.post_key.id
         return bundle
 
 
