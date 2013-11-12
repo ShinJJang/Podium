@@ -248,29 +248,28 @@ var w_getWeather = function (code) {
 
 // dropdown
 $(document).ready(function(){
-    $(".dropdown_display").click(function(){
-
+    $(".open_dropdown").click(function(){
         if($(this).hasClass("opened")){
-            $(".dropdown_submenu").hide();
+            $(this).parent().children(".dropdown").hide();
             $(this).removeClass("opened");
         }
         else{
-            $(".dropdown_submenu").show();
+            $(this).parent().children(".dropdown").show();
             $(this).addClass("opened");
         }
     });
 
     //Mouseup textarea false
-    $(".dropdown_submenu").mouseup(function(){
+    $(".dropdown").mouseup(function(){
         return false;
     });
-    $(".dropdown_display").mouseup(function(){
+    $(".open_dropdown").mouseup(function(){
         return false;
     });
 
     //Textarea without editing.
     $(document).mouseup(function(){
-        $(".dropdown_submenu").hide();
-        $(this).removeClass("opened");
+        $(".dropdown").hide();
+        $(".open_dropdown").removeClass("opened");
     });
 });

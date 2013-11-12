@@ -9,6 +9,9 @@ a:hover, a:active, a:focus {
 
 #p_header { background: #76bab2; border-color:#38978c; }
 #p_header #p_topSearch input[type="text"] { background-image:url(../images/color-mint/top_search.png); }
+
+#p_header #p_headerLinks > li a#toSetting.opened { background-image:url(../images/color-mint/top_setting_opened.png); }
+
 #p_body #p_nav #nav_userProfile a .nav_no { color:#ff7f7f }
 #p_body #p_nav #nav_userProfile { background:#ccc; }
 
@@ -55,6 +58,7 @@ a:hover, a:active, a:focus {
 (min-resolution: 192dpi) {
 	
 	#p_header #p_topSearch input[type="text"] { background-image:url(../images/color-mint/top_search@2x.png); }
+    #p_header #p_headerLinks > li a#toSetting.opened { background-image:url(../images/color-mint/top_setting_opened@2x.png); }
 	
 	#p_body #p_timeline .p_timelineNav ul li a { background-image:url(../images/color-mint/moment_item@2x.png); }
 	#p_body #p_timeline .p_timelineNav ul li.selected a { background-image:url(../images/color-mint/moment_selected@2x.png); }

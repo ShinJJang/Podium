@@ -30,20 +30,18 @@
         <div id="p_topSearch" class="pui">
             <input id="p_topSearchForm" type="text" name="p_topSearchForm" value=""
                    placeholder="Search Everything in the Podium" autocomplete="off">
-            <ul id="p_topSearch_results" class="dropdown"></ul>
+            <ul id="p_topSearch_results" class="autocomplete"></ul>
         </div>
         <ul id="p_headerLinks">
-            <li>
-                <div class="dropdown">
-                    <a class="dropdown_display" id="toSetting" href="#">Settings</a>
-                    <div class="dropdown_submenu" style="display: none; ">
-                        <ul class="display_submenu_root">
-                            <li><a href="/people/{{ user.id }}">My Profile</a></li>
-                            <li><a href="#settings">Settings</a></li>
-                            <li><a href="mailto:contact@podiumconcept.me?subject=니꺼못쓰겠다야&body=요로코롬 불편한디 으째쓴다냐">Send Feedback</a></li>
-                            <li><a href="/accounts/logout/">Logout</a></li>
-                        </ul>
-                    </div>
+            <li class="pui">
+                <div class="dropdown_wrapper">
+                    <a id="toSetting" class="open_dropdown" href="#">Settings</a>
+                    <ul class="dropdown">
+                        <li><a href="/people/{{ user.id }}">My Profile</a></li>
+                        <li><a href="#settings">Settings</a></li>
+                        <li><a href="mailto:contact@podiumconcept.me?subject=니꺼못쓰겠다야&body=요로코롬 불편한디 으째쓴다냐">Send Feedback</a></li>
+                        <li><a href="/accounts/logout/">Logout</a></li>
+                    </ul>
                 </div>
             </li>
         </ul>
