@@ -1,7 +1,6 @@
 # Django settings for Podium project.
 # -*- coding: utf-8 -*-
 import os.path
-
 BASE_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
