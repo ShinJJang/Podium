@@ -197,6 +197,10 @@ var update_member_for_permission = function(eventdom){
     switch (set_permission) {
         case "0":
             method = "PATCH";
+            if(eventdom.parents(".self_member").length > 0) {
+                location = "/group/"+group_id+"/";
+            }
+            console.log(location);
             break;
         case "1":
             method = "PATCH";
@@ -204,7 +208,7 @@ var update_member_for_permission = function(eventdom){
         case "-1":
             method = "DELETE";
             var alert_statement = "정말 이 멤버를 그룹에서 제외할꺼에요?";
-            if($(".li_member_for_delete").length == 1) {    // TODO Group delete - 멤버있는지 그룹에서 예외처리
+            if($(".member_list > li").length == 1) {    // TODO Group delete - 멤버있는지 그룹에서 예외처리
                 alert_statement = "이외의 멤버가 없어 탈퇴하시면 그룹이 삭제됩니다.\n계속하시겠습니까?";
                 location = "/";
                 option_code = "group_delete";
