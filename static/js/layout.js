@@ -248,30 +248,32 @@ var w_getWeather = function (code) {
 
 // dropdown
 $(document).ready(function(){
-    $(".dropdown_display").click(function(){
-        var X=$(this).attr('id');
-
-        if(X==1){
-            $(".dropdown_submenu").hide();
-            $(this).attr('id', '0');
+    $(".open_dropdown").click(function(){
+        if($(this).hasClass("opened")){
+            $(this).parent().children(".dropdown").hide();
+            $(this).removeClass("opened");
         }
         else{
-            $(".dropdown_submenu").show();
-            $(this).attr('id', '1');
+            $(this).parent().children(".dropdown").show();
+            $(this).addClass("opened");
         }
     });
 
     //Mouseup textarea false
-    $(".dropdown_submenu").mouseup(function(){
-        return false
+    $(".dropdown").mouseup(function(){
+        return false;
     });
-    $(".dropdown_display").mouseup(function(){
-        return false
+    $(".open_dropdown").mouseup(function(){
+        return false;
     });
 
     //Textarea without editing.
     $(document).mouseup(function(){
-        $(".dropdown_submenu").hide();
-        $(".dropdown_display").attr('id', '');
+        $(".dropdown").hide();
+        $(".open_dropdown").removeClass("opened");
     });
+
+    $("#live_list").on("click","li", function(){
+        window.location = $(this).attr("data-targeturl");
+    })
 });

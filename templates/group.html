@@ -149,8 +149,10 @@
         var timeline_js_parameter_top_post_polling = "post__group__id={{ group.id }}";
         console.log("timeline_js_parameter_top_post_polling = " + timeline_js_parameter_top_post_polling);
     </script>
-    {% include 'post_public.html' %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/timeline.js"></script>
+    {% if group.open_scope != 1 or permission != -1 %}
+        {% include 'post_public.html' %}
+        <script type="text/javascript" src="{{ STATIC_URL }}js/timeline.js"></script>
+    {% endif %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/group.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/group_default.js"></script>
 {% endblock %}

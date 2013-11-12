@@ -9,6 +9,9 @@ a:hover, a:active, a:focus {
 
 #p_header { background: #76bab2; border-color:#38978c; }
 #p_header #p_topSearch input[type="text"] { background-image:url(../images/color-mint/top_search.png); }
+
+#p_header #p_headerLinks > li a#toSetting.opened { background-image:url(../images/color-mint/top_setting_opened.png); }
+
 #p_body #p_nav #nav_userProfile a .nav_no { color:#ff7f7f }
 #p_body #p_nav #nav_userProfile { background:#ccc; }
 
@@ -18,15 +21,16 @@ a:hover, a:active, a:focus {
 
 #p_body #p_timeline { background: #eaecec; box-shadow:0 0 5px rgba(0,0,0,0.1); }
 
+#p_body #p_timeline .p_pageInfo .infoBox h3 { border-bottom-color:#76bab2; }
+#p_body #p_timeline .p_pageInfo .infoBox ul li strong { color:#38978c; }
+
 #p_body #p_timeline  .p_timelineContents .p_tBox .writeSelect li.selected a { background-color:#76bab2; }
 #p_body #p_timeline .p_timelineContents .p_tIcon { background-color:#76bab2; }
 
 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm input.postFormSubmit { background:#38978c; color:#fff; }
 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm input.postFormSubmit:hover { background:#63bab0; }
 
-#p_body #p_timeline .p_timelineNav ul li a { background-image:url(../images/color-mint/moment_item.png); }
-#p_body #p_timeline .p_timelineNav ul li.selected a { background-image:url(../images/color-mint/moment_selected.png); color:#38978c; }
-#p_body #p_timeline .p_timelineNav ul li.more a { background-image:url(../images/color-mint/moment_more.png); }
+#p_body #p_timeline .p_timelineNav ul li .author { color:#38978c; }
 #p_body #p_timeline .p_timelineContents .p_tBox .p_tWidget h2 { color:#38978c; }
 #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .p_responses p a strong { color:#38978c; font-weight:bold; }
 
@@ -56,10 +60,7 @@ a:hover, a:active, a:focus {
 (min-resolution: 192dpi) {
 	
 	#p_header #p_topSearch input[type="text"] { background-image:url(../images/color-mint/top_search@2x.png); }
-	
-	#p_body #p_timeline .p_timelineNav ul li a { background-image:url(../images/color-mint/moment_item@2x.png); }
-	#p_body #p_timeline .p_timelineNav ul li.selected a { background-image:url(../images/color-mint/moment_selected@2x.png); }
-	#p_body #p_timeline .p_timelineNav ul li.more a { background-image:url(../images/color-mint/moment_more@2x.png); }
+    #p_header #p_headerLinks > li a#toSetting.opened { background-image:url(../images/color-mint/top_setting_opened@2x.png); }
 	
 	#p_body #p_timeline .p_timelineContents .project .p_tArticle { background-image:url(../images/color-mint/timeline_project_bg@2x.png); }
 	#p_body #p_timeline .p_timelineContents .private .p_tArticle { background-image:url(../images/color-mint/private_bg@2x.png); }

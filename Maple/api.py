@@ -86,6 +86,7 @@ class UserProfileResource(ModelResource):
         queryset = UserProfile.objects.all()
         resource_name = 'userprofile'
         include_resource_uri = False
+        always_return_data = True
         authorization = Authorization()
 
 
@@ -333,6 +334,13 @@ class GroupResource(ModelResource):
 
         return bundle
 
+    def obj_delete(self, bundle, **kwargs):
+        obj = self.obj_get(bundle=bundle, **kwargs)
+        if obj.memberships_set.all().count() != 0:
+            raise BadRequest("멤버가 아직 존재합니다. 해당 그룹을 삭제할 수 없습니다.")
+
+        return super(GroupResource, self).obj_delete(bundle)
+
     def dehydrate(self, bundle):
         bundle.data['member_count'] = Memberships.objects.filter(group_key=bundle.obj.pk).count()
         return bundle
@@ -401,6 +409,14 @@ class MembershipsResource(ModelResource):
         bundle.obj = Memberships(group_key=group, user_key=user)
         bundle.obj.save()
         return bundle
+
+    def hydrate(self, bundle):  # 멤버 권한 업데이트시, 체크
+        request_user_membership = get_object_or_404(Memberships, user_key=bundle.request.user, group_key=bundle.obj.group_key)
+        if request_user_membership.permission < 1:
+            raise BadRequest('권한이 없어요~')
+
+        return bundle
+
 
 class MembershipNotisResource(ModelResource):
     noti_group_key = fields.ForeignKey(GroupResource, 'noti_group_key', full=False)

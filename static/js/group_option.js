@@ -134,12 +134,14 @@ var get_member_list = function() {
         dataType: "json",
         statusCode: {
             200: function (data) {
-                console.log(data);
                 $(".member_list").html("");
                 for(var index in data.objects){
                     var strclass = "li_member_for_delete";
-                    if(data.objects[index].user_key.id == user_id)
+                    if(data.objects[index].user_key.id == user_id) {
                         strclass += " self_member";
+                    }
+                    else if(data.objects[index].permission == 2)
+                        strclass = "";
                     else if(data.objects[index].permission == 1)
                         strclass += " permitted_member";
                     var photo_url = "/static/images/user_defaultProfile.jpg";
@@ -167,7 +169,7 @@ var dropdown_dom_generate = function(eventdom){
     $("#select_member").tmpl(data).appendTo(eventdom);
 };
 
-if(permission > 1) {
+if(permission > 0) {
     $(document).on({
         mouseenter: function() {
             if($(this).find(".permission_click").size() == 0) {
@@ -180,7 +182,7 @@ if(permission > 1) {
         mouseleave: function() {
             $(this).find(".dropmid").toggle();
         }
-    }, ".member_list > li");
+    }, ".member_list > li.li_member_for_delete");
 }
 
 
@@ -194,6 +196,9 @@ var update_member_for_permission = function(eventdom){
     switch (set_permission) {
         case "0":
             method = "PATCH";
+            if(eventdom.parents(".self_member").length > 0) {
+                location = "/group/"+group_id+"/";
+            }
             break;
         case "1":
             method = "PATCH";
@@ -201,7 +206,7 @@ var update_member_for_permission = function(eventdom){
         case "-1":
             method = "DELETE";
             var alert_statement = "정말 이 멤버를 그룹에서 제외할꺼에요?";
-            if($(".li_member_for_delete").length == 1) {    // TODO Group delete - 멤버있는지 그룹에서 예외처리
+            if($(".member_list > li").length == 1) {    // TODO Group delete - 멤버있는지 그룹에서 예외처리
                 alert_statement = "이외의 멤버가 없어 탈퇴하시면 그룹이 삭제됩니다.\n계속하시겠습니까?";
                 location = "/";
                 option_code = "group_delete";
@@ -281,6 +286,7 @@ var update_member_permission = function(method, member_id, set_permission, event
         url: feedback_url,
         contentType: "application/json",
         data: data,
+        async: false,
         dataType: "json",
         statusCode: {
             202: function() {
@@ -297,6 +303,9 @@ var update_member_permission = function(method, member_id, set_permission, event
             204: function() {
                 eventdom.parents(".li_member_for_delete").remove();
                 showToast("선택된 멤버가 탈퇴 되었습니다.");
+            },
+            400: function(data) {
+                showToast($.parseJSON(data.responseText).error);
             },
             404: function() {
                 showToast("해당 멤버는 이미 존재하지 않습니다.");
@@ -324,13 +333,14 @@ var group_delete = function() {
         url: feedback_url,
         contentType: "application/json",
         dataType: "json",
+        async: false,
         statusCode: {
             204: function() {
-                console.log("selected member exclude at this group!");
                 window.location.assign("/");
+                showToast("그룹이 삭제되었습니다.");
             },
             404: function() {
-                console.log("Not founded!")
+                showToast("해당 그룹을 찾을 수 없습니다.");
             }
         }
     });
