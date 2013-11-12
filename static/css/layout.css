@@ -12,8 +12,9 @@ body { background:#f4f4f4; }
     #p_header #p_topSearch input[type="text"] { width:400px; height:30px; border:none; border-radius: 5px; box-sizing: border-box; padding-left:25px; background-position:8px 50%; background-repeat: no-repeat; background-size:12px 12px; }
 
     #p_header #p_headerLinks { float:right; }
-    #p_header #p_headerLinks li { float:left; width:75px; }
-    #p_header #p_headerLinks li a#toSetting { display:block; width:75px; height:0; padding-top:50px; background:url(../images/top_setting.png) no-repeat; background-size:75px 50px; overflow:hidden; }
+    #p_header #p_headerLinks > li { float:left; width:75px; }
+    #p_header #p_headerLinks > li a#toSetting { float:right; display:block; width:75px; height:0; padding-top:50px; background:url(../images/top_setting.png) no-repeat; background-size:75px 50px; overflow:hidden; }
+    #p_header #p_headerLinks > li .dropdown { width:140px; top:40px; right:15px; position:absolute; }
 
 #p_body { position:relative; padding-top:51px; min-height:100%; box-sizing:border-box; }
 
@@ -365,54 +366,6 @@ screen and (max-width:58.75em) {
 
 .toast-message-wrapper { display:none; top:75%; width:100%; position:absolute; z-index:1000; text-align: center; }
 .toast-message { background:rgba(0,0,0,0.75); border:1px #000 solid; color:#fff; display:inline-block; padding:3px 10px; border-radius:3px; }
-
-/*dropdown*/
-div.dropdown {
-color: #555;
-margin: 3px -22px 0 0;
-position: relative;
-text-align:left;
-}
-
-div.dropdown_submenu
-{
-background: #fff;
-position: absolute;
-top: -12px;
-left: -20px;
-z-index: 100;
-width: 135px;
-display: none;
-margin-left: 10px;
-padding: 40px 0 5px;
-border-radius: 6px;
-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
-}
-
-a.dropdown_display {
-font-size: 11px;
-line-height: 16px;
-color: #555;
-position: absolute;
-z-index: 110;
-display: block;
-padding: 11px 0 0 20px;
-height: 28px;
-width: 121px;
-margin: -11px 0 0 -10px;
-text-decoration: none;
-background: url(../images/arrow.png) 116px 17px no-repeat;
-cursor:pointer;
-}
-.display_submenu_root
-{
-list-style:none;
-margin:0px;
-padding:0px;
-font-size: 11px;
-padding: 11px 0 0 0px;
-border-top:1px solid #dedede;
-}
 
 /* 그룹 멤버 페이지 사진 */
 .member_list .userPicture { width:26px; height:26px; z-index:-1; }
