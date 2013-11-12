@@ -249,29 +249,28 @@ var w_getWeather = function (code) {
 // dropdown
 $(document).ready(function(){
     $(".dropdown_display").click(function(){
-        var X=$(this).attr('id');
 
-        if(X==1){
+        if($(this).hasClass("opened")){
             $(".dropdown_submenu").hide();
-            $(this).attr('id', '0');
+            $(this).removeClass("opened");
         }
         else{
             $(".dropdown_submenu").show();
-            $(this).attr('id', '1');
+            $(this).addClass("opened");
         }
     });
 
     //Mouseup textarea false
     $(".dropdown_submenu").mouseup(function(){
-        return false
+        return false;
     });
     $(".dropdown_display").mouseup(function(){
-        return false
+        return false;
     });
 
     //Textarea without editing.
     $(document).mouseup(function(){
         $(".dropdown_submenu").hide();
-        $(".dropdown_display").attr('id', '');
+        $(this).removeClass("opened");
     });
 });

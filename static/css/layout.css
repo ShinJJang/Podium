@@ -370,11 +370,10 @@ screen and (max-width:58.75em) {
 div.dropdown {
 color: #555;
 margin: 3px -22px 0 0;
-width: 143px;
 position: relative;
-height: 17px;
 text-align:left;
 }
+
 div.dropdown_submenu
 {
 background: #fff;
@@ -390,23 +389,6 @@ border-radius: 6px;
 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 
-.dropdown  li a {
-
-    color: #555555;
-    display: block;
-    font-family: arial;
-    font-weight: bold;
-    padding: 6px 15px;
-  cursor: pointer;
-text-decoration:none;
-}
-
-.dropdown li a:hover{
-    background:#155FB0;
-    color: #FFFFFF;
-    text-decoration: none;
-
-}
 a.dropdown_display {
 font-size: 11px;
 line-height: 16px;
