@@ -49,7 +49,10 @@
                         <ul id="poll-${ post.id }" class="p_attachment p_poll_unloaded">
                         </ul>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
-                    <p class="p_tPermalink public"><a class="timestamp" href="/post/${ post.id }/"><abbr class="timeago" title=${ post.created }></abbr></a></p>
+                    <p class="p_tPermalink public"><a class="timestamp" href="/post/${ post.id }/"><abbr class="timeago"
+                     title=${ post.created }></abbr></a><span>
+                     <div class="fb-like" data-href="http://podiumconcept.me/post/${ post.id }/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
+                     </span></p>
                 </div>
             </article>
             <aside class="p_tAside">
