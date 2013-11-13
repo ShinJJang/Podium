@@ -413,7 +413,7 @@ class MembershipsResource(ModelResource):
     def hydrate(self, bundle):  # 멤버 권한 업데이트시, 체크
         request_user_membership = get_object_or_404(Memberships, user_key=bundle.request.user, group_key=bundle.obj.group_key)
         if request_user_membership.permission < 1:
-            raise BadRequest('권한이 없어요~')
+            raise BadRequest('권한이 없습니다.')
 
         return bundle
 
@@ -433,13 +433,19 @@ class MembershipNotisResource(ModelResource):
         always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
-        group = Groups.objects.get(pk=bundle.data['noti_group_key'])
-        user = User.objects.get(pk=bundle.data['noti_user_key'])
 
-        if Memberships.objects.filter(group_key=group, user_key=user).exists():
+        #group = Groups.objects.get(pk=bundle.data['noti_group_key'])
+        #user = User.objects.get(pk=bundle.data['noti_user_key'])
+        group_id = bundle.data['noti_group_key']
+        user_id = bundle.data['noti_user_key']
+
+        if MembershipNotis.objects.filter(noti_group_key_id=group_id, noti_user_key_id=user_id).exists():
+            raise BadRequest('이미 그룹 가입 요청이 되었습니다.')
+
+        elif Memberships.objects.filter(group_key=group_id, user_key=user_id).exists():
             raise BadRequest("이미 존재하는 멤버입니다.")  # TODO - 400 이용하면 그룹 요청시 요긴할 것 - JS 수정
 
-        bundle.obj = MembershipNotis(noti_group_key=group, noti_user_key=user)
+        bundle.obj = MembershipNotis(noti_group_key_id=group_id, noti_user_key_id=user_id)
         bundle.obj.save()
         return bundle
 
