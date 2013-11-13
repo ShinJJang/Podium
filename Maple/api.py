@@ -24,7 +24,6 @@ from tastypie.utils import trailing_slash
 from haystack.query import SearchQuerySet
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
-from json import loads
 from tastypie.exceptions import BadRequest
 
 
@@ -196,8 +195,17 @@ class FriendshipNotisResource(ModelResource): #create
     def obj_create(self, bundle, **kwargs):
         noti_from_user = bundle.request.user
         friend_id = bundle.data['friend_id']
-        noti_to_user = User.objects.get(pk=friend_id)
-        bundle.obj = FriendshipNotis(friend_noti_from_user_key=noti_from_user, friend_noti_to_user_key=noti_to_user)
+
+        if FriendshipNotis.objects.filter(friend_noti_from_user_key=noti_from_user, friend_noti_to_user_key_id=friend_id).exists():
+            raise BadRequest('이미 친구 요청을 보냈습니다')
+
+        elif FriendshipNotis.objects.filter(friend_noti_from_user_key_id=friend_id, friend_noti_to_user_key=noti_from_user).exists():
+            raise BadRequest('이미 친구 요청을 왔습니다')
+
+        elif Friendships.objects.filter(user_key=noti_from_user, friend_user_key_id=friend_id).exists():
+            raise BadRequest("이미 친구입니다")
+
+        bundle.obj = FriendshipNotis(friend_noti_from_user_key=noti_from_user, friend_noti_to_user_key_id=friend_id)
         bundle.obj.save()
         return bundle
 
@@ -219,8 +227,11 @@ class FriendshipsResource(ModelResource): #polling get or create
     def obj_create(self, bundle, **kwargs):
         user = bundle.request.user
         friend_id = bundle.data['friend_id']
-        friend_user = User.objects.get(pk=friend_id)
-        bundle.obj = Friendships(user_key=user, friend_user_key=friend_user)
+
+        if Friendships.objects.filter(user_key=user, friend_user_key_id=friend_id).exists():
+            raise BadRequest("이미 친구입니다")
+
+        bundle.obj = Friendships(user_key=user, friend_user_key_id=friend_id)
         bundle.obj.save()
         return bundle
 

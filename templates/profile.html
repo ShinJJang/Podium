@@ -161,6 +161,7 @@
                 var data = JSON.stringify({
                     "friend_id": {{ user_pageowner.id }}
                 });
+                $("#friendStatus").html('<span class="friend">요청 중</span>');
                 $.ajax({
                     type: "POST",
                     url: request_friend_url,
@@ -168,9 +169,12 @@
                     data: data,
                     dataType: "json",
                     statusCode: {
-                        201: function (data) {
-                            console.log("request friendship!");
-                            $("#friendStatus").html('<span class="friend">요청 중</span>');
+                        201: function() {
+                           showToast("친구 요청을 보냈습니다");
+                        },
+                        400: function(data) {
+                            showToast($.parseJSON(data.responseText).error);
+                            check_friendship();
                         }
                     }
                 });
@@ -189,7 +193,7 @@
                     }
                 }
             });
-        }
+        };
 
         var accept_friendship = function(noti_id){
             $('#addFriend').click(function() {
@@ -197,6 +201,8 @@
                 var data = JSON.stringify({
                     "friend_id": {{ user_pageowner.id }}
                 });
+
+                $("#friendStatus").html('<span class="friend">친구</span>');
                 $.ajax({
                     type: "POST",
                     url: request_friend_url,
@@ -204,16 +210,19 @@
                     data: data,
                     dataType: "json",
                     statusCode: {
-                        201: function (data) {
+                        201: function () {
                             delete_friendship_noti(noti_id);
-                            console.log("accept friendship!");
-                            $("#friendStatus").html('<span class="friend">친구</span>');
-                            get_friendship_notis();
+                            showToast("친구 요청을 수락하였습니다");
+                            get_friendship_notis(); // sidebar - 친구 요청 poll
+                        },
+                        400: function(data) {
+                            showToast($.parseJSON(data.responseText).error);
+                            check_friendship();
                         }
                     }
                 });
             });
-        }
+        };
 
         var check_accept_friend_request = function(){
             var feedback_url = "/api/v1/friend_noti/?noti_from_user={{ user_pageowner.id }}&noti_to_user={{ user.id }}";
@@ -225,15 +234,13 @@
                 statusCode: {
                     200: function (data) {
                         if(data.meta.total_count) {
-                            console.log("you got request friendship!");
-                            $("#friendStatus").html('<a href="#" id="addFriend">친구 수락</a>');
+                            $("#friendStatus").html('<a id="addFriend">친구 수락</a>');
                             var noti_id = data.objects.pop().id;
                             accept_friendship(noti_id);
                             return false;
                         }
                         else {
-                            console.log("not member!")
-                            $("#friendStatus").html('<a href="#" id="addFriend">친구 요청</a>');
+                            $("#friendStatus").html('<a id="addFriend">친구 요청</a>');
                             request_friendship();
                             return false;
                         }
@@ -252,7 +259,6 @@
                 statusCode: {
                     200: function (data) {
                         if(data.meta.total_count) {
-                            console.log("already request friendship!");
                             $("#friendStatus").html('<span class="friend">요청 중</span>');
                         }
                         else {
@@ -263,7 +269,7 @@
             });
         };
 
-        $(function(){
+        var check_friendship = function() {
             if ({{ user_pageowner.id }} == {{ user.id }}){
                 return false;
             }
@@ -287,7 +293,8 @@
                     }
                 }
             });
-        });
+        };
+        check_friendship();
 
         var disable_form = function() {
             $("#timeline_widget").remove();
