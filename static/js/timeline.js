@@ -371,6 +371,7 @@ function PostTopPolling() {
                 }
                 $("#post_public_template").tmpl(data.objects).prependTo("#timeline_posts");
 
+                FB.XFBML.parse();
                 Rainbow.color();
 
                 timeRefresh();
@@ -528,6 +529,8 @@ function postBottom() {
                     }
                 }
                 $("#post_public_template").tmpl(data.objects).appendTo("#timeline_posts");
+
+                FB.XFBML.parse();
                 Rainbow.color();
                 post_bottom_url = data.meta.next;
                 timeRefresh();
