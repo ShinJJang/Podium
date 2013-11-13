@@ -371,7 +371,7 @@ function PostTopPolling() {
                 }
                 $("#post_public_template").tmpl(data.objects).prependTo("#timeline_posts");
 
-                post_public_template
+                FB.XFBML.parse();
                 Rainbow.color();
 
                 timeRefresh();
