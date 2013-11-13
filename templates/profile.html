@@ -47,13 +47,13 @@
                                 <strong>주소</strong>
                                 <p class="formButton"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
                                 <p class="data">{% if user.userprofile.address != "" %}{{ user.userprofile.address }}{% else %} 비공개 {% endif %}</p>
-                                <p class="form"><input type="text" name="address" id="f_address" value="{{ user.userprofile.address }}"></p>
+                                <p class="form"><input type="text" name="address" id="f_address" value="{% if user.userprofile.address != "" %}{{ user.userprofile.address }}{% endif %}"></p>
                             </li>
                             <li id="profile_phone" class="editProfile cboth">
                                 <strong>전화번호</strong>
                                 <p class="formButton"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
                                 <p class="data">{% if user.userprofile.phone != "" %}{{ user.userprofile.phone }}{% else %} 비공개 {% endif %}</p>
-                                <p class="form"><input type="tel" name="phone" id="f_phone" value="{{ user.userprofile.phone }}"></p>
+                                <p class="form"><input type="tel" name="phone" id="f_phone" value="{% if user.userprofile.phone != "" %}{{ user.userprofile.phone }}{% endif %}"></p>
                             </li>
                         </ul>
                     </div>
