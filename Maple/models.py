@@ -74,9 +74,22 @@ def create_friend_post(sender, instance, created, **kwargs):
                 FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
 
         elif instance.open_scope == 3:
-            memberships = Memberships.objects.filter(group_key=instance.group.pk)
-            for membership in memberships:
-                FriendPosts.objects.get_or_create(user_key=membership.user_key, friend_post_key=instance)
+            memberships = Memberships.objects.select_related().filter(group_key=instance.group.pk)
+            if instance.group.open_scope == 0:
+                members = memberships.values_list('user_key', flat=True)
+                friends = Friendships.objects.select_related().filter(user_key=write_user).values_list('friend_user_key', flat=True)
+
+                # 친구와 그룹 멤버 user id union(중복 없이)
+                user_ids = list(set(list(members) + list(friends)))
+
+                # 친구와 그룹 멤버들에게 저장
+                for user_id in user_ids:
+                    FriendPosts.objects.get_or_create(user_key_id=user_id, friend_post_key=instance)
+
+            else:
+                for membership in memberships:
+                    FriendPosts.objects.get_or_create(user_key=membership.user_key, friend_post_key=instance)
+
             GroupPosts.objects.get_or_create(group_key=instance.group, post_key=instance)
 
 post_save.connect(create_friend_post, sender=Posts)
