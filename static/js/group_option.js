@@ -169,7 +169,7 @@ var dropdown_dom_generate = function(eventdom){
     $("#select_member").tmpl(data).appendTo(eventdom);
 };
 
-if(permission > 0) {
+if(typeof permission != 'undefined' && permission > 0) {
     $(document).on({
         mouseenter: function() {
             if($(this).find(".permission_click").size() == 0) {
