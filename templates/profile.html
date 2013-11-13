@@ -41,7 +41,7 @@
                                 <strong>생일</strong>
                                 <p class="formButton"><a class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
                                 <p class="data">{% if user.userprofile.birthday != "" %}{{ user.userprofile.birthday }}{% else %} 비공개 {% endif %}</p>
-                                <p class="form"><input type="date" name="birthday" id="f_birthday" value="{{ user.userprofile.birthday|date:"Y-m-d" }}"></p>
+                                <p class="form"><input type="date" name="birthday" id="f_birthday" value="{% if user.userprofile.birthday != "" %}{{ user.userprofile.birthday|date:"Y-m-d" }}{% endif %}"></p>
                             </li>
                             <li id="profile_address" class="editProfile cboth">
                                 <strong>주소</strong>
