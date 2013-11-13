@@ -264,3 +264,5 @@ INTERNAL_IPS = ('127.0.0.1',)
 MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + (
   'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
 )
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

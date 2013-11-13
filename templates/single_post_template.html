@@ -1,5 +1,15 @@
 <script id="post_public_template" type="text/x-jquery-tmpl">
-    <div class="p_tItem p_container public pui">
+    <div class="p_tItem p_container pui
+    {% templatetag openblock %}if group != null{% templatetag closeblock %}
+        project
+    {% templatetag openblock %}/if{% templatetag closeblock %}
+
+    {% templatetag openblock %}if open_scope == 1{% templatetag closeblock %}
+        private
+    {% templatetag openblock %}else{% templatetag closeblock %}
+        public
+    {% templatetag openblock %}/if{% templatetag closeblock %}
+    ">
         <a href="/people/${ user.id }" class="p_tUser">
             <span class="nav_profile">
                 {% templatetag openblock %}if user.user_photo.length > 0{% templatetag closeblock %}
@@ -16,7 +26,9 @@
                         <a href="/people/${ user.id }">${ user.username }</a>
                         {% templatetag openblock %}if open_scope == 2{% templatetag closeblock %}
                             > <a href="/people/${ target_user_id }">${ target_user_name }</a>
-                        {% templatetag openblock %}else open_scope == 3{% templatetag closeblock %}
+                        {% templatetag openblock %}/if{% templatetag closeblock %}
+
+                        {% templatetag openblock %}if open_scope == 3{% templatetag closeblock %}
                             > <a href="/group/${ group_id }">${ group_name }</a>
                         {% templatetag openblock %}/if{% templatetag closeblock %}
                     </p>
@@ -38,6 +50,7 @@
                         </ul>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
                     <p class="p_tPermalink public"><a class="timestamp" href="#"><abbr class="timeago" title=${ created }></abbr></a></p>
+                    <div class="fb-like" data-href="http://podiumconcept.me/post/${ post.id }/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
                 </div>
             </article>
             <aside class="p_tAside">
