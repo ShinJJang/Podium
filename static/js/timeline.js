@@ -723,12 +723,9 @@ $(function () {
         if (!post_attach) {
             post_attach = true;
             attach_type = "file";
-            //$("#postAttach").html('<form method="" action="" name="upload_form" id="upload_form" ><input type="file" name="file" id="file" /><input type="button" value="Upload" id="upload"/></form>');
-            //$("#postAttach").html('<div id="invisible"><form action="https://somapodium.s3.amazonaws.com" method="post" enctype="multipart/form-data" id="upload_form"><input type="hidden" name="key"></input><input type="hidden" name="AWSAccessKeyId" value="AKIAJKZRCQKYZ7EHIXYA"></input><input type="hidden" name="acl" value="public-read"></input><input type="hidden" name="policy"></input><input type="hidden" name="signature"></input><input type="hidden" name="success_action_status" value="201"></input><input type="file" id="file_info" name="file"></input></form></div><div id="wrapper"><input type="button" id="upload_button" value="upload"/><div id="progress_container"><div id="progress_bar"></div></div></div><div id="status_container">Status: <span id="status">idle</span></div>');
             $("#postAttach").html('<div id="attach_file"></div><div id="attach_file_info"></div><div id="attach_file_type"></div><div id="attach_is_file"></div><div id="attach_file_count"></div><div id="attach_file_name"></div>');
             $("#attach_file").html('<div id="status">Please select a file</div>');
 
-            //$("#attach_file").html('<input type="hidden" id="post_is_file" value="12"></input>');
             var attachFile = document.createElement("input");
             attachFile.id = "post_file";
             attachFile.setAttribute("type", "file");
@@ -739,11 +736,6 @@ $(function () {
             $("#attach_is_file").html('<input type="hidden" id="post_is_file" value="0" >');
             $("#attach_file_count").html('<input type="hidden" id="post_file_count" value="" >');
             $("#attach_file_name").html('<input type="hidden" id="post_file_name" value="파일 이름" >');
-            //var attachFileUrl = document.createElement("<input type='hidden' name='post_file_url_info' value=''>");
-            //attachFileUrl.setAttribute("name", "post_file_url_info");
-            //attachFileUrl.setAttribute("type", "hidden");
-            //attachFileUrl.setAttribute("value", "");
-
 
             var attachFileCancelButton = document.createElement("button");
             attachFileCancelButton.id = "post_file_delete_button";
@@ -751,14 +743,8 @@ $(function () {
             attachFileCancelButton.setAttribute("value", "업로드파일삭제");
             attachFileCancelButton.setAttribute("onclick", "s3_upload_delete()");
 
-            //var attachPreview = document.createElement("input");
-            //attachPreview.id = "file_status";
-            //attachPreview.setAttribute("value", "please select a file");
-
             document.getElementById("attach_file").appendChild(attachFile);
-            //document.getElementById("status").appendChild(attachFileUrl);
             document.getElementById("attach_file").appendChild(attachFileCancelButton);
-
         }
     });
     $("#toPlain").click(function () {
