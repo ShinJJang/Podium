@@ -77,7 +77,7 @@ app.post('/', function (req, res) {
     if(log_message) {
 
         if(log_message.type == 'post') {
-            logger.info("post_message = " + log_message.user);
+            logger.info("post_message = " + log_message.content);
             message = log_message.user_name + "이 " + log_message.content + "(글)을 썼습니다.";
             user_id = log_message.user_id;
             link = log_message.link;

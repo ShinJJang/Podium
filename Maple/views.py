@@ -218,9 +218,6 @@ def sign_s3(request):  #request에 메서드, 유저아이디는 x db조회, 파
     AWS_SECRET_KEY = "flwBllFUCpi0YG5juUFM8w3tIN73/jdoTx93qmac"
     S3_BUCKET = "somapodium"
     object_name = request.GET.get('s3_object_name')
-    print object_name.encode('utf-8')
-    print dumps(object_name).decode("UTF-8")
-    print unicode(object_name).encode('utf-8')
     mime_type = request.GET.get('s3_object_type')
     method = request.GET.get('s3_method')
     file_count = request.GET.get('s3_file_count')
