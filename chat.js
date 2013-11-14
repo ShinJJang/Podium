@@ -228,8 +228,6 @@ io.sockets.on('connection', function (socket) {
 
         logger.info("message in message = " + parse_message.message);
 
-        var chat_message = (parse_message.user_name + ": " + parse_message.message);
-
         logger.info(parse_message.user_name + ': [' + parse_message.message + '] from client message');
 
         var chat_message_to_client = JSON.stringify({

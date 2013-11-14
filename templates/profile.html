@@ -8,15 +8,18 @@
         <header>
             <div id="p_peopleCover">
                 <div id="p_peopleName">
-                    <span id="p_peoplePicture">
-                        {% with user_pageowner.userpictures_set.all|first as userpicture %}
+                    <p id="p_peoplePicture">
+                        {% with user_pageowner.userpictures_set.all|dictsortreversed:'created'|first as userpicture %}
                             {% if userpicture %}
                                 <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="peoplePicture" />
                             {% else %}
                                 <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="peoplePicture" />
                             {% endif %}
                         {% endwith %}
-                    </span>
+                        {% if user == user_pageowner %}
+                            <span class="uploadGuide">클릭하시면<br />사진을 업로드합니다</span>
+                        {% endif %}
+                    </p>
                     <h1>{{ user_pageowner.username }}</h1>
                     <p id="friendStatus">
                     </p>
