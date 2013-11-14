@@ -107,6 +107,7 @@ class UserPictureResource(ModelResource):
         bundle.obj.save()
         return bundle
 
+
 class PostResource(ModelResource):
     user = fields.ToOneField(UserResource, 'user_key', full=True)
     target_user = fields.ToOneField(UserResource, 'target_user', full=True, null=True)
@@ -132,13 +133,17 @@ class PostResource(ModelResource):
         open_scope = bundle.data['open_scope']
         aType = bundle.data['aType']
         if (open_scope == 0) or (open_scope == 1): # public to self or private
-            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType)
+            try:
+                target_user = get_object_or_404(User, pk=bundle.data['target'])
+            except:
+                target_user = user
+            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType, target_user=target_user)
         elif open_scope == 2: # public to friend
-            target_user = User.objects.get(pk=bundle.data['target'])
+            target_user = get_object_or_404(User, pk=bundle.data['target'])
             bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType,
                                target_user=target_user)
         elif open_scope == 3: # group
-            group = Groups.objects.get(pk=bundle.data['target'])
+            group = get_object_or_404(Groups, pk=bundle.data['target'])
             bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType, group=group)
 
         bundle.obj.save()
@@ -260,6 +265,17 @@ class FriendPostResource(ModelResource):
         }
         # paginator_class = EstimatedCountPaginator
         allowed_methods = ['get']
+
+    def dehydrate(self, bundle):
+        if bundle.obj.friend_post_key.open_scope == 1:
+            if bundle.request.user == bundle.obj.friend_post_key.target_user:
+                return bundle
+            elif bundle.request.user == bundle.obj.friend_post_key.user_key:
+                return bundle
+            else:
+                return False
+
+        return bundle
 
 
 class PostEmotionsResource(ModelResource):

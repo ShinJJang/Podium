@@ -133,6 +133,9 @@ def create_friend_post(sender, instance, created, **kwargs):
             # - 그룹에서는 멤버도 자신을 포함하므로 따로 넣어주지 않음
             FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
 
+        if instance.open_scope == 1 and instance.target_user != write_user:
+            FriendPosts.objects.get_or_create(user_key=instance.target_user, friend_post_key=instance)
+
         # 친구들에게 글 저장
         if instance.open_scope == 0 or instance.open_scope == 2:
             friendships = Friendships.objects.filter(user_key=write_user)

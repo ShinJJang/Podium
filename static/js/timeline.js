@@ -61,7 +61,8 @@ $(document).on("submit", "#form_post", function (event) {
     }
     else if (target_user) {
         var target = target_user;
-        open_scope = 2;
+        if(open_scope != 1)
+            open_scope = 2;
     }
 
     if ($("#attach_video").length > 0) {
