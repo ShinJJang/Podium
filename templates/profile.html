@@ -155,6 +155,24 @@
 
 {% block add_scripts %}
     <script type="text/javascript">
+        var get_friend_list = function(){
+            var feedback_url = "/api/v1/friendship/?user={{ user_pageowner.id }}";
+            $.ajax({
+                type: "GET",
+                url: feedback_url,
+                contentType: "application/json",
+                dataType: "json",
+                statusCode: {
+                    200: function (data) {
+                        // TODO(태건형) - 친구목록
+                        // model - friendships - 친구는 friend_user field - user model
+                        console.log(data);
+                    }
+                }
+            });
+        };
+        get_friend_list();
+
         var request_friendship = function(){
             $('#addFriend').click(function() {
                 var request_friend_url = "/api/v1/friend_noti/";

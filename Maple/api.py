@@ -212,7 +212,7 @@ class FriendshipNotisResource(ModelResource): #create
 
 class FriendshipsResource(ModelResource): #polling get or create
     user = fields.ForeignKey(UserResource, 'user_key', full=False)
-    friend_user = fields.ForeignKey(UserResource, 'friend_user_key', full=False)
+    friend_user = fields.ForeignKey(UserResource, 'friend_user_key', full=True)
 
     class Meta:
         queryset = Friendships.objects.all()
