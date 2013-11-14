@@ -39,20 +39,20 @@
                             </li>
                             <li id="profile_birthday" class="editProfile cboth">
                                 <strong>생일</strong>
-                                <p class="formButton"><a class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
-                                <p class="data">{% if user.userprofile.birthday != null %}{{ user.userprofile.birthday }}{% else %} 비공개 {% endif %}</p>
+                                <p class="formButton"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
+                                <p class="data">{% if user.userprofile.birthday != "" %}{{ user.userprofile.birthday }}{% else %} 비공개 {% endif %}</p>
                                 <p class="form"><input type="date" name="birthday" id="f_birthday" value="{% if user.userprofile.birthday != "" %}{{ user.userprofile.birthday|date:"Y-m-d" }}{% endif %}"></p>
                             </li>
                             <li id="profile_address" class="editProfile cboth">
                                 <strong>주소</strong>
                                 <p class="formButton"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
-                                <p class="data">{% if user.userprofile.address != null %}{{ user.userprofile.address }}{% else %} 비공개 {% endif %}</p>
+                                <p class="data">{% if user.userprofile.address != "" %}{{ user.userprofile.address }}{% else %} 비공개 {% endif %}</p>
                                 <p class="form"><input type="text" name="address" id="f_address" value="{% if user.userprofile.address != "" %}{{ user.userprofile.address }}{% endif %}"></p>
                             </li>
                             <li id="profile_phone" class="editProfile cboth">
                                 <strong>전화번호</strong>
                                 <p class="formButton"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
-                                <p class="data">{% if user.userprofile.phone != null %}{{ user.userprofile.phone }}{% else %} 비공개 {% endif %}</p>
+                                <p class="data">{% if user.userprofile.phone != "" %}{{ user.userprofile.phone }}{% else %} 비공개 {% endif %}</p>
                                 <p class="form"><input type="tel" name="phone" id="f_phone" value="{% if user.userprofile.phone != "" %}{{ user.userprofile.phone }}{% endif %}"></p>
                             </li>
                         {% else %}
@@ -62,24 +62,30 @@
                             </li>
                             <li id="profile_birthday">
                                 <strong>생일</strong>
-                                <p class="data">{% if user_pageowner.userprofile.birthday != null %}{{ user_pageowner.userprofile.birthday }}{% else %} 비공개 {% endif %}</p>
+                                <p class="data">{% if user_pageowner.userprofile.birthday != "" %}{{ user_pageowner.userprofile.birthday }}{% else %} 비공개 {% endif %}</p>
                             </li>
                             <li id="profile_address">
                                 <strong>주소</strong>
-                                <p class="data">{% if user_pageowner.userprofile.address != null %}{{ user_pageowner.userprofile.address }}{% else %} 비공개 {% endif %}</p>
+                                <p class="data">{% if user_pageowner.userprofile.address != "" %}{{ user_pageowner.userprofile.address }}{% else %} 비공개 {% endif %}</p>
                             </li>
                             <li id="profile_phone">
                                 <strong>전화번호</strong>
-                                <p class="data">{% if user_pageowner.userprofile.phone != null %}{{ user_pageowner.userprofile.phone }}{% else %} 비공개 {% endif %}</p>
+                                <p class="data">{% if user_pageowner.userprofile.phone != "" %}{{ user_pageowner.userprofile.phone }}{% else %} 비공개 {% endif %}</p>
                             </li>
                         {% endif %}
                     </ul>
                 </div>
                 <div class="infoBox">
                     <h3>고등학교</h3>
+                    {% if user.usertohobby_set.all %}
                     <ul>
-                        <li>{{ user.usertohobby_set }}</li>
+                        <li>비공개</li>
                     </ul>
+                    {% else %}
+                    <ul>
+                        <li>비공개</li>
+                    </ul>
+                    {% endif %}
                 </div>
             </div>
             <div class="p_timelineContents">
