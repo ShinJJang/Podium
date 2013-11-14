@@ -41,6 +41,7 @@ var accept_membership = function(){
                 }
             }
         });
+        return false;
     });
 };
 
@@ -54,7 +55,7 @@ var get_member_request= function(){
         statusCode: {
             200: function(data) {
                 for(var index in data.objects) {
-                    $("#member_request").append("<li><a name="+data.objects[index].id+" tag="+data.objects[index].noti_user_key.id+"><span>"+data.objects[index].noti_user_key.username+"</span></a></li>");
+                    $("#member_request").append("<li><a href='#' name="+data.objects[index].id+" tag="+data.objects[index].noti_user_key.id+"><span>"+data.objects[index].noti_user_key.username+"</span></a></li>");
                 }
                 accept_membership();
                 return false;
@@ -90,6 +91,7 @@ var request_membership = function(){
                 }
             }
         });
+        return false;
     });
 };
 
@@ -183,6 +185,7 @@ $(".member_leave").click(function() {
             }
         }
     });
+    return false;
 });
 
 

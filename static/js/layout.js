@@ -257,6 +257,7 @@ $(document).ready(function(){
             $(this).parent().children(".dropdown").show();
             $(this).addClass("opened");
         }
+        return false;
     });
 
     //Mouseup textarea false
@@ -271,9 +272,11 @@ $(document).ready(function(){
     $(document).mouseup(function(){
         $(".dropdown").hide();
         $(".open_dropdown").removeClass("opened");
+        return false;
     });
 
     $("#live_list").on("click","li", function(){
         window.location = $(this).attr("data-targeturl");
+        return false;
     })
 });
