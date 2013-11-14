@@ -14,6 +14,7 @@ class UserProfile(models.Model):
     birthday = models.DateField(null=True)
     address = models.TextField(max_length=100, null=True)
     phone = models.TextField(max_length=20, null=True)
+    ki = models.IntegerField(null=True)
 
     def __str__(self):
         return "%s's profile" % self.user
@@ -24,6 +25,71 @@ def create_user_profile(sender, instance, created, **kwargs):
         UserProfile.objects.get_or_create(user=instance)
 
 post_save.connect(create_user_profile, sender=User)
+
+
+class HighSchools(models.Model):
+    name = models.CharField(max_length=30)
+
+
+class UserToHighSchool(models.Model):
+    user = models.ForeignKey(User)
+    highschool = models.ForeignKey(HighSchools)
+    enter = models.DateField(null=True)
+    graduate = models.DateField(null=True)
+
+
+class University(models.Model):
+    name = models.CharField(max_length=30)
+
+
+class UserToUniversity(models.Model):
+    user = models.ForeignKey(User)
+    university = models.ForeignKey(University)
+    enter = models.DateField(null=True)
+    graduate = models.DateField(null=True)
+    major = models.CharField(null=True, max_length=20)
+
+
+class Teams(models.Model):
+    name = models.CharField(max_length=30)
+    mentor = models.ForeignKey(User)
+
+
+class UserToTeam(models.Model):
+    user = models.ForeignKey(User)
+    team = models.ForeignKey(Teams)
+    joinedOn = models.DateField()
+
+
+class Companies(models.Model):
+    name = models.CharField(max_length=30)
+    mentor = models.ForeignKey(User)
+
+
+class UserToCompany(models.Model):
+    user = models.ForeignKey(User)
+    team = models.ForeignKey(Companies)
+    enter = models.DateField(null=True)
+    leave = models.DateField(null=True)
+    job = models.CharField(max_length=30)
+
+
+class Hobbies(models.Model):
+    name = models.CharField(max_length=30)
+
+
+class UserToHobby(models.Model):
+    user = models.ForeignKey(User)
+    hobby = models.ForeignKey(Hobbies)
+
+
+class PLanguages(models.Model):
+    name = models.CharField(max_length=30)
+
+
+class UserToPLanguage(models.Model):
+    user = models.ForeignKey(User)
+    planguage = models.ForeignKey(PLanguages)
 
 
 class Groups(models.Model):
