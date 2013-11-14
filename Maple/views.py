@@ -52,7 +52,8 @@ def people(request, people_id):
     user_pageowner = User.objects.get(id=people_id)
     ctx = Context({
         'user': user,
-        'user_pageowner': user_pageowner
+        'user_pageowner': user_pageowner,
+        'page_title': user_pageowner.username
     })
     return render(request, 'profile.html', ctx)
 
@@ -69,7 +70,8 @@ def post(request, post_id):
 
     ctx = Context({
         'user': user,
-        'post': post
+        'post': post,
+        'page_title': post.user_key.username+" - "+post.post[0:40],
     })
     return render(request, 'single_post.html', ctx)
 
@@ -81,6 +83,7 @@ def private(request):
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     ctx = Context({
         'user': user,
+        'page_title': user.username
     })
     return render(request, 'private.html', ctx)
 
@@ -108,7 +111,8 @@ def group(request, group_id):
         'user': user,
         'group': group,
         'membership_id': membership_id,
-        'permission': permission
+        'permission': permission,
+        'page_title': group.group_name
     })
     return render(request, 'group.html', ctx)
 
@@ -120,6 +124,7 @@ def group_create(request):
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     ctx = Context({
         'user': user,
+        'page_title': '새 그룹 만들기'
     })
     return render(request, 'group_create.html', ctx)
 
@@ -144,7 +149,8 @@ def group_settings(request, group_id):
     ctx = Context({
         'user': user,
         'group': group_,
-        'permission': permission
+        'permission': permission,
+        'page_title': group_.group_name
     })
     return render(request, 'group_settings.html', ctx)
 
@@ -169,7 +175,8 @@ def group_members(request, group_id):
     ctx = Context({
         'user': user,
         'group': group,
-        'permission': permission
+        'permission': permission,
+        'page_title': group.group_name
     })
     return render(request, 'group_members.html', ctx)
 
@@ -218,9 +225,6 @@ def sign_s3(request):  #request에 메서드, 유저아이디는 x db조회, 파
     AWS_SECRET_KEY = "flwBllFUCpi0YG5juUFM8w3tIN73/jdoTx93qmac"
     S3_BUCKET = "somapodium"
     object_name = request.GET.get('s3_object_name')
-    print object_name.encode('utf-8')
-    print dumps(object_name).decode("UTF-8")
-    print unicode(object_name).encode('utf-8')
     mime_type = request.GET.get('s3_object_type')
     method = request.GET.get('s3_method')
     file_count = request.GET.get('s3_file_count')

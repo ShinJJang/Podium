@@ -299,6 +299,7 @@
 
                     console.log(data.objects.length);
                     for(var i in data.objects) {
+                        newExcitingAlerts();
                         displayChatRoom(data.objects[i].chat_room_key.id, data.objects[i].chat_room_key.chat_room_name, data.objects[i].chat_room_key.participant_count);
                         var request_data = JSON.stringify({
                             "chat_room_key": data.objects[i].chat_room_key,
@@ -328,7 +329,30 @@
                 console.log("invited_chat error [response] = [" + data + "]");
             }
         });
-    }, 5000);
+    }, 2000);
+
+
+
+
+    var newExcitingAlerts = (function () {
+        var oldTitle = document.title;
+        console.log(oldTitle);
+        var msg = '새로운 메시지 도착';
+        var timeoutId;
+        var blink = function() { document.title = document.title == msg ? oldTitle : msg; };
+        var clear = function() {
+            clearInterval(timeoutId);
+            document.title = oldTitle;
+            //window.onfocus = null;
+            timeoutId = null;
+        };
+        return function () {
+            if (!timeoutId) {
+                timeoutId = setInterval(blink, 500);
+                window.onfocus = clear;
+            }
+        };
+    }());
 
     var socket_chat_connection = (function (roomid, participant_count_in_room) {
         console.log(participant_count_in_room);
@@ -354,17 +378,18 @@
         setSocketConnection(room);
 
         socket.on('message', function (message) {
-            console.log("socket receive message = " + message);
             var receive_data = JSON.parse(message);
-
+            console.log("socket receive message = " + message);
+            console.log("alert test");
             //var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             if(receive_data.user_name == "{{ user.username }}") {
                 $('#' + roomid + ' ul').append('<li class="outbound"><span class="sender">' + receive_data.user_name + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
             } else {
+                newExcitingAlerts();
                 $('#' + roomid + ' ul').append('<li class="inbound"><span class="sender">' + receive_data.user_name + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
             }
             $('#' + roomid + ' ul').scrollTop(1000000000);
-            entry_el.focus();
+            //entry_el.focus();
         });
 
         socket.on('my_message', function (message) {
@@ -382,6 +407,7 @@
         });
 
         entry_el.keypress(function (event) {
+            entry_el.focus();
             if (event.keyCode != 13 || entry_el.val()=='') return; // 빈 메시지는 전송하지 않는다.
             var value = entry_el.val();
             room = $(this).parent().attr("id").substring(8);

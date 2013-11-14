@@ -242,6 +242,7 @@ var update_member_for_permission = function(eventdom){
 
 $(document).on("click", ".permission_click", function(){
     update_member_for_permission($(this));
+    return false;
 });
 
 // 멤버 추가
@@ -274,6 +275,7 @@ $("#request_member").click(function(){
             }
         }
     });
+    return false;
 });
 
 var update_member_permission = function(method, member_id, set_permission, eventdom) {
