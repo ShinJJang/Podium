@@ -2,7 +2,6 @@
 
 {% block title %}
 {% endblock %}
-
 {% block content %}
 
     <section id="p_timeline">
@@ -21,6 +20,8 @@
                     <h1>{{ user_pageowner.username }}</h1>
                     <p id="friendStatus">
                     </p>
+                <input id="user_picture_file" type="file" onchange="s3_upload_user_picture_put();"></input>
+
                 </div>
             </div>
         </header>
@@ -174,6 +175,88 @@
 
 {% block add_scripts %}
     <script type="text/javascript">
+
+        var user_profile_picture_click = $("#p_peoplePicture").click(function () {
+            $("#user_picture_file").click();
+        });
+
+    function s3_upload_user_picture_put() {
+        var check_file_name = $("#user_picture_file").val();
+        var extension = check_file_name.replace(/^.*\./, '');
+        var valid_extensions = ['png','gif', 'jpg'];
+        var file_size = 0;
+        if ($.support.msie) {
+            var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+            var sPath = $("#user_picture_file")[0].value;
+            var objFile = objFSO.getFile(sPath);
+            var iSize = objFile.size;
+            iSize = iSize / 1024;
+        }
+        else {
+            iSize = ($("#user_picture_file")[0].files[0].size / 1024);
+        }
+        if ($.inArray(extension, valid_extensions) == -1) {
+            alert("Invalid extensions");
+        }
+        else if(iSize > 10000) {
+            alert("Invalid file size");
+        }
+        else {
+            var feedback_api = "/get_file_count/";
+            var file_count = "";
+            $.ajax({
+                url: feedback_api,
+                type: "GET",
+                contentType: "application/json",
+                dataType: "xml",
+                statusCode: {
+                    200: function (data) {
+                        timeRefresh();
+                        var s3upload = new S3Upload({
+                            opt_method: "PUT",
+                            opt_user_file_count: 'user_picture',
+                            file_dom_selector: '#user_picture_file',
+                            s3_sign_put_url: '/sign_s3/',
+                            onProgress: function (percent, message) {
+
+                            },
+                            onFinishS3Put: function (url, file) {
+                                var parse_url = url.split("/");
+                                var file_upload_url = "/api/v1/userpictures/";
+                                file_link = url;
+                                console.log(file);
+                                file_name = file.name;
+                                var user_file_data = JSON.stringify({
+                                    "file_link": file_link,
+                                    "file_name": file_name
+                                });
+                                $.ajax({
+                                    url: file_upload_url,
+                                    type: "POST",
+                                    contentType: "application/json",
+                                    data: user_file_data,
+                                    dataType: "json",
+                                    statusCode: {
+                                        201: function (data) {
+                                            // TODO file_upload result
+                                        },
+                                        500: function (data) {
+                                            // TODO file_upload fail result
+                                        }
+                                    }
+                                });
+                                //$('#post_file_url_info').val(url);
+                            },
+                            onError: function (status) {
+                                console.log(status);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
+
         var get_friend_list = function(){
             var feedback_url = "/api/v1/friendship/?user={{ user_pageowner.id }}";
             $.ajax({

@@ -98,6 +98,14 @@ class UserPictureResource(ModelResource):
         include_resource_uri = False
         authorization = Authorization()
 
+    def obj_create(self, bundle, **kwargs):
+        print "test "
+        user_key = bundle.request.user
+        file_link = bundle.data['file_link']
+        file_name = bundle.data['file_name']
+        bundle.obj = UserPictures(user_key=user_key, picture=file_link, name=file_name)
+        bundle.obj.save()
+        return bundle
 
 class PostResource(ModelResource):
     user = fields.ToOneField(UserResource, 'user_key', full=True)
