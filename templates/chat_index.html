@@ -253,7 +253,21 @@
                     } else {
                         chatMessage = chatMessage + '<li class="inbound">';
                     }
-                    chatMessage = chatMessage + '<span class="sender">'+data.objects[len-i].user.username+'</span><span class="message"><span class="arrow"></span>' + data.objects[len-i].chatting_message + '</span></li>';
+                    time_stamp = data.objects[len-i].created.split("T");
+                    date = time_stamp[0].split("-");
+                    year = date[0];
+                    month = date[1];
+                    day = date[2];
+                    time_stamp = time_stamp[1].split(":");
+                    hour = time_stamp[0];
+                    minute = time_stamp[1];
+                    if(hour > 12) {
+                        time = month + "-" + day + ":오후" + hour + "시" + minute;
+                    }
+                    else {
+                        time = month + "-" + day + ":오전" + hour + "시" + minute;
+                    }// TODO (최태건) 타임에 css좀 넣어주십시오 꾸벅
+                    chatMessage = chatMessage + '<span class="sender">'+data.objects[len-i].user.username+ '</span><span>' + time + '</span><span class="message"><span class="arrow"></span>' + data.objects[len-i].chatting_message + '</span></li>';
                 }
                 $("#chatBox_" + chatroomId + " ul").append(chatMessage);
                 $("#chatBox_" + chatroomId + " ul").scrollTop(1000000000);
@@ -379,14 +393,30 @@
 
         socket.on('message', function (message) {
             var receive_data = JSON.parse(message);
-            console.log("socket receive message = " + message);
-            console.log("alert test");
+            var date = new Date();
+            month = date.getMonth();
+            month = month + 1;
+            hour = date.getHours();
+            minute = date.getMinutes();
+
+            if(hour < 10) {
+                hour = '0' + hour;
+            }
+            if(minute < 10) {
+                minute = '0' + minute;
+            }
+            if(date.getHours() > 12) {
+                time = month + "-" + date.getDate() + ":오후" + hour + "시" + minute;
+            }
+            else {
+                time = month + "-" + date.getDate() + ":오전" + hour + "시" + minute;
+            }
             //var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            if(receive_data.user_name == "{{ user.username }}") {
-                $('#' + roomid + ' ul').append('<li class="outbound"><span class="sender">' + receive_data.user_name + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
+            if(receive_data.user_name == "{{ user.username }}") { // TODO (최태건) 타임에 css좀 넣어주십시오 꾸벅
+                $('#' + roomid + ' ul').append('<li class="outbound"><span class="sender">' + receive_data.user_name + '</span><span>' + time + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
             } else {
                 newExcitingAlerts();
-                $('#' + roomid + ' ul').append('<li class="inbound"><span class="sender">' + receive_data.user_name + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
+                $('#' + roomid + ' ul').append('<li class="inbound"><span class="sender">' + receive_data.user_name + '</span><span>' + time + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
             }
             $('#' + roomid + ' ul').scrollTop(1000000000);
             //entry_el.focus();
@@ -409,6 +439,7 @@
         entry_el.keypress(function (event) {
             entry_el.focus();
             if (event.keyCode != 13 || entry_el.val()=='') return; // 빈 메시지는 전송하지 않는다.
+
             var value = entry_el.val();
             room = $(this).parent().attr("id").substring(8);
             var msg = JSON.stringify({
@@ -417,13 +448,8 @@
                 "message": entry_el.val(),
                 "user_name": userName.val()
             });
-            //var msg = "{'room_name': room, 'user_id': userId.val(), type: 'chat', message: entry_el.val() + "\n", user_name: userName.val()}" //user 사진 작게
-            //var msgObj = eval('(' + msg + ')');
-            console.log(entry_el.val());
-            console.log('send message' + msg.message);
             if (msg) {
                 socket.emit('send_message', msg, function (data) {
-                    console.log('send message to server [message] = [' + data + ']');
                 });
                 entry_el.val("");
             }
