@@ -40,7 +40,7 @@
                             </li>
                             <li id="profile_birthday" class="editProfile cboth">
                                 <strong>생일</strong>
-                                <p class="formButton"><a class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
+                                <p class="formButton"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
                                 <p class="data">{% if user.userprofile.birthday != "" %}{{ user.userprofile.birthday }}{% else %} 비공개 {% endif %}</p>
                                 <p class="form"><input type="date" name="birthday" id="f_birthday" value="{% if user.userprofile.birthday != "" %}{{ user.userprofile.birthday|date:"Y-m-d" }}{% endif %}"></p>
                             </li>
@@ -255,13 +255,13 @@
                 statusCode: {
                     200: function (data) {
                         if(data.meta.total_count) {
-                            $("#friendStatus").html('<a id="addFriend">친구 수락</a>');
+                            $("#friendStatus").html('<a href="#" id="addFriend">친구 수락</a>');
                             var noti_id = data.objects.pop().id;
                             accept_friendship(noti_id);
                             return false;
                         }
                         else {
-                            $("#friendStatus").html('<a id="addFriend">친구 요청</a>');
+                            $("#friendStatus").html('<a href="#" id="addFriend">친구 요청</a>');
                             request_friendship();
                             return false;
                         }
