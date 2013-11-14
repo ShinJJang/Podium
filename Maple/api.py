@@ -155,9 +155,6 @@ class PostResource(ModelResource):
         if bundle.obj.group:
             bundle.data['group_name'] = bundle.obj.group.group_name
             bundle.data['group_id'] = bundle.obj.group.id
-        elif bundle.obj.target_user:
-            bundle.data['target_user_name'] = bundle.obj.target_user.username
-            bundle.data['target_user_id'] = bundle.obj.target_user.id
         return bundle
 
 
@@ -266,16 +263,19 @@ class FriendPostResource(ModelResource):
         # paginator_class = EstimatedCountPaginator
         allowed_methods = ['get']
 
-    def dehydrate(self, bundle):
-        if bundle.obj.friend_post_key.open_scope == 1:
-            if bundle.request.user == bundle.obj.friend_post_key.target_user:
-                return bundle
-            elif bundle.request.user == bundle.obj.friend_post_key.user_key:
-                return bundle
-            else:
-                return False
+    def get_list(self, request, **kwargs):
+        resp = super(FriendPostResource, self).get_list(request, **kwargs)
 
-        return bundle
+        data = json.loads(resp.content)
+
+        for obj in data['objects']:
+            if obj['post']['open_scope'] == 1:
+                if request.user.id != obj['post']['target_user']['id'] and request.user.id != obj['post']['user']['id']:
+                    data['objects'].remove(obj)
+
+        data = json.dumps(data)
+
+        return HttpResponse(data, mimetype='application/json', status=200)
 
 
 class PostEmotionsResource(ModelResource):

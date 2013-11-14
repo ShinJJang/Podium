@@ -65,8 +65,9 @@ def post(request, post_id):
     user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
     post = get_object_or_404(Posts, pk=post_id)
 
-    if post.open_scope == 1 and user != post.user_key:
-        return home(request)
+    if post.open_scope == 1:
+        if user != post.user_key and user != post.target_user:
+            return home(request)
 
     ctx = Context({
         'user': user,
