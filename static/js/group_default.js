@@ -41,6 +41,7 @@ var accept_membership = function(){
                 }
             }
         });
+        return false;
     });
 };
 
@@ -90,6 +91,7 @@ var request_membership = function(){
                 }
             }
         });
+        return false;
     });
 };
 
@@ -183,6 +185,7 @@ $(".member_leave").click(function() {
             }
         }
     });
+    return false;
 });
 
 
