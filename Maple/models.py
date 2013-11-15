@@ -235,8 +235,8 @@ class CommentEmotions(Emotions):
 
 class UserPictures(models.Model):
     user_key = models.ForeignKey(User)
-    picture = models.FileField(upload_to='upload/%y/%m/%d')
-    name = models.CharField(max_length=30, null=False)
+    picture = models.CharField(max_length=1000, null=False)
+    name = models.CharField(max_length=1000, null=False)
     created = models.DateTimeField(auto_now=True)
 
 
@@ -351,3 +351,5 @@ class UserChattingMessage(models.Model):
 class TestModel(models.Model):
     test = models.ForeignKey(ChatRoom)
     testbaekmodel = models.CharField(max_length=1000)
+    test2 = models.CharField(default='1', max_length='100')
+
