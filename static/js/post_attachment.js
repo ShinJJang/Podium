@@ -13,6 +13,7 @@ $(document).on("click", ".p_responses", function () {
         var postid = tag_id.replace("commentList", "");
 
         pollComment(postid);
+        FB.XFBML.parse();
     }
     return false;
 });
