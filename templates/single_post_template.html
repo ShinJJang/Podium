@@ -54,13 +54,13 @@
                         </ul>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
                     <p class="p_tPermalink public"><a class="timestamp" href="#"><abbr class="timeago" title=${ created }></abbr></a></p>
-                    <div class="fb-like" data-href="http://podiumconcept.me/post/${ post.id }/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
                 </div>
             </article>
             <aside class="p_tAside">
                 <header class="p_responses">
                     <div class="p_container">
-                        <p class="p_emotion"><a href="#"><strong>감정</strong>/ ${ emotion_count }</a></p>
+                        <p class="p_emotion"><a href="#"><strong>좋아요</strong>/ <span id="emotion_count_e1_${ id }">${ emotion_e1_count }</span></a></p>
+                        <p class="p_emotion"><a href="#"><strong>멋져요</strong>/ <span id="emotion_count_e2_${ id }">${ emotion_e2_count }</span></a></p>
                         <p class="p_comment"><a href="#"><strong>댓글</strong>/ ${ comment_count }</a></p>
                     </div>
                 </header>
@@ -70,6 +70,7 @@
                             <input name="emotion" type="submit" value="좋아요" tag="E1">
                             <input name="emotion" type="submit" value="멋져요" tag="E2">
                             <input name="post_key" type="hidden" value="${ id }">
+                            <div class="fb-like" data-href="http://podiumconcept.me/post/${ post.id }/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
                         </form>
                     </div>
                 </section>

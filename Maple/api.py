@@ -543,17 +543,17 @@ class PostResource(ModelResource):
         post = bundle.data['post']
         open_scope = bundle.data['open_scope']
         aType = bundle.data['aType']
-        if (open_scope == 0) or (open_scope == 1): # public to self or private
+        if (open_scope == 0) or (open_scope == 1):  # public to self or private
             try:
                 target_user = get_object_or_404(User, pk=bundle.data['target'])
             except:
                 target_user = user
             bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType, target_user=target_user)
-        elif open_scope == 2: # public to friend
+        elif open_scope == 2:                       # public to friend
             target_user = get_object_or_404(User, pk=bundle.data['target'])
             bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType,
                                target_user=target_user)
-        elif open_scope == 3: # group
+        elif open_scope == 3:                       # group
             group = get_object_or_404(Groups, pk=bundle.data['target'])
             bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType, group=group)
 
@@ -562,7 +562,8 @@ class PostResource(ModelResource):
 
     def dehydrate(self, bundle):
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
-        bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count()
+        bundle.data['emotion_e1_count'] = bundle.obj.postemotions_set.filter(emotion="E1").count()
+        bundle.data['emotion_e2_count'] = bundle.obj.postemotions_set.filter(emotion="E2").count()
         if bundle.obj.group:
             bundle.data['group_name'] = bundle.obj.group.group_name
             bundle.data['group_id'] = bundle.obj.group.id
@@ -681,7 +682,7 @@ class FriendPostResource(ModelResource):
 
         for obj in data['objects']:
             if obj['post']['open_scope'] == 1:
-                if request.user.id != obj['post']['target_user']['id'] and request.user.id != obj['post']['user']['id']:
+                if (obj['post']['target_user'] is not None and request.user.id != obj['post']['target_user']['id']) and request.user.id != obj['post']['user']['id']:
                     data['objects'].remove(obj)
 
         data = json.dumps(data)
@@ -690,8 +691,8 @@ class FriendPostResource(ModelResource):
 
 
 class PostEmotionsResource(ModelResource):
-    user = fields.ForeignKey(UserResource, 'user')
-    post = fields.ForeignKey(PostResource, 'post')
+    user = fields.ForeignKey(UserResource, 'user_key')
+    post = fields.ForeignKey(PostResource, 'post_key')
 
     class Meta:
         queryset = PostEmotions.objects.all()
