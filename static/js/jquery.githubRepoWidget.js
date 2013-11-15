@@ -59,61 +59,110 @@
                         +'<p class="link"></p>'
                         +'</div>'
                         +'<div class="github-box-download">'
+                        +'<p class="commit_message"><span></span> &mdash; <a id="commit_link" target="_blank" href="">go commit!</a></p>'
                         +'<p class="updated"></p>'
                         +'<a class="download" href="' + repoUrl + '/zipball/master">Download as zip</a>'
                         +'</div>'
                         +'<div class="github-box-content">'
-                        +'<p class="commit_message"><span></span> &mdash; <a id="commit_link" target="_blank" href="">go commit!</a></p>'
+                        +'<p class="commit_king"><span></span> &mdash; <a id="commit_king_link" target="_blank" href="">go commit king!</a></p>'
+                        +'<p class="add_line_king"><span></span> &mdash; <a id="add_line_king_link" target="_blank" href="">add commit king!</a></p>' //TODO 최태건 링크를 사진으로!
+                        +'<p class="del_line_king"><span></span> &mdash; <a id="del_line_king_link" target="_blank" href="">del commit king!</a></p>'
                         +'</div>'
                         +'</div>'
+
                 );
 
                 $widget.appendTo($container);
 
                 $.ajax({
-                        url: 'https://api.github.com/repos/' + repo,
+                        url: 'https://api.github.com/repos/' + repo + '?access_token=5d8f3b01b598b741b0dd601fdbb8a80537db523a',
                         dataType: 'jsonp',
                         success: function(results) {
                                 var repo = results.data, date, updated_at = 'unknown';
 
-                                if (repo.updated_at) {
-                                        date = new Date(repo.updated_at);
-
-                                            console.log(date.toLocaleString());
-                                            console.log(date.getDate());
-                                            console.log(date.getTime());
-                                            console.log(date.getUTCHours());
-                                            console.log(date.getHours());
-                                            console.log(date);
-                                            date.setTime(repo.updated_at);
-                                            console.log(repo.updated_at);
-                                        if(date.getHours() > 12) {
-                                            updated_at = "오후" + date.getHours() + ":" + date.getMinutes() + "분  " + (date.getMonth() + 1) + '-' + date.getDate() + '-' + date.getFullYear();
-                                        }
-                                        else{
-                                            updated_at = "오전" + date.getHours() + ":" + date.getMinutes() + "분  " + (date.getMonth() + 1) + '-' + date.getDate() + '-' + date.getFullYear();
-                                        }
-                                }
                                 $widget.find('.watchers').text(repo.subscribers_count);
                                 $widget.find('.stargazers').text(repo.stargazers_count);
                                 $widget.find('.forks').text(repo.forks);
                                 $widget.find('.description span').text(repo.description);
-                                $widget.find('.updated').html('Latest commit to the <strong>master</strong> branch on ' + updated_at);
 
                                 // Don't show "null" if the repo has no homepage URL.
                                 if(repo.homepage != null) $widget.find('.link').append($('<a />').attr('href', repo.homepage).text(repo.homepage));
+
+                        }
+                });
+                $.ajax({
+                        url: 'https://api.github.com/repos/' + repo + '/stats/contributors' + '?access_token=5d8f3b01b598b741b0dd601fdbb8a80537db523a',
+                        dataType: 'jsonp',
+                        success: function(results) {
+                                var repo = results.data;
+                                var most_commit_user ,most_commit_user_url, most_commit_user_avatar, most_commit_user_total;
+                                var most_add_line_user, most_add_line_user_url, most_add_line_user_avatar, most_add_line_user_total;
+                                var most_del_line_user, most_del_line_user_url, most_del_line_user_avatar, most_del_line_user_total;
+                                var commit_total = 0, add_line_total = 0, temp_add_line_total = 0, del_line_total = 0, temp_del_line_total = 0;
+
+                                for (var index = 0; index < repo.length; index++) {
+
+                                    if(repo[index].total > commit_total) {
+                                        // about commit king
+                                        most_commit_user = repo[index].author.login;
+                                        most_commit_user_url = repo[index].author.html_url;
+                                        most_commit_user_avatar = repo[index].author.avatar_url;
+                                        most_commit_user_total = repo[index].total;
+                                    }
+                                    for(var line_index = 0; line_index < repo[index].weeks.length; line_index++) {
+                                        temp_add_line_total = temp_add_line_total + repo[index].weeks[line_index].a;
+                                        temp_del_line_total = temp_del_line_total + repo[index].weeks[line_index].d;
+                                    }
+                                    if(temp_add_line_total > add_line_total) {
+                                        most_add_line_user_total = temp_add_line_total;
+                                        most_add_line_user = repo[index].author.login;
+                                        most_add_line_user_url = repo[index].author.html_url;
+                                        most_add_line_user_avatar = repo[index].author.avatar_url;
+                                    }
+                                    if(temp_del_line_total > del_line_total) {
+                                        most_del_line_user_total = temp_del_line_total;
+                                        most_del_line_user = repo[index].author.login;
+                                        most_del_line_user_url = repo[index].author.html_url;
+                                        most_del_line_user_avatar = repo[index].author.avatar_url;
+                                    }
+
+                                    add_line_total = temp_add_line_total;
+                                    temp_add_line_total = 0;
+                                    del_line_total = temp_del_line_total;
+                                    temp_del_line_total = 0;
+
+                                    commit_total = repo[index].total;
+                                }
+                                $widget.find('.commit_king span').text(most_commit_user + " has total commit(" + most_commit_user_total + ")");
+                                $widget.find('#commit_king_link').attr('href', most_commit_user_url);
+
+                                $widget.find('.add_line_king span').text(most_add_line_user + " add total line(" + most_add_line_user_total + ")");
+                                $widget.find('#add_line_king_link').attr('href', most_add_line_user_url);
+
+                                $widget.find('.del_line_king span').text(most_del_line_user + " del total line(" + most_del_line_user_total + ")");
+                                $widget.find('#del_line_king_link').attr('href', most_del_line_user_url);
+
                         }
                 });
 
                 $.ajax({
-                        url: 'https://api.github.com/repos/' + repo + '/commits?sha=master',
+                        url: 'https://api.github.com/repos/' + repo + '/commits?sha=master&access_token=5d8f3b01b598b741b0dd601fdbb8a80537db523a',
                         dataType: 'jsonp',
                         success: function(results) {
                                 var repo = results.data, date, pushed_at = 'unknown';
                                 console.log(repo);
                                 console.log(results);
+                                if (repo[0].commit.committer.date) {
+                                        date = new Date(repo[0].commit.committer.date);
+                                        console.log(date.toLocaleString());
+                                        updated_at = date.toLocaleString()
+
+                                }
                                 $widget.find('.commit_message span').text(repo[0].commit.committer.name + " comit:" + repo[0].commit.message);
                                 $widget.find('#commit_link').attr('href', repo[0].html_url);
+                                $widget.find('.updated').html('Latest commit to the <strong>master</strong> branch on ' + updated_at);
+
+                                console.log()
                         }
                 });
 
