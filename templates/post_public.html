@@ -24,7 +24,7 @@
                 <div class="p_container">
                     <p class="p_tUserName">
                         <a href="/people/${ post.user.id }">${ post.user.username }</a>
-                        {% templatetag openblock %}if post.open_scope == 1 && post.target_user.id != post.user.id{% templatetag closeblock %}
+                        {% templatetag openblock %}if post.open_scope == 1 && post.target_user && post.target_user.id != post.user.id{% templatetag closeblock %}
                             > <a href="/people/${ post.target_user.id }">${ post.target_user.username }</a>
                         {% templatetag openblock %}/if{% templatetag closeblock %}
 
