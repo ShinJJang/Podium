@@ -63,12 +63,11 @@ class UserToTeam(models.Model):
 
 class Companies(models.Model):
     name = models.CharField(max_length=30)
-    mentor = models.ForeignKey(User)
 
 
 class UserToCompany(models.Model):
     user = models.ForeignKey(User)
-    team = models.ForeignKey(Companies)
+    company = models.ForeignKey(Companies)
     enter = models.DateField(null=True)
     leave = models.DateField(null=True)
     job = models.CharField(max_length=30)
@@ -353,3 +352,11 @@ class TestModel(models.Model):
     testbaekmodel = models.CharField(max_length=1000)
     test2 = models.CharField(default='1', max_length='100')
 
+
+class Approval(models.Model):
+    user_key = models.ForeignKey(User)
+    friendpost_key = models.ForeignKey(FriendPosts)
+    file_link = models.CharField(max_length=1000, null=False)
+    file_name = models.CharField(max_length=500, null=False)
+    created = models.DateTimeField(auto_now=True)
+    isChecked = models.NullBooleanField()
