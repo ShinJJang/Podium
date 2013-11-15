@@ -89,20 +89,21 @@ body { background:#f4f4f4; }
         #p_body #p_messages #chat_request_form .search_form input[type="button"] { margin-left:5px; cursor:pointer; color:transparent; border-radius:20px; border:1px #ccc solid; width:30px; height:30px; overflow:hidden; background-position:50% 50%; background-size:30px 30px; background-repeat:no-repeat; background-image:url(../images/icon_newChat.png); }
 
         #p_chatBoxContainer { z-index:50;position:fixed; bottom:0; right:85px; }
-        #p_chatBoxContainer .chatBox h2 { height:24px; font-weight:bold; padding:0 5px; color:#fff; line-height:24px; }
-        #p_chatBoxContainer .chatBox .closeChat { position:absolute; top:0px; right:0px; display:block; width:24px; height:24px; text-indent:-10000px; background:url(../images/chat_close.png) 50% 50% no-repeat; background-size:18px 18px; }
-        #p_chatBoxContainer .chatBox { position:relative; width:200px; height:250px; background:#fff; border:1px solid; border-bottom:none; bottom:0; margin-left:10px; float:right; font-size:0.86em; box-shadow:0px 1px 2px #999; }
-        #p_chatBoxContainer .chatBox ul { height:190px; overflow-y:scroll; padding:5px; background:#f4f4f4; }
+        #p_chatBoxContainer .chatBox h2 { height:30px; font-weight:bold; padding:0 5px; color:#fff; line-height:30px; }
+        #p_chatBoxContainer .chatBox .closeChat { position:absolute; top:0px; right:0px; display:block; width:30px; height:30px; text-indent:-10000px; background:url(../images/chat_close.png) 50% 50% no-repeat; background-size:18px 18px; }
+        #p_chatBoxContainer .chatBox { position:relative; width:240px; height:320px; background:#fff; border:1px solid; border-bottom:none; bottom:0; margin-left:10px; float:right; box-shadow:0px 1px 2px #999; }
+        #p_chatBoxContainer .chatBox ul { height:250px; overflow-y:scroll; padding:5px; background:#f4f4f4; }
         #p_chatBoxContainer .chatBox ul li { clear:both; padding-top:5px; word-break:break-all; }
         #p_chatBoxContainer .chatBox ul li.serviceMessage { color:#999; font-size:0.86em; text-align: center; font-style: italic; }
-        #p_chatBoxContainer .chatBox ul li .sender { display:block; font-size:0.86em; color:#8e8e8e; }
-        #p_chatBoxContainer .chatBox ul li .message { display:block; line-height:1.3; padding:1px 4px; position:relative; border:1px solid; border-radius:3px; }
+        #p_chatBoxContainer .chatBox ul li .sender { display:block; font-size:0.86em; color:#666; font-weight:bold; }
+        #p_chatBoxContainer .chatBox ul li .message { display:block; line-height:1.3; padding:2px 5px; position:relative; border:1px solid; border-radius:5px; }
+        #p_chatBoxContainer .chatBox ul li .time { color:#aaa; font-size:0.92em; clear:both; font-weight:normal; }
         #p_chatBoxContainer .chatBox ul .outbound .sender { text-align:right; }
         #p_chatBoxContainer .chatBox ul .inbound .message { margin-left:3px; float:left; background:#76bab2; border-color:#38978e; color:#fff; }
         #p_chatBoxContainer .chatBox ul .inbound .message .arrow { position:absolute; top:50%; margin-top:-4px; left:-4px; background:url(../images/color-mint/chat_inbound.png); width:4px; height:8px; }
         #p_chatBoxContainer .chatBox ul .outbound .message { margin-right:3px; float:right; background:#e5ebea; border-color:#ccc; color:#777; }
         #p_chatBoxContainer .chatBox ul .outbound .message .arrow { position:absolute; top:50%; margin-top:-4px; right:-4px; background:url(../images/color-mint/chat_outbound.png); width:4px; height:8px; }
-        #p_chatBoxContainer .chatBox input { height:24px; border:none; border-top:1px #dadada solid; padding:0 5px; font-size:12px; margin:0; width:190px; }
+        #p_chatBoxContainer .chatBox input { height:29px; border:none; border-top:1px #dadada solid; padding:0 5px; font-size:12px; margin:0; width:230px; }
 
 #p_body #p_document > .p_container { padding:20px; }
     #p_body #p_timeline { position:relative; z-index:20; margin-left:210px; margin-right:75px; background:#f0f0f0; border-left:1px #ccc solid; border-right:1px #ccc solid; min-height:100%; }
@@ -131,9 +132,9 @@ body { background:#f4f4f4; }
             #p_body #p_timeline .p_pageInfo .infoBox ul li.editing .data { display:none; }
             #p_body #p_timeline .p_pageInfo .infoBox ul li.editProfile .form { display:none; }
             #p_body #p_timeline .p_pageInfo .infoBox ul li .form { clear:both; }
-            #p_body #p_timeline .p_pageInfo .infoBox ul li .form input[type="text"],
-            #p_body #p_timeline .p_pageInfo .infoBox ul li .form input[type="tel"],
-            #p_body #p_timeline .p_pageInfo .infoBox ul li .form input[type="date"] { width:160px; border:1px #dadada solid; padding:2px 4px; }
+            #p_body #p_timeline .p_pageInfo .infoBox ul li .form input.fullLength { width:160px; border:1px #dadada solid; padding:2px 4px; }
+
+            #p_body #p_timeline .p_pageInfo .infoBox ul li div.info { cursor:pointer; }
 
         #p_body #p_timeline .p_timelineContents { float:left; width:710px; }
 
@@ -272,14 +273,14 @@ body { background:#f4f4f4; }
 
         #p_body #p_timeline #p_peopleCover { height:300px; background:url(../images/user_cover_placeholder.jpg) 50% 50% no-repeat; border-bottom:10px #dadada solid; background-size: cover; }
         #p_body #p_timeline #p_peopleCover #p_peopleName { text-align:center; position:absolute; top:236px; width:300px; margin-left:-150px; left:50%; }
-        #p_body #p_timeline #p_peopleCover #p_peoplePicture { position:relative; display:inline-block; border:3px #ccc solid; width:122px; height:122px; overflow:hidden; border-radius: 80px; box-shadow:0 2px 10px rgba(0,0,0,0.5); }
+        #p_body #p_timeline #p_peopleCover #p_peoplePicture { position:relative; display:inline-block; border:3px #ccc solid; width:122px; height:122px; overflow:hidden; border-radius: 10px; box-shadow:0 -1px 2px rgba(255,255,255,0.5); background:#fff; }
         #p_body #p_timeline #p_peopleCover #p_peoplePicture img { width:122px; height:122px; }
         #p_body #p_timeline #p_peopleCover #p_peoplePicture .uploadGuide { cursor:pointer; display:none; position:absolute; top:0; left:0; width:122px; height:82px; padding-top:40px; background:rgba(0,0,0,0.5); color:#fff; font-weight:bold; font-size:0.86em; }
         #p_body #p_timeline #p_peopleCover #p_peoplePicture:hover .uploadGuide { display:block; }
 
         #p_body #p_timeline #user_picture_file { display:none; }
 
-        #p_body #p_timeline #p_peopleCover #p_peopleName h1 { font-size:1.43em; line-height:30px; height:30px; margin-bottom:10px; }
+        #p_body #p_timeline #p_peopleCover #p_peopleName h1 { font-size:1.5em; line-height:30px; height:30px; margin-bottom:10px; font-weight:200; text-shadow:0 -1px 0 #fff; }
 
         #p_body #p_timeline #p_peopleCover #p_peopleName #friendStatus a { border:1px #ddd solid; border-radius:5px; background-color:#fff; background-size:12px 12px; background-repeat:no-repeat; background-position:10px 50%; padding:5px 15px 5px 30px; display:inline-block; color:#8e8e8e; font-weight:bold; box-shadow:0px 1px 1px rgba(0,0,0,0.3); }
         #p_body #p_timeline #p_peopleCover #p_peopleName #friendStatus a:hover { background-color:#f6f6f6; }
