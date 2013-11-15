@@ -79,9 +79,11 @@
                         {% endif %}
                     </ul>
                 </div>
+
+                <!-- 고등학교 -->
                 <div class="infoBox">
                     <h3>고등학교</h3>
-                    <ul>
+                    <ul id="profile_highschool">
                         {% if user_pageowner.usertohighschool_set.all %}
                             {% for userhighschool in user_pageowner.usertohighschool_set.all %}
                                 <li>
@@ -90,9 +92,10 @@
                                         <p class="desc">{{ userhighschool.enter|date:"Y년 M" }} - {{ userhighschool.graduate|date:"Y년 M" }}</p>
                                     </div>
                                     {% if user == user_pageowner %}
-                                        <div class="editor">
-                                            <p><input type="text" class="fullLength" id="highschool_name" placeholder="고등학교 이름" /></p>
-                                            <p><input type="date" class="halfLength" id="highschool_enter" placeholder="입학일" /> - <input type="date" class="halfLength" id="highschool_graduate" placeholder="졸업일" /></p>
+                                        <div class="editor pui">
+                                            <div><input type="text" class="fullLength highschool_name" placeholder="고등학교 이름" autocomplete="on" value="{{ userhighschool.highschool.name }}" /><ul class="highschool_results autocomplete"></ul><input type="hidden" class="highschool_id" value="{{ userhighschool.id }}" /></div>
+                                            <p><label for="f_highschool_enter">입학</label><input type="date" id="f_highschool_enter" class="halfLength highschool_enter" placeholder="입학일" value="{{ userhighschool.enter|date:"Y-m-d" }}" /></p>
+                                            <p><label for="f_highschool_graduate">졸업</label><input type="date" id="f_highschool_graduate" class="halfLength highschool_graduate" placeholder="졸업일" value="{{ userhighschool.graduate|date:"Y-m-d" }}" /></p>
                                             <p class="buttons"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a><a href="#" class="f_delete">삭제</a></p>
                                         </div>
                                     {% endif %}
@@ -101,8 +104,182 @@
                         {% else %}
                             <li>비공개</li>
                         {% endif %}
+                        {% if user == user_pageowner %}
+                            <li>
+                                <div class="info">
+                                    + 추가하기
+                                </div>
+                                <div class="editor pui">
+                                    <div><input type="text" class="fullLength highschool_name" placeholder="고등학교 이름" autocomplete="on" value="" /><ul class="highschool_results autocomplete"></ul><input type="hidden" class="highschool_id" value="-1" /></div>
+                                    <p><label for="f_highschool_enter">입학</label><input type="date" id="f_highschool_enter" class="halfLength highschool_enter" placeholder="입학일" value="" /></p>
+                                    <p><label for="f_highschool_graduate">졸업</label><input type="date" id="f_highschool_graduate" class="halfLength highschool_graduate" placeholder="졸업일" value="" /></p>
+                                    <p class="buttons"><a href="#" class="f_submit">추가</a><a href="#" class="f_cancel">취소</a></p>
+                                </div>
+
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
+
+                <!-- 대학교 -->
+                <div class="infoBox">
+                    <h3>대학교</h3>
+                    <ul id="profile_university">
+                        {% if user_pageowner.usertouniversity_set.all %}
+                            {% for useruniversity in user_pageowner.usertouniversity_set.all %}
+                                <li>
+                                    <div class="info">
+                                        <h4>{{ useruniversity.university.name }}</h4>
+                                        <p class="desc">{{ useruniversity.enter|date:"Y년 M" }} - {{ useruniversity.graduate|date:"Y년 M" }}</p>
+                                    </div>
+                                    {% if user == user_pageowner %}
+                                        <div class="editor pui">
+                                            <div><input type="text" class="fullLength university_name" placeholder="대학교 이름" autocomplete="on" value="{{ useruniversity.university.name }}" /><ul class="university_results autocomplete"></ul><input type="hidden" class="university_id" value="{{ useruniversity.id }}" /></div>
+                                            <p><label for="f_university_enter">입학</label><input type="date" id="f_university_enter" class="halfLength university_enter" placeholder="입학일" value="{{ useruniversity.enter|date:"Y-m-d" }}" /></p>
+                                            <p><label for="f_university_graduate">졸업</label><input type="date" id="f_university_graduate" class="halfLength university_graduate" placeholder="졸업일" value="{{ useruniversity.graduate|date:"Y-m-d" }}" /></p>
+                                            <p><label for="f_university_major">학과</label><input type="text" id="f_university_major" class="halfLength university_major" placeholder="학과" value="{{ useruniversity.major }}" /></p>
+                                            <p class="buttons"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a><a href="#" class="f_delete">삭제</a></p>
+                                        </div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li>비공개</li>
+                        {% endif %}
+                        {% if user == user_pageowner %}
+                            <li>
+                                <div class="info">
+                                    + 추가하기
+                                </div>
+                                <div class="editor pui">
+                                    <div><input type="text" class="fullLength university_name" placeholder="대학교 이름" autocomplete="on" value="" /><ul class="university_results autocomplete"></ul><input type="hidden" class="university_id" value="-1" /></div>
+                                    <p><label for="f_university_enter">입학</label><input type="date" id="f_university_enter" class="halfLength university_enter" placeholder="입학일" value="" /></p>
+                                    <p><label for="f_university_graduate">졸업</label><input type="date" id="f_university_graduate" class="halfLength university_graduate" placeholder="졸업일" value="" /></p>
+                                    <p><label for="f_university_major">학과</label><input type="text" id="f_university_major" class="halfLength university_major" placeholder="학과" value="" /></p>
+                                    <p class="buttons"><a href="#" class="f_submit">추가</a><a href="#" class="f_cancel">취소</a></p>
+                                </div>
+
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- 직장 -->
+                <div class="infoBox">
+                    <h3>직장</h3>
+                    <ul id="profile_company">
+                        {% if user_pageowner.usertocompany_set.all %}
+                            {% for usercompany in user_pageowner.usertocompany_set.all %}
+                                <li>
+                                    <div class="info">
+                                        <h4>{{ usercompany.company.name }}</h4>
+                                        <p class="desc">{{ usercompany.job }}</p>
+                                        <p class="desc">{{ usercompany.enter|date:"Y년 M" }} - {{ usercompany.leave|date:"Y년 M" }}</p>
+                                    </div>
+                                    {% if user == user_pageowner %}
+                                        <div class="editor pui">
+                                            <div><input type="text" class="fullLength company_name" placeholder="직장 이름" autocomplete="on" value="{{ usercompany.company.name }}" /><ul class="company_results autocomplete"></ul><input type="hidden" class="company_id" value="{{ usercompany.id }}" /></div>
+                                            <p><label for="f_company_enter">입사</label><input type="date" id="f_company_enter" class="halfLength company_enter" placeholder="입사" value="{{ usercompany.enter|date:"Y-m-d" }}" /></p>
+                                            <p><label for="f_company_leave">퇴사</label><input type="date" id="f_company_leave" class="halfLength company_leave" placeholder="퇴사" value="{{ usercompany.leave|date:"Y-m-d" }}" /></p>
+                                            <p><label for="f_company_job">직책</label><input type="text" id="f_company_job" class="halfLength company_job" placeholder="맡은 일" value="{{ usercompany.job }}" /></p>
+                                            <p class="buttons"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a><a href="#" class="f_delete">삭제</a></p>
+                                        </div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li>비공개</li>
+                        {% endif %}
+                        {% if user == user_pageowner %}
+                            <li>
+                                <div class="info">
+                                    + 추가하기
+                                </div>
+                                <div class="editor pui">
+                                    <div><input type="text" class="fullLength company_name" placeholder="직장 이름" autocomplete="on" value="" /><ul class="company_results autocomplete"></ul><input type="hidden" class="company_id" value="" /></div>
+                                    <p><label for="f_company_enter">입사</label><input type="date" id="f_company_enter" class="halfLength company_enter" placeholder="입사" value="" /></p>
+                                    <p><label for="f_company_leave">퇴사</label><input type="date" id="f_company_leave" class="halfLength company_leave" placeholder="퇴사" value="" /></p>
+                                    <p><label for="f_company_job">직책</label><input type="text" id="f_company_job" class="halfLength company_job" placeholder="맡은 일" value="" /></p>
+                                    <p class="buttons"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
+                                </div>
+
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- 언어 -->
+                <div class="infoBox">
+                    <h3>프로그래밍 언어</h3>
+                    <ul id="profile_planguage">
+                        {% if user_pageowner.usertoplanguage_set.all %}
+                            {% for userplanguage in user_pageowner.usertoplanguage_set.all %}
+                                <li>
+                                    <div class="info">
+                                        <h4>{{ userplanguage.planguage.name }}</h4>
+                                    </div>
+                                    {% if user == user_pageowner %}
+                                        <div class="editor pui">
+                                            <div><input type="text" class="fullLength planguage_name" placeholder="언어" autocomplete="on" value="{{ userplanguage.planguage.name }}" /><ul class="planguage_results autocomplete"></ul><input type="hidden" class="planguage_id" value="{{ userplanguage.id }}" /></div>
+                                            <p class="buttons"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a><a href="#" class="f_delete">삭제</a></p>
+                                        </div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li>비공개</li>
+                        {% endif %}
+                        {% if user == user_pageowner %}
+                            <li>
+                                <div class="info">
+                                    + 추가하기
+                                </div>
+                                <div class="editor pui">
+                                    <div><input type="text" class="fullLength planguage_name" placeholder="언어" autocomplete="on" value="" /><ul class="planguage_results autocomplete"></ul><input type="hidden" class="planguage_id" value="" /></div>
+                                    <p class="buttons"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
+                                </div>
+
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            
+                <!-- 취미 -->
+                <div class="infoBox">
+                    <h3>취미</h3>
+                    <ul id="profile_hobby">
+                        {% if user_pageowner.usertohobby_set.all %}
+                            {% for userhobby in user_pageowner.usertohobby_set.all %}
+                                <li>
+                                    <div class="info">
+                                        <h4>{{ userhobby.hobby.name }}</h4>
+                                    </div>
+                                    {% if user == user_pageowner %}
+                                        <div class="editor pui">
+                                            <div><input type="text" class="fullLength hobby_name" placeholder="취미" autocomplete="on" value="{{ userhobby.hobby.name }}" /><ul class="hobby_results autocomplete"></ul><input type="hidden" class="hobby_id" value="{{ userhobby.id }}" /></div>
+                                            <p class="buttons"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a><a href="#" class="f_delete">삭제</a></p>
+                                        </div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li>비공개</li>
+                        {% endif %}
+                        {% if user == user_pageowner %}
+                            <li>
+                                <div class="info">
+                                    + 추가하기
+                                </div>
+                                <div class="editor pui">
+                                    <div><input type="text" class="fullLength hobby_name" placeholder="취미" autocomplete="on" value="" /><ul class="hobby_results autocomplete"></ul><input type="hidden" class="hobby_id" value="" /></div>
+                                    <p class="buttons"><a href="#" class="f_submit">수정</a><a href="#" class="f_cancel">취소</a></p>
+                                </div>
+
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
             </div>
             <div class="p_timelineContents">
                 <section id="timeline_widget">
