@@ -567,6 +567,14 @@ class PostResource(ModelResource):
         if bundle.obj.group:
             bundle.data['group_name'] = bundle.obj.group.group_name
             bundle.data['group_id'] = bundle.obj.group.id
+
+            # 사무국 지원 - 보는 이가 연수생인지
+            membership = Memberships.objects.filter(group_key=bundle.obj.group, user_key=bundle.request.user)
+            bundle.data['permission'] = membership.first().permission if membership.exists() else -1
+
+            # 사무국 지원 - 글쓴이가 사무국인지
+            writer_membership = Memberships.objects.filter(group_key=bundle.obj.group, user_key=bundle.obj.user_key)
+            bundle.data['writer_permission'] = writer_membership.first().permission if writer_membership.exists() else -1
         return bundle
 
 

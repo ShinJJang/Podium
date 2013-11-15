@@ -47,6 +47,19 @@
                     {% templatetag openblock %}if post.attachment_type == 3{% templatetag closeblock %}
                         <div id="file-${ post.id }" class="p_attachment p_file_unloaded">
                         </div>
+                        {% templatetag openblock %}if post.group.group_name == "사무국" && post.writer_permission > 0{% templatetag closeblock %}
+                            {% templatetag openblock %}if post.permission > 0{% templatetag closeblock %}
+                                <div id="approval-${ post.id }" class="p_attachment p_approval_manage_unloaded">
+                                    사무국 목록
+                                </div>
+                            {% templatetag openblock %}/if{% templatetag closeblock %}
+
+                            {% templatetag openblock %}if post.permission == 0{% templatetag closeblock %}
+                                <div id="approval-${ post.id }" class="p_attachment p_approval_upload_unloaded">
+                                    연수생 파일 업로드
+                                </div>
+                            {% templatetag openblock %}/if{% templatetag closeblock %}
+                        {% templatetag openblock %}/if{% templatetag closeblock %}
                     {% templatetag openblock %}/if{% templatetag closeblock %}
 
                     {% templatetag openblock %}if post.attachment_type == 4{% templatetag closeblock %}
