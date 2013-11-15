@@ -113,24 +113,26 @@
                                         temp_add_line_total = temp_add_line_total + repo[index].weeks[line_index].a;
                                         temp_del_line_total = temp_del_line_total + repo[index].weeks[line_index].d;
                                     }
+                                    console.log(temp_del_line_total);
                                     if(temp_add_line_total > add_line_total) {
                                         most_add_line_user_total = temp_add_line_total;
                                         most_add_line_user = repo[index].author.login;
                                         most_add_line_user_url = repo[index].author.html_url;
                                         most_add_line_user_avatar = repo[index].author.avatar_url;
+                                        add_line_total = temp_add_line_total;
+
                                     }
+
                                     if(temp_del_line_total > del_line_total) {
                                         most_del_line_user_total = temp_del_line_total;
                                         most_del_line_user = repo[index].author.login;
                                         most_del_line_user_url = repo[index].author.html_url;
                                         most_del_line_user_avatar = repo[index].author.avatar_url;
+                                        del_line_total = temp_del_line_total;
                                     }
-
-                                    add_line_total = temp_add_line_total;
+                                    console.log(most_del_line_user);
                                     temp_add_line_total = 0;
-                                    del_line_total = temp_del_line_total;
                                     temp_del_line_total = 0;
-
                                     commit_total = repo[index].total;
                                 }
                                 $widget.find('.commit_king span').text(most_commit_user + " has total commit(" + most_commit_user_total + ")");
