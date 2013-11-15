@@ -270,7 +270,7 @@ class FriendPostResource(ModelResource):
 
         for obj in data['objects']:
             if obj['post']['open_scope'] == 1:
-                if request.user.id != obj['post']['target_user']['id'] and request.user.id != obj['post']['user']['id']:
+                if (obj['post']['target_user'] is not None and request.user.id != obj['post']['target_user']['id']) and request.user.id != obj['post']['user']['id']:
                     data['objects'].remove(obj)
 
         data = json.dumps(data)
