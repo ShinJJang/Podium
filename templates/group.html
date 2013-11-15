@@ -30,7 +30,7 @@
                     {% if permission != -1 %}
                     <div class="p_tItem p_container">
                     <a href="#" class="p_tAdd p_tIcon"></a>
-
+                    <div class="github-widget" data-repo="ShinJJang/podium"></div>
                     <div class="p_tBox pui">
                         <ul class="writeSelect cboth">
                             <li id="toPlain" class="selected"><a href="#">Plain Text</a></li>
@@ -156,4 +156,5 @@
     {% endif %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/group.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/group_default.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.githubRepoWidget.js"></script>
 {% endblock %}
