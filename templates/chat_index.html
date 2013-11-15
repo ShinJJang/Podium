@@ -414,7 +414,7 @@
             }
             //var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             if(receive_data.user_name == "{{ user.username }}") { // TODO (최태건) 타임에 css좀 넣어주십시오 꾸벅
-                $('#' + roomid + ' ul').append('<li class="outbound"><p class="sender">' + receive_data.user_name + '<span class="time"> · ' + time + '</span></p><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
+                $('#' + roomid + ' ul').append('<li class="outbound"><p class="sender"><span class="time">' + time + ' · </span>' + receive_data.user_name +'</p><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
             } else {
                 newExcitingAlerts();
                 $('#' + roomid + ' ul').append('<li class="inbound"><p class="sender">' + receive_data.user_name + '<span class="time"> · ' + time + '</span></p><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');

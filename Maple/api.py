@@ -78,6 +78,417 @@ class UserResource(ModelResource):
         return bundle
 
 
+class HighSchoolsResource(ModelResource):
+    class Meta:
+        queryset = HighSchools.objects.all()
+        resource_name = 'highschools'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(HighSchools).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToHighSchoolResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    highschool = fields.ForeignKey(HighSchoolsResource, 'highschool', full=False)
+
+    class Meta:
+        queryset = UserToHighSchool.objects.all()
+        resource_name = 'user_to_highschool'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        highschool = HighSchools.objects.get(pk=bundle.data['highschool'])
+        enter = bundle.data['enter']
+        graduate = bundle.data['graduate']
+        bundle.obj = UserToHighSchool(user=user, highschool=highschool, enter=enter, graduate=graduate)
+        bundle.obj.save()
+        return bundle
+
+
+class UniversityResource(ModelResource):
+    class Meta:
+        queryset = University.objects.all()
+        resource_name = 'university'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(University).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToUniversityResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    university = fields.ForeignKey(UniversityResource, 'university', full=False)
+
+    class Meta:
+        queryset = UserToUniversity.objects.all()
+        resource_name = 'user_to_university'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        university = University.objects.get(pk=bundle.data['university'])
+        enter = bundle.data['enter']
+        graduate = bundle.data['graduate']
+        major = bundle.data['major']
+        bundle.obj = UserToUniversity(user=user, university=university, enter=enter, graduate=graduate, major=major)
+        bundle.obj.save()
+        return bundle
+
+
+class TeamsResource(ModelResource):
+    class Meta:
+        queryset = Teams.objects.all()
+        resource_name = 'teams'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(Teams).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToTeamResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    team = fields.ForeignKey(TeamsResource, 'team', full=False)
+
+    class Meta:
+        queryset = UserToTeam.objects.all()
+        resource_name = 'user_to_team'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        team = Teams.objects.get(pk=bundle.data['team'])
+        joinedOn = bundle.data['joinedOn']
+        bundle.obj = UserToTeam(user=user, team=team, joinedOn=joinedOn)
+        bundle.obj.save()
+        return bundle
+
+
+class CompaniesResource(ModelResource):
+    class Meta:
+        queryset = Companies.objects.all()
+        resource_name = 'companies'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(Companies).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToCompanyResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    company = fields.ForeignKey(CompaniesResource, 'company', full=False)
+
+    class Meta:
+        queryset = UserToCompany.objects.all()
+        resource_name = 'user_to_company'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        company = Companies.objects.get(pk=bundle.data['company'])
+        enter = bundle.data['enter']
+        leave = bundle.data['leave']
+        job = bundle.data['job']
+        bundle.obj = UserToCompany(user=user, company=company, enter=enter, leave=leave, job=job)
+        bundle.obj.save()
+        return bundle
+
+
+class HobbiesResource(ModelResource):
+    class Meta:
+        queryset = Hobbies.objects.all()
+        resource_name = 'hobbies'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(Hobbies).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToHobbyResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    hobby = fields.ForeignKey(HobbiesResource, 'hobby', full=False)
+
+    class Meta:
+        queryset = UserToHobby.objects.all()
+        resource_name = 'user_to_hobby'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        hobby = Hobbies.objects.get(pk=bundle.data['team'])
+        bundle.obj = UserToHobby(user=user, hobby=hobby)
+        bundle.obj.save()
+        return bundle
+
+
+class PLanguagesResource(ModelResource):
+    class Meta:
+        queryset = PLanguages.objects.all()
+        resource_name = 'planguages'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(PLanguages).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToPLanguageResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    planguage = fields.ForeignKey(PLanguagesResource, 'planguage', full=False)
+
+    class Meta:
+        queryset = UserToPLanguage.objects.all()
+        resource_name = 'user_to_planguage'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        planguage = PLanguages.objects.get(pk=bundle.data['planguage'])
+        bundle.obj = UserToPLanguage(user=user, planguage=planguage)
+        bundle.obj.save()
+        return bundle
+
+
 class UserProfileResource(ModelResource):
     user = fields.OneToOneField(UserResource, 'user', full=True)
 

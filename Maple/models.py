@@ -63,12 +63,11 @@ class UserToTeam(models.Model):
 
 class Companies(models.Model):
     name = models.CharField(max_length=30)
-    mentor = models.ForeignKey(User)
 
 
 class UserToCompany(models.Model):
     user = models.ForeignKey(User)
-    team = models.ForeignKey(Companies)
+    company = models.ForeignKey(Companies)
     enter = models.DateField(null=True)
     leave = models.DateField(null=True)
     job = models.CharField(max_length=30)
