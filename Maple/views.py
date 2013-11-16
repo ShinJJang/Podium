@@ -209,17 +209,22 @@ def sign_s3(request):  #request에 메서드, 유저아이디는 x db조회, 파
     expires = int(time.time() + 10)
     amz_headers = "x-amz-acl:public-read"
     user_id = request.user.id
+    if file_count.find("soma") != -1 :
+        put_request = "%s\n\n%s\n%d\n%s\n/%s/%s/%s/%s" % (method, mime_type, expires, amz_headers, S3_BUCKET, file_count, str(user_id), object_name)
+        hashed = hmac.new(AWS_SECRET_KEY, put_request, hashlib.sha1)
+        signature = b64encode(hashed.digest())
+        url = 'https://%s.s3.amazonaws.com/%s/%s/%s' % (S3_BUCKET, file_count, str(user_id), object_name)
+        signed_request = '%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s' % (url, AWS_ACCESS_KEY, expires, signature)
+    else :
+        put_request = "%s\n\n%s\n%d\n%s\n/%s/%s/%s/%s" % (method, mime_type, expires, amz_headers, S3_BUCKET, str(user_id), file_count, object_name)
+        hashed = hmac.new(AWS_SECRET_KEY, put_request, hashlib.sha1)
+        signature = b64encode(hashed.digest())
+        url = 'https://%s.s3.amazonaws.com/%s/%s/%s' % (S3_BUCKET, str(user_id), file_count, object_name)
+        signed_request = '%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s' % (url, AWS_ACCESS_KEY, expires, signature)
 
-    put_request = "%s\n\n%s\n%d\n%s\n/%s/%s/%s/%s" % (method, mime_type, expires, amz_headers, S3_BUCKET, str(user_id), file_count, object_name)
-    print unicode(put_request).encode("utf-8")
-    hashed = hmac.new(AWS_SECRET_KEY, put_request, hashlib.sha1)
 
-    signature = b64encode(hashed.digest())
 
-    url = 'https://%s.s3.amazonaws.com/%s/%s/%s' % (S3_BUCKET, str(user_id), file_count, object_name)
-    signed_request = '%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s' % (url, AWS_ACCESS_KEY, expires, signature)
-    print url
-    print signed_request
+
     return HttpResponse(json.dumps({
         'signed_request': signed_request,
         'url': url

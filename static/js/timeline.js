@@ -787,14 +787,10 @@ $(function () {
             $("#attach_file_count").html('<input type="hidden" id="post_file_count" value="" >');
             $("#attach_file_name").html('<input type="hidden" id="post_file_name" value="파일 이름" >');
 
-            var attachFileCancelButton = document.createElement("button");
-            attachFileCancelButton.id = "post_file_delete_button";
-            attachFileCancelButton.setAttribute("type", "button");
-            attachFileCancelButton.setAttribute("value", "업로드파일삭제");
-            attachFileCancelButton.setAttribute("onclick", "s3_upload_delete()");
+            var attachFileCancelButton = '<button id="post_file_delete_button" onclick="s3_upload_delete()">Cancel Uploaded File</button>';
 
             document.getElementById("attach_file").appendChild(attachFile);
-            document.getElementById("attach_file").appendChild(attachFileCancelButton);
+            $("#attach_file").append(attachFileCancelButton);
         }
     });
     $("#toPlain").click(function () {
