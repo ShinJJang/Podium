@@ -282,6 +282,75 @@ body { background:#f4f4f4; }
 
             #p_body #p_timeline .p_timelineNav ul li:hover { background-color:#f4f4f4; }
 
+        #p_body #p_timeline #p_groupCover { background:url(../images/group_titleBG.png) repeat; background-size:19px 19px; }
+        #p_body #p_timeline #p_groupCover #p_groupTitle { width:940px; margin:0 auto; }
+        #p_body #p_timeline #p_groupCover #p_groupTitle h1 { color:#9057df; font-weight:200; letter-spacing: -1px; text-shadow: 0px 1px 5px #cab2ed; }
+        #p_body #p_timeline #p_groupCover #p_groupTitle h1 .type { color:#747e82; font-weight:bold; text-shadow:none; letter-spacing: 0; margin-left:10px; }
+        #p_body #p_timeline #p_groupCover #p_groupTitle .desc { color:#616a6e; float:left; margin-right:15px; }
+
+        #p_body #p_timeline #p_groupCover .github-enabled { padding:50px 0; }
+        #p_body #p_timeline #p_groupCover .github-disabled { padding:100px 0; }
+
+        #p_body #p_timeline #p_groupCover .github-enabled h1 { font-size:2.57em; line-height:1.3; }
+        #p_body #p_timeline #p_groupCover .github-enabled h1 .type { font-size:0.39em; }
+        #p_body #p_timeline #p_groupCover .github-enabled .desc { margin-top:5px; }
+
+        .github-box{background:rgba(234,234,234,0.5); border-top:1px #ccc solid; }
+        .github-box a{border:0;text-decoration:none}
+        .github-box .github-box-title{position:relative;}
+        .github-box .github-box-title h3{font-weight:normal;margin:0;color:#888;padding:5px 10px 5px 33px;background:url(../images/github.png) 10px center no-repeat}
+        .github-box .github-box-title h3 a { color:#9057df; }
+        .github-box .github-box-title h3 a:hover, .github-box .github-box-title h3 a:active { color:#aa7fe5; }
+        .github-box .moreLink { padding-right:15px; background-position:right 50%; background-repeat:no-repeat; color:#999; }
+        .github-box .moreLink:hover { color:#777; }
+        .github-box .github-box-title h3 .label { color:#171516; margin-right:20px;font-weight:bold;}
+        .github-box .github-box-title h3 .repo{font-weight:bold}
+        .github-box .github-box-title .github-stats{position:absolute;top:8px;right:10px;background:white;border:1px solid #ddd;border-radius:3px;font-size:11px;font-weight:bold;line-height:21px;height:21px}
+        .github-box .github-box-title .github-stats a {
+            display:inline-block;
+            height:21px;
+            color:#666;
+            padding:0 5px 0 18px;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAqCAMAAACEJ4viAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpEQjIyNkJEQkM0NjYxMUUxOEFDQzk3ODcxRDkzRjhCRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpEQjIyNkJEQ0M0NjYxMUUxOEFDQzk3ODcxRDkzRjhCRSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkRCMjI2QkQ5QzQ2NjExRTE4QUNDOTc4NzFEOTNGOEJFIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkRCMjI2QkRBQzQ2NjExRTE4QUNDOTc4NzFEOTNGOEJFIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+h1kA9gAAAK5QTFRF+fn5sbGx8fHx09PTmpqa2dnZ/f3919fX9PT00NDQ1dXVpKSk+vr6+/v7vb298vLyycnJ8/PztLS0zc3N6enp/v7+q6ur2NjY9/f3srKy/Pz8p6en7u7uoaGhnJyc4eHhtbW1pqam6Ojo9fX17e3toqKirKys1NTUzs7Ox8fHwcHBwMDA5eXlnZ2dpaWl0dHR9vb25ubm4uLi3d3dqqqqwsLCv7+/oKCgmZmZ////8yEsbwAAAMBJREFUeNrE0tcOgjAUBuDSliUoMhTEvfdef9//xUQjgaLX0Ium/ZLT/+SkRPxZpGykvuf5VMJogy5jY9yjDHcWFhqlcRuHc4o6B1QK0BDg+hcZgNDh3NWTwzItH/bRrhvT+g3zSxZkNGCZpoWGIbU0a3Y6zV5VA6keyeDxiw62P0gUqEW0FbDim4nVikFJbU2zZXybUEaxhCqOQqyh5/G0wpWICUwthyqwD4InOMuXJ7/gs7WkoPdVg1vykF8CDACEFanKO3aSYwAAAABJRU5ErkJggg==') no-repeat;
+        }
+        .github-box .github-box-title .github-stats .watchers{border-right:1px solid #ddd}
+        .github-box .github-box-title .github-stats .forks{background-position:-4px -21px;padding-left:15px}
+        .github-box .github-box-content{padding:0 10px 10px;color:#727474;}
+        .github-box .github-box-content p{margin:0}
+        .github-box .github-box-content .link{font-weight:bold}
+        .github-box .github-box-download{position:relative;border-top:1px solid #ddd;border-bottom:1px solid #ddd;background:white;padding:10px; margin-bottom:10px;}
+        .github-box .github-box-download .commit_message strong { font-size:0.86em; color:#9057df; margin-right:20px; }
+        .github-box .github-box-download .updated{margin:0;font-size:11px;color:#666;line-height:24px;font-weight:300}
+        .github-box .github-box-download .updated strong{font-weight:bold;color:#000}
+        .github-box .github-box-download .download{position:absolute;display:block;top:10px;right:10px;height:24px;line-height:24px;font-size:12px;color:#666;font-weight:bold;text-shadow:0 1px 0 rgba(255,255,255,0.9);padding:0 10px;border:1px solid #ddd;border-bottom-color:#bbb;border-radius:3px;background:#f5f5f5;background:-moz-linear-gradient(#f5f5f5,#e5e5e5);background:-webkit-linear-gradient(#f5f5f5,#e5e5e5);}
+        .github-box .github-box-download .download:hover{color:#527894;border-color:#cfe3ed;border-bottom-color:#9fc7db;background:#f1f7fa;background:-moz-linear-gradient(#f1f7fa,#dbeaf1);background:-webkit-linear-gradient(#f1f7fa,#dbeaf1);}
+
+        .github-box .github-box-content .ranking { height:50px; }
+        .github-box .github-box-content .ranking li { float:left; width:300px; margin-right:10px; }
+        .github-box .github-box-content .ranking li:last-child { margin-right:0; }
+        .github-box .github-box-content .ranking strong { display:block; font-size:0.86em; text-align:left; background:url(../images/king_icons.png) no-repeat; padding:7px 0 0 20px; }
+        .github-box .github-box-content .ranking a {margin-left:20px;}
+        .github-box .github-box-content .ranking span { font-size:0.86em; color:#888; }
+
+        .github-box .github-box-content h4 { color:#666; font-size:0.86em; margin-bottom:5px; }
+
+
+        .github-box .github-box-content .ranking .commit_king strong { background-position:0 0; }
+        .github-box .github-box-content .ranking .add_line_king strong { background-position:0 -50px; }
+        .github-box .github-box-content .ranking .del_line_king strong { background-position:0 -100px; }
+
+        #p_body #p_timeline #p_groupCover .github-disabled h1 { font-size:3.42em; }
+        #p_body #p_timeline #p_groupCover .github-disabled h1 .type { font-size:0.3em; }
+        #p_body #p_timeline #p_groupCover .github-disabled .desc { font-size:1.29em; }
+
+
+        #p_body #p_timeline #p_groupCover #p_groupTitle #friendStatus { margin-bottom:15px; }
+
+        #p_body #p_timeline #p_groupCover #p_groupTitle #friendStatus a { border:1px #ddd solid; border-radius:5px; background-color:#fff; background-size:12px 12px; background-repeat:no-repeat; background-position:10px 50%; padding:3px 10px 3px 30px; display:inline-block; color:#8e8e8e; font-weight:bold; box-shadow:0px 1px 1px rgba(0,0,0,0.3); }
+        #p_body #p_timeline #p_groupCover #p_groupTitle #friendStatus a:hover { background-color:#f6f6f6; }
+
+        #p_body #p_timeline #p_groupCover #p_groupTitle #friendStatus span { border:1px solid; border-radius:5px; background-size:12px 12px; background-repeat:no-repeat; background-image:url(../images/people_friend.png); background-position:10px 50%; padding:3px 10px 3px 30px; display:inline-block; color:#fff; font-weight:bold; box-shadow:inset 0px 1px 2px rgba(0,0,0,0.3); }
+
         #p_body #p_timeline #p_peopleCover { height:300px; background:url(../images/user_cover_placeholder.jpg) 50% 50% no-repeat; border-bottom:10px #dadada solid; background-size: cover; }
         #p_body #p_timeline #p_peopleCover #p_peopleName { text-align:center; position:absolute; top:236px; width:300px; margin-left:-150px; left:50%; }
         #p_body #p_timeline #p_peopleCover #p_peoplePicture { position:relative; display:inline-block; border:3px #ccc solid; width:122px; height:122px; overflow:hidden; border-radius: 10px; box-shadow:0 -1px 2px rgba(255,255,255,0.5); background:#fff; }
@@ -298,9 +367,11 @@ body { background:#f4f4f4; }
 
         #p_body #p_timeline #p_peopleCover #p_peopleName #friendStatus span { border:1px solid; border-radius:5px; background-size:12px 12px; background-repeat:no-repeat; background-image:url(../images/people_friend.png); background-position:10px 50%; padding:5px 15px 5px 30px; display:inline-block; color:#fff; font-weight:bold; box-shadow:inset 0px 1px 2px rgba(0,0,0,0.3); }
 
-        #p_body #p_timeline #p_profileContents { padding-top:160px; }
-        #p_body #p_timeline #p_profileContents #p_peopleAction { background:#76bab2; border-radius:5px; height:35px; overflow:hidden; }
-        #p_body #p_timeline #p_profileContents #p_peopleAction li { height:35px; line-height:35px; float:left; }
+        #p_body #p_timeline #p_groupContents { padding-top:30px; }
+
+        #p_body #p_timeline #p_profileContents { padding-top:130px; }
+        #p_body #p_timeline #p_peopleAction { background:#76bab2; border-radius:5px; height:35px; overflow:hidden; }
+        #p_body #p_timeline #p_peopleAction li { height:35px; line-height:35px; float:left; }
 
         #siteInfo { font-size:0.86em; border-top:1px #ddd solid; padding-top:10px; }
         #siteInfo sup { font-size:0.5em; color:#888; }
@@ -350,6 +421,9 @@ body { background:#f4f4f4; }
     #p_body #p_timeline .p_timelineContents .p_tBox .p_tAside .opened .p_container { background-image:url(../images/timeline_less@2x.png); }
 
     #p_body #p_timeline #p_peopleCover #p_peopleName #friendStatus span { background-image:url(../images/people_friend@2x.png); }
+
+    #p_body #p_timeline #p_groupCover { background-image:url(../images/group_titleBG.png); }
+    .github-box .github-box-content .ranking strong { background-image:url(../images/king_icons@2x.png);}
 
 }
 

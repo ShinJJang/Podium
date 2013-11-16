@@ -9,28 +9,6 @@
 
 
         $('.github-widget').each(function(){
-
-                if(i == 0) $('head').append(
-                        '<style type="text/css">'
-                        +'.github-box{font-family:helvetica,arial,sans-serif;font-size:13px;line-height:18px;background:#fafafa;border:1px solid #ddd;color:#666;border-radius:3px}'
-                        +'.github-box a{color:#4183c4;border:0;text-decoration:none}'
-                        +'.github-box .github-box-title{position:relative;border-bottom:1px solid #ddd;border-radius:3px 3px 0 0;background:#fcfcfc;background:-moz-linear-gradient(#fcfcfc,#ebebeb);background:-webkit-linear-gradient(#fcfcfc,#ebebeb);}'
-                        +'.github-box .github-box-title h3{font-family:helvetica,arial,sans-serif;font-weight:normal;font-size:16px;color:gray;margin:0;padding:10px 10px 10px 30px;background:url('+box_title_png+') 7px center no-repeat}'
-                        +'.github-box .github-box-title h3 .repo{font-weight:bold}'
-                        +'.github-box .github-box-title .github-stats{position:absolute;top:8px;right:10px;background:white;border:1px solid #ddd;border-radius:3px;font-size:11px;font-weight:bold;line-height:21px;height:21px}'
-                        +'.github-box .github-box-title .github-stats a{display:inline-block;height:21px;color:#666;padding:0 5px 0 18px;background: url('+stats_png+') no-repeat}'
-                        +'.github-box .github-box-title .github-stats .watchers{border-right:1px solid #ddd}'
-                        +'.github-box .github-box-title .github-stats .forks{background-position:-4px -21px;padding-left:15px}'
-                        +'.github-box .github-box-content{padding:10px;font-weight:300}'
-                        +'.github-box .github-box-content p{margin:0}'
-                        +'.github-box .github-box-content .link{font-weight:bold}'
-                        +'.github-box .github-box-download{position:relative;border-top:1px solid #ddd;background:white;border-radius:0 0 3px 3px;padding:10px;height:24px}'
-                        +'.github-box .github-box-download .updated{margin:0;font-size:11px;color:#666;line-height:24px;font-weight:300}'
-                        +'.github-box .github-box-download .updated strong{font-weight:bold;color:#000}'
-                        +'.github-box .github-box-download .download{position:absolute;display:block;top:10px;right:10px;height:24px;line-height:24px;font-size:12px;color:#666;font-weight:bold;text-shadow:0 1px 0 rgba(255,255,255,0.9);padding:0 10px;border:1px solid #ddd;border-bottom-color:#bbb;border-radius:3px;background:#f5f5f5;background:-moz-linear-gradient(#f5f5f5,#e5e5e5);background:-webkit-linear-gradient(#f5f5f5,#e5e5e5);}'
-                        +'.github-box .github-box-download .download:hover{color:#527894;border-color:#cfe3ed;border-bottom-color:#9fc7db;background:#f1f7fa;background:-moz-linear-gradient(#f1f7fa,#dbeaf1);background:-webkit-linear-gradient(#f1f7fa,#dbeaf1);}'
-                        +'</style>'
-                );
                 i++;
 
                 var $container = $(this), $widget,
@@ -43,7 +21,7 @@
                 $widget = $(
                         '<div class="github-box repo">'
                         +'<div class="github-box-title">'
-                        +'<h3>'
+                        +'<h3><span class="label">REPOSITORIES</span>'
                         +'<a class="owner" href="' + vendorUrl + '">' + vendorName + '</a>'
                         +'/'
                         +'<a class="repo" href="' + repoUrl + '">' + repoName + '</a>'
@@ -55,18 +33,21 @@
                         +'</div>'
                         +'</div>'
                         +'<div class="github-box-content">'
-                        +'<p class="description"><span></span> &mdash; <a target="_blank" href="' + repoUrl + '#readme">Read More</a></p>'
+                        +'<p class="description"><span></span> &mdash; <a target="_blank" href="' + repoUrl + '#readme" class="moreLink">more</a></p>'
                         +'<p class="link"></p>'
                         +'</div>'
                         +'<div class="github-box-download">'
-                        +'<p class="commit_message"><span></span> &mdash; <a id="commit_link" target="_blank" href="">go commit!</a></p>'
+                        +'<p class="commit_message"><span></span> &mdash; <a id="commit_link" target="_blank" href="#" class="moreLink">more</a></p>'
                         +'<p class="updated"></p>'
                         +'<a class="download" href="' + repoUrl + '/zipball/master">Download as zip</a>'
                         +'</div>'
                         +'<div class="github-box-content">'
-                        +'<p class="commit_king"><span></span> &mdash; <a id="commit_king_link" target="_blank" href="">go commit king!</a></p>'
-                        +'<p class="add_line_king"><span></span> &mdash; <a id="add_line_king_link" target="_blank" href="">add commit king!</a></p>' //TODO 최태건 링크를 사진으로!
-                        +'<p class="del_line_king"><span></span> &mdash; <a id="del_line_king_link" target="_blank" href="">del commit king!</a></p>'
+                        +'<h4>RANKING</h4>'
+                        +'<ul class="ranking">'
+                        +'<li class="commit_king"></li>'
+                        +'<li class="add_line_king"></li>' //TODO 최태건 링크를 사진으로!
+                        +'<li class="del_line_king"></li>'
+                        +'</ul>'
                         +'</div>'
                         +'</div>'
 
@@ -135,14 +116,9 @@
                                     temp_del_line_total = 0;
                                     commit_total = repo[index].total;
                                 }
-                                $widget.find('.commit_king span').text(most_commit_user + " has total commit(" + most_commit_user_total + ")");
-                                $widget.find('#commit_king_link').attr('href', most_commit_user_url);
-
-                                $widget.find('.add_line_king span').text(most_add_line_user + " add total line(" + most_add_line_user_total + ")");
-                                $widget.find('#add_line_king_link').attr('href', most_add_line_user_url);
-
-                                $widget.find('.del_line_king span').text(most_del_line_user + " del total line(" + most_del_line_user_total + ")");
-                                $widget.find('#del_line_king_link').attr('href', most_del_line_user_url);
+                                $widget.find('.commit_king').html('<strong>COMMIT KING</strong><a href="'+ most_commit_user_url + '" target="_blank">' + most_commit_user + '</a><span>(' + most_commit_user_total + ' commits)</span>');
+                                $widget.find('.add_line_king').html('<strong>ADD KING</strong><a href="' + most_add_line_user_url + '"target="_blank">' + most_add_line_user + '</a><span>(' + most_add_line_user_total + ' lines)</span>');
+                                $widget.find('.del_line_king').html('<strong>DELETE KING</strong><a href="'+ most_del_line_user_url + '" target="_blank">' + most_del_line_user + '</a><span>(' + most_del_line_user_total + ' lines)</span>');
 
                         }
                 });
@@ -160,7 +136,7 @@
                                         updated_at = date.toLocaleString()
 
                                 }
-                                $widget.find('.commit_message span').text(repo[0].commit.committer.name + " comit:" + repo[0].commit.message);
+                                $widget.find('.commit_message span').html('<strong>'+ repo[0].commit.committer.name + "</strong>" + repo[0].commit.message);
                                 $widget.find('#commit_link').attr('href', repo[0].html_url);
                                 $widget.find('.updated').html('Latest commit to the <strong>master</strong> branch on ' + updated_at);
 
