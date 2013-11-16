@@ -8,29 +8,21 @@
 
     <section id="p_timeline">
         <header>
-            <div id="p_peopleCover">
-                <div id="p_peopleName">
-                    <div class="pui">
-                        <div class="box">
-                        <h1>{{ group.group_name }}</h1>
-                            <div class="text">
-                                <h4>{{ group.open_scope_str }}{% if group.isProject %} - 프로젝트{% endif %}</h4>
-                                {{ group.description }}
-                            </div>
-                        </div>
-                    </div>
-                    <p id="friendStatus">
-                    </p>
+            <div id="p_groupCover">
+                <div id="p_groupTitle" class="github-enabled">
+                    <h1>{{ group.group_name }} <span class="type">{{ group.open_scope_str }}{% if group.isProject %} - 프로젝트{% endif %}</span></h1>
+                    <p class="desc">{{ group.description }}</p>
+                    <p id="friendStatus"></p>
+                    <div class="github-widget" data-repo="ShinJJang/podium"></div>
                 </div>
             </div>
         </header>
-        <div id="p_profileContents" class="p_container">
+        <div id="groupContents" class="p_container">
             <div class="p_timelineContents">
                 <section id="timeline_widget">
                     {% if permission != -1 %}
                     <div class="p_tItem p_container">
                     <a href="#" class="p_tAdd p_tIcon"></a>
-                    <div class="github-widget" data-repo="ShinJJang/podium"></div>
                     <div class="p_tBox pui">
                         <ul class="writeSelect cboth">
                             <li id="toPlain" class="selected"><a href="#">Plain Text</a></li>
