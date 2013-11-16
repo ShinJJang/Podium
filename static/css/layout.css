@@ -282,7 +282,7 @@ body { background:#f4f4f4; }
 
             #p_body #p_timeline .p_timelineNav ul li:hover { background-color:#f4f4f4; }
 
-        #p_body #p_timeline #p_groupCover { background:url(../images/group_titleBG.png) repeat; background-size:19px 19px; }
+        #p_body #p_timeline #p_groupCover { background:url(../images/group_titleBG.png) repeat; background-size:19px 19px; border-bottom:1px #ccc solid; }
         #p_body #p_timeline #p_groupCover #p_groupTitle { width:940px; margin:0 auto; }
         #p_body #p_timeline #p_groupCover #p_groupTitle h1 { color:#9057df; font-weight:200; letter-spacing: -1px; text-shadow: 0px 1px 5px #cab2ed; }
         #p_body #p_timeline #p_groupCover #p_groupTitle h1 .type { color:#747e82; font-weight:bold; text-shadow:none; letter-spacing: 0; margin-left:10px; }
@@ -338,6 +338,7 @@ body { background:#f4f4f4; }
         .github-box .github-box-content .ranking .commit_king strong { background-position:0 0; }
         .github-box .github-box-content .ranking .add_line_king strong { background-position:0 -50px; }
         .github-box .github-box-content .ranking .del_line_king strong { background-position:0 -100px; }
+        .github-box .github-box-content .ranking .avatar { width:14px; height:14px; margin-right:5px; vertical-align:middle; border:1px #ccc solid; }
 
         #p_body #p_timeline #p_groupCover .github-disabled h1 { font-size:3.42em; }
         #p_body #p_timeline #p_groupCover .github-disabled h1 .type { font-size:0.3em; }

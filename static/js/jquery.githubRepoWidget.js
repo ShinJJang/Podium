@@ -116,9 +116,9 @@
                                     temp_del_line_total = 0;
                                     commit_total = repo[index].total;
                                 }
-                                $widget.find('.commit_king').html('<strong>COMMIT KING</strong><a href="'+ most_commit_user_url + '" target="_blank">' + most_commit_user + '</a><span>(' + most_commit_user_total + ' commits)</span>');
-                                $widget.find('.add_line_king').html('<strong>ADD KING</strong><a href="' + most_add_line_user_url + '"target="_blank">' + most_add_line_user + '</a><span>(' + most_add_line_user_total + ' lines)</span>');
-                                $widget.find('.del_line_king').html('<strong>DELETE KING</strong><a href="'+ most_del_line_user_url + '" target="_blank">' + most_del_line_user + '</a><span>(' + most_del_line_user_total + ' lines)</span>');
+                                $widget.find('.commit_king').html('<strong>COMMIT KING</strong><a href="'+ most_commit_user_url + '" target="_blank"><img src="' + most_commit_user_avatar + '" class="avatar" alt="commit king url" />' + most_commit_user + '</a><span>(' + most_commit_user_total + ' commits)</span>');
+                                $widget.find('.add_line_king').html('<strong>ADD KING</strong><a href="' + most_add_line_user_url + '"target="_blank"><img src="' + most_add_line_user_avatar + '" class="avatar" alt="commit king url" />' + most_add_line_user + '</a><span>(' + most_add_line_user_total + ' lines)</span>');
+                                $widget.find('.del_line_king').html('<strong>DELETE KING</strong><a href="'+ most_del_line_user_url + '" target="_blank"><img src="' + most_del_line_user_avatar + '" class="avatar" alt="commit king url" />' + most_del_line_user + '</a><span>(' + most_del_line_user_total + ' lines)</span>');
 
                         }
                 });
