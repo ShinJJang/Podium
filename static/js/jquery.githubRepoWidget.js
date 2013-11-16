@@ -42,7 +42,6 @@
                         +'<a class="download" href="' + repoUrl + '/zipball/master">Download as zip</a>'
                         +'</div>'
                         +'<div class="github-box-content">'
-                        +'<h4>RANKING</h4>'
                         +'<ul class="ranking">'
                         +'<li class="commit_king"></li>'
                         +'<li class="add_line_king"></li>' //TODO 최태건 링크를 사진으로!
