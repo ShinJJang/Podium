@@ -39,9 +39,6 @@
                 this.handleFileSelect($(this.file_dom_selector).get(0), options);
             }
             else {
-                console.log("opt file count = " + options.opt_key_file_count);
-                console.log("opt file name = " + options.opt_key_file_name);
-                console.log("opti method = " + options.opt_method);
                 this.uploadFile(null, options);
             }
         }

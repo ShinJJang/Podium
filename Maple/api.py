@@ -924,7 +924,6 @@ class UserFilesResource(ModelResource):
         }
 
     def obj_create(self, bundle, **kwargs):
-        print "test "
         post_key = bundle.data['post_key']
         post = Posts.objects.get(pk=post_key)
         user_key = bundle.request.user
@@ -1052,17 +1051,12 @@ class UserChattingMessageResource(ModelResource):
         }
 
     def obj_create(self, bundle, **kwargs):
-        print bundle.data
         message = bundle.data['comment']
-        print message
         user_id = bundle.data['user_id']
         room_id = bundle.data['room_id']
         chat_room_key = ChatRoom.objects.get(id=room_id)
-        print chat_room_key
         user_key = User.objects.get(id=user_id)
-        print user_key
         bundle.obj = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key, chatting_message=message)
-        print bundle.obj
         bundle.obj.save()
         return bundle
 
@@ -1088,6 +1082,29 @@ class GroupPostResource(ModelResource):
         bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.post_key.user_key.userpictures_set.order_by('-created')[:1]]
         return bundle
 
+class ApprovalResource(ModelResource):
+    user_key = fields.ForeignKey(UserResource, 'user_key', full=False)
+    friend_post_key = fields.ForeignKey(FriendPostResource, 'friendpost_key', full=False)
+
+    class Meta:
+        queryset = GroupPosts.objects.all().order_by('-pk')
+        resource_name = 'approvals'
+        authorization = Authorization()
+        filtering = {
+            "user_key": ALL,
+            "friend_post_key": ALL
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        print 1
+        post_friend_key = bundle.data['post_friend_key']
+        print post_friend_key
+        user_key = bundle.request.user
+        file_link = bundle.data['file_link']
+        file_name = bundle.data['file_name']
+        print 3
+        bundle.obj = Approval.objects.create(user_key=user_key, friendpost_key_id=post_friend_key, file_link=file_link, file_name=file_name)
+        return bundle
 """
 // tastypie 상속 가능한 method
 detail_uri_kwargs()

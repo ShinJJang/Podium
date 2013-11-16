@@ -55,28 +55,31 @@
                             {% templatetag openblock %}/if{% templatetag closeblock %}
 
                             {% templatetag openblock %}if post.permission == 0{% templatetag closeblock %}
-                                <div id="approval-${ post.id }" class="p_attachment p_approval_upload_unloaded">
-                                    <div id="attach_file">
-                                        <input id="post_file" type="file" onchange="s3_upload_center();"></input>
-                                        <input id="post_file_delete_button" type="button" onclick="s3_upload_delete_center()"></input>
+                                <div id="approval-${ post.id }">
+                                    <div id="attach_center_file">
+                                        <input id="post_center_file" type="file" onchange="s3_upload_center();"></input>
+                                        <button id="post_center_file_delete_button" onclick="s3_upload_delete_center()">Cancel Uploaded File</button>
+                                        <button id="post_center_file_submit_button" onclick="s3_center_file_submit()">Submit</button>
                                     <div>
-                                    <div id="status">Please select a file</div>
+                                    <div id="center_status">Please select a file</div>
 
-                                    <div id="attach_file_info">
-                                        <input type="hidden" id="post_file_url_info" value=""></input>
+                                    <div id="attach_center_file_info">
+                                        <input type="hidden" id="post_center_file_url_info" value=""></input>
                                     </div>
-                                    <div id="attach_file_type">
-                                        <input type="hidden" id="post_file_type" value=""></input>
+                                    <div id="attach_center_file_type">
+                                        <input type="hidden" id="post_center_file_type" value=""></input>
                                     </div>
-                                    <div id="attach_is_file">
-                                        <input type="hidden" id="post_is_file" value="0"><input>
+                                    <div id="attach_center_is_file">
+                                        <input type="hidden" id="post_center_is_file" value="0"></input>
                                     </div>
-
-                                    <div id="attach_file_count">
-                                        <input type="hidden" id="post_file_count" value=""><input>
+                                    <div id="attach_center_friend_id">
+                                        <input type="hidden" id="post_center_friend_key" value="${ id }"></input>
                                     </div>
-                                    <div id="attach_file_name">
-                                        <input type="hidden" id="post_file_name" value="파일 이름"><input>
+                                    <div id="attach_center_file_count">
+                                        <input type="hidden" id="post_center_file_count" value="soma_${ post.id }"></input>
+                                    </div>
+                                    <div id="attach_center_file_name">
+                                        <input type="hidden" id="post_center_file_name" value="파일 이름"></input>
                                     </div>
                                 </div>
                             {% templatetag openblock %}/if{% templatetag closeblock %}
