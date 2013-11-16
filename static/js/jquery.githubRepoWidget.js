@@ -93,7 +93,6 @@
                                         temp_add_line_total = temp_add_line_total + repo[index].weeks[line_index].a;
                                         temp_del_line_total = temp_del_line_total + repo[index].weeks[line_index].d;
                                     }
-                                    console.log(temp_del_line_total);
                                     if(temp_add_line_total > add_line_total) {
                                         most_add_line_user_total = temp_add_line_total;
                                         most_add_line_user = repo[index].author.login;
@@ -102,7 +101,6 @@
                                         add_line_total = temp_add_line_total;
 
                                     }
-
                                     if(temp_del_line_total > del_line_total) {
                                         most_del_line_user_total = temp_del_line_total;
                                         most_del_line_user = repo[index].author.login;
@@ -110,7 +108,6 @@
                                         most_del_line_user_avatar = repo[index].author.avatar_url;
                                         del_line_total = temp_del_line_total;
                                     }
-                                    console.log(most_del_line_user);
                                     temp_add_line_total = 0;
                                     temp_del_line_total = 0;
                                     commit_total = repo[index].total;
@@ -127,19 +124,14 @@
                         dataType: 'jsonp',
                         success: function(results) {
                                 var repo = results.data, date, pushed_at = 'unknown';
-                                console.log(repo);
-                                console.log(results);
                                 if (repo[0].commit.committer.date) {
                                         date = new Date(repo[0].commit.committer.date);
-                                        console.log(date.toLocaleString());
                                         updated_at = date.toLocaleString()
 
                                 }
                                 $widget.find('.commit_message span').html('<strong>'+ repo[0].commit.committer.name + "</strong>" + repo[0].commit.message);
                                 $widget.find('#commit_link').attr('href', repo[0].html_url);
                                 $widget.find('.updated').html('Latest commit to the <strong>master</strong> branch on ' + updated_at);
-
-                                console.log()
                         }
                 });
 
