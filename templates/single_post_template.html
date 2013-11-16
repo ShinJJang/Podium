@@ -33,7 +33,7 @@
                         {% templatetag openblock %}/if{% templatetag closeblock %}
 
                         {% templatetag openblock %}if open_scope == 3{% templatetag closeblock %}
-                            > <a href="/group/${ group_id }">${ group_name }</a>
+                            > <a href="/group/${ group.id }">${ group.group_name }</a>
                         {% templatetag openblock %}/if{% templatetag closeblock %}
                     </p>
                     <div class="p_tText">
