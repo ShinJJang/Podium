@@ -910,7 +910,7 @@ function s3_upload_put() {
                             $('#post_file_type').val(file.type);
                             $('#post_file_name').val(file.name);
                             $("#post_is_file").val("1");
-                            $('#status').html('<a href=' + url + ' > Upload completed ' + parse_url[5] + '</a');
+                            $('#status').html('<a href=' + url + ' > Upload completed ' + file.name + '</a');
                         },
                         onError: function (status) {
                             $('#status').html('Upload error: ' + status);

@@ -56,7 +56,28 @@
 
                             {% templatetag openblock %}if post.permission == 0{% templatetag closeblock %}
                                 <div id="approval-${ post.id }" class="p_attachment p_approval_upload_unloaded">
-                                    연수생 파일 업로드
+                                    <div id="attach_file">
+                                        <input id="post_file" type="file" onchange="s3_upload_center();"></input>
+                                        <input id="post_file_delete_button" type="button" onclick="s3_upload_delete_center()"></input>
+                                    <div>
+                                    <div id="status">Please select a file</div>
+
+                                    <div id="attach_file_info">
+                                        <input type="hidden" id="post_file_url_info" value=""></input>
+                                    </div>
+                                    <div id="attach_file_type">
+                                        <input type="hidden" id="post_file_type" value=""></input>
+                                    </div>
+                                    <div id="attach_is_file">
+                                        <input type="hidden" id="post_is_file" value="0"><input>
+                                    </div>
+
+                                    <div id="attach_file_count">
+                                        <input type="hidden" id="post_file_count" value=""><input>
+                                    </div>
+                                    <div id="attach_file_name">
+                                        <input type="hidden" id="post_file_name" value="파일 이름"><input>
+                                    </div>
                                 </div>
                             {% templatetag openblock %}/if{% templatetag closeblock %}
                         {% templatetag openblock %}/if{% templatetag closeblock %}
@@ -134,3 +155,7 @@
 <script id="file_template" type="text/x-jquery-tmpl">
     <div class="fileItem"><strong>${ label }</strong><span class="tooltip-parent tooltip-hover">${ users.length }</span></div>
 </script>
+
+{% block add_scripts %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/center_approval_submit.js"></script>
+{% endblock %}
