@@ -175,7 +175,21 @@ body { background:#f4f4f4; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li#toPlain a { background-position:10px 10px; border-top-left-radius: 5px; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .writeSelect li#toRich a { background-position:10px -20px; }
 
-                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm { }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #attachCancel { float:right; color:#888; margin-top:2px; font-size:0.86em; font-weight:bold; background:#f0f0f0 url(../images/color-mint/delete.png) 3px 50% no-repeat; padding:4px 6px 2px 24px; border-radius:3px; border:1px #ddd solid; background-size:16px 16px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #post_file_delete_button,
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .removeElement { cursor:pointer; display:inline-block; background:url(../images/color-mint/delete.png) 0 0 no-repeat; line-height:16px; margin-left:5px; padding-left:18px; color:#888; font-size:0.86em; font-weight:bold; background-size:16px 16px; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #add_poll { cursor:pointer; display:inline-block; background:url(../images/color-mint/add_friend.png) 0 50% no-repeat; line-height:16px; padding-left:18px; color:#888; font-size:0.86em; font-weight:bold; background-size:12px 12px; }
+
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #attachCancel:hover { color:#999; background-color:#f4f4f4; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #post_file_delete_button:hover,
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .removeElement:hover,
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #add_poll:hover { color:#999; }
+
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #postAttach input[type=text] { width:400px; border:1px #ddd solid; margin:0; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #postAttach input[type=file] { width:300px; border:1px #ddd solid; margin:0; padding:3px 2px; }
+
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #pollElement { margin-top:5px; border-top:1px #ccc solid; }
+                #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #pollElement li { margin-top:5px;}
 
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .postTools { border-top:1px #ddd solid; background:#f0f0f0; }
                 #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .postOptions { float:left; padding-top:9px; padding-left:10px; }
@@ -377,10 +391,11 @@ body { background:#f4f4f4; }
         #siteInfo { font-size:0.86em; border-top:1px #ddd solid; padding-top:10px; }
         #siteInfo sup { font-size:0.5em; color:#888; }
 
-.modalWrapper { background:rgba(0,0,0,0.5); position:absolute; width:100%; height:100%; top:0; z-index:1000; }
-.modalWrapper .modalMargin { height:50%; }
-.modalWrapper .modalBox { background:#fff; margin:0 auto; }
-
+        #codeModal textarea { padding:4px; border-radius:3px; width:390px; border:1px #eaeaea solid; font-family:Menlo,Monaco,'Bitstream Vera Sans Mono','Lucida Console',Consolas,monospace; font-size:0.86em; height:140px; }
+        #codeModal label { width:80px; float:left; color:#38978c; font-weight:bold; }
+        #codeModal select { width:200px; font-size:14px !important; }
+        #codeModal .elementLine { margin-bottom:10px; }
+        #codeModal .insertLine { text-align:center; }
 
 @media
 (-webkit-min-device-pixel-ratio: 2),
@@ -404,6 +419,12 @@ body { background:#f4f4f4; }
     #p_chatBoxContainer .chatBox .closeChat { background-image:url(../images/chat_close@2x.png); }
 
     #p_body #p_timeline .p_timelineNav h3.live { background-image:url(../images/timeline_live@2x.png); }
+
+    #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #attachCancel,
+    #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #post_file_delete_button,
+    #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm .removeElement { background-image: url(../images/color-mint/delete@2x.png); }
+
+    #p_body #p_timeline .p_timelineContents .p_tBox .p_postForm #add_poll { background-image:url(../images/color-mint/add_friend.png) 0 0 no-repeat; }
 
     /* Timeline Icons */
 

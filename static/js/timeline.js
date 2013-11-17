@@ -773,12 +773,49 @@ $(function () {
 
     // Simply add code tag on the textarea.
     $(".attachSelect .wCode").click(function () {
-        var modalWindow = '<div id="codeModal" class="modalWrapper"><div class="modalMargin"></div><div id="codeModalBox" class="modalBox"><a href="#" id="closeModal"></a><h2>Attach Code</h2></div></div>';
+        var modalWindow = '<div id="codeModal" class="modalWrapper pui"><div class="modalMargin"></div><div id="codeModalBox" class="modalBox"><a href="#" class="closeModal">Close</a><h2>Attach Code</h2>'
+            + '<p class="desc">타임라인에 삽입할 코드를 위한 문법을 자동으로 생성해줍니다. 문법을 알고 계시는 경우, 굳이 이 창으로 입력하지 않고 직접 입력하셔도 됩니다.</p>'
+            + '<div class="elementLine"><label for="language_select">언어 선택</label><select name="language_select" id="language_select">'
+            + '<option value="c">C, C++</option>'
+            + '<option value="coffeescript">CoffeeScript</option>'
+            + '<option value="csharp">C#</option>'
+            + '<option value="css">CSS</option>'
+            + '<option value="d">D</option>'
+            + '<option value="go">Go</option>'
+            + '<option value="haskell">Haskell</option>'
+            + '<option value="html">HTML</option>'
+            + '<option value="java">Java</option>'
+            + '<option value="javascript">JavaScript</option>'
+            + '<option value="lua">Lua</option>'
+            + '<option value="php">PHP</option>'
+            + '<option value="python>Python</option>'
+            + '<option value="r">R</option>'
+            + '<option value="ruby">Ruby</option>'
+            + '<option value="scheme">Scheme</option>'
+            + '<option value="shell">Shell</option>'
+            + '<option value="smalltalk">Smalltalk</option>'
+            + '<option value="generic">기타</option>'
+            + '</select></div>'
+            + '<div class="elementLine"><label for="language_text">구문 입력</label><textarea id="language_text" name="language_text"></textarea></div>'
+            + '<div class="insertLine"><button id="language_insert" class="btn">본문에 삽입</button></div>'
+            + '</div></div>';
         $("body").append(modalWindow);
         $("#codeModal").height($(document).height());
         $("#codeModal .modalMargin").height($(window).height()/2);
-        $("#codeModal .modalBox").width("480px").height("360px").css("marginTop","-180px");
-        $("#post").val($("#post").val() + "[code language=\"language\"]\n\n[/code]");
+        $("#codeModal .modalBox").width("480px").height("330px").css("marginTop","-180px");
+
+        $("#codeModal #language_text").keydown(function(e){
+            var keyCode = e.keyCode || e.which;
+            if(keyCode == 9) {
+                this.value += "    ";
+                e.preventDefault();
+            }
+        });
+
+        $("#codeModal #language_insert").click(function(){
+            $("#post").val($("#post").val() + '[code language="' + $('#language_select').val() + '"\n' + $('#language_text').val() + '\n[/code]');
+            $("#codeModal").fadeOut();
+        });
     });
 
     // Attach video's address on YouTube
@@ -818,7 +855,7 @@ $(function () {
             $("#attach_file_count").html('<input type="hidden" id="post_file_count" value="" >');
             $("#attach_file_name").html('<input type="hidden" id="post_file_name" value="파일 이름" >');
 
-            var attachFileCancelButton = '<button id="post_file_delete_button" onclick="s3_upload_delete()">Cancel Uploaded File</button>';
+            var attachFileCancelButton = '<a href="#" id="post_file_delete_button" onclick="s3_upload_delete()">Cancel Uploaded File</a>';
 
             document.getElementById("attach_file").appendChild(attachFile);
             $("#attach_file").append(attachFileCancelButton);
