@@ -98,7 +98,6 @@ function s3_center_file_submit() {
         var file_upload_url = "/api/v1/approvals/";
         var file_link = $('#post_center_file_url_info').val();
         var post_friend_key = $('#post_center_friend_key').val();
-        console.log(post_friend_key);
         var file_name = $('#post_center_file_name').val();
         var user_file_data = JSON.stringify({
             "post_friend_key": post_friend_key,
@@ -117,7 +116,9 @@ function s3_center_file_submit() {
             dataType: "json",
             statusCode: {
                 201: function (data) {
-                    // TODO file_upload result
+                    var approval_dom = $(".p_approval_"+data.post_friend_key);
+                    approval_dom.html('');
+                    approval_dom.html('<div class="p_attachment><a href="'+data.file_link+'">'+data.file_name+'</a><input type="button" value="수정"></input></div>');
                     showToast("제출되었습니다");
                 },
                 400: function (data) {

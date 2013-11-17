@@ -47,7 +47,12 @@
                     {% templatetag openblock %}if post.attachment_type == 3{% templatetag closeblock %}
                         <div id="file-${ post.id }" class="p_attachment p_file_unloaded">
                         </div>
-                        <div class="p_approval">
+
+                        {% templatetag openblock %}if typeof (friend_post_key) == "undefined"{% templatetag closeblock %}
+                            <div class="p_approval_${ id }">
+                        {% templatetag openblock %}else{% templatetag closeblock %}
+                            <div class="p_approval_${ friend_post_key }">
+                        {% templatetag openblock %}/if{% templatetag closeblock %}
                         {% templatetag openblock %}if post.open_scope == 3 && post.group.group_name == "사무국" && post.writer_permission{% templatetag closeblock %}
                             {% templatetag openblock %}if post.permission > 0{% templatetag closeblock %}
                                 <div id="approval-${ post.id }" class="p_attachment p_approval_manager_unloaded">
