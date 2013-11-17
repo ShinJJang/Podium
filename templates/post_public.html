@@ -96,11 +96,37 @@
                                         </div>
                                     </div>
                                 {% templatetag openblock %}else{% templatetag closeblock %}
-                                    <div class="p_attachment >
+                                    <div class="p_attachment">
                                         <a href="${ post.approval.file_link }">${ post.approval.file_name }</a>
-                                        <input type="button" value="수정"></input>
                                     </div>
-                                {% templatetag openblock %}/if{% templatetag closeblock %}
+                                    <div>
+                                    <input id="modify_post_center_file" type="file" onchange="s3_uploaded_file_center();"></input>
+                                    <input id="post_approval_id" type="hidden" value="${ post.approval.id }"></input>
+                                    </div>
+                                    <div id="modify_center_status"></div>
+                                    <div id="modify_attach_center_file_info">
+                                        <input type="hidden" id="modify_post_center_file_url_info" value=""></input>
+                                    </div>
+                                    <div id="modify_attach_center_file_type">
+                                        <input type="hidden" id="modify_post_center_file_type" value=""></input>
+                                    </div>
+                                    <div id="modify_attach_center_is_file">
+                                        <input type="hidden" id="modify_post_center_is_file" value="0"></input>
+                                    </div>
+                                    <div id="modify_attach_center_friend_id">
+                                        {% templatetag openblock %}if typeof (friend_post_key) == "undefined"{% templatetag closeblock %}
+                                            <input type="hidden" id="modify_post_center_friend_key" value="${ id }"></input>
+                                        {% templatetag openblock %}else{% templatetag closeblock %}
+                                            <input type="hidden" id="modify_post_center_friend_key" value="${ friend_post_key }"></input>
+                                        {% templatetag openblock %}/if{% templatetag closeblock %}
+                                    </div>
+                                    <div id="modify_attach_center_file_count">
+                                        <input type="hidden" id="modify_post_center_file_count" value="soma_${ post.id }"></input>
+                                    </div>
+                                    <div id="modify_attach_center_file_name">
+                                        <input type="hidden" id="modify_post_center_file_name" value="파일 이름"></input>
+                                    </div>
+                            {% templatetag openblock %}/if{% templatetag closeblock %}
                             {% templatetag openblock %}/if{% templatetag closeblock %}
 
                         {% templatetag openblock %}/if{% templatetag closeblock %}
@@ -180,6 +206,3 @@
     <div class="fileItem"><strong>${ label }</strong><span class="tooltip-parent tooltip-hover">${ users.length }</span></div>
 </script>
 
-{% block add_scripts %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/center_approval_submit.js"></script>
-{% endblock %}
