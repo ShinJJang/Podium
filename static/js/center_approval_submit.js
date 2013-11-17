@@ -221,29 +221,34 @@ function s3_uploaded_file_center() {
 }
 
 
-
 //$(document).ready(function() {
 //    crud_approval("GET");
 //});
 //
 //
-//var crud_approval = function(method, friendpost_id, file_link, file_name) {
-//    var file_upload_url = "/api/v1/approvals/";
-//    if(method != "POST")
-//        file_upload_url += friendpost_id+"/";
-//    $.ajax({
-//        url: file_upload_url,
-//        type: method,
-//        contentType: "application/json",
-//        dataType: "json",
-//        statusCode: {
-//            200: function (data) {
-//                // TODO file_upload result
-//                console.log(data);
-//            },
-//            500: function (data) {
-//                // TODO file_upload fail result
-//            }
-//        }
-//    });
-//};
+var crud_approval = function(method, approver_id, file_link, file_name, isChecked) {
+    var file_upload_url = "/api/v1/approvals/";
+    if(method != "POST")
+        file_upload_url += approver_id+"/";
+    var data = JSON.stringify({
+        "isChecked": isChecked
+    });
+    $.ajax({
+        url: file_upload_url,
+        type: method,
+        contentType: "application/json",
+        dataType: "json",
+        statusCode: {
+            200: function (data) {
+                // TODO file_upload result
+                console.log(data);
+            },
+            202: function (data) {
+                showToast(data);
+            },
+            500: function (data) {
+                // TODO file_upload fail result
+            }
+        }
+    });
+};

@@ -510,7 +510,6 @@ class UserPictureResource(ModelResource):
         authorization = Authorization()
 
     def obj_create(self, bundle, **kwargs):
-        print "test "
         user_key = bundle.request.user
         file_link = bundle.data['file_link']
         file_name = bundle.data['file_name']
@@ -591,7 +590,8 @@ class PostResource(ModelResource):
                 approvals = Approval.objects.filter(friendpost_key__friend_post_key=bundle.obj.id)
                 if approvals.exists():
                     bundle.data['approvals'] = [{"id": obj.id, "file_link": obj.file_link, "file_name": obj.file_name,
-                                                 "username": obj.user_key.username, "created": obj.created, "updated": obj.updated} for obj in approvals]
+                                                 "username": obj.user_key.username, "created": obj.created,
+                                                 "updated": obj.updated, "isChecked": obj.isChecked} for obj in approvals]
 
         return bundle
 
@@ -1142,7 +1142,6 @@ class ApprovalResource(ModelResource):
         return bundle
 
     def obj_update(self, bundle, skip_errors=False, **kwargs):
-        print 1
         post_friend_key = bundle.data['post_friend_key']
         user_key = bundle.request.user
         file_link = bundle.data['file_link']

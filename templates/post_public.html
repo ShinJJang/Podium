@@ -60,11 +60,25 @@
                                     {% templatetag openblock %}if typeof (post.approvals) != "undefined"{% templatetag closeblock %}
                                         <ul>
                                         {% templatetag openblock %}each(i, obj) post.approvals{% templatetag closeblock %}
-                                           <li>${ obj.username } : <a href="${ obj.file_link }">${ obj.file_name }</a>
+                                           <li class="ul_approval" tag="${ obj.id }">${ obj.username } : <a href="${ obj.file_link }">${ obj.file_name }</a>
                                                 <span>제출일시: ${ obj.created }</span>
                                            {% templatetag openblock %}if obj.updated != null{% templatetag closeblock %}
                                                 <span>수정일시: ${ obj.updated }</span>
                                            {% templatetag openblock %}/if{% templatetag closeblock %}
+                                           <input id="checked_true" type="button"
+                                               {% templatetag openblock %}if obj.isChecked{% templatetag closeblock %}
+                                               value="승인 취소"
+                                               {% templatetag openblock %}else{% templatetag closeblock %}
+                                               value="승인"
+                                               {% templatetag openblock %}/if{% templatetag closeblock %}
+                                               ></input>
+                                           <input id="checked_false" type="button"
+                                               {% templatetag openblock %}if obj.isChecked == false{% templatetag closeblock %}
+                                               value="반려 취소"
+                                               {% templatetag openblock %}else{% templatetag closeblock %}
+                                                value="반려"
+                                               {% templatetag openblock %}/if{% templatetag closeblock %}
+                                               ></input>
                                            </li>
                                         {% templatetag openblock %}/each{% templatetag closeblock %}
                                         </ul>
