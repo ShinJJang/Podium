@@ -1135,9 +1135,21 @@ class ApprovalResource(ModelResource):
         if Approval.objects.filter(user_key=user_key, friendpost_key_id=post_friend_key).exists():
             return BadRequest("이미 제출되었습니다")
 
-        bundle.obj = Approval.objects.create(user_key=user_key, friendpost_key_id=post_friend_key, file_link=file_link, file_name=file_name, updated=None)
+        bundle.obj = Approval.objects.create(user_key=user_key, friendpost_key_id=post_friend_key, file_link=file_link, file_name=file_name)
+
         return bundle
 
+    def obj_update(self, bundle, skip_errors=False, **kwargs):
+        print 1
+        post_friend_key = bundle.data['post_friend_key']
+        user_key = bundle.request.user
+        file_link = bundle.data['file_link']
+        file_name = bundle.data['file_name']
+        bundle.obj = Approval.objects.get(user_key=user_key, friendpost_key_id=post_friend_key)
+        bundle.obj.file_link = file_link
+        bundle.obj.file_name = file_name
+        bundle.obj.save()
+        return bundle
 
 """
 // tastypie 상속 가능한 method
