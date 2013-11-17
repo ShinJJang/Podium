@@ -59,14 +59,14 @@
                                     사무국 목록
                                     {% templatetag openblock %}if typeof (post.approvals) != "undefined"{% templatetag closeblock %}
                                         <ul>
-                                        {% templatetag openvariable %}each(i, obj) post.approvals{% templatetag closevariable %}
+                                        {% templatetag openblock %}each(i, obj) post.approvals{% templatetag closeblock %}
                                            <li>${ obj.username } : <a href="${ obj.file_link }">${ obj.file_name }</a>
                                                 <span>제출일시: ${ obj.created }</span>
                                            {% templatetag openblock %}if obj.updated != null{% templatetag closeblock %}
                                                 <span>수정일시: ${ obj.updated }</span>
                                            {% templatetag openblock %}/if{% templatetag closeblock %}
                                            </li>
-                                        {% templatetag openvariable %}/each{% templatetag closevariable %}
+                                        {% templatetag openblock %}/each{% templatetag closeblock %}
                                         </ul>
                                     {% templatetag openblock %}/if{% templatetag closeblock %}
                                 </div>
