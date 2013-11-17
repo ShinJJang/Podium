@@ -564,6 +564,8 @@ class PostResource(ModelResource):
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
         bundle.data['emotion_e1_count'] = bundle.obj.postemotions_set.filter(emotion="E1").count()
         bundle.data['emotion_e2_count'] = bundle.obj.postemotions_set.filter(emotion="E2").count()
+        user_emotion = bundle.obj.postemotions_set.filter(user_key=bundle.request.user)
+        bundle.data['emotion_selected'] = user_emotion[0].emotion if user_emotion else None
         if bundle.obj.group and bundle.obj.group.group_name == "사무국" and bundle.obj.attachment_type == 3:
              # 사무국 지원 - 글쓴이가 사무국인지
             writer_membership = Memberships.objects.filter(group_key=bundle.obj.group, user_key=bundle.obj.user_key)

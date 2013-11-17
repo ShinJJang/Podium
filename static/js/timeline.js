@@ -660,8 +660,26 @@ var get_emotion = function(emotion, post_key, count) {
                 if(count) {
                     var e1_count = $.grep(data.objects, function(e){ return e.emotion == "E1" }).length;
                     var e2_count = $.grep(data.objects, function(e){ return e.emotion == "E2" }).length;
-                    $("#emotion_count_e1_"+post_key).html(e1_count);
-                    $("#emotion_count_e2_"+post_key).html(e2_count);
+                    var e1_dom = $("#emotion_count_e1_"+post_key);
+                    var e2_dom = $("#emotion_count_e2_"+post_key);
+                    e1_dom.html(e1_count);
+                    e2_dom.html(e2_count);
+                    $(".emotion_selected").removeClass("emotion_selected");
+                    for(index in data.objects) {
+                        var _emotion = data.objects[index];
+                        var userid = _emotion.user.split("/");
+                        console.log(userid[userid.length-2]);
+                        if(userid[userid.length-2]==user_id) {
+                            if(_emotion.emotion == "E1") {
+                                e1_dom.addClass("emotion_selected");
+                                break;
+                            }
+                            else if(_emotion.emotion == "E2") {
+                                e2_dom.addClass("emotion_selected");
+                                break;
+                            }
+                        }
+                    }
                 }
                 else {
                     if(data.meta.total_count > 0){
