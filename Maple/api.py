@@ -588,7 +588,8 @@ class PostResource(ModelResource):
             else:
                 approvals = Approval.objects.filter(friendpost_key__friend_post_key=bundle.obj.id)
                 if approvals.exists():
-                    bundle.data['approvals'] = [obj.__dict__ for obj in approvals]
+                    bundle.data['approvals'] = [{"id": obj.id, "file_link": obj.file_link, "file_name": obj.file_name,
+                                                 "username": obj.user_key.username, "created": obj.created, "updated": obj.updated} for obj in approvals]
 
         return bundle
 
@@ -1134,7 +1135,7 @@ class ApprovalResource(ModelResource):
         if Approval.objects.filter(user_key=user_key, friendpost_key_id=post_friend_key).exists():
             return BadRequest("이미 제출되었습니다")
 
-        bundle.obj = Approval.objects.create(user_key=user_key, friendpost_key_id=post_friend_key, file_link=file_link, file_name=file_name)
+        bundle.obj = Approval.objects.create(user_key=user_key, friendpost_key_id=post_friend_key, file_link=file_link, file_name=file_name, updated=None)
         return bundle
 
 
