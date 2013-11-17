@@ -788,14 +788,19 @@ class GroupResource(ModelResource):
         group_name = bundle.data['group_name']
         description = bundle.data['description']
         is_project = bundle.data['isProject']
+        github_repo = bundle.data['github_repo']
         open_scope = bundle.data['open_scope']
         member_request_list = bundle.data['members']
+
         if Groups.objects.filter(group_name=group_name).count() != 0:
             raise BadRequest('이미 존재하는 그룹명입니다')
-        bundle.obj = Groups(group_name=group_name, description=description, isProject=is_project, open_scope=open_scope)
+
+        bundle.obj = Groups(group_name=group_name, description=description, isProject=is_project, github_repo=github_repo, open_scope=open_scope)
         bundle.obj.save()
+
         # creator is owner
         Memberships.objects.create(group_key=bundle.obj, user_key=bundle.request.user, permission=2)
+
         # 초대 -> 바로 가입됨
         if member_request_list:
             for user_key in member_request_list:

@@ -98,6 +98,7 @@ class Groups(models.Model):
     updated = models.DateTimeField(auto_now=True)
     isProject = models.BooleanField()
     open_scope = models.IntegerField(default=0)  # 0 = open, 1 = semi-open, 2 = close
+    github_repo = models.CharField(max_length=512)
 
     def open_scope_str(self):
         result = None

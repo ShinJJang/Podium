@@ -22,6 +22,7 @@ var submit_group_form = function(event, feedback_api, method){
         "group_name": $("input[name=group_name]").val(),
         "description": $("textarea[name=description]").val(),
         "isProject": $("input[name=is_project]").is(":checked"),
+        "github_repo": $("input[name=github_repo]").val(),
         "open_scope": open_scope,
         "members": members
     });
