@@ -358,5 +358,6 @@ class Approval(models.Model):
     friendpost_key = models.ForeignKey(FriendPosts)
     file_link = models.CharField(max_length=1000, null=False)
     file_name = models.CharField(max_length=500, null=False)
-    created = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     isChecked = models.NullBooleanField()

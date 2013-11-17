@@ -94,7 +94,6 @@ function s3_upload_delete_center() {
 }
 
 function s3_center_file_submit() {
-    console.log("asda");
     if (!$('#attach_center_is_file').val()) {
         var file_upload_url = "/api/v1/approvals/";
         var file_link = $('#post_center_file_url_info').val();
@@ -106,6 +105,10 @@ function s3_center_file_submit() {
             "file_link": file_link,
             "file_name": file_name
         });
+        if (post_friend_key == -1) {
+            showToast("그룹 가입 이전의 글입니다.");
+            return false;
+        }
         $.ajax({
             url: file_upload_url,
             type: "POST",
@@ -115,7 +118,10 @@ function s3_center_file_submit() {
             statusCode: {
                 201: function (data) {
                     // TODO file_upload result
-                    console.log(data);
+                    showToast("제출되었습니다");
+                },
+                400: function (data) {
+                    showToast($.parseJSON(data.responseText).error);
                 },
                 500: function (data) {
                     // TODO file_upload fail result
@@ -124,3 +130,28 @@ function s3_center_file_submit() {
         });
     }
 }
+//$(document).ready(function() {
+//    crud_approval("GET");
+//});
+//
+//
+//var crud_approval = function(method, friendpost_id, file_link, file_name) {
+//    var file_upload_url = "/api/v1/approvals/";
+//    if(method != "POST")
+//        file_upload_url += friendpost_id+"/";
+//    $.ajax({
+//        url: file_upload_url,
+//        type: method,
+//        contentType: "application/json",
+//        dataType: "json",
+//        statusCode: {
+//            200: function (data) {
+//                // TODO file_upload result
+//                console.log(data);
+//            },
+//            500: function (data) {
+//                // TODO file_upload fail result
+//            }
+//        }
+//    });
+//};

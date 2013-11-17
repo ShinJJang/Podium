@@ -564,14 +564,32 @@ class PostResource(ModelResource):
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
         bundle.data['emotion_e1_count'] = bundle.obj.postemotions_set.filter(emotion="E1").count()
         bundle.data['emotion_e2_count'] = bundle.obj.postemotions_set.filter(emotion="E2").count()
-        if bundle.obj.group:
+        if bundle.obj.group and bundle.obj.group.group_name == "사무국" and bundle.obj.attachment_type == 3:
+             # 사무국 지원 - 글쓴이가 사무국인지
+            writer_membership = Memberships.objects.filter(group_key=bundle.obj.group, user_key=bundle.obj.user_key)
+            bundle.data['writer_permission'] = True if writer_membership.exists() and writer_membership[0].permission > 0 else False
+
+            if not bundle.data['writer_permission']:
+                return bundle
+
             # 사무국 지원 - 보는 이가 연수생인지
             membership = Memberships.objects.filter(group_key=bundle.obj.group, user_key=bundle.request.user)
             bundle.data['permission'] = membership[0].permission if membership.exists() else -1
 
-            # 사무국 지원 - 글쓴이가 사무국인지
-            writer_membership = Memberships.objects.filter(group_key=bundle.obj.group, user_key=bundle.obj.user_key)
-            bundle.data['writer_permission'] = writer_membership[0].permission if writer_membership.exists() else -1
+            if bundle.data['permission'] == -1:
+                return bundle
+
+            if bundle.data['permission'] == 0:
+                approval = FriendPosts.objects.filter(user_key=bundle.request.user, friend_post_key=bundle.obj)[0].approval_set.all()
+                if approval.exists():
+                    approval = {"id": approval[0].id, "file_link": approval[0].file_link, "file_name": approval[0].file_name}
+                    bundle.data['approval'] = approval
+
+            else:
+                approvals = Approval.objects.filter(friendpost_key__friend_post_key=bundle.obj.id)
+                if approvals.exists():
+                    bundle.data['approvals'] = [obj.__dict__ for obj in approvals]
+
         return bundle
 
 
@@ -637,7 +655,7 @@ class FriendshipNotisResource(ModelResource): #create
         return bundle
 
 
-class FriendshipsResource(ModelResource): #polling get or create
+class FriendshipsResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user_key', full=False)
     friend_user = fields.ForeignKey(UserResource, 'friend_user_key', full=True)
 
@@ -1079,16 +1097,23 @@ class GroupPostResource(ModelResource):
         allowed_methods = ['get']
 
     def dehydrate(self, bundle):
-        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.post_key.user_key.userpictures_set.order_by('-created')[:1]]
+        friendpost = FriendPosts.objects.filter(user_key=bundle.request.user, friend_post_key=bundle.obj.post_key)
+        if friendpost.exists():
+            bundle.data['friend_post_key'] = friendpost[0].id
+        else:
+            bundle.data['friend_post_key'] = -1
+
         return bundle
 
+
 class ApprovalResource(ModelResource):
-    user_key = fields.ForeignKey(UserResource, 'user_key', full=False)
+    user_key = fields.ForeignKey(UserResource, 'user_key', full=True)
     friend_post_key = fields.ForeignKey(FriendPostResource, 'friendpost_key', full=False)
 
     class Meta:
-        queryset = GroupPosts.objects.all().order_by('-pk')
+        queryset = Approval.objects.all().order_by('-pk')
         resource_name = 'approvals'
+        always_return_data = True
         authorization = Authorization()
         filtering = {
             "user_key": ALL,
@@ -1096,15 +1121,18 @@ class ApprovalResource(ModelResource):
         }
 
     def obj_create(self, bundle, **kwargs):
-        print 1
         post_friend_key = bundle.data['post_friend_key']
-        print post_friend_key
         user_key = bundle.request.user
         file_link = bundle.data['file_link']
         file_name = bundle.data['file_name']
-        print 3
+
+        if Approval.objects.filter(user_key=user_key, friendpost_key_id=post_friend_key).exists():
+            return BadRequest("이미 제출되었습니다")
+
         bundle.obj = Approval.objects.create(user_key=user_key, friendpost_key_id=post_friend_key, file_link=file_link, file_name=file_name)
         return bundle
+
+
 """
 // tastypie 상속 가능한 method
 detail_uri_kwargs()
