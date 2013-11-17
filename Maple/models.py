@@ -171,12 +171,16 @@ def create_log(sender, instance, created, **kwargs):
     where = None
     link = "/post/"
     if sender == Posts:
+        if instance.open_scope == 1 or (instance.group and instance.group.open_scope != 0):
+            return
         model_name = 'post'
         content = instance.post
         user = get_object_or_404(User, pk=instance.user_key.id)
         link += str(instance.id)+"/"
 
     elif sender == Comments:
+        if instance.post_key.open_scope == 1 or (instance.post_key.group and instance.post_key.group.open_scope != 0):
+            return
         model_name = 'comment'
         content = instance.comment
         where = instance.post_key.post
@@ -185,6 +189,8 @@ def create_log(sender, instance, created, **kwargs):
         link += str(instance.post_key.id)+"/"
 
     elif sender == PostEmotions:
+        if instance.post_key.open_scope == 1 or (instance.post_key.group and instance.post_key.group.open_scope != 0):
+            return
         model_name = 'emotion'
         where = instance.post_key.post
         id_emotion = instance.emotions_ptr_id
@@ -196,7 +202,6 @@ def create_log(sender, instance, created, **kwargs):
 
     log = {'type': model_name, 'user_name': user.username, 'user_id': user.id, 'content': content, 'where': where, 'where_owner': where_owner, 'emotion': emotion, 'link': link}
     r = requests.post('http://localhost:4000/', data=log)
-    print r.status_code
 
 post_save.connect(create_log, sender=Posts)
 
