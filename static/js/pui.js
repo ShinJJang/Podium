@@ -10,4 +10,8 @@ $(function(){
     $(".pui .tooltip-right").each(function(){
         $(this).css("right","-"+($(this).outerWidth()+5)+"px").css("margin-top","-"+($(this).outerHeight()/2)+"px");
     });
+
+    $('body').on("click",".pui .closeModal", function(){
+        $(".modalWrapper").remove();
+    })
 });

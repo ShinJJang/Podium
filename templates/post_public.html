@@ -161,7 +161,15 @@
                         <ul id="poll-${ post.id }" class="p_attachment p_poll_unloaded">
                         </ul>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
-                    <p class="p_tPermalink public"><a class="timestamp" href="/post/${ post.id }/"><abbr class="timeago" title=${ post.created }></abbr></a></p>
+                    <p class="p_tPermalink
+                    {% templatetag openblock %}if post.group != null{% templatetag closeblock %}
+                        project
+                    {% templatetag openblock %}/if{% templatetag closeblock %}
+                    {% templatetag openblock %}if post.open_scope == 1{% templatetag closeblock %}
+                        private
+                    {% templatetag openblock %}else{% templatetag closeblock %}
+                        public
+                    {% templatetag openblock %}/if{% templatetag closeblock %}"><a class="timestamp" href="/post/${ post.id }/"><abbr class="timeago" title=${ post.created }></abbr></a></p>
                 </div>
             </article>
             <aside class="p_tAside">
