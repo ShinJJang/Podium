@@ -13,7 +13,7 @@
                     <h1>{{ group.group_name }} <span class="type">{{ group.open_scope_str }}{% if group.isProject %} - 프로젝트{% endif %}</span></h1>
                     <p class="desc">{{ group.description }}</p>
                     <p id="friendStatus"></p>
-                    <div class="github-widget" data-repo="binarylogic/searchlogic"></div>
+                    <div class="github-widget" data-repo="{{ group.github_repo }}"></div>
                 </div>
             </div>
         </header>
