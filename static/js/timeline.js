@@ -713,6 +713,19 @@ function timeRefresh() {
     $("abbr.timeago").timeago();
 }
 
+$("#postAttach").on("click","#attachCancel",function(){
+    var aType = "";
+    if ($("#attach_poll").length > 0) aType="설문조사";
+    else if ($("#attach_video").length > 0) aType="동영상";
+    else if ($("#attach_file").length > 0) aType="파일";
+    if(confirm(aType + " 첨부를 취소하시겠습니까?")) {
+        $(".attachSelect").show();
+        $("#postAttach").html("").hide();
+        post_attach=false;
+    }
+    return false;
+});
+
 // attach something
 $(function () {
     $(".attachSelect .wPoll").click(function () {
@@ -721,7 +734,7 @@ $(function () {
         if (!post_attach) {
             post_attach = true;
             attach_type = "poll";
-            var pollHtml = '<div id="attach_poll">';
+            var pollHtml = '<a href="#" id="attachCancel">첨부 취소</a><div id="attach_poll">';
             pollHtml = pollHtml + '<input class="attachTitle" id="pollTitle" type="text" placeholder="설문조사 제목" />'
                     + '<ul id="pollElement"><li><input type="text" class="attachElement" placeholder="항목 1"></li><li><input type="text" class="attachElement" placeholder="항목 2"></li><li><a href="#" id="add_poll">새 항목 추가</a></li></ul>'
                     + '</div>';
@@ -757,7 +770,7 @@ $(function () {
         if (!post_attach) {
             post_attach = true;
             attach_type = "video";
-            $("#postAttach").html('<div id="attach_video"></div>');
+            $("#postAttach").html('<a href="#" id="attachCancel">첨부 취소</a><div id="attach_video"></div>');
             var attachAddress = document.createElement("input");
             attachAddress.className = "attachTitle";
             attachAddress.id = "videoAddress";
@@ -773,7 +786,7 @@ $(function () {
         if (!post_attach) {
             post_attach = true;
             attach_type = "file";
-            $("#postAttach").html('<div id="attach_file"></div><div id="attach_file_info"></div><div id="attach_file_type"></div><div id="attach_is_file"></div><div id="attach_file_count"></div><div id="attach_file_name"></div>');
+            $("#postAttach").html('<a href="#" id="attachCancel">첨부 취소</a><div id="attach_file"></div><div id="attach_file_info"></div><div id="attach_file_type"></div><div id="attach_is_file"></div><div id="attach_file_count"></div><div id="attach_file_name"></div>');
             $("#attach_file").html('<div id="status">Please select a file</div>');
 
             var attachFile = document.createElement("input");

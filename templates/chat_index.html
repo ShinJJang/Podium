@@ -479,10 +479,10 @@
                 dataType: 'json',
                 url: '/api/v1/user/' + message.user_id,
                 success: function (data) {
-                    console.log(data);
                     if(data.user_photo.length>0) {
                         userPicture = data.user_photo[0].picture;
                     }
+                    message.message = message.message.replace(/<(?:.|\n)*?>/gm, '');
                     var newLog = '<li data-targeturl="'+message.link+'"><p class="photo"><img src="'+userPicture+'" alt="profile image"></p><p class="author">'+data.username+'</p><p>'+message.message+'</p></li>';
                     $("#live_list").prepend(newLog);
                 }
