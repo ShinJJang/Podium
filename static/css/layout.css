@@ -282,7 +282,7 @@ body { background:#f4f4f4; }
 
             #p_body #p_timeline .p_timelineNav ul li:hover { background-color:#f4f4f4; }
 
-        #p_body #p_timeline #p_groupCover { background:url(../images/group_titleBG.png) repeat; background-size:19px 19px; }
+        #p_body #p_timeline #p_groupCover { background:url(../images/group_titleBG.png) repeat; background-size:19px 19px; border-bottom:1px #ccc solid; }
         #p_body #p_timeline #p_groupCover #p_groupTitle { width:940px; margin:0 auto; }
         #p_body #p_timeline #p_groupCover #p_groupTitle h1 { color:#9057df; font-weight:200; letter-spacing: -1px; text-shadow: 0px 1px 5px #cab2ed; }
         #p_body #p_timeline #p_groupCover #p_groupTitle h1 .type { color:#747e82; font-weight:bold; text-shadow:none; letter-spacing: 0; margin-left:10px; }
@@ -325,19 +325,19 @@ body { background:#f4f4f4; }
         .github-box .github-box-download .download{position:absolute;display:block;top:10px;right:10px;height:24px;line-height:24px;font-size:12px;color:#666;font-weight:bold;text-shadow:0 1px 0 rgba(255,255,255,0.9);padding:0 10px;border:1px solid #ddd;border-bottom-color:#bbb;border-radius:3px;background:#f5f5f5;background:-moz-linear-gradient(#f5f5f5,#e5e5e5);background:-webkit-linear-gradient(#f5f5f5,#e5e5e5);}
         .github-box .github-box-download .download:hover{color:#527894;border-color:#cfe3ed;border-bottom-color:#9fc7db;background:#f1f7fa;background:-moz-linear-gradient(#f1f7fa,#dbeaf1);background:-webkit-linear-gradient(#f1f7fa,#dbeaf1);}
 
-        .github-box .github-box-content .ranking { height:50px; }
+        .github-box .github-box-content .ranking { height:65px; }
         .github-box .github-box-content .ranking li { float:left; width:300px; margin-right:10px; }
         .github-box .github-box-content .ranking li:last-child { margin-right:0; }
-        .github-box .github-box-content .ranking strong { display:block; font-size:0.86em; text-align:left; background:url(../images/king_icons.png) no-repeat; padding:7px 0 0 20px; }
+        .github-box .github-box-content .ranking strong { display:block; font-size:0.86em; margin-bottom:5px; text-align:left; background:url(../images/king_icons.png) no-repeat; padding:7px 0 0 20px; }
         .github-box .github-box-content .ranking a {margin-left:20px;}
         .github-box .github-box-content .ranking span { font-size:0.86em; color:#888; }
 
         .github-box .github-box-content h4 { color:#666; font-size:0.86em; margin-bottom:5px; }
 
-
         .github-box .github-box-content .ranking .commit_king strong { background-position:0 0; }
         .github-box .github-box-content .ranking .add_line_king strong { background-position:0 -50px; }
         .github-box .github-box-content .ranking .del_line_king strong { background-position:0 -100px; }
+        .github-box .github-box-content .ranking .avatar { width:29px; height:29px; margin-right:5px; vertical-align:middle; box-shadow:0px 1px 3px #ccc; border-radius:3px; }
 
         #p_body #p_timeline #p_groupCover .github-disabled h1 { font-size:3.42em; }
         #p_body #p_timeline #p_groupCover .github-disabled h1 .type { font-size:0.3em; }

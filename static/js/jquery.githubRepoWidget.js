@@ -42,7 +42,6 @@
                         +'<a class="download" href="' + repoUrl + '/zipball/master">Download as zip</a>'
                         +'</div>'
                         +'<div class="github-box-content">'
-                        +'<h4>RANKING</h4>'
                         +'<ul class="ranking">'
                         +'<li class="commit_king"></li>'
                         +'<li class="add_line_king"></li>' //TODO 최태건 링크를 사진으로!
@@ -94,7 +93,6 @@
                                         temp_add_line_total = temp_add_line_total + repo[index].weeks[line_index].a;
                                         temp_del_line_total = temp_del_line_total + repo[index].weeks[line_index].d;
                                     }
-                                    console.log(temp_del_line_total);
                                     if(temp_add_line_total > add_line_total) {
                                         most_add_line_user_total = temp_add_line_total;
                                         most_add_line_user = repo[index].author.login;
@@ -103,7 +101,6 @@
                                         add_line_total = temp_add_line_total;
 
                                     }
-
                                     if(temp_del_line_total > del_line_total) {
                                         most_del_line_user_total = temp_del_line_total;
                                         most_del_line_user = repo[index].author.login;
@@ -111,14 +108,13 @@
                                         most_del_line_user_avatar = repo[index].author.avatar_url;
                                         del_line_total = temp_del_line_total;
                                     }
-                                    console.log(most_del_line_user);
                                     temp_add_line_total = 0;
                                     temp_del_line_total = 0;
                                     commit_total = repo[index].total;
                                 }
-                                $widget.find('.commit_king').html('<strong>COMMIT KING</strong><a href="'+ most_commit_user_url + '" target="_blank">' + most_commit_user + '</a><span>(' + most_commit_user_total + ' commits)</span>');
-                                $widget.find('.add_line_king').html('<strong>ADD KING</strong><a href="' + most_add_line_user_url + '"target="_blank">' + most_add_line_user + '</a><span>(' + most_add_line_user_total + ' lines)</span>');
-                                $widget.find('.del_line_king').html('<strong>DELETE KING</strong><a href="'+ most_del_line_user_url + '" target="_blank">' + most_del_line_user + '</a><span>(' + most_del_line_user_total + ' lines)</span>');
+                                $widget.find('.commit_king').html('<strong>COMMIT KING</strong><a href="'+ most_commit_user_url + '" target="_blank"><img src="' + most_commit_user_avatar + '" class="avatar" alt="commit king url" />' + most_commit_user + '</a><span>(' + most_commit_user_total + ' commits)</span>');
+                                $widget.find('.add_line_king').html('<strong>ADD KING</strong><a href="' + most_add_line_user_url + '"target="_blank"><img src="' + most_add_line_user_avatar + '" class="avatar" alt="commit king url" />' + most_add_line_user + '</a><span>(' + most_add_line_user_total + ' lines)</span>');
+                                $widget.find('.del_line_king').html('<strong>DELETE KING</strong><a href="'+ most_del_line_user_url + '" target="_blank"><img src="' + most_del_line_user_avatar + '" class="avatar" alt="commit king url" />' + most_del_line_user + '</a><span>(' + most_del_line_user_total + ' lines)</span>');
 
                         }
                 });
@@ -128,19 +124,14 @@
                         dataType: 'jsonp',
                         success: function(results) {
                                 var repo = results.data, date, pushed_at = 'unknown';
-                                console.log(repo);
-                                console.log(results);
                                 if (repo[0].commit.committer.date) {
                                         date = new Date(repo[0].commit.committer.date);
-                                        console.log(date.toLocaleString());
                                         updated_at = date.toLocaleString()
 
                                 }
                                 $widget.find('.commit_message span').html('<strong>'+ repo[0].commit.committer.name + "</strong>" + repo[0].commit.message);
                                 $widget.find('#commit_link').attr('href', repo[0].html_url);
                                 $widget.find('.updated').html('Latest commit to the <strong>master</strong> branch on ' + updated_at);
-
-                                console.log()
                         }
                 });
 
