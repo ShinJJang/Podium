@@ -433,9 +433,11 @@
                                     statusCode: {
                                         201: function (data) {
                                             // TODO file_upload result
+                                            window.location.reload(true);
                                         },
                                         500: function (data) {
                                             // TODO file_upload fail result
+                                            showToast("사진 업로드가 실패했습니다.");
                                         }
                                     }
                                 });

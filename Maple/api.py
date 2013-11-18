@@ -416,7 +416,7 @@ class UserToHobbyResource(ModelResource):
 
     def obj_create(self, bundle, **kwargs):
         user = bundle.request.user
-        hobby = Hobbies.objects.get(pk=bundle.data['team'])
+        hobby = Hobbies.objects.get(pk=bundle.data['hobby'])
         bundle.obj = UserToHobby(user=user, hobby=hobby)
         bundle.obj.save()
         return bundle
