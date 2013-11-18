@@ -140,6 +140,7 @@ INSTALLED_APPS = (
     'south',
     'raven.contrib.django.raven_compat',
     'debug_toolbar',
+    'tastypie_swagger'
 )
 
 # Set your DSN value
@@ -268,3 +269,5 @@ MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + (
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 LOGIN_REDIRECT_URL="/"
+
+TASTYPIE_SWAGGER_API_MODULE = 'Podium.urls.v1_api'
