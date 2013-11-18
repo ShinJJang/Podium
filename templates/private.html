@@ -11,7 +11,7 @@
             <div id="p_peopleCover">
                 <div id="p_peopleName">
                     <span id="p_peoplePicture">
-                        {% with user.userpictures_set.all|first as userpicture %}
+                        {% with user.userpictures_set.all|dictsortreversed:'created'|first as userpicture %}
                             {% if userpicture %}
                                 <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}" class="peoplePicture" />
                             {% else %}
