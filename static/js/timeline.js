@@ -807,7 +807,7 @@ $(function () {
         $("#codeModal #language_text").keydown(function(e){
             var keyCode = e.keyCode || e.which;
             if(keyCode == 9) {
-                showToast("탭 키 대신 스페이스바 4번을 사용해주세요");
+                showToast("탭 키 대신 스페이스바 4번을 사용해주세요");r
                 e.preventDefault();
             }
         });
