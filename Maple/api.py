@@ -560,6 +560,7 @@ class PostResource(ModelResource):
         return bundle
 
     def dehydrate(self, bundle):
+        bundle.data['login_user_photo'] = [pic.__dict__ for pic in bundle.request.user.userpictures_set.order_by('-created')[:1]]
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
         bundle.data['emotion_e1_count'] = bundle.obj.postemotions_set.filter(emotion="E1").count()
         bundle.data['emotion_e2_count'] = bundle.obj.postemotions_set.filter(emotion="E2").count()

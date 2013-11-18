@@ -81,8 +81,8 @@
                         <div class="p_commentForm">
                             <input name="post_key" type="hidden" value="${ id }">
                             <span class="commentProfile">
-                                {% templatetag openblock %}if user.user_photo.length > 0{% templatetag closeblock %}
-                                    <img src="${ user.user_photo[0].picture }" alt="${ user.user_photo[0].name }" class="userPicture"/>
+                                {% templatetag openblock %}if login_user_photo.length > 0{% templatetag closeblock %}
+                                    <img src="${ login_user_photo[0].picture }" alt="${ login_user_photo[0].name }" class="userPicture"/>
                                 {% templatetag openblock %}else{% templatetag closeblock %}
                                     <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="userPicture"/>
                                 {% templatetag openblock %}/if{% templatetag closeblock %}
