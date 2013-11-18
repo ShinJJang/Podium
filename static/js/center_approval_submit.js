@@ -205,6 +205,7 @@ function s3_uploaded_file_center() {
                             },
                             400: function (data) {
                                 showToast($.parseJSON(data.responseText).error);
+                                $('#center_status').html('Upload error: ' + $.parseJSON(data.responseText).error);
                             },
                             500: function (data) {
                                 // TODO file_upload fail result
@@ -221,30 +222,66 @@ function s3_uploaded_file_center() {
 }
 
 
-//$(document).ready(function() {
-//    crud_approval("GET");
-//});
-//
-//
-var crud_approval = function(method, approver_id, file_link, file_name, isChecked) {
+$(document).on("click", ".approval_checked", function() {
+    var approval_id = $(this).parent().attr("tag");
+    var isChecked = null;
+    var tag_isChecked = $(this).attr("tag");
+    if(tag_isChecked == "1")
+        isChecked = true;
+    else if(tag_isChecked == "-1")
+        isChecked = false;
+
+    crud_approval("PATCH", approval_id, null, null, isChecked, $(this).parent());
+});
+
+
+var crud_approval = function(method, approver_id, file_link, file_name, isChecked, event_parent_dom) {
     var file_upload_url = "/api/v1/approvals/";
     if(method != "POST")
         file_upload_url += approver_id+"/";
     var data = JSON.stringify({
+//        "file_link": file_link,
+//        "file_name": file_name,
         "isChecked": isChecked
     });
     $.ajax({
         url: file_upload_url,
         type: method,
+        data: data,
         contentType: "application/json",
         dataType: "json",
         statusCode: {
             200: function (data) {
                 // TODO file_upload result
-                console.log(data);
             },
             202: function (data) {
                 showToast(data);
+                var true_dom = event_parent_dom.find("#approval_true");
+                var false_dom = event_parent_dom.find("#approval_false");
+                if(data.isChecked == null){
+                    true_dom.val("승인");
+                    true_dom.attr("tag", "1");
+
+                    false_dom.val("반려");
+                    false_dom.attr("tag", "-1");
+                }
+                else if(data.isChecked){
+                    true_dom.val("승인 취소");
+                    true_dom.attr("tag", "0");
+
+                    false_dom.val("반려");
+                    false_dom.attr("tag", "-1");
+                }
+                else if(!data.isChecked){
+                    true_dom.val("승인");
+                    true_dom.attr("tag", "1");
+
+                    false_dom.val("반려 취소");
+                    false_dom.attr("tag", "0");
+                }
+            },
+            400: function(data) {
+                showToast($.parseJSON(data.responseText).error);
             },
             500: function (data) {
                 // TODO file_upload fail result

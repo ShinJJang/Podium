@@ -1135,21 +1135,16 @@ class ApprovalResource(ModelResource):
         file_name = bundle.data['file_name']
 
         if Approval.objects.filter(user_key=user_key, friendpost_key_id=post_friend_key).exists():
-            return BadRequest("이미 제출되었습니다")
+            raise BadRequest("이미 제출되었습니다")
 
         bundle.obj = Approval.objects.create(user_key=user_key, friendpost_key_id=post_friend_key, file_link=file_link, file_name=file_name)
 
         return bundle
 
-    def obj_update(self, bundle, skip_errors=False, **kwargs):
-        post_friend_key = bundle.data['post_friend_key']
-        user_key = bundle.request.user
-        file_link = bundle.data['file_link']
-        file_name = bundle.data['file_name']
-        bundle.obj = Approval.objects.get(user_key=user_key, friendpost_key_id=post_friend_key)
-        bundle.obj.file_link = file_link
-        bundle.obj.file_name = file_name
-        bundle.obj.save()
+    def hydrate(self, bundle):
+        request_member = Memberships.objects.filter(group_key__group_name="사무국", user_key=bundle.request.user)
+        if request_member.exists() and request_member[0].permission < 1 and bundle.obj.isChecked:
+            raise BadRequest("이미 승인되어 수정이 불가능합니다")
         return bundle
 
 """
