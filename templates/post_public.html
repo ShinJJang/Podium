@@ -61,22 +61,22 @@
                                         <ul>
                                         {% templatetag openblock %}each(i, obj) post.approvals{% templatetag closeblock %}
                                            <li class="ul_approval" tag="${ obj.id }">${ obj.username } : <a href="${ obj.file_link }">${ obj.file_name }</a>
-                                                <span>제출일시: ${ obj.created }</span>
+                                                <span>제출일시: ${ obj.created.toLocaleString() }</span>
                                            {% templatetag openblock %}if obj.updated != null{% templatetag closeblock %}
-                                                <span>수정일시: ${ obj.updated }</span>
+                                                <span>수정일시: ${ obj.updated.toLocaleString() }</span>
                                            {% templatetag openblock %}/if{% templatetag closeblock %}
-                                           <input id="checked_true" type="button"
+                                           <input id="approval_true" class="approval_checked" type="button"
                                                {% templatetag openblock %}if obj.isChecked{% templatetag closeblock %}
-                                               value="승인 취소"
+                                               value="승인 취소" tag="0"
                                                {% templatetag openblock %}else{% templatetag closeblock %}
-                                               value="승인"
+                                               value="승인" tag="1"
                                                {% templatetag openblock %}/if{% templatetag closeblock %}
                                                ></input>
-                                           <input id="checked_false" type="button"
+                                           <input id="approval_false" class="approval_checked" type="button"
                                                {% templatetag openblock %}if obj.isChecked == false{% templatetag closeblock %}
-                                               value="반려 취소"
+                                               value="반려 취소" tag="0"
                                                {% templatetag openblock %}else{% templatetag closeblock %}
-                                                value="반려"
+                                                value="반려" tag="-1"
                                                {% templatetag openblock %}/if{% templatetag closeblock %}
                                                ></input>
                                            </li>
