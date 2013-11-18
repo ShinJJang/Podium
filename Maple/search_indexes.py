@@ -5,7 +5,7 @@ from .models import Posts, Groups, HighSchools, University, Teams, Companies, Ho
 
 class PostIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    post = indexes.CharField(model_attr='post')
+    post = indexes.EdgeNgramField(model_attr='post')
 
     def get_model(self):
         return Posts
