@@ -434,6 +434,7 @@ function profileSubmit(entityName, itemUrl, itemName, relationId, relationUrl, r
                                 data: relationData,
                                 statusCode:{
                                     202: function(data){
+                                        document.location.reload(true);
                                         $(target).children(".info").html('<div class="info">수정되었습니다.</div>').show();
                                         $(target).children(".editor").hide();
                                     }
@@ -454,6 +455,7 @@ function profileSubmit(entityName, itemUrl, itemName, relationId, relationUrl, r
                     data: relationData,
                     statusCode:{
                         202: function(data){
+                            window.location.reload(true);
                             $(target).children(".info").html('<div class="info">수정되었습니다.</div>').show();
                             $(target).children(".editor").hide();
                         }
@@ -495,6 +497,7 @@ function profileAdd(entityName, itemUrl, itemName, relationUrl, relationData, ta
                                 data: relationData,
                                 statusCode:{
                                     201: function(){
+                                        window.location.reload(true);
                                         $(target).children(".info").html('<div class="info">수정되었습니다.</div>').show();
                                         $(target).children(".editor").hide();
                                     }
@@ -515,6 +518,7 @@ function profileAdd(entityName, itemUrl, itemName, relationUrl, relationData, ta
                     data: relationData,
                     statusCode:{
                         201: function(){
+                            window.location.reload(true);
                             $(target).children(".info").html('<div class="info">수정되었습니다.</div>').show();
                             $(target).children(".editor").hide();
                         }

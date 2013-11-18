@@ -788,7 +788,7 @@ $(function () {
             + '<option value="javascript">JavaScript</option>'
             + '<option value="lua">Lua</option>'
             + '<option value="php">PHP</option>'
-            + '<option value="python>Python</option>'
+            + '<option value="python">Python</option>'
             + '<option value="r">R</option>'
             + '<option value="ruby">Ruby</option>'
             + '<option value="scheme">Scheme</option>'
