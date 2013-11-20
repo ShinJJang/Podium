@@ -99,6 +99,7 @@ class Groups(models.Model):
     isProject = models.BooleanField()
     open_scope = models.IntegerField(default=0)  # 0 = open, 1 = semi-open, 2 = close
     github_repo = models.CharField(max_length=512, null=True)
+    github_commit_last_id = models.CharField(max_length=64, null=True)
 
     def open_scope_str(self):
         result = None
