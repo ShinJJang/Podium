@@ -61,7 +61,8 @@ $(document).on("submit", "#form_post", function (event) {
     }
     else if (target_user) {
         var target = target_user;
-        open_scope = 2;
+        if(open_scope != 1)
+            open_scope = 2;
     }
 
     if ($("#attach_video").length > 0) {
@@ -371,7 +372,6 @@ function PostTopPolling() {
                 }
                 $("#post_public_template").tmpl(data.objects).prependTo("#timeline_posts");
 
-                FB.XFBML.parse();
                 Rainbow.color();
 
                 timeRefresh();
@@ -530,7 +530,6 @@ function postBottom() {
                 }
                 $("#post_public_template").tmpl(data.objects).appendTo("#timeline_posts");
 
-                FB.XFBML.parse();
                 Rainbow.color();
                 post_bottom_url = data.meta.next;
                 timeRefresh();
@@ -634,34 +633,116 @@ $(document).on("click", ".p_responses", function () {
         var postid = tag_id.replace("commentList", "");
 
         pollComment(postid);
+        FB.XFBML.parse();
     }
     return false;
 });
 
 // emotion click
-$(document).on("click", ".form_emotion :submit", function (event) {
-    var feedback_api = api_path + "postemotions/";
-    var data = JSON.stringify({
-        "emotion": $(this).attr('tag'),
-        "post_key": $(this).siblings("input[name=post_key]").val()
-    });
+$(document).on("click", ".form_emotion :submit", function () {
+    var emotion = $(this).attr('tag')
+    var post_key = $(this).siblings("input[name=post_key]").val()
+    get_emotion(emotion, post_key, false);
+    return false;
+});
+
+var get_emotion = function(emotion, post_key, count) {
+    var feedback_api = api_path + "postemotions/?post="+post_key;
+    if(!count)
+        feedback_api += "&user="+user_id;
     $.ajax({
         url: feedback_api,
-        type: "POST",
+        type: "GET",
         contentType: "application/json",
-        data: data,
         dataType: "json",
         statusCode: {
-            201: function (data) {
+            200: function (data) {
+                if(count) {
+                    var e1_count = $.grep(data.objects, function(e){ return e.emotion == "E1" }).length;
+                    var e2_count = $.grep(data.objects, function(e){ return e.emotion == "E2" }).length;
+                    var e1_dom = $("#emotion_count_e1_"+post_key);
+                    var e2_dom = $("#emotion_count_e2_"+post_key);
+                    e1_dom.html(e1_count);
+                    e2_dom.html(e2_count);
+                    $(".emotion_selected").removeClass("emotion_selected");
+                    for(index in data.objects) {
+                        var _emotion = data.objects[index];
+                        var userid = _emotion.user.split("/");
+                        console.log(userid[userid.length-2]);
+                        if(userid[userid.length-2]==user_id) {
+                            if(_emotion.emotion == "E1") {
+                                e1_dom.addClass("emotion_selected");
+                                break;
+                            }
+                            else if(_emotion.emotion == "E2") {
+                                e2_dom.addClass("emotion_selected");
+                                break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    if(data.meta.total_count > 0){
+                        if (data.objects[0].emotion == emotion)
+                            check_emotion("DELETE", emotion, post_key, data.objects[0].id);
+                        else
+                            check_emotion("PATCH" ,emotion, post_key, data.objects[0].id);
+                    }
+                    else {
+                        check_emotion("POST" ,emotion, post_key);
+                    }
+                }
             }
         }
     });
     return false;
-});
+};
+
+var check_emotion = function(method, emotion, post_key, emotion_id) {
+    var feedback_api = api_path + "postemotions/";
+    if(method != "POST")
+        feedback_api += emotion_id + "/";
+
+    var data = JSON.stringify({
+        "emotion": emotion,
+        "post_key": post_key
+    });
+    $.ajax({
+        url: feedback_api,
+        type: method,
+        contentType: "application/json",
+        data: data,
+        dataType: "json",
+        statusCode: {
+            201: function() {
+                get_emotion(null, post_key, true);
+            },
+            202: function() {
+                get_emotion(null, post_key, true);
+            },
+            204: function() {
+                get_emotion(null, post_key, true);
+            }
+        }
+    });
+};
 
 function timeRefresh() {
     $("abbr.timeago").timeago();
 }
+
+$("#postAttach").on("click","#attachCancel",function(){
+    var aType = "";
+    if ($("#attach_poll").length > 0) aType="설문조사";
+    else if ($("#attach_video").length > 0) aType="동영상";
+    else if ($("#attach_file").length > 0) aType="파일";
+    if(confirm(aType + " 첨부를 취소하시겠습니까?")) {
+        $(".attachSelect").show();
+        $("#postAttach").html("").hide();
+        post_attach=false;
+    }
+    return false;
+});
 
 // attach something
 $(function () {
@@ -671,7 +752,7 @@ $(function () {
         if (!post_attach) {
             post_attach = true;
             attach_type = "poll";
-            var pollHtml = '<div id="attach_poll">';
+            var pollHtml = '<a href="#" id="attachCancel">첨부 취소</a><div id="attach_poll">';
             pollHtml = pollHtml + '<input class="attachTitle" id="pollTitle" type="text" placeholder="설문조사 제목" />'
                     + '<ul id="pollElement"><li><input type="text" class="attachElement" placeholder="항목 1"></li><li><input type="text" class="attachElement" placeholder="항목 2"></li><li><a href="#" id="add_poll">새 항목 추가</a></li></ul>'
                     + '</div>';
@@ -692,12 +773,49 @@ $(function () {
 
     // Simply add code tag on the textarea.
     $(".attachSelect .wCode").click(function () {
-        var modalWindow = '<div id="codeModal" class="modalWrapper"><div class="modalMargin"></div><div id="codeModalBox" class="modalBox"><a href="#" id="closeModal"></a><h2>Attach Code</h2></div></div>';
+        var modalWindow = '<div id="codeModal" class="modalWrapper pui"><div class="modalMargin"></div><div id="codeModalBox" class="modalBox"><a href="#" class="closeModal">Close</a><h2>Attach Code</h2>'
+            + '<p class="desc">타임라인에 삽입할 코드를 위한 문법을 자동으로 생성해줍니다. 문법을 알고 계시는 경우, 굳이 이 창으로 입력하지 않고 직접 입력하셔도 됩니다.</p>'
+            + '<div class="elementLine"><label for="language_select">언어 선택</label><select name="language_select" id="language_select">'
+            + '<option value="c">C, C++</option>'
+            + '<option value="coffeescript">CoffeeScript</option>'
+            + '<option value="csharp">C#</option>'
+            + '<option value="css">CSS</option>'
+            + '<option value="d">D</option>'
+            + '<option value="go">Go</option>'
+            + '<option value="haskell">Haskell</option>'
+            + '<option value="html">HTML</option>'
+            + '<option value="java">Java</option>'
+            + '<option value="javascript">JavaScript</option>'
+            + '<option value="lua">Lua</option>'
+            + '<option value="php">PHP</option>'
+            + '<option value="python">Python</option>'
+            + '<option value="r">R</option>'
+            + '<option value="ruby">Ruby</option>'
+            + '<option value="scheme">Scheme</option>'
+            + '<option value="shell">Shell</option>'
+            + '<option value="smalltalk">Smalltalk</option>'
+            + '<option value="generic">기타</option>'
+            + '</select></div>'
+            + '<div class="elementLine"><label for="language_text">구문 입력</label><textarea id="language_text" name="language_text"></textarea></div>'
+            + '<div class="insertLine"><button id="language_insert" class="btn">본문에 삽입</button></div>'
+            + '</div></div>';
         $("body").append(modalWindow);
         $("#codeModal").height($(document).height());
         $("#codeModal .modalMargin").height($(window).height()/2);
-        $("#codeModal .modalBox").width("480px").height("360px").css("marginTop","-180px");
-        $("#post").val($("#post").val() + "[code language=\"language\"]\n\n[/code]");
+        $("#codeModal .modalBox").width("480px").height("330px").css("marginTop","-180px");
+
+        $("#codeModal #language_text").keydown(function(e){
+            var keyCode = e.keyCode || e.which;
+            if(keyCode == 9) {
+                showToast("탭 키 대신 스페이스바 4번을 사용해주세요");r
+                e.preventDefault();
+            }
+        });
+
+        $("#codeModal #language_insert").click(function(){
+            $("#post").val($("#post").val() + '[code language="' + $('#language_select').val() + '"]\n' + $('#language_text').val() + '\n[/code]');
+            $("#codeModal").fadeOut();
+        });
     });
 
     // Attach video's address on YouTube
@@ -707,7 +825,7 @@ $(function () {
         if (!post_attach) {
             post_attach = true;
             attach_type = "video";
-            $("#postAttach").html('<div id="attach_video"></div>');
+            $("#postAttach").html('<a href="#" id="attachCancel">첨부 취소</a><div id="attach_video"></div>');
             var attachAddress = document.createElement("input");
             attachAddress.className = "attachTitle";
             attachAddress.id = "videoAddress";
@@ -723,12 +841,9 @@ $(function () {
         if (!post_attach) {
             post_attach = true;
             attach_type = "file";
-            //$("#postAttach").html('<form method="" action="" name="upload_form" id="upload_form" ><input type="file" name="file" id="file" /><input type="button" value="Upload" id="upload"/></form>');
-            //$("#postAttach").html('<div id="invisible"><form action="https://somapodium.s3.amazonaws.com" method="post" enctype="multipart/form-data" id="upload_form"><input type="hidden" name="key"></input><input type="hidden" name="AWSAccessKeyId" value="AKIAJKZRCQKYZ7EHIXYA"></input><input type="hidden" name="acl" value="public-read"></input><input type="hidden" name="policy"></input><input type="hidden" name="signature"></input><input type="hidden" name="success_action_status" value="201"></input><input type="file" id="file_info" name="file"></input></form></div><div id="wrapper"><input type="button" id="upload_button" value="upload"/><div id="progress_container"><div id="progress_bar"></div></div></div><div id="status_container">Status: <span id="status">idle</span></div>');
-            $("#postAttach").html('<div id="attach_file"></div><div id="attach_file_info"></div><div id="attach_file_type"></div><div id="attach_is_file"></div><div id="attach_file_count"></div><div id="attach_file_name"></div>');
+            $("#postAttach").html('<a href="#" id="attachCancel">첨부 취소</a><div id="attach_file"></div><div id="attach_file_info"></div><div id="attach_file_type"></div><div id="attach_is_file"></div><div id="attach_file_count"></div><div id="attach_file_name"></div>');
             $("#attach_file").html('<div id="status">Please select a file</div>');
 
-            //$("#attach_file").html('<input type="hidden" id="post_is_file" value="12"></input>');
             var attachFile = document.createElement("input");
             attachFile.id = "post_file";
             attachFile.setAttribute("type", "file");
@@ -739,26 +854,11 @@ $(function () {
             $("#attach_is_file").html('<input type="hidden" id="post_is_file" value="0" >');
             $("#attach_file_count").html('<input type="hidden" id="post_file_count" value="" >');
             $("#attach_file_name").html('<input type="hidden" id="post_file_name" value="파일 이름" >');
-            //var attachFileUrl = document.createElement("<input type='hidden' name='post_file_url_info' value=''>");
-            //attachFileUrl.setAttribute("name", "post_file_url_info");
-            //attachFileUrl.setAttribute("type", "hidden");
-            //attachFileUrl.setAttribute("value", "");
 
-
-            var attachFileCancelButton = document.createElement("button");
-            attachFileCancelButton.id = "post_file_delete_button";
-            attachFileCancelButton.setAttribute("type", "button");
-            attachFileCancelButton.setAttribute("value", "업로드파일삭제");
-            attachFileCancelButton.setAttribute("onclick", "s3_upload_delete()");
-
-            //var attachPreview = document.createElement("input");
-            //attachPreview.id = "file_status";
-            //attachPreview.setAttribute("value", "please select a file");
+            var attachFileCancelButton = '<a href="#" id="post_file_delete_button" onclick="s3_upload_delete()">Cancel Uploaded File</a>';
 
             document.getElementById("attach_file").appendChild(attachFile);
-            //document.getElementById("status").appendChild(attachFileUrl);
-            document.getElementById("attach_file").appendChild(attachFileCancelButton);
-
+            $("#attach_file").append(attachFileCancelButton);
         }
     });
     $("#toPlain").click(function () {
@@ -822,7 +922,7 @@ function bindPoll(targetDiv) {
 function s3_upload_put() {
     var check_file_name = $('#post_file').val();
     var extension = check_file_name.replace(/^.*\./, '');
-    var valid_extensions = ['hwp', 'jpg', 'ppt', 'pptx', 'doc', 'zip', 'png','txt', 'pdf'];
+    var valid_extensions = ['hwp', 'jpg','JPG', 'jpeg','JPEG', 'ppt', 'pptx', 'doc', 'zip', 'png','txt', 'pdf'];
     var file_size = 0;
     if ($.support.msie) {
         var objFSO = new ActiveXObject("Scripting.FileSystemObject");
@@ -874,7 +974,7 @@ function s3_upload_put() {
                             $('#post_file_type').val(file.type);
                             $('#post_file_name').val(file.name);
                             $("#post_is_file").val("1");
-                            $('#status').html('<a href=' + url + ' > Upload completed ' + parse_url[5] + '</a');
+                            $('#status').html('<a href=' + url + ' > Upload completed ' + file.name + '</a');
                         },
                         onError: function (status) {
                             $('#status').html('Upload error: ' + status);

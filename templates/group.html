@@ -1,35 +1,36 @@
 {% extends "_base.html" %}
 
 {% block title %}
+    {{ page_title  }}
 {% endblock %}
 
 {% block content %}
 
     <section id="p_timeline">
         <header>
-            <div id="p_peopleCover">
-                <div id="p_peopleName">
-                    <div class="pui">
-                        <div class="box">
-                        <h1>{{ group.group_name }}</h1>
-                            <div class="text">
-                                <h4>{{ group.open_scope_str }}{% if group.isProject %} - 프로젝트{% endif %}</h4>
-                                {{ group.description }}
-                            </div>
-                        </div>
+            <div id="p_groupCover">
+                {% if group.github_repo %}
+                    <div id="p_groupTitle" class="github-enabled">
+                        <h1>{{ group.group_name }} <span class="type">{{ group.open_scope_str }}{% if group.isProject %} - 프로젝트{% endif %}</span></h1>
+                        <p class="desc">{{ group.description }}</p>
+                        <p id="friendStatus"></p>
+                        <div class="github-widget" data-repo="{{ group.github_repo }}"></div>
                     </div>
-                    <p id="friendStatus">
-                    </p>
-                </div>
+                {% else %}
+                    <div id="p_groupTitle" class="github-disabled">
+                        <h1>{{ group.group_name }} <span class="type">{{ group.open_scope_str }}{% if group.isProject %} - 프로젝트{% endif %}</span></h1>
+                        <p class="desc">{{ group.description }}</p>
+                        <p id="friendStatus"></p>
+                    </div>
+                {% endif %}
             </div>
         </header>
-        <div id="p_profileContents" class="p_container">
+        <div id="groupContents" class="p_container">
             <div class="p_timelineContents">
                 <section id="timeline_widget">
                     {% if permission != -1 %}
                     <div class="p_tItem p_container">
                     <a href="#" class="p_tAdd p_tIcon"></a>
-
                     <div class="p_tBox pui">
                         <ul class="writeSelect cboth">
                             <li id="toPlain" class="selected"><a href="#">Plain Text</a></li>
@@ -101,18 +102,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="dropdown">
-                    <a class="dropdown_display" id="toSetting" href="#">Settings</a>
-                    <div class="dropdown_submenu" style="display: none; ">
-                        <ul class="display_submenu_root">
-                        {% if permission > 0 %}
-                            <li><a class="group_menu_admin" href="settings/">그룹 설정</a></li>
-                        {% endif %}
-                            <li><a href="members/">멤버 보기</a></li>
-                        {% if permission > -1 %}
-                            <li><a class="group_menu_admin member_leave" href="#">그룹 탈퇴</a></li>
-                        {% endif %}
-                        </ul>
+                <div class="pui">
+                    <div class="dropdown_wrapper">
+                        <a class="open_dropdown" id="toSetting" href="#">Settings</a>
+                        <div class="dropdown">
+                            <ul class="display_submenu_root">
+                            {% if permission > 0 %}
+                                <li><a class="group_menu_admin" href="settings/">그룹 설정</a></li>
+                            {% endif %}
+                                <li><a href="members/">멤버 보기</a></li>
+                            {% if permission > -1 %}
+                                <li><a class="group_menu_admin member_leave" href="#">그룹 탈퇴</a></li>
+                            {% endif %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             {% if permission > 0 %}
@@ -155,4 +158,5 @@
     {% endif %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/group.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/group_default.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.githubRepoWidget.js"></script>
 {% endblock %}

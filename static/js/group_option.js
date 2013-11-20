@@ -22,6 +22,7 @@ var submit_group_form = function(event, feedback_api, method){
         "group_name": $("input[name=group_name]").val(),
         "description": $("textarea[name=description]").val(),
         "isProject": $("input[name=is_project]").is(":checked"),
+        "github_repo": $("input[name=github_repo]").val(),
         "open_scope": open_scope,
         "members": members
     });
@@ -169,7 +170,7 @@ var dropdown_dom_generate = function(eventdom){
     $("#select_member").tmpl(data).appendTo(eventdom);
 };
 
-if(permission > 0) {
+if(typeof permission != 'undefined' && permission > 0) {
     $(document).on({
         mouseenter: function() {
             if($(this).find(".permission_click").size() == 0) {
@@ -242,6 +243,7 @@ var update_member_for_permission = function(eventdom){
 
 $(document).on("click", ".permission_click", function(){
     update_member_for_permission($(this));
+    return false;
 });
 
 // 멤버 추가
@@ -274,6 +276,7 @@ $("#request_member").click(function(){
             }
         }
     });
+    return false;
 });
 
 var update_member_permission = function(method, member_id, set_permission, eventdom) {

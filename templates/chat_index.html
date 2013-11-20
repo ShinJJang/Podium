@@ -277,12 +277,27 @@
             success: function(data){
                 for(var i in data.objects) {
                     var len = data.objects.length - 1;
-                    if(data.objects[len-i].user.id == {{ user.id }}) {
-                        chatMessage = chatMessage + '<li class="outbound">';
-                    } else {
-                        chatMessage = chatMessage + '<li class="inbound">';
+                    time_stamp = data.objects[len-i].created.split("T");
+                    date = time_stamp[0].split("-");
+                    year = date[0];
+                    month = date[1];
+                    day = date[2];
+                    time_stamp = time_stamp[1].split(":");
+                    hour = time_stamp[0];
+                    minute = time_stamp[1];
+                    if(hour > 12) {
+                        time = month + "월 " + day + "일 오후 " + hour + ":" + minute;
                     }
-                    chatMessage = chatMessage + '<span class="sender">'+data.objects[len-i].user.username+'</span><span class="message"><span class="arrow"></span>' + data.objects[len-i].chatting_message + '</span></li>';
+                    else {
+                        time = month + "월 " + day + "일 오전 " + hour + ":" + minute;
+                    }
+
+                    if(data.objects[len-i].user.id == {{ user.id }}) {
+                        chatMessage = chatMessage + '<li class="outbound"><p class="sender"><span class="time">' + time + ' · </span>' + data.objects[len-i].user.username + '</p>';
+                    } else {
+                        chatMessage = chatMessage + '<li class="inbound"><p class="sender">' + data.objects[len-i].user.username + '<span class="time"> · ' + time + '</span></p>';
+                    }
+                    chatMessage = chatMessage + '<span class="message"><span class="arrow"></span>' + data.objects[len-i].chatting_message + '</span></li>';
                 }
                 $("#chatBox_" + chatroomId + " ul").append(chatMessage);
                 $("#chatBox_" + chatroomId + " ul").scrollTop(1000000000);
@@ -328,6 +343,7 @@
 
                     console.log(data.objects.length);
                     for(var i in data.objects) {
+                        newExcitingAlerts();
                         displayChatRoom(data.objects[i].chat_room_key.id, data.objects[i].chat_room_key.chat_room_name, data.objects[i].chat_room_key.participant_count);
                         var request_data = JSON.stringify({
                             "chat_room_key": data.objects[i].chat_room_key,
@@ -357,7 +373,30 @@
                 console.log("invited_chat error [response] = [" + data + "]");
             }
         });
-    }, 5000);
+    }, 2000);
+
+
+
+
+    var newExcitingAlerts = (function () {
+        var oldTitle = document.title;
+        console.log(oldTitle);
+        var msg = '새로운 메시지 도착';
+        var timeoutId;
+        var blink = function() { document.title = document.title == msg ? oldTitle : msg; };
+        var clear = function() {
+            clearInterval(timeoutId);
+            document.title = oldTitle;
+            //window.onfocus = null;
+            timeoutId = null;
+        };
+        return function () {
+            if (!timeoutId) {
+                timeoutId = setInterval(blink, 500);
+                window.onfocus = clear;
+            }
+        };
+    }());
 
     var socket_chat_connection = (function (roomid, participant_count_in_room) {
         console.log(participant_count_in_room);
@@ -383,17 +422,34 @@
         setSocketConnection(room);
 
         socket.on('message', function (message) {
-            console.log("socket receive message = " + message);
             var receive_data = JSON.parse(message);
+            var date = new Date();
+            month = date.getMonth();
+            month = month + 1;
+            hour = date.getHours();
+            minute = date.getMinutes();
 
+            if(hour < 10) {
+                hour = '0' + hour;
+            }
+            if(minute < 10) {
+                minute = '0' + minute;
+            }
+            if(date.getHours() > 12) {
+                time = month + "월 " + date.getDate() + "일 오후 " + hour + ":" + minute;
+            }
+            else {
+                time = month + "월 " + date.getDate() + "일 오전 " + hour + ":" + minute;
+            }
             //var receive_data = message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            if(receive_data.user_name == "{{ user.username }}") {
-                $('#' + roomid + ' ul').append('<li class="outbound"><span class="sender">' + receive_data.user_name + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
+            if(receive_data.user_name == "{{ user.username }}") { // TODO (최태건) 타임에 css좀 넣어주십시오 꾸벅
+                $('#' + roomid + ' ul').append('<li class="outbound"><p class="sender"><span class="time">' + time + ' · </span>' + receive_data.user_name +'</p><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
             } else {
-                $('#' + roomid + ' ul').append('<li class="inbound"><span class="sender">' + receive_data.user_name + '</span><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
+                newExcitingAlerts();
+                $('#' + roomid + ' ul').append('<li class="inbound"><p class="sender">' + receive_data.user_name + '<span class="time"> · ' + time + '</span></p><span class="message"><span class="arrow"></span>' + receive_data.message + '</span></li>');
             }
             $('#' + roomid + ' ul').scrollTop(1000000000);
-            entry_el.focus();
+            //entry_el.focus();
         });
 
         socket.on('my_message', function (message) {
@@ -411,7 +467,9 @@
         });
 
         entry_el.keypress(function (event) {
+            entry_el.focus();
             if (event.keyCode != 13 || entry_el.val()=='') return; // 빈 메시지는 전송하지 않는다.
+
             var value = entry_el.val();
             room = $(this).parent().attr("id").substring(8);
             var msg = JSON.stringify({
@@ -420,13 +478,8 @@
                 "message": entry_el.val(),
                 "user_name": userName.val()
             });
-            //var msg = "{'room_name': room, 'user_id': userId.val(), type: 'chat', message: entry_el.val() + "\n", user_name: userName.val()}" //user 사진 작게
-            //var msgObj = eval('(' + msg + ')');
-            console.log(entry_el.val());
-            console.log('send message' + msg.message);
             if (msg) {
                 socket.emit('send_message', msg, function (data) {
-                    console.log('send message to server [message] = [' + data + ']');
                 });
                 entry_el.val("");
             }
@@ -440,7 +493,7 @@
         });
     });
 
-    $(document).ready(function() { // TODO(최태건) 이부분을 하단부에 띄워줘야 함니다 지금은 console.log로 출력합니다.
+    $(document).ready(function() {
         var socket = io.connect(window.location.hostname, {port: 4000, 'force new connection': true});
         socket.on('connect', function () {
 
@@ -455,10 +508,10 @@
                 dataType: 'json',
                 url: '/api/v1/user/' + message.user_id,
                 success: function (data) {
-                    console.log(data);
                     if(data.user_photo.length>0) {
                         userPicture = data.user_photo[0].picture;
                     }
+                    message.message = message.message.replace(/<(?:.|\n)*?>/gm, '');
                     var newLog = '<li data-targeturl="'+message.link+'"><p class="photo"><img src="'+userPicture+'" alt="profile image"></p><p class="author">'+data.username+'</p><p>'+message.message+'</p></li>';
                     $("#live_list").prepend(newLog);
                 }

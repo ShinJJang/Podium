@@ -24,7 +24,6 @@ from tastypie.utils import trailing_slash
 from haystack.query import SearchQuerySet
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
-from json import loads
 from tastypie.exceptions import BadRequest
 
 
@@ -79,6 +78,417 @@ class UserResource(ModelResource):
         return bundle
 
 
+class HighSchoolsResource(ModelResource):
+    class Meta:
+        queryset = HighSchools.objects.all()
+        resource_name = 'highschools'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(HighSchools).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToHighSchoolResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    highschool = fields.ForeignKey(HighSchoolsResource, 'highschool', full=False)
+
+    class Meta:
+        queryset = UserToHighSchool.objects.all()
+        resource_name = 'user_to_highschool'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        highschool = HighSchools.objects.get(pk=bundle.data['highschool'])
+        enter = bundle.data['enter']
+        graduate = bundle.data['graduate']
+        bundle.obj = UserToHighSchool(user=user, highschool=highschool, enter=enter, graduate=graduate)
+        bundle.obj.save()
+        return bundle
+
+
+class UniversityResource(ModelResource):
+    class Meta:
+        queryset = University.objects.all()
+        resource_name = 'university'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(University).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToUniversityResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    university = fields.ForeignKey(UniversityResource, 'university', full=False)
+
+    class Meta:
+        queryset = UserToUniversity.objects.all()
+        resource_name = 'user_to_university'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        university = University.objects.get(pk=bundle.data['university'])
+        enter = bundle.data['enter']
+        graduate = bundle.data['graduate']
+        major = bundle.data['major']
+        bundle.obj = UserToUniversity(user=user, university=university, enter=enter, graduate=graduate, major=major)
+        bundle.obj.save()
+        return bundle
+
+
+class TeamsResource(ModelResource):
+    class Meta:
+        queryset = Teams.objects.all()
+        resource_name = 'teams'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(Teams).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToTeamResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    team = fields.ForeignKey(TeamsResource, 'team', full=False)
+
+    class Meta:
+        queryset = UserToTeam.objects.all()
+        resource_name = 'user_to_team'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        team = Teams.objects.get(pk=bundle.data['team'])
+        joinedOn = bundle.data['joinedOn']
+        bundle.obj = UserToTeam(user=user, team=team, joinedOn=joinedOn)
+        bundle.obj.save()
+        return bundle
+
+
+class CompaniesResource(ModelResource):
+    class Meta:
+        queryset = Companies.objects.all()
+        resource_name = 'companies'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(Companies).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToCompanyResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    company = fields.ForeignKey(CompaniesResource, 'company', full=False)
+
+    class Meta:
+        queryset = UserToCompany.objects.all()
+        resource_name = 'user_to_company'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        company = Companies.objects.get(pk=bundle.data['company'])
+        enter = bundle.data['enter']
+        leave = bundle.data['leave']
+        job = bundle.data['job']
+        bundle.obj = UserToCompany(user=user, company=company, enter=enter, leave=leave, job=job)
+        bundle.obj.save()
+        return bundle
+
+
+class HobbiesResource(ModelResource):
+    class Meta:
+        queryset = Hobbies.objects.all()
+        resource_name = 'hobbies'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(Hobbies).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToHobbyResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    hobby = fields.ForeignKey(HobbiesResource, 'hobby', full=False)
+
+    class Meta:
+        queryset = UserToHobby.objects.all()
+        resource_name = 'user_to_hobby'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        hobby = Hobbies.objects.get(pk=bundle.data['hobby'])
+        bundle.obj = UserToHobby(user=user, hobby=hobby)
+        bundle.obj.save()
+        return bundle
+
+
+class PLanguagesResource(ModelResource):
+    class Meta:
+        queryset = PLanguages.objects.all()
+        resource_name = 'planguages'
+        authorization = Authorization()
+        include_resource_uri = False
+        always_return_data = True
+        filtering = {
+            "id": ['exact'],
+            "name": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_user_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(PLanguages).load_all().filter(Q(name=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
+
+class UserToPLanguageResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user', full=False)
+    planguage = fields.ForeignKey(PLanguagesResource, 'planguage', full=False)
+
+    class Meta:
+        queryset = UserToPLanguage.objects.all()
+        resource_name = 'user_to_planguage'
+        authorization = Authorization()
+        include_resource_uri = False
+        filtering = {
+            "user": ['exact']
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        user = bundle.request.user
+        planguage = PLanguages.objects.get(pk=bundle.data['planguage'])
+        bundle.obj = UserToPLanguage(user=user, planguage=planguage)
+        bundle.obj.save()
+        return bundle
+
+
 class UserProfileResource(ModelResource):
     user = fields.OneToOneField(UserResource, 'user', full=True)
 
@@ -98,6 +508,14 @@ class UserPictureResource(ModelResource):
         resource_name = 'userpictures'
         include_resource_uri = False
         authorization = Authorization()
+
+    def obj_create(self, bundle, **kwargs):
+        user_key = bundle.request.user
+        file_link = bundle.data['file_link']
+        file_name = bundle.data['file_name']
+        bundle.obj = UserPictures(user_key=user_key, picture=file_link, name=file_name)
+        bundle.obj.save()
+        return bundle
 
 
 class PostResource(ModelResource):
@@ -124,29 +542,94 @@ class PostResource(ModelResource):
         post = bundle.data['post']
         open_scope = bundle.data['open_scope']
         aType = bundle.data['aType']
-        if (open_scope == 0) or (open_scope == 1): # public to self or private
-            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType)
-        elif open_scope == 2: # public to friend
-            target_user = User.objects.get(pk=bundle.data['target'])
+        if (open_scope == 0) or (open_scope == 1):  # public to self or private
+            try:
+                target_user = get_object_or_404(User, pk=bundle.data['target'])
+            except:
+                target_user = user
+            bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType, target_user=target_user)
+        elif open_scope == 2:                       # public to friend
+            target_user = get_object_or_404(User, pk=bundle.data['target'])
             bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType,
                                target_user=target_user)
-        elif open_scope == 3: # group
-            group = Groups.objects.get(pk=bundle.data['target'])
+        elif open_scope == 3:                       # group
+            group = get_object_or_404(Groups, pk=bundle.data['target'])
             bundle.obj = Posts(user_key=user, post=post, open_scope=open_scope, attachment_type=aType, group=group)
 
         bundle.obj.save()
         return bundle
 
     def dehydrate(self, bundle):
+        bundle.data['login_user_photo'] = [pic.__dict__ for pic in bundle.request.user.userpictures_set.order_by('-created')[:1]]
         bundle.data['comment_count'] = bundle.obj.comments_set.all().count()
-        bundle.data['emotion_count'] = bundle.obj.postemotions_set.all().count()
-        if bundle.obj.group:
-            bundle.data['group_name'] = bundle.obj.group.group_name
-            bundle.data['group_id'] = bundle.obj.group.id
-        elif bundle.obj.target_user:
-            bundle.data['target_user_name'] = bundle.obj.target_user.username
-            bundle.data['target_user_id'] = bundle.obj.target_user.id
+        bundle.data['emotion_e1_count'] = bundle.obj.postemotions_set.filter(emotion="E1").count()
+        bundle.data['emotion_e2_count'] = bundle.obj.postemotions_set.filter(emotion="E2").count()
+        user_emotion = bundle.obj.postemotions_set.filter(user_key=bundle.request.user)
+        bundle.data['emotion_selected'] = user_emotion[0].emotion if user_emotion else None
+        if bundle.obj.group and bundle.obj.group.group_name == "사무국" and bundle.obj.attachment_type == 3:
+             # 사무국 지원 - 글쓴이가 사무국인지
+            writer_membership = Memberships.objects.filter(group_key=bundle.obj.group, user_key=bundle.obj.user_key)
+            bundle.data['writer_permission'] = True if writer_membership.exists() and writer_membership[0].permission > 0 else False
+
+            if not bundle.data['writer_permission']:
+                return bundle
+
+            # 사무국 지원 - 보는 이가 연수생인지
+            membership = Memberships.objects.filter(group_key=bundle.obj.group, user_key=bundle.request.user)
+            bundle.data['permission'] = membership[0].permission if membership.exists() else -1
+
+            if bundle.data['permission'] == -1:
+                return bundle
+
+            if bundle.data['permission'] == 0:
+                approval = FriendPosts.objects.filter(user_key=bundle.request.user, friend_post_key=bundle.obj)[0].approval_set.all()
+                if approval.exists():
+                    approval = {"id": approval[0].id, "file_link": approval[0].file_link, "file_name": approval[0].file_name}
+                    bundle.data['approval'] = approval
+
+            else:
+                approvals = Approval.objects.filter(friendpost_key__friend_post_key=bundle.obj.id)
+                if approvals.exists():
+                    bundle.data['approvals'] = [{"id": obj.id, "file_link": obj.file_link, "file_name": obj.file_name,
+                                                 "username": obj.user_key.username, "created": obj.created,
+                                                 "updated": obj.updated, "isChecked": obj.isChecked} for obj in approvals]
+
         return bundle
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_post_get_search"),
+        ]
+
+    def get_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # Do the query.
+        sqs = SearchQuerySet().models(Posts).load_all().filter(Q(post=request.GET.get('q', '')))
+        paginator = Paginator(sqs, 20)
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            if result.object.open_scope == 1 or (result.object.group and result.object.group.open_scope != 0):
+                continue
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
 
 
 class CommentResource(ModelResource):
@@ -196,15 +679,24 @@ class FriendshipNotisResource(ModelResource): #create
     def obj_create(self, bundle, **kwargs):
         noti_from_user = bundle.request.user
         friend_id = bundle.data['friend_id']
-        noti_to_user = User.objects.get(pk=friend_id)
-        bundle.obj = FriendshipNotis(friend_noti_from_user_key=noti_from_user, friend_noti_to_user_key=noti_to_user)
+
+        if FriendshipNotis.objects.filter(friend_noti_from_user_key=noti_from_user, friend_noti_to_user_key_id=friend_id).exists():
+            raise BadRequest('이미 친구 요청을 보냈습니다')
+
+        elif FriendshipNotis.objects.filter(friend_noti_from_user_key_id=friend_id, friend_noti_to_user_key=noti_from_user).exists():
+            raise BadRequest('이미 친구 요청을 왔습니다')
+
+        elif Friendships.objects.filter(user_key=noti_from_user, friend_user_key_id=friend_id).exists():
+            raise BadRequest("이미 친구입니다")
+
+        bundle.obj = FriendshipNotis(friend_noti_from_user_key=noti_from_user, friend_noti_to_user_key_id=friend_id)
         bundle.obj.save()
         return bundle
 
 
-class FriendshipsResource(ModelResource): #polling get or create
+class FriendshipsResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user_key', full=False)
-    friend_user = fields.ForeignKey(UserResource, 'friend_user_key', full=False)
+    friend_user = fields.ForeignKey(UserResource, 'friend_user_key', full=True)
 
     class Meta:
         queryset = Friendships.objects.all()
@@ -219,8 +711,11 @@ class FriendshipsResource(ModelResource): #polling get or create
     def obj_create(self, bundle, **kwargs):
         user = bundle.request.user
         friend_id = bundle.data['friend_id']
-        friend_user = User.objects.get(pk=friend_id)
-        bundle.obj = Friendships(user_key=user, friend_user_key=friend_user)
+
+        if Friendships.objects.filter(user_key=user, friend_user_key_id=friend_id).exists():
+            raise BadRequest("이미 친구입니다")
+
+        bundle.obj = Friendships(user_key=user, friend_user_key_id=friend_id)
         bundle.obj.save()
         return bundle
 
@@ -242,10 +737,24 @@ class FriendPostResource(ModelResource):
         # paginator_class = EstimatedCountPaginator
         allowed_methods = ['get']
 
+    def get_list(self, request, **kwargs):
+        resp = super(FriendPostResource, self).get_list(request, **kwargs)
+
+        data = json.loads(resp.content)
+
+        for obj in data['objects']:
+            if obj['post']['open_scope'] == 1:
+                if (obj['post']['target_user'] is not None and request.user.id != obj['post']['target_user']['id']) and request.user.id != obj['post']['user']['id']:
+                    data['objects'].remove(obj)
+
+        data = json.dumps(data)
+
+        return HttpResponse(data, mimetype='application/json', status=200)
+
 
 class PostEmotionsResource(ModelResource):
-    user = fields.ForeignKey(UserResource, 'user')
-    post = fields.ForeignKey(PostResource, 'post')
+    user = fields.ForeignKey(UserResource, 'user_key')
+    post = fields.ForeignKey(PostResource, 'post_key')
 
     class Meta:
         queryset = PostEmotions.objects.all()
@@ -318,14 +827,19 @@ class GroupResource(ModelResource):
         group_name = bundle.data['group_name']
         description = bundle.data['description']
         is_project = bundle.data['isProject']
+        github_repo = bundle.data['github_repo']
         open_scope = bundle.data['open_scope']
         member_request_list = bundle.data['members']
+
         if Groups.objects.filter(group_name=group_name).count() != 0:
             raise BadRequest('이미 존재하는 그룹명입니다')
-        bundle.obj = Groups(group_name=group_name, description=description, isProject=is_project, open_scope=open_scope)
+
+        bundle.obj = Groups(group_name=group_name, description=description, isProject=is_project, github_repo=github_repo, open_scope=open_scope)
         bundle.obj.save()
+
         # creator is owner
         Memberships.objects.create(group_key=bundle.obj, user_key=bundle.request.user, permission=2)
+
         # 초대 -> 바로 가입됨
         if member_request_list:
             for user_key in member_request_list:
@@ -413,7 +927,7 @@ class MembershipsResource(ModelResource):
     def hydrate(self, bundle):  # 멤버 권한 업데이트시, 체크
         request_user_membership = get_object_or_404(Memberships, user_key=bundle.request.user, group_key=bundle.obj.group_key)
         if request_user_membership.permission < 1:
-            raise BadRequest('권한이 없어요~')
+            raise BadRequest('권한이 없습니다.')
 
         return bundle
 
@@ -433,13 +947,19 @@ class MembershipNotisResource(ModelResource):
         always_return_data = True
 
     def obj_create(self, bundle, **kwargs):
-        group = Groups.objects.get(pk=bundle.data['noti_group_key'])
-        user = User.objects.get(pk=bundle.data['noti_user_key'])
 
-        if Memberships.objects.filter(group_key=group, user_key=user).exists():
+        #group = Groups.objects.get(pk=bundle.data['noti_group_key'])
+        #user = User.objects.get(pk=bundle.data['noti_user_key'])
+        group_id = bundle.data['noti_group_key']
+        user_id = bundle.data['noti_user_key']
+
+        if MembershipNotis.objects.filter(noti_group_key_id=group_id, noti_user_key_id=user_id).exists():
+            raise BadRequest('이미 그룹 가입 요청이 되었습니다.')
+
+        elif Memberships.objects.filter(group_key=group_id, user_key=user_id).exists():
             raise BadRequest("이미 존재하는 멤버입니다.")  # TODO - 400 이용하면 그룹 요청시 요긴할 것 - JS 수정
 
-        bundle.obj = MembershipNotis(noti_group_key=group, noti_user_key=user)
+        bundle.obj = MembershipNotis(noti_group_key_id=group_id, noti_user_key_id=user_id)
         bundle.obj.save()
         return bundle
 
@@ -466,7 +986,6 @@ class UserFilesResource(ModelResource):
         }
 
     def obj_create(self, bundle, **kwargs):
-        print "test "
         post_key = bundle.data['post_key']
         post = Posts.objects.get(pk=post_key)
         user_key = bundle.request.user
@@ -594,17 +1113,12 @@ class UserChattingMessageResource(ModelResource):
         }
 
     def obj_create(self, bundle, **kwargs):
-        print bundle.data
         message = bundle.data['comment']
-        print message
         user_id = bundle.data['user_id']
         room_id = bundle.data['room_id']
         chat_room_key = ChatRoom.objects.get(id=room_id)
-        print chat_room_key
         user_key = User.objects.get(id=user_id)
-        print user_key
         bundle.obj = UserChattingMessage.objects.create(chat_room_key=chat_room_key, user_key=user_key, chatting_message=message)
-        print bundle.obj
         bundle.obj.save()
         return bundle
 
@@ -627,7 +1141,46 @@ class GroupPostResource(ModelResource):
         allowed_methods = ['get']
 
     def dehydrate(self, bundle):
-        bundle.data['user_photo'] = [pic.__dict__ for pic in bundle.obj.post_key.user_key.userpictures_set.order_by('-created')[:1]]
+        friendpost = FriendPosts.objects.filter(user_key=bundle.request.user, friend_post_key=bundle.obj.post_key)
+        if friendpost.exists():
+            bundle.data['friend_post_key'] = friendpost[0].id
+        else:
+            bundle.data['friend_post_key'] = -1
+
+        return bundle
+
+
+class ApprovalResource(ModelResource):
+    user_key = fields.ForeignKey(UserResource, 'user_key', full=True)
+    friend_post_key = fields.ForeignKey(FriendPostResource, 'friendpost_key', full=False)
+
+    class Meta:
+        queryset = Approval.objects.all().order_by('-pk')
+        resource_name = 'approvals'
+        always_return_data = True
+        authorization = Authorization()
+        filtering = {
+            "user_key": ALL,
+            "friend_post_key": ALL
+        }
+
+    def obj_create(self, bundle, **kwargs):
+        post_friend_key = bundle.data['post_friend_key']
+        user_key = bundle.request.user
+        file_link = bundle.data['file_link']
+        file_name = bundle.data['file_name']
+
+        if Approval.objects.filter(user_key=user_key, friendpost_key_id=post_friend_key).exists():
+            raise BadRequest("이미 제출되었습니다")
+
+        bundle.obj = Approval.objects.create(user_key=user_key, friendpost_key_id=post_friend_key, file_link=file_link, file_name=file_name)
+
+        return bundle
+
+    def hydrate(self, bundle):
+        request_member = Memberships.objects.filter(group_key__group_name="사무국", user_key=bundle.request.user)
+        if request_member.exists() and request_member[0].permission < 1 and bundle.obj.isChecked:
+            raise BadRequest("이미 승인되어 수정이 불가능합니다")
         return bundle
 
 """

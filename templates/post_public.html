@@ -24,12 +24,16 @@
                 <div class="p_container">
                     <p class="p_tUserName">
                         <a href="/people/${ post.user.id }">${ post.user.username }</a>
+                        {% templatetag openblock %}if post.open_scope == 1 && post.target_user && post.target_user.id != post.user.id{% templatetag closeblock %}
+                            > <a href="/people/${ post.target_user.id }">${ post.target_user.username }</a>
+                        {% templatetag openblock %}/if{% templatetag closeblock %}
+
                         {% templatetag openblock %}if post.open_scope == 2{% templatetag closeblock %}
-                            > <a href="/people/${ post.target_user_id }">${ post.target_user_name }</a>
+                            > <a href="/people/${ post.target_user.id }">${ post.target_user.username }</a>
                         {% templatetag openblock %}/if{% templatetag closeblock %}
 
                         {% templatetag openblock %}if post.open_scope == 3{% templatetag closeblock %}
-                            > <a href="/group/${ post.group_id }">${ post.group_name }</a>
+                            > <a href="/group/${ post.group.id }">${ post.group.group_name }</a>
                         {% templatetag openblock %}/if{% templatetag closeblock %}
                     </p>
                     <div class="p_tText">
@@ -43,20 +47,136 @@
                     {% templatetag openblock %}if post.attachment_type == 3{% templatetag closeblock %}
                         <div id="file-${ post.id }" class="p_attachment p_file_unloaded">
                         </div>
+
+                        {% templatetag openblock %}if typeof (friend_post_key) == "undefined"{% templatetag closeblock %}
+                            <div class="p_approval_${ id }">
+                        {% templatetag openblock %}else{% templatetag closeblock %}
+                            <div class="p_approval_${ friend_post_key }">
+                        {% templatetag openblock %}/if{% templatetag closeblock %}
+                        {% templatetag openblock %}if post.open_scope == 3 && post.group.group_name == "사무국" && post.writer_permission{% templatetag closeblock %}
+                            {% templatetag openblock %}if post.permission > 0{% templatetag closeblock %}
+                                <div id="approval-${ post.id }" class="p_attachment p_approval_manager_unloaded">
+                                    사무국 목록
+                                    {% templatetag openblock %}if typeof (post.approvals) != "undefined"{% templatetag closeblock %}
+                                        <ul>
+                                        {% templatetag openblock %}each(i, obj) post.approvals{% templatetag closeblock %}
+                                           <li class="ul_approval" tag="${ obj.id }">${ obj.username } : <a href="${ obj.file_link }">${ obj.file_name }</a>
+                                                <span>제출일시: ${ obj.created.toLocaleString() }</span>
+                                           {% templatetag openblock %}if obj.updated != null{% templatetag closeblock %}
+                                                <span>수정일시: ${ obj.updated.toLocaleString() }</span>
+                                           {% templatetag openblock %}/if{% templatetag closeblock %}
+                                           <input id="approval_true" class="approval_checked" type="button"
+                                               {% templatetag openblock %}if obj.isChecked{% templatetag closeblock %}
+                                               value="승인 취소" tag="0"
+                                               {% templatetag openblock %}else{% templatetag closeblock %}
+                                               value="승인" tag="1"
+                                               {% templatetag openblock %}/if{% templatetag closeblock %}
+                                               ></input>
+                                           <input id="approval_false" class="approval_checked" type="button"
+                                               {% templatetag openblock %}if obj.isChecked == false{% templatetag closeblock %}
+                                               value="반려 취소" tag="0"
+                                               {% templatetag openblock %}else{% templatetag closeblock %}
+                                                value="반려" tag="-1"
+                                               {% templatetag openblock %}/if{% templatetag closeblock %}
+                                               ></input>
+                                           </li>
+                                        {% templatetag openblock %}/each{% templatetag closeblock %}
+                                        </ul>
+                                    {% templatetag openblock %}/if{% templatetag closeblock %}
+                                </div>
+                            {% templatetag openblock %}/if{% templatetag closeblock %}
+
+                            {% templatetag openblock %}if post.permission == 0{% templatetag closeblock %}
+                                {% templatetag openblock %}if typeof (post.approval) == "undefined"{% templatetag closeblock %}
+                                    <div id="approval-${ post.id }" class="p_attachment p_approval_member_unloaded">
+                                        <div id="attach_center_file">
+                                            <input id="post_center_file" type="file" onchange="s3_upload_center();"></input>
+                                            <button id="post_center_file_delete_button" onclick="s3_upload_delete_center()">Cancel Uploaded File</button>
+                                            <button id="post_center_file_submit_button" onclick="s3_center_file_submit()">Submit</button>
+                                        <div>
+                                        <div id="center_status">Please select a file</div>
+
+                                        <div id="attach_center_file_info">
+                                            <input type="hidden" id="post_center_file_url_info" value=""></input>
+                                        </div>
+                                        <div id="attach_center_file_type">
+                                            <input type="hidden" id="post_center_file_type" value=""></input>
+                                        </div>
+                                        <div id="attach_center_is_file">
+                                            <input type="hidden" id="post_center_is_file" value="0"></input>
+                                        </div>
+                                        <div id="attach_center_friend_id">
+                                            {% templatetag openblock %}if typeof (friend_post_key) == "undefined"{% templatetag closeblock %}
+                                                <input type="hidden" id="post_center_friend_key" value="${ id }"></input>
+                                            {% templatetag openblock %}else{% templatetag closeblock %}
+                                                <input type="hidden" id="post_center_friend_key" value="${ friend_post_key }"></input>
+                                            {% templatetag openblock %}/if{% templatetag closeblock %}
+                                        </div>
+                                        <div id="attach_center_file_count">
+                                            <input type="hidden" id="post_center_file_count" value="soma_${ post.id }"></input>
+                                        </div>
+                                        <div id="attach_center_file_name">
+                                            <input type="hidden" id="post_center_file_name" value="파일 이름"></input>
+                                        </div>
+                                    </div>
+                                {% templatetag openblock %}else{% templatetag closeblock %}
+                                    <div class="p_attachment">
+                                        <a href="${ post.approval.file_link }">${ post.approval.file_name }</a>
+                                    </div>
+                                    <div>
+                                    <input id="modify_post_center_file" type="file" onchange="s3_uploaded_file_center();"></input>
+                                    <input id="post_approval_id" type="hidden" value="${ post.approval.id }"></input>
+                                    </div>
+                                    <div id="modify_center_status"></div>
+                                    <div id="modify_attach_center_file_info">
+                                        <input type="hidden" id="modify_post_center_file_url_info" value=""></input>
+                                    </div>
+                                    <div id="modify_attach_center_file_type">
+                                        <input type="hidden" id="modify_post_center_file_type" value=""></input>
+                                    </div>
+                                    <div id="modify_attach_center_is_file">
+                                        <input type="hidden" id="modify_post_center_is_file" value="0"></input>
+                                    </div>
+                                    <div id="modify_attach_center_friend_id">
+                                        {% templatetag openblock %}if typeof (friend_post_key) == "undefined"{% templatetag closeblock %}
+                                            <input type="hidden" id="modify_post_center_friend_key" value="${ id }"></input>
+                                        {% templatetag openblock %}else{% templatetag closeblock %}
+                                            <input type="hidden" id="modify_post_center_friend_key" value="${ friend_post_key }"></input>
+                                        {% templatetag openblock %}/if{% templatetag closeblock %}
+                                    </div>
+                                    <div id="modify_attach_center_file_count">
+                                        <input type="hidden" id="modify_post_center_file_count" value="soma_${ post.id }"></input>
+                                    </div>
+                                    <div id="modify_attach_center_file_name">
+                                        <input type="hidden" id="modify_post_center_file_name" value="파일 이름"></input>
+                                    </div>
+                                {% templatetag openblock %}/if{% templatetag closeblock %}
+                            {% templatetag openblock %}/if{% templatetag closeblock %}
+
+                        {% templatetag openblock %}/if{% templatetag closeblock %}
+                        </div>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
 
                     {% templatetag openblock %}if post.attachment_type == 4{% templatetag closeblock %}
                         <ul id="poll-${ post.id }" class="p_attachment p_poll_unloaded">
                         </ul>
                     {% templatetag openblock %}/if{% templatetag closeblock %}
-                    <p class="p_tPermalink public"><a class="timestamp" href="/post/${ post.id }/"><abbr class="timeago" title=${ post.created }></abbr></a></p>
-                    <div align="right" class="fb-like" data-href="http://podiumconcept.me/post/${ post.id }/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                    <p class="p_tPermalink
+                    {% templatetag openblock %}if post.group != null{% templatetag closeblock %}
+                        project
+                    {% templatetag openblock %}/if{% templatetag closeblock %}
+                    {% templatetag openblock %}if post.open_scope == 1{% templatetag closeblock %}
+                        private
+                    {% templatetag openblock %}else{% templatetag closeblock %}
+                        public
+                    {% templatetag openblock %}/if{% templatetag closeblock %}"><a class="timestamp" href="/post/${ post.id }/"><abbr class="timeago" title=${ post.created }></abbr></a></p>
                 </div>
             </article>
             <aside class="p_tAside">
                 <header class="p_responses">
                     <div class="p_container">
-                        <p class="p_emotion"><a href="#"><strong>감정</strong>/ ${ post.emotion_count }</a></p>
+                        <p class="p_emotion"><a href="#"><strong>좋아요</strong>/ <span id="emotion_count_e1_${ post.id }" {% templatetag openblock %}if post.emotion_selected == "E1"{% templatetag closeblock %}class="emotion_selected"{% templatetag openblock %}/if{% templatetag closeblock %}>${ post.emotion_e1_count }</span></a></p>
+                        <p class="p_emotion"><a href="#"><strong>멋져요</strong>/ <span id="emotion_count_e2_${ post.id }" {% templatetag openblock %}if post.emotion_selected == "E2"{% templatetag closeblock %}class="emotion_selected"{% templatetag openblock %}/if{% templatetag closeblock %}>${ post.emotion_e2_count }</span></a></p>
                         <p class="p_comment"><a href="#"><strong>댓글</strong>/ ${ post.comment_count }</a></p>
                     </div>
                 </header>
@@ -66,6 +186,7 @@
                             <input name="emotion" type="submit" value="좋아요" tag="E1">
                             <input name="emotion" type="submit" value="멋져요" tag="E2">
                             <input name="post_key" type="hidden" value="${ post.id }">
+                            <div class="fb-like" data-href="http://podiumconcept.me/post/${ post.id }/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
                         </form>
                     </div>
                 </section>
@@ -76,8 +197,8 @@
                         <div class="p_commentForm">
                             <input name="post_key" type="hidden" value="${ post.id }">
                             <span class="commentProfile">
-                                {% templatetag openblock %}if post.user.user_photo.length > 0{% templatetag closeblock %}
-                                    <img src="${ post.user.user_photo[0].picture }" alt="${ post.user.user_photo[0].name }" class="userPicture"/>
+                                {% templatetag openblock %}if post.login_user_photo.length > 0{% templatetag closeblock %}
+                                    <img src="${ post.login_user_photo[0].picture }" alt="${ post.login_user_photo[0].name }" class="userPicture"/>
                                 {% templatetag openblock %}else{% templatetag closeblock %}
                                     <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="userPicture"/>
                                 {% templatetag openblock %}/if{% templatetag closeblock %}
@@ -116,3 +237,4 @@
 <script id="file_template" type="text/x-jquery-tmpl">
     <div class="fileItem"><strong>${ label }</strong><span class="tooltip-parent tooltip-hover">${ users.length }</span></div>
 </script>
+

@@ -6,8 +6,7 @@ var delete_membership_noti = function(noti_id){
         contentType: "application/json",
         dataType: "json",
         statusCode: {
-            204: function (data) {
-                console.log("member noti deleted = " + noti_id);
+            204: function () {
             }
         }
     });
@@ -15,14 +14,16 @@ var delete_membership_noti = function(noti_id){
 
 // accept시 user는 자신이 아닌 수락 받는 user
 var accept_membership = function(){
-    $("#member_request > li > a").click(function() {
-        var noti_id = $(this).attr("name");
-        var user_key = $(this).attr("tag");
+    $("#member_request").find("li").click(function() {
+        var a_ = $(this).children("a");
+        var noti_id = a_.attr("name");
+        var user_key = a_.attr("tag");
         var request_friend_url = "/api/v1/memberships/";
         var data = JSON.stringify({
             "group_key": group_id,
             "user_key": user_key
         });
+        $(this).remove();
         $.ajax({
             type: "POST",
             url: request_friend_url,
@@ -30,13 +31,17 @@ var accept_membership = function(){
             data: data,
             dataType: "json",
             statusCode: {
-                201: function (data) {
-                    console.log("member accept click");
+                201: function () {
                     delete_membership_noti(noti_id);
-                    $("#friendStatus").html('<span class="friend">가입됨</span>');
+                    showToast("가입을 수락하였습니다");
+                },
+                400: function(data) {
+                    showToast($.parseJSON(data.responseText).error);
+                    get_member_request();
                 }
             }
         });
+        return false;
     });
 };
 
@@ -49,8 +54,6 @@ var get_member_request= function(){
         dataType: "json",
         statusCode: {
             200: function(data) {
-                console.log("get member request");
-                console.log(data);
                 for(var index in data.objects) {
                     $("#member_request").append("<li><a href='#' name="+data.objects[index].id+" tag="+data.objects[index].noti_user_key.id+"><span>"+data.objects[index].noti_user_key.username+"</span></a></li>");
                 }
@@ -71,6 +74,7 @@ var request_membership = function(){
             "noti_group_key": group_id,
             "noti_user_key": user_id
         });
+        $("#friendStatus").html('<span class="friend">요청 중</span>'); // TODO - 클릭시 요청 취소 Dropdown
         $.ajax({
             type: "POST",
             url: request_friend_url,
@@ -78,12 +82,16 @@ var request_membership = function(){
             data: data,
             dataType: "json",
             statusCode: {
-                201: function (data) {
-                    console.log("request membership!");
-                    $("#friendStatus").html('<span class="friend">요청 중</span>'); // TODO - 클릭시 요청 취소 Dropdown
+                201: function() {
+                    showToast("그룹 가입 신청이 되었습니다");
+                },
+                400: function(data) {
+                    showToast($.parseJSON(data.responseText).error);
+                    check_membership();
                 }
             }
         });
+        return false;
     });
 };
 
@@ -120,8 +128,6 @@ var check_membership = function(){
         dataType: "json",
         statusCode: {
             200: function (data) {
-                console.log("membership data");
-                console.log(data);
                 if(data.meta.total_count) {
                     console.log("already member!");
                     $("#friendStatus").html('<span class="friend">가입됨</span>');
@@ -162,8 +168,8 @@ $(".member_leave").click(function() {
         type: "DELETE",
         dataType: "json",
         statusCode:{
-            204: function(data) {
-                console.log("I quit this group!");
+            204: function() {
+                showToast("그룹을 탈퇴하였습니다");
                 if(open_scope == 2)
                     window.location.assign("/");
                 else {
@@ -179,6 +185,7 @@ $(".member_leave").click(function() {
             }
         }
     });
+    return false;
 });
 
 
@@ -193,7 +200,6 @@ var decision_delete_level = function(){
         async: false,
         statusCode: {
             200: function (data) {
-                console.log("count = "+data.meta.total_count);
                 if (data.meta.total_count == 1) {
                     result = 2;
                 }

@@ -11,7 +11,7 @@
                     <p class="pass">
                         {{ form.password }}
                     </p>
-                    <input type="hidden" name="next" value="/" />
+                    <input type="hidden" name="next" value="{{ next }}" />
                     <p class="button">
                         <input type="submit" value="Log In" />
                         <a href="/accounts/register"><input type="button" value="Sign In" /></a>

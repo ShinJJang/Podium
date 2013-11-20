@@ -104,7 +104,7 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Debug Tool bar 안보려면 주석 처리
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 AUTHENTICATION_BACKENDS  = (
@@ -140,6 +140,8 @@ INSTALLED_APPS = (
     'south',
     'raven.contrib.django.raven_compat',
     'debug_toolbar',
+    'tastypie_swagger',
+    'djcelery'
 )
 
 # Set your DSN value
@@ -264,3 +266,18 @@ INTERNAL_IPS = ('127.0.0.1',)
 MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + (
   'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
 )
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+LOGIN_REDIRECT_URL="/"
+
+TASTYPIE_SWAGGER_API_MODULE = 'Podium.urls.v1_api'
+
+BROKER_URL = 'redis://localhost:6379/0'
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_TIMEZONE = 'Asia/Seoul'
+
+import djcelery
+djcelery.setup_loader()
+
+

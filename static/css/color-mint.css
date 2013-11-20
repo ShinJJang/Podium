@@ -48,10 +48,16 @@ a:hover, a:active, a:focus {
 
 #p_chatBoxContainer .chatBox { border-color:#ccc; box-shadow:0 0 2px rgba(0,0,0,0.2); }
 #p_chatBoxContainer .chatBox h2 { background:#76bab2; border-bottom:1px #ccc solid; }
+#p_chatBoxContainer .chatBox h2.inactive { background:#b5d0cd; }
 #p_chatBoxContainer .chatBox .closeChat:hover { background-color:#38978c; }
+
+#p_body #p_timeline #p_groupCover #p_groupTitle #friendStatus a { background-image:url(../images/color-mint/add_friend.png); }
+#p_body #p_timeline #p_groupCover #p_groupTitle #friendStatus span { border-color:#38978c; background-color:#76bab2; }
 
 #p_body #p_timeline #p_peopleCover #p_peopleName #friendStatus a { background-image:url(../images/color-mint/add_friend.png); }
 #p_body #p_timeline #p_peopleCover #p_peopleName #friendStatus span { border-color:#38978c; background-color:#76bab2; }
+
+.github-box .moreLink { background-image:url(../images/color-mint/more_link.png); }
 
 /* Retina Display Support */
 
@@ -73,6 +79,8 @@ a:hover, a:active, a:focus {
     #p_body #p_timeline .p_timelineContents .p_tBox .p_poll li.checked { background-image:url(../images/color-mint/poll_checked@2x.png); }
 
     #p_body #p_timeline #p_peopleCover #p_peopleName #friendStatus a { background-image:url(../images/color-mint/add_friend@2x.png); }
+
+    .github-box .moreLink { background-image:url(../images/color-mint/more_link@2x.png); }
 }
 
 @media

@@ -4,14 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseServerError
 from django.template import Context
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
-from django.contrib.sessions.models import Session
-from django.core import serializers
 from .models import *
 from django.forms.models import model_to_dict
 
 from base64 import b64encode
-from json import dumps
 import time
 import hmac
 import hashlib
@@ -23,9 +19,7 @@ sys.setdefaultencoding("utf-8")
 
 @login_required
 def home(request):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)
+    user = request.user
     ctx = Context({
         'user': user,
         'page_title': 'Podium'
@@ -34,9 +28,7 @@ def home(request):
 
 @login_required
 def pui(request):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)
+    user = request.user
     ctx = Context({
         'user': user,
         'page_title': 'PUI Framework'
@@ -46,49 +38,45 @@ def pui(request):
 
 @login_required
 def people(request, people_id):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    user = request.user
     user_pageowner = User.objects.get(id=people_id)
     ctx = Context({
         'user': user,
-        'user_pageowner': user_pageowner
+        'user_pageowner': user_pageowner,
+        'page_title': user_pageowner.username
     })
     return render(request, 'profile.html', ctx)
 
 
 @login_required
 def post(request, post_id):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    user = request.user
     post = get_object_or_404(Posts, pk=post_id)
 
-    if post.open_scope == 1 and user != post.user_key:
-        return home(request)
+    if post.open_scope == 1:
+        if user != post.user_key and user != post.target_user:
+            return home(request)
 
     ctx = Context({
         'user': user,
-        'post': post
+        'post': post,
+        'page_title': post.user_key.username+" - "+post.post[0:40],
     })
     return render(request, 'single_post.html', ctx)
 
 
 @login_required
 def private(request):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    user = request.user
     ctx = Context({
         'user': user,
+        'page_title': user.username
     })
     return render(request, 'private.html', ctx)
 
 @login_required
 def group(request, group_id):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    user = request.user
     group = get_object_or_404(Groups, pk=group_id)
 
     membership_id = None
@@ -108,27 +96,25 @@ def group(request, group_id):
         'user': user,
         'group': group,
         'membership_id': membership_id,
-        'permission': permission
+        'permission': permission,
+        'page_title': group.group_name
     })
     return render(request, 'group.html', ctx)
 
 
 @login_required
 def group_create(request):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    user = request.user
     ctx = Context({
         'user': user,
+        'page_title': '새 그룹 만들기'
     })
     return render(request, 'group_create.html', ctx)
 
 
 @login_required
 def group_settings(request, group_id):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    user = request.user
     group_ = Groups.objects.get(id=group_id)
 
     permission = -1
@@ -144,16 +130,15 @@ def group_settings(request, group_id):
     ctx = Context({
         'user': user,
         'group': group_,
-        'permission': permission
+        'permission': permission,
+        'page_title': group_.group_name
     })
     return render(request, 'group_settings.html', ctx)
 
 
 @login_required
 def group_members(request, group_id):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    user = request.user
     group = Groups.objects.get(id=group_id)
 
     permission = -1
@@ -169,16 +154,15 @@ def group_members(request, group_id):
     ctx = Context({
         'user': user,
         'group': group,
-        'permission': permission
+        'permission': permission,
+        'page_title': group.group_name
     })
     return render(request, 'group_members.html', ctx)
 
 
 @login_required
 def get_chat_list(request):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    user = request.user
     chat_rooms = ChatRoom.objects.filter(chatparticipants__user_key=user).annotate(models.Max('userchattingmessage__created')).order_by('-userchattingmessage__created__max')
     chat_room = []
     print chat_rooms
@@ -212,46 +196,47 @@ def get_chat_list(request):
     print chat_room
     return HttpResponse(json.dumps(chat_room), content_type='application/json')
 
+
 def sign_s3(request):  #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
 
     AWS_ACCESS_KEY = "AKIAJKZRCQKYZ7EHIXYA"
     AWS_SECRET_KEY = "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"
     S3_BUCKET = "somapodium"
     object_name = request.GET.get('s3_object_name')
-    print object_name.encode('utf-8')
-    print dumps(object_name).decode("UTF-8")
-    print unicode(object_name).encode('utf-8')
     mime_type = request.GET.get('s3_object_type')
     method = request.GET.get('s3_method')
     file_count = request.GET.get('s3_file_count')
     expires = int(time.time() + 10)
     amz_headers = "x-amz-acl:public-read"
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    user_id = request.user.id
+    if file_count.find("soma") != -1 :
+        put_request = "%s\n\n%s\n%d\n%s\n/%s/%s/%s/%s" % (method, mime_type, expires, amz_headers, S3_BUCKET, file_count, str(user_id), object_name)
+        hashed = hmac.new(AWS_SECRET_KEY, put_request, hashlib.sha1)
+        signature = b64encode(hashed.digest())
+        url = 'https://%s.s3.amazonaws.com/%s/%s/%s' % (S3_BUCKET, file_count, str(user_id), object_name)
+        signed_request = '%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s' % (url, AWS_ACCESS_KEY, expires, signature)
+    else :
+        put_request = "%s\n\n%s\n%d\n%s\n/%s/%s/%s/%s" % (method, mime_type, expires, amz_headers, S3_BUCKET, str(user_id), file_count, object_name)
+        hashed = hmac.new(AWS_SECRET_KEY, put_request, hashlib.sha1)
+        signature = b64encode(hashed.digest())
+        url = 'https://%s.s3.amazonaws.com/%s/%s/%s' % (S3_BUCKET, str(user_id), file_count, object_name)
+        signed_request = '%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s' % (url, AWS_ACCESS_KEY, expires, signature)
 
-    put_request = "%s\n\n%s\n%d\n%s\n/%s/%s/%s/%s" % (method, mime_type, expires, amz_headers, S3_BUCKET, str(user_id), file_count, object_name)
-    print unicode(put_request).encode("utf-8")
-    hashed = hmac.new(AWS_SECRET_KEY, put_request, hashlib.sha1)
 
-    signature = b64encode(hashed.digest())
 
-    url = 'https://%s.s3.amazonaws.com/%s/%s/%s' % (S3_BUCKET, str(user_id), file_count, object_name)
-    signed_request = '%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s' % (url, AWS_ACCESS_KEY, expires, signature)
-    print url
-    print signed_request
+
     return HttpResponse(json.dumps({
         'signed_request': signed_request,
         'url': url
     }), content_type='application/json')
 
+
 def get_file_count(request):  #request에 메서드, 유저아이디는 x db조회, 파일 카운트를 추가.오브젝트네임이 키값이다.
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
-    object_file_count, user_file_count = UserFileCount.objects.get_or_create(user_key = user)
+    user = request.user
+    object_file_count, user_file_count = UserFileCount.objects.get_or_create(user_key=user)
     print object_file_count.file_count
     return HttpResponse(object_file_count.file_count)
+
 
 @login_required
 def chat(request):
@@ -265,9 +250,7 @@ def chat(request):
 @login_required
 @csrf_exempt
 def vote(request):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    user = request.user
 
     if request.method == 'POST':
         poll_object = {}
@@ -361,9 +344,7 @@ def chat_noti_check(room_id, user_key): #  todo(baek) chatroom을 기반으로 �
 @login_required()
 @csrf_exempt
 def set_participant_socket_connection(request):
-    session = Session.objects.get(session_key=request.session._session_key)
-    user_id = session.get_decoded().get('_auth_user_id')
-    user = User.objects.get(id=user_id)   # 현재 로그인된 사용자
+    user = request.user
     if request.method == 'POST':
         print request.POST.get('room_id')
         participant = ChatParticipants.objects.get(chat_room_key=request.POST.get('room_id'), user_key=user);

@@ -14,6 +14,7 @@ class UserProfile(models.Model):
     birthday = models.DateField(null=True)
     address = models.TextField(max_length=100, null=True)
     phone = models.TextField(max_length=20, null=True)
+    ki = models.IntegerField(null=True)
 
     def __str__(self):
         return "%s's profile" % self.user
@@ -26,6 +27,70 @@ def create_user_profile(sender, instance, created, **kwargs):
 post_save.connect(create_user_profile, sender=User)
 
 
+class HighSchools(models.Model):
+    name = models.CharField(max_length=30)
+
+
+class UserToHighSchool(models.Model):
+    user = models.ForeignKey(User)
+    highschool = models.ForeignKey(HighSchools)
+    enter = models.DateField(null=True)
+    graduate = models.DateField(null=True)
+
+
+class University(models.Model):
+    name = models.CharField(max_length=30)
+
+
+class UserToUniversity(models.Model):
+    user = models.ForeignKey(User)
+    university = models.ForeignKey(University)
+    enter = models.DateField(null=True)
+    graduate = models.DateField(null=True)
+    major = models.CharField(null=True, max_length=20)
+
+
+class Teams(models.Model):
+    name = models.CharField(max_length=30)
+    mentor = models.ForeignKey(User)
+
+
+class UserToTeam(models.Model):
+    user = models.ForeignKey(User)
+    team = models.ForeignKey(Teams)
+    joinedOn = models.DateField()
+
+
+class Companies(models.Model):
+    name = models.CharField(max_length=30)
+
+
+class UserToCompany(models.Model):
+    user = models.ForeignKey(User)
+    company = models.ForeignKey(Companies)
+    enter = models.DateField(null=True)
+    leave = models.DateField(null=True)
+    job = models.CharField(max_length=30)
+
+
+class Hobbies(models.Model):
+    name = models.CharField(max_length=30)
+
+
+class UserToHobby(models.Model):
+    user = models.ForeignKey(User)
+    hobby = models.ForeignKey(Hobbies)
+
+
+class PLanguages(models.Model):
+    name = models.CharField(max_length=30)
+
+
+class UserToPLanguage(models.Model):
+    user = models.ForeignKey(User)
+    planguage = models.ForeignKey(PLanguages)
+
+
 class Groups(models.Model):
     group_name = models.CharField(max_length=30)
     description = models.CharField(max_length=4096)
@@ -33,6 +98,8 @@ class Groups(models.Model):
     updated = models.DateTimeField(auto_now=True)
     isProject = models.BooleanField()
     open_scope = models.IntegerField(default=0)  # 0 = open, 1 = semi-open, 2 = close
+    github_repo = models.CharField(max_length=512, null=True)
+    github_commit_last_id = models.CharField(max_length=64, null=True)
 
     def open_scope_str(self):
         result = None
@@ -67,6 +134,9 @@ def create_friend_post(sender, instance, created, **kwargs):
             # - 그룹에서는 멤버도 자신을 포함하므로 따로 넣어주지 않음
             FriendPosts.objects.get_or_create(user_key=write_user, friend_post_key=instance)
 
+        if instance.open_scope == 1 and instance.target_user != write_user:
+            FriendPosts.objects.get_or_create(user_key=instance.target_user, friend_post_key=instance)
+
         # 친구들에게 글 저장
         if instance.open_scope == 0 or instance.open_scope == 2:
             friendships = Friendships.objects.filter(user_key=write_user)
@@ -74,9 +144,22 @@ def create_friend_post(sender, instance, created, **kwargs):
                 FriendPosts.objects.get_or_create(user_key=friendship.friend_user_key, friend_post_key=instance)
 
         elif instance.open_scope == 3:
-            memberships = Memberships.objects.filter(group_key=instance.group.pk)
-            for membership in memberships:
-                FriendPosts.objects.get_or_create(user_key=membership.user_key, friend_post_key=instance)
+            memberships = Memberships.objects.select_related().filter(group_key=instance.group.pk)
+            if instance.group.open_scope == 0:
+                members = memberships.values_list('user_key', flat=True)
+                friends = Friendships.objects.select_related().filter(user_key=write_user).values_list('friend_user_key', flat=True)
+
+                # 친구와 그룹 멤버 user id union(중복 없이)
+                user_ids = list(set(list(members) + list(friends)))
+
+                # 친구와 그룹 멤버들에게 저장
+                for user_id in user_ids:
+                    FriendPosts.objects.get_or_create(user_key_id=user_id, friend_post_key=instance)
+
+            else:
+                for membership in memberships:
+                    FriendPosts.objects.get_or_create(user_key=membership.user_key, friend_post_key=instance)
+
             GroupPosts.objects.get_or_create(group_key=instance.group, post_key=instance)
 
 post_save.connect(create_friend_post, sender=Posts)
@@ -89,12 +172,16 @@ def create_log(sender, instance, created, **kwargs):
     where = None
     link = "/post/"
     if sender == Posts:
+        if instance.open_scope == 1 or (instance.group and instance.group.open_scope != 0):
+            return
         model_name = 'post'
         content = instance.post
         user = get_object_or_404(User, pk=instance.user_key.id)
         link += str(instance.id)+"/"
 
     elif sender == Comments:
+        if instance.post_key.open_scope == 1 or (instance.post_key.group and instance.post_key.group.open_scope != 0):
+            return
         model_name = 'comment'
         content = instance.comment
         where = instance.post_key.post
@@ -103,6 +190,8 @@ def create_log(sender, instance, created, **kwargs):
         link += str(instance.post_key.id)+"/"
 
     elif sender == PostEmotions:
+        if instance.post_key.open_scope == 1 or (instance.post_key.group and instance.post_key.group.open_scope != 0):
+            return
         model_name = 'emotion'
         where = instance.post_key.post
         id_emotion = instance.emotions_ptr_id
@@ -114,7 +203,6 @@ def create_log(sender, instance, created, **kwargs):
 
     log = {'type': model_name, 'user_name': user.username, 'user_id': user.id, 'content': content, 'where': where, 'where_owner': where_owner, 'emotion': emotion, 'link': link}
     r = requests.post('http://localhost:4000/', data=log)
-    print r.status_code
 
 post_save.connect(create_log, sender=Posts)
 
@@ -153,8 +241,8 @@ class CommentEmotions(Emotions):
 
 class UserPictures(models.Model):
     user_key = models.ForeignKey(User)
-    picture = models.FileField(upload_to='upload/%y/%m/%d')
-    name = models.CharField(max_length=30, null=False)
+    picture = models.CharField(max_length=1000, null=False)
+    name = models.CharField(max_length=1000, null=False)
     created = models.DateTimeField(auto_now=True)
 
 
@@ -269,3 +357,14 @@ class UserChattingMessage(models.Model):
 class TestModel(models.Model):
     test = models.ForeignKey(ChatRoom)
     testbaekmodel = models.CharField(max_length=1000)
+    test2 = models.CharField(default='1', max_length='100')
+
+
+class Approval(models.Model):
+    user_key = models.ForeignKey(User)
+    friendpost_key = models.ForeignKey(FriendPosts)
+    file_link = models.CharField(max_length=1000, null=False)
+    file_name = models.CharField(max_length=500, null=False)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    isChecked = models.NullBooleanField()

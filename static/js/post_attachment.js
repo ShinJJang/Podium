@@ -13,6 +13,7 @@ $(document).on("click", ".p_responses", function () {
         var postid = tag_id.replace("commentList", "");
 
         pollComment(postid);
+        FB.XFBML.parse();
     }
     return false;
 });
@@ -87,28 +88,76 @@ var counting_comment = function(post_key) {
 
 
 //region Emotion Attachment
-$(document).on("click", ".form_emotion :submit", function (event) {
-    var feedback_api = api_path + "postemotions/";
-    var data = JSON.stringify({
-        "emotion": $(this).attr('tag'),
-        "post_key": $(this).siblings("input[name=post_key]").val()
-    });
-    console.log(data);
+// emotion click
+$(document).on("click", ".form_emotion :submit", function () {
+    var emotion = $(this).attr('tag')
+    var post_key = $(this).siblings("input[name=post_key]").val()
+    get_emotion(emotion, post_key, false);
+    return false;
+});
+
+var get_emotion = function(emotion, post_key, count) {
+    var feedback_api = api_path + "postemotions/?post="+post_key;
+    if(!count)
+        feedback_api += "&user="+user_id;
     $.ajax({
         url: feedback_api,
-        type: "POST",
+        type: "GET",
         contentType: "application/json",
-        data: data,
         dataType: "json",
         statusCode: {
-            201: function (data) {
-                console.log("post emotion submit response");
-                console.log(data);
+            200: function (data) {
+                if(count) {
+                    var e1_count = $.grep(data.objects, function(e){ return e.emotion == "E1" }).length;
+                    var e2_count = $.grep(data.objects, function(e){ return e.emotion == "E2" }).length;
+                    $("#emotion_count_e1_"+post_key).html(e1_count);
+                    $("#emotion_count_e2_"+post_key).html(e2_count);
+                }
+                else {
+                    if(data.meta.total_count > 0){
+                        if (data.objects[0].emotion == emotion)
+                            check_emotion("DELETE", emotion, post_key, data.objects[0].id);
+                        else
+                            check_emotion("PATCH" ,emotion, post_key, data.objects[0].id);
+                    }
+                    else {
+                        check_emotion("POST" ,emotion, post_key);
+                    }
+                }
             }
         }
     });
     return false;
-});
+};
+
+var check_emotion = function(method, emotion, post_key, emotion_id) {
+    var feedback_api = api_path + "postemotions/";
+    if(method != "POST")
+        feedback_api += emotion_id + "/";
+
+    var data = JSON.stringify({
+        "emotion": emotion,
+        "post_key": post_key
+    });
+    $.ajax({
+        url: feedback_api,
+        type: method,
+        contentType: "application/json",
+        data: data,
+        dataType: "json",
+        statusCode: {
+            201: function() {
+                get_emotion(null, post_key, true);
+            },
+            202: function() {
+                get_emotion(null, post_key, true);
+            },
+            204: function() {
+                get_emotion(null, post_key, true);
+            }
+        }
+    });
+};
 //endregion
 
 
