@@ -205,14 +205,14 @@
             statusCode: {
                 200: function (data) {
                     for(var index in data.objects) {
-                        var appendText = '<li><a class="openChat cboth" data-count="2" title="' + data.objects[index].username + '" id="userList_'+index+'" data-room_name="default" href="#">';
+                        var appendText = '<li><a class="newChat cboth" data-count="2" title="' + data.objects[index].friend_userusername + '" id="userList_'+index+'" data-room_name="default" href="#">';
 
-                        if(data.objects[index].user_photo.length != 0) {
+                        if(data.objects[index].friend_user.user_photo.length != 0) {
                             appendText = appendText
                                     + '<span class="userProfile"><img src="'
-                                    + data.objects[index].user_photo[0].picture
+                                    + data.objects[index].friend_user.user_photo[0].picture
                                     + '" alt="'
-                                    + data.objects[index].user_photo[0].name
+                                    + data.objects[index].friend_user.user_photo[0].name
                                     + '" class="chatPicture" /></span>';
                         } else {
                             appendText = appendText
@@ -220,7 +220,7 @@
                         }
                         appendText = appendText
                                 + '<span class="userName">'
-                                + data.objects[index].username
+                                + data.objects[index].friend_user.username
                                 + '</span></li>';
                         $('#login_user_list').append(appendText);
                     }
