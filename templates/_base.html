@@ -53,17 +53,17 @@
             <ul id="nav_userProfile">
                 <li id="nav_profile">
                     <a title="My Profile" href="/people/{{ user.id }}">
-                                <span class="nav_profile">
-                                    {% with user.userpictures_set.all|dictsortreversed:'created'|first as userpicture %}
-                                        {% if userpicture %}
-                                            <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}"
-                                                 class="userPicture"/>
-                                        {% else %}
-                                            <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진"
-                                                 class="userPicture"/>
-                                        {% endif %}
-                                    {% endwith %}
-                                </span>
+                        <span class="nav_profile">
+                            {% with user.userpictures_set.all|dictsortreversed:'created'|first as userpicture %}
+                                {% if userpicture %}
+                                    <img src="{{ userpicture.picture }}" alt="{{ userpicture.name }}"
+                                         class="userPicture"/>
+                                {% else %}
+                                    <img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진"
+                                         class="userPicture"/>
+                                {% endif %}
+                            {% endwith %}
+                        </span>
                         <span class="nav_label username">{{ user.username }}</span>
                     </a>
                 </li>
@@ -97,7 +97,6 @@
     <aside id="p_messages">
         <div class="p_container">
             <div id="p_chat">
-
             </div>
         </div>
     </aside>

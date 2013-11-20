@@ -197,7 +197,36 @@
     }
 
     function getFriendList() {
+        $.ajax({
+            type: 'GET',
+            content_type: 'application/json',
+            dataType: 'json',
+            url: '/api/v1/user/',
+            statusCode: {
+                200: function (data) {
+                    for(var index in data.objects) {
+                        var appendText = '<li><a class="openChat cboth" data-count="2" title="' + data.objects[index].username + '" id="userList_'+index+'" data-room_name="default" href="#">';
 
+                        if(data.objects[index].user_photo.length != 0) {
+                            appendText = appendText
+                                    + '<span class="userProfile"><img src="'
+                                    + data.objects[index].user_photo[0].picture
+                                    + '" alt="'
+                                    + data.objects[index].user_photo[0].name
+                                    + '" class="chatPicture" /></span>';
+                        } else {
+                            appendText = appendText
+                                    + '<span class="userProfile"><img src="{{ STATIC_URL }}images/user_defaultProfile.jpg" alt="기본 프로필 사진" class="chatPicture" /></span>';
+                        }
+                        appendText = appendText
+                                + '<span class="userName">'
+                                + data.objects[index].username
+                                + '</span></li>';
+                        $('#login_user_list').append(appendText);
+                    }
+                }
+            }
+        });
     }
 
     $(function(){
