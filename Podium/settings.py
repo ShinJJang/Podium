@@ -140,7 +140,8 @@ INSTALLED_APPS = (
     'south',
     'raven.contrib.django.raven_compat',
     'debug_toolbar',
-    'tastypie_swagger'
+    'tastypie_swagger',
+    'djcelery'
 )
 
 # Set your DSN value
@@ -271,3 +272,12 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 LOGIN_REDIRECT_URL="/"
 
 TASTYPIE_SWAGGER_API_MODULE = 'Podium.urls.v1_api'
+
+BROKER_URL = 'redis://localhost:6379/0'
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_TIMEZONE = 'Asia/Seoul'
+
+import djcelery
+djcelery.setup_loader()
+
+
