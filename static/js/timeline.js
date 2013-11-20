@@ -812,9 +812,14 @@ $(function () {
             }
         });
 
-        $("#codeModal #language_insert").click(function(){
+        $("#codeModal #language_insert").bind("click",function(){
             $("#post").val($("#post").val() + '[code language="' + $('#language_select').val() + '"]\n' + $('#language_text').val() + '\n[/code]');
-            $("#codeModal").fadeOut();
+            $("#codeModal #language_insert").unbind("click");
+            $(".modalWrapper").remove();
+        });
+
+        $("#codeModal .closeModal").click(function(){
+            $("#codeModal #language_insert").unbind("click");
         });
     });
 
