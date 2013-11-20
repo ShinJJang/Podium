@@ -414,7 +414,7 @@ function PostTopPolling() {
                             }
 
                             //var file_name = data.objects[0].file_link.split("/");
-                            var imageExp = /.[jpg|png|jpeg|gif]$/;
+                            var imageExp = /.[jpg|png|jpeg|gif]$/i;
                             if(imageExp.test(data.objects[0].file_name)) {
                                 $(targetDiv).append('<a href="' + data.objects[0].file_link + '">' + '<img src="' + data.objects[0].file_link + '" alt="' + data.objects[0].file_name + '" />' + '</li>');
                             }
@@ -922,7 +922,7 @@ function bindPoll(targetDiv) {
 function s3_upload_put() {
     var check_file_name = $('#post_file').val();
     var extension = check_file_name.replace(/^.*\./, '');
-    var valid_extensions = ['hwp', 'jpg','JPG', 'jpeg','JPEG', 'ppt', 'pptx', 'doc', 'zip', 'png','txt', 'pdf'];
+    var valid_extensions = ['hwp', 'jpg','JPG', 'jpeg','JPEG', 'ppt', 'pptx', 'doc', 'docx', 'zip', 'png', 'PNG', 'txt', 'pdf', 'gif', 'GIF'];
     var file_size = 0;
     if ($.support.msie) {
         var objFSO = new ActiveXObject("Scripting.FileSystemObject");
