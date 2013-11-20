@@ -201,7 +201,7 @@
             type: 'GET',
             content_type: 'application/json',
             dataType: 'json',
-            url: '/api/v1/user/',
+            url: '/api/v1/friendship/?user={{ user.id }}',
             statusCode: {
                 200: function (data) {
                     for(var index in data.objects) {
