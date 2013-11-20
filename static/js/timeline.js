@@ -922,7 +922,7 @@ function bindPoll(targetDiv) {
 function s3_upload_put() {
     var check_file_name = $('#post_file').val();
     var extension = check_file_name.replace(/^.*\./, '');
-    var valid_extensions = ['hwp', 'jpg', 'ppt', 'pptx', 'doc', 'zip', 'png','txt', 'pdf'];
+    var valid_extensions = ['hwp', 'jpg','JPG', 'jpeg','JPEG', 'ppt', 'pptx', 'doc', 'zip', 'png','txt', 'pdf'];
     var file_size = 0;
     if ($.support.msie) {
         var objFSO = new ActiveXObject("Scripting.FileSystemObject");

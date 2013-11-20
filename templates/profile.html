@@ -377,7 +377,7 @@
     function s3_upload_user_picture_put() {
         var check_file_name = $("#user_picture_file").val();
         var extension = check_file_name.replace(/^.*\./, '');
-        var valid_extensions = ['png','gif', 'jpg'];
+        var valid_extensions = ['png', 'PNG', 'GIF', 'JPG','gif', 'jpg', 'jpeg', 'JPEG'];
         var file_size = 0;
         if ($.support.msie) {
             var objFSO = new ActiveXObject("Scripting.FileSystemObject");
