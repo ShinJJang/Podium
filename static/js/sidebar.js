@@ -44,6 +44,7 @@ $(document).ready(function () {
         $("#p_timeline").waypoint(function () {
             get_friendship_notis();
             group_list_poll();
+//            notification_polling();
         }, { offset: '0' });
     }, 5000);
 });
@@ -51,3 +52,18 @@ $(document).ready(function () {
 $("#nav_request").click(function() {
     $("#ul_nav_request").toggle();
 });
+
+//var notification_polling = function(){
+//    var feedback_url = "/api/v1/user/notification";
+//    $.ajax({
+//        type: "GET",
+//        url: feedback_url,
+//        contentType: "application/json",
+//        dataType: "json",
+//        statusCode: {
+//            200: function (data) {
+//                console.log(data);
+//            }
+//        }
+//    });
+//};

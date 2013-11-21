@@ -207,6 +207,65 @@ def create_log(sender, instance, created, **kwargs):
 post_save.connect(create_log, sender=Posts)
 
 
+def create_notification(sender, instance, created, **kwargs):
+    noti = None
+    relation_user = []
+
+    if sender == Posts:
+        _message = instance.user_key.username+"가 '"+instance.post[:10]+"...' 글을 썼습니다"
+        _url = "/post/"+str(instance.id)+"/"
+        noti = CommonNotification(actor=instance.user_key, message=_message, link=_url)
+
+        # 친구에게 쓰는 글
+        if instance.target_user is not None and instance.target_user != instance.user_key:
+            relation_user.append(instance.target_user.id)
+
+        # 그룹에 쓰는 글
+        elif instance.open_scope == 3:
+            members = Memberships.objects.select_related().filter(group_key=instance.group).exclude(user_key=instance.user_key)
+            if members.exists():
+                members_id = members.values_list('user_key', flat=True)
+                relation_user = members_id
+
+    elif sender == Comments:
+        _message = instance.user_key.username+"가 '"+instance.post_key.post[:10]+"...' 글에 댓글을 남겼습니다"
+        _url = "/post/"+str(instance.post_key.id)+"/"
+        noti = CommonNotification(actor=instance.user_key, message=_message, link=_url)
+
+        # 자신을 제외한 댓글을 쓴 사람에게
+        commentor = instance.post_key.comments_set.all().exclude(user_key=instance.user_key).values_list('user_key', flat=True)
+
+        # 자신을 제외한 감정을 표현한 사람에게
+        emotioner = instance.post_key.postemotions_set.all().exclude(user_key=instance.user_key).values_list('user_key', flat=True)
+
+        # id들을 중복 없이 더하기
+        relation_user = (list(set(list(commentor)+list(emotioner))))
+
+    elif sender == PostEmotions:
+        emotion_str = "좋아합니다" if instance.emotion == "E1" else "멋져합니다"
+        _message = instance.user_key.username+"가 '"+instance.post_key.post[:10]+"...' 글에 "+emotion_str
+        _url = "/post/"+str(instance.post_key.id)+"/"
+        noti = CommonNotification(actor=instance.user_key, message=_message, link=_url)
+
+        # 자신을 제외한 댓글을 쓴 사람에게
+        commentor = instance.post_key.comments_set.all().exclude(user_key=instance.user_key).values_list('user_key', flat=True)
+
+        # 자신을 제외한 감정을 표현한 사람에게
+        emotioner = instance.post_key.postemotions_set.all().exclude(user_key=instance.user_key).values_list('user_key', flat=True)
+
+        # id들을 중복 없이 더하기
+        relation_user = (list(set(list(commentor)+list(emotioner))))
+
+    if noti is not None and relation_user.__len__() > 0:
+        noti.save()
+        for user_id in relation_user:
+            user_noti = UserToCommonNotification(target_user_id=user_id, notification=noti)
+            user_noti.save()
+
+
+post_save.connect(create_notification, sender=Posts)
+
+
 class Comments(models.Model):
     user_key = models.ForeignKey(User)
     post_key = models.ForeignKey(Posts)
@@ -215,6 +274,7 @@ class Comments(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
 post_save.connect(create_log, sender=Comments)
+post_save.connect(create_notification, sender=Comments)
 
 class Emotions(models.Model):
     LIKE = 'E1'
@@ -233,6 +293,7 @@ class PostEmotions(Emotions):
     post_key = models.ForeignKey(Posts)
 
 post_save.connect(create_log, sender=PostEmotions)
+post_save.connect(create_notification, sender=PostEmotions)
 
 
 class CommentEmotions(Emotions):
@@ -368,3 +429,18 @@ class Approval(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     isChecked = models.NullBooleanField()
+
+
+class CommonNotification(models.Model):
+    actor = models.ForeignKey(User)
+    message = models.CharField(max_length=500)
+    link = models.CharField(max_length=1000)
+    created = models.DateTimeField(auto_now_add=True)
+
+
+class UserToCommonNotification(models.Model):
+    target_user = models.ForeignKey(User)
+    notification = models.ForeignKey(CommonNotification)
+    is_read = models.BooleanField(default=False)
+
+
