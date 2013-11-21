@@ -57,18 +57,24 @@ body { background:#f4f4f4; }
 
     #p_body #p_messages { width:75px; height:100%; padding-top:51px; box-sizing:border-box; position:fixed; top:0; right:0; }
         #p_body #p_messages > .p_container { width:88px; height:100%; box-sizing:border-box; }
-        #p_body #p_messages #p_chat { padding:10px 0 0; }
+        #p_body #p_messages #p_chat { padding:10px 0 51px; }
 
         #p_body #p_messages h2 { width:75px; font-size:0.76em; text-transform:uppercase; color:#666; font-weight:500; text-align: center; margin-bottom:5px; }
 
         #p_body #p_messages ul.userList { padding:0; border-top:1px #eaeaea solid; border-bottom:1px #ccc solid; background:#fff; margin:0 0 10px; }
         #p_body #p_messages ul.userList li { clear:both; }
         #p_body #p_messages ul.userList li a { display:block; padding:8px 28px 7px 15px; height:45px; }
+        #p_body #p_messages ul#login_user_list li a { height:30px; }
+
         #p_body #p_messages ul.userList li a:hover { background:#f4f4f4; }
         #p_body #p_messages ul.userList li a .userProfile { float:left; display:block; width:43px; height:43px; border-radius:5px; border:1px #ccc solid; position:relative; margin-right:10px; }
-        #p_body #p_messages ul.userList li a .chatPicture { width:43px; height:43px; border-radius:5px; position:relative; }
+        #p_body #p_messages ul#login_user_list li a .userProfile { margin-left:7px; width:28px; height:28px; }
+        #p_body #p_messages.opened ul#login_user_list li a .userProfile { margin-left:0; }
+        #p_body #p_messages ul.userList li a .chatPicture { width:43px; height:43px; border-radius:4px; position:relative; }
+        #p_body #p_messages ul#login_user_list li a .chatPicture { width:28px; height:28px; }
 
         #p_body #p_messages ul.userList li a .userName { display:none; white-space: nowrap; color:#666; margin-bottom:2px; }
+        #p_body #p_messages ul#login_user_list li a .userName { line-height: 30px; margin:0; }
         #p_body #p_messages ul.userList li a .recentMessage { display:none; white-space:nowrap; font-size:0.86em; color:#fff; border-radius:3px; border:1px solid; }
 
         #p_body #p_messages.opened ul.userList li a .userName { display:block; }
@@ -384,7 +390,7 @@ body { background:#f4f4f4; }
 
         #p_body #p_timeline #p_groupContents { padding-top:30px; }
 
-        #p_body #p_timeline #p_profileContents { padding-top:130px; }
+        #p_body #p_timeline #p_profileContents { padding-top:160px; }
         #p_body #p_timeline #p_peopleAction { background:#76bab2; border-radius:5px; height:35px; overflow:hidden; }
         #p_body #p_timeline #p_peopleAction li { height:35px; line-height:35px; float:left; }
 
