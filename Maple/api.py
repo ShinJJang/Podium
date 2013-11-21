@@ -1199,10 +1199,10 @@ class CommonNotificationResource(ModelResource):
 
 class UserToNotificationResource(ModelResource):
     target_user = fields.ForeignKey(UserResource, 'target_user', full=True)
-    notification = fields.ForeignKey(FriendPostResource, 'notification', full=True)
+    notification = fields.ForeignKey(CommonNotificationResource, 'notification', full=True)
 
     class Meta:
-        queryset = UserToCommonNotification.objects.all().order_by('-pk')
+        queryset = UserToCommonNotification.objects.all().order_by('-pk').filter(is_read=False)
         resource_name = 'usernoti'
         always_return_data = True
         authorization = Authorization()

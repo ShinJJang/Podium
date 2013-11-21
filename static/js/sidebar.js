@@ -69,3 +69,24 @@ var notification_polling = function(){
     });
 };
 notification_polling();
+
+$("#nav_notification").click(function() {
+    var feedback_url = "/api/v1/usernoti/?target_user__id="+user_id+"&limit=5";
+    $.ajax({
+        type: "GET",
+        url: feedback_url,
+        contentType: "application/json",
+        dataType: "json",
+        statusCode: {
+            200: function (data) {
+                console.log(data);
+//                $("#common_noti_count").html(data.noti_count);
+                $("#ul_nav_common_request").html('');
+                for(index in data.objects) {
+                    $("#ul_nav_common_request").append('<li><a href="'+data.objects[index].notification.link+'"><span class="nav_icon"></span><span class="nav_label">'+data.objects[index].notification.message+'</span></a></li>');
+                }
+            }
+        }
+    });
+    $("#ul_nav_common_request").toggle();
+});

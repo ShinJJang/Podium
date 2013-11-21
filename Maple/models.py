@@ -241,6 +241,12 @@ def create_notification(sender, instance, created, **kwargs):
         # id들을 중복 없이 더하기
         relation_user = (list(set(list(commentor)+list(emotioner))))
 
+        # 글쓴이와 타겟 유저
+        if instance.post_key.user_key != instance.user_key and instance.post_key.user_key.id not in relation_user:
+            relation_user.append(instance.post_key.user_key.id)
+        if instance.post_key.target_user is not None and instance.post_key.target_user != instance.user_key and instance.post_key.target_user.id not in relation_user:
+            relation_user.append(instance.post_key.target_user.id)
+
     elif sender == PostEmotions:
         emotion_str = "좋아합니다" if instance.emotion == "E1" else "멋져합니다"
         _message = instance.user_key.username+"가 '"+instance.post_key.post[:10]+"...' 글에 "+emotion_str
@@ -255,6 +261,12 @@ def create_notification(sender, instance, created, **kwargs):
 
         # id들을 중복 없이 더하기
         relation_user = (list(set(list(commentor)+list(emotioner))))
+
+        # 글쓴이와 타겟 유저
+        if instance.post_key.user_key != instance.user_key and instance.post_key.user_key.id not in relation_user:
+            relation_user.append(instance.post_key.user_key.id)
+        if instance.post_key.target_user is not None and instance.post_key.target_user != instance.user_key and instance.post_key.target_user.id not in relation_user:
+            relation_user.append(instance.post_key.target_user.id)
 
     if noti is not None and relation_user.__len__() > 0:
         noti.save()
