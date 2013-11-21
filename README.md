@@ -1,30 +1,25 @@
 Podium
 ======
 
-Social network service for software maestro
+Social network service for software maestro.
+created by software maestro Podium team.
 
 
-Install
-======
-download Podium-SNS-0.0.1.tar.gz
-압축 해제 Podium-SNS-0.0.1.tar.gz
- # sh boot.sh
- # sh serverstart.sh
- # sh nodeserverstart.sh
 
-<p>Numbered list:</p>
+#### Install
+1. download Podium-SNS-0.0.1.tar.gz
+2. 압축 해제 Podium-SNS-0.0.1.tar.gz
+3. (#) sh boot.sh
+4. (#) sh serverstart.sh
+5. (#) sh nodeserverstart.sh
 
-<ol>
-<li>apples</li>
-<li>oranges</li>
-<li>pears</li>
-</ol>
 
-initial settings
+#### initial settings
     database name: test
     database username: postgres
     database password: 0000
 
     site settings: localhost
 
-if you want to modify settings, modify Podium/Podium/settings.py
+#### modify
+	if you want to modify settings, modify Podium/Podium/settings.py
