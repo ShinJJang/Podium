@@ -1227,6 +1227,11 @@ class UserToNotificationResource(ModelResource):
         self.log_throttled_access(request)
         return self.create_response(request, object_list)
 
+    def dehydrate(self, bundle):
+        bundle.obj.is_read = True
+        bundle.obj.save()
+        return bundle
+
 """
 // tastypie 상속 가능한 method
 detail_uri_kwargs()
