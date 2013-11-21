@@ -12,6 +12,14 @@ download Podium-SNS-0.0.1.tar.gz
  # sh serverstart.sh
  # sh nodeserverstart.sh
 
+<p>Numbered list:</p>
+
+<ol>
+<li>apples</li>
+<li>oranges</li>
+<li>pears</li>
+</ol>
+
 initial settings
     database name: test
     database username: postgres
