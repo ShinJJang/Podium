@@ -1183,6 +1183,50 @@ class ApprovalResource(ModelResource):
             raise BadRequest("이미 승인되어 수정이 불가능합니다")
         return bundle
 
+
+class CommonNotificationResource(ModelResource):
+    actor = fields.ForeignKey(UserResource, 'actor', full=True)
+
+    class Meta:
+        queryset = CommonNotification.objects.all().order_by('-pk')
+        resource_name = 'commonnoti'
+        always_return_data = True
+        authorization = Authorization()
+        filtering = {
+            "actor": ALL_WITH_RELATIONS,
+        }
+
+
+class UserToNotificationResource(ModelResource):
+    target_user = fields.ForeignKey(UserResource, 'target_user', full=True)
+    notification = fields.ForeignKey(FriendPostResource, 'notification', full=True)
+
+    class Meta:
+        queryset = UserToCommonNotification.objects.all().order_by('-pk')
+        resource_name = 'usernoti'
+        always_return_data = True
+        authorization = Authorization()
+        filtering = {
+            "target_user": ALL_WITH_RELATIONS,
+            "notification": ALL_WITH_RELATIONS
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/count%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_count'), name="api_user_noti_count"),
+        ]
+
+    def get_count(self, request, **kwargs):
+        user = request.user
+
+        unread_notis_count = UserToCommonNotification.objects.filter(target_user=user, is_read=False).count()
+        object_list = {
+            'noti_count': unread_notis_count,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
+
 """
 // tastypie 상속 가능한 method
 detail_uri_kwargs()

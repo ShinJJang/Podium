@@ -42,6 +42,7 @@ v1_api.register(UserToHobbyResource())
 v1_api.register(PLanguagesResource())
 v1_api.register(UserToPLanguageResource())
 v1_api.register(ApprovalResource())
+v1_api.register(UserToNotificationResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home),
