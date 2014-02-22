@@ -44,7 +44,6 @@ django-tastypie-swagger==0.1.2
 django-debug-toolbar==1.0.1
 South==0.8.4
 boto==2.25.0
-django-haystack==2.1.0
 jsonfield==0.9.20
 psycopg2==2.5.2
 registration==1.0
