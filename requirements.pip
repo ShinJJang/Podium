@@ -37,7 +37,6 @@ requests==1.2.3
 restkit==4.2.2
 simplejson==3.3.1
 six==1.4.1
-south==0.8.2
 urllib3==1.7.1
 django-celery==3.1.9
 raven==4.0.4
