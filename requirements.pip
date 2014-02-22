@@ -23,7 +23,7 @@ django-picklefield==0.3.0
 django-registration==1.0
 django-social-auth==0.7.28
 django-static-compiler==0.3.3
-django-tastypie==0.10.0
+django-tastypie==0.11.0
 django-templatetag-sugar==0.1
 elasticsearch==0.4.3
 gunicorn==0.17.4
@@ -48,3 +48,15 @@ simplejson==3.3.1
 six==1.4.1
 south==0.8.2
 urllib3==1.7.1
+django-celery==3.1.9
+raven==4.0.4
+django-tastypie-swagger==0.1.2
+django-debug-toolbar==1.0.1
+South==0.8.4
+boto==2.25.0
+django-haystack==2.1.0
+jsonfield==0.9.20
+psycopg2==2.5.2
+registration==1.0
+django-jenkins==0.15.0
+pyelasticsearch==0.6.1
